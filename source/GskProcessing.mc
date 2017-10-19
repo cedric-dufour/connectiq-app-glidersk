@@ -514,7 +514,7 @@ class GskProcessing {
     self.bAltitudeCritical = false;
     self.bAltitudeWarning = false;
     if(self.fDestinationElevation != null) {
-      var fHeight = (self.fAltitudeAtDestination-self.fDestinationElevation) * $.GSK_Settings.fUnitElevationConstant;
+      var fHeight = self.fAltitudeAtDestination-self.fDestinationElevation;
       if(fHeight <= $.GSK_Settings.fHeightCritical) {
         self.bAltitudeCritical = true;
       }
