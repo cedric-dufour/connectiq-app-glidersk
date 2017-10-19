@@ -465,7 +465,7 @@ class GskProcessing {
 
     // ... finesse
     if(self.bAscent) {
-      // ALGO: let's use the user-specified decision finesse to estimate where we'd stand if we were to descend and head straight back home
+      // ALGO: let's use the user-specified reference finesse to estimate where we'd stand if we were to descend and head straight back home
       self.fFinesse = $.GSK_Settings.iFinesseReference.toFloat();
     }
     else {
@@ -481,7 +481,7 @@ class GskProcessing {
     //       meaningful alerts.
     if(self.fFinesse > 0.0f) {
       // ALGO: Let's start by estimating our altitude at destination assuming we're heading straight to it - i.e. speed-to(wards)-destination
-      //       is equal to ground speed - and using the lowest between our decision finesse and actual finesse.
+      //       is equal to ground speed - and using the lowest between our reference finesse and actual finesse.
       //       This is the worst-case scenario as far as finesse is concerned BUT the best-case scenario as far as our heading
       //       (vs. bearing to destination) is concerned.
       self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / (self.fFinesse < $.GSK_Settings.iFinesseReference ? self.fFinesse : $.GSK_Settings.iFinesseReference);
