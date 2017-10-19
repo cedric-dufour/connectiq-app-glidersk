@@ -273,6 +273,7 @@ class GskProcessing {
     else {
       //Sys.println("WARNING: Position data have no accuracy information (:accuracy)");
       self.iAccuracy = Pos.QUALITY_NOT_AVAILABLE;
+      return;
     }
 
     // ... position
