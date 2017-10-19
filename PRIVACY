@@ -1,0 +1,18 @@
+GliderSK (Garmin ConnectIQ) App
+===============================
+Privacy information
+
+GliderSK does not collect and transmit any data to any 3rd-party, save for the
+Activity files you record and upload to Garmin (Connect) when synchronizing
+your device.
+
+The permissions required by GliderSK are:
+ - "Sensor" permission:
+   for acceleration data
+ - "Positioning" permission:
+   for location, elevation and speed data
+ - "Fit" permission:
+   for recording your Activity (to FIT file)
+ - "FitContributor" permission:
+   to add vertical speed, rate of turn and acceleration data in your
+   recorder Activity (FIT file)

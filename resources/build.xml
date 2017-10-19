@@ -1,0 +1,11 @@
+<!-- -*- mode:xml; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab: -->
+<build>
+  <!-- exclude all layouts by default -->
+  <exclude annotation="layout_148x205"/>
+  <exclude annotation="layout_200x265"/>
+  <exclude annotation="layout_205x148"/>
+  <exclude annotation="layout_215x180"/>
+  <exclude annotation="layout_218x218"/>
+  <exclude annotation="layout_240x240"/>
+  <exclude annotation="layout_240x400"/>
+</build>

@@ -1,0 +1,285 @@
+GliderSK (Garmin ConnectIQ) App
+===============================
+Usage instructions
+
+
+   !!! WARNING !!! DISCLAIMER !!! WARNING !!! DISCLAIMER !!! WARNING !!!
+
+   THIS APPLICATION IS NOT TO BE USED AS A MEAN TO INSURE FLIGHT SAFETY.
+
+  Always follow official or recommended procedures to insure flight safety,
+         *independently* from the help this application can offer.
+
+   !!! WARNING !!! DISCLAIMER !!! WARNING !!! DISCLAIMER !!! WARNING !!!
+
+
+Global View
+-----------
+
+The GliderSK Global view displays all the flight data in a single view, without
+any further bells or whistles:
+ - Top-Left:
+   your current acceleration (G-meter)
+ - Top-Right:
+   your current rate-of-turn
+ - Left:
+   your current altitude
+ - Center:
+   your current finesse
+ - Right:
+   your current (GPS) heading
+ - Bottom-Left:
+   your current vertical speed
+ - Bottom-Right:
+   your current ground speed
+
+
+Variometer View
+---------------
+
+The GliderSK Variometer displays your current ascent/descent rate both textu-
+ally and graphically, using visually appealing colors:
+ - GREEN for ascent
+ - RED for descent
+
+
+Varioplot View
+--------------
+
+The GliderSK Varioplot graphically displays you ascent/descent rate along your
+flight path, using visually appealing colors ranging from:
+ - (Bright) GREEN for maximum ascent rate
+ - (Bright) RED for maximum descent rate
+
+In addition, the following values will be displayed in the corner of the plot:
+ - Top-Left:
+   your current altitude
+ - Top-Right:
+   your current vertical speed
+ - Bottom-Left:
+   your current ground speed
+ - Bottom-Right:
+   your current finesse
+
+By pressing the MENU button (long-pressing the UP button), you will enter the
+Variometer Plot control menu:
+ - Pan/Zoom:
+   enter Pan/Zoom mode, where short pressing the following buttons will
+   result in:
+     SELECT: switch between zoom in/out, pan up/down, pan left/right
+     UP:     zoom in  /OR/ pan up   /OR/ pan left
+     DOWN:   zoom out /OR/ pan down /OR/ pan right
+ - Settings:
+   (see further below)
+
+
+Rate-of-Turn View
+-----------------
+
+The GliderSK Rate-of-Turn displays your current rate-of-turn both textually
+and graphically, using visually appealing colors:
+ - GREEN for right (starboard) turns
+ - RED for left (port) turns
+
+
+Safety View
+-----------
+
+The GliderSK Safety view works by continuously calculating the altitude that
+would be reached at your destination, using a two-pass algorithm:
+
+ - Pass 1: worst-case finesse and best-case heading
+   the altitude-at-destination is estimated using your actual ground
+   speed (as if heading straight towards that destination) and the
+   user-specified reference finesse (or the actual finesse if is lower
+   than that).
+
+ - Pass 2: actual (or worst-case) finesse and heading
+   IF the resulting height (Above Ground Level) is below or equal to
+   the user-specified decision height, the altitude-at-destination
+   is calculated again, using the *actual* finesse (unless you're ascending,
+   in which case the user-specified reference finesse is used) and
+   the *actual* speed-towards-destination (which accounts for heading
+   vs bearing discrepancies).
+
+Once the estimated or actual altitude at destination have been computed, alerts
+will be issued according to the corresponding height:
+
+ - Critical Alert: red background / high-frequency tone
+   when the height is below or equal to the user-specified critical height
+
+ - Warning Alert: yellow background / low-frequency tone
+   when the height is below or equal to the user-specified warning height
+
+The GliderSK Safety Monitor displays all critical flight safety information
+in a single view, using visually appealing alert colors:
+ - Top-Left:
+   the name of your current destination
+   / OR [short-press the SELECT and UP button] /
+   the elevation of your current destination
+ - Top-Right:
+   the distance to your current destination
+ - Left:
+   your current altitude
+ - Center:
+   your current finesse
+   / OR (if in ascent) /
+   your reference finesse (grayed-out)
+ - Right:
+   the actual altitude when reaching your current destination
+   / OR (if the corresponding height is above your decision height) /
+   the estimated altitude when reaching your current destination (grayed-out)
+ - Bottom-Left:
+   your current vertical speed
+ - Bottom-Right:
+   your current ground speed
+   / OR [short-press the SELECT and DOWN button] /
+   your current speed towards your current destination
+
+Both Left and Right (altitude) fields will have their background:
+ - RED if the corresponding height is below the critical height
+ - YELLOW if is below or equal the warning height
+ - GREEN otherwise.
+
+The Center (finesse) field will have its backround:
+ - RED if the actual finesse is below or equal to the reference finesse
+ - YELLOW if the actual finesse is above the reference finesse
+ - GREEN if in ascent (and the reference finesse is used for calculation)
+
+In case the positioning quality gets below Usable, all fields will turn RED.
+If a reasonable "last known" position is available, values will still be displayed
+(all grayed-out), otherwise no value will be displayed.
+
+By pressing the SELECT button a first time, the application will allow you to
+switch the Top-Left and Bottom-Right fields according to your preference:
+
+By pressing the SELECT button a second time, the application will display the
+current (critical) settings:
+ - Top-Left:
+   the name of your current destination
+ - Top-Right:
+   the elevation of your current destination
+ - Left:
+   your chosen critical height
+ - Center
+   your chosen reference finesse
+ - Right:
+   your chosen warning height
+ - Bottom-Left:
+   your chosen decision height
+ - Bottom-Right:
+   your chosen time constant
+
+By pressing the MENU button (long-pressing the UP button), you will enter the
+Safety destination selection menu (and access to the Settings menu):
+ - Load Destination:
+   load your current destination from the destination memory, ordered
+   by distance if your location is available
+ - Edit Destination:
+   edit the name, latitude, longitude and elevation of your current
+   destination OR pick your current location/elevation as destination
+ - Save Destination:
+   save your current destination to the destination memory (50 slots available)
+ - Delete Destination:
+   delete a destination from the destination memory
+ - Settings:
+   (see further below)
+
+
+Activity Recording
+------------------
+
+Unless explicitely stated otherwise for a given view, you may control your
+activity recording status (start, pause, resume, save, discard) by pressing the
+SELECT button. When recording, the BACK key will act as Lap Key (unless
+configured not to do so; see Settings below).
+
+GliderSK adds custom fields to the recorded FIT file:
+ - Vertical Speed
+ - Rate-of-Turn
+ - Acceleration
+(which will be plotted in Garmin Connect if your installed the application
+through the Garmin ConnectIQ store)
+
+
+Settings
+--------
+
+Unless explicitely stated otherwise for a given view, you may enter the Settings
+menu by pressing the MENU button (long-pressing the UP button).
+
+The application allows you to specify the following settings:
+ - Time Constant:
+   time constants (in seconds) used for exponentially averaging (EMA) sensor values
+ - Variometer -> Variometer Range:
+   the range used for the variometer display and tones (3.0, 6.0 or 9.0 m/s)
+ - Variometer -> Variometer Mode:
+   whether the variometer tracks altitude variation only (dAlt) or compensates for cinetic energy (speed) variations (dE)
+ - Variometer -> Energy Efficiency
+   percentage of the short-term cinetic energy (speed) variations that may be recovered as potential energy (altitude)
+ - Variometer -> Plot Range:
+   the time range (in minutes) for plotting the variometer-vs-location history
+ - Safety -> Reference Finesse:
+   the worst-case finesse to apply for altitude estimation (when in ascent)
+ - Safety -> Decision Height:
+   the height (Above Ground Level) under which to switch from altitude
+   estimation (using worst-case finesse and best-case heading) to
+   actual altitude calculation (using actual finesse and heading)
+ - Safety -> Warning Height:
+   the height (Above Ground Level) under which to issue warning alerts
+ - Safety -> Critical Height:
+   the height (Above Ground Level) under which to issue critical alerts
+ - Units -> Distance Unit:
+   preferred units for displaying distance (and horizontal speed) values
+ - Units -> Elevation Unit:
+   preferred units for displaying elevation (and vertical speed) values
+ - Units -> Rate-of-Turn Unit:
+   your preferred unit for displaying rate-of-turn values
+ - Units -> Timezone:
+   display Local Time (LT) or Universal Time Coordinates (UTC/Z)
+ - Background Color:
+   the background color
+ - Sounds -> Variometer Tones:
+   whether to play variometer tones
+ - Sounds -> Alert Tones:
+   whether to play alert tones when below warning or critical height
+   (or GPS signal is lost)
+ - Sounds -> Mute distance:
+   the distance (from destination) under which to mute all sounds
+   (and let you concentrate on your take-off or landing)
+ - Lap Key:
+   whether the BACK key adds a new lap to a recording activity
+
+
+Warning! Gotchas!!!
+-------------------
+
+When using GPS devices, you should be aware that:
+ - GPS is very accurate for location (latitude/longitude) information;
+   even more so when coupled with GLONASS (at the cost of battery usage).
+ - (Garmin) UltraTrac feature is very cool to save battery but does NOT
+   refresh location information frequently enough for GliderSK purpose.
+      !!! DO NOT USE ULTRATRAC WITH GLIDERSK !!!
+ - GPS elevation sucks! Really! For (vertically) fast moving objects,
+   only barometric altimeter does the job.
+      !!! DO NOT USE GPS ELEVATION WITH GLIDERSK !!!
+ - When using the barometric altimeter, make sure it is configured to
+   act as an altimeter and not a barometer (or any subtle mix of the two).
+      !!! DO CONFIGURE THE ALTIMETER TO ACT AS BAROMETER !!!
+
+The ConnectIQ framework does NOT allow applications - like GliderSK - to
+control the location source (GPS, GLONASS and/or UltraTrac) or elevation
+source (GPS or barometric altimeter). The same applies for barometric alti-
+meter mode and calibration. The only way to circumvent that limitation is to
+      !!! USE A NATIVE GARMIN APPLICATION BEFOREHANDS !!!
+   (the ConnectIQ application will then retain its settings)
+
+Consequently, in order to have the best experience with GliderSK (e.g.
+on a Garmin D2 Charlie watch):
+ - open the FLY activity and set its Altimeter setting to Pressure
+   and its GPS settings to GPS (or GPS+GLONASS)
+ - switch to the Barometer widget and set its Watch Mode setting
+   to Altimeter
+ - switch to the Altimeter widget and use its Calibrate option to
+   calibrate your elevation/altitude
+

@@ -1,0 +1,259 @@
+// -*- mode:java; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab:
+
+// Glider's Swiss Knife (GliderSK)
+// Copyright (C) 2017 Cedric Dufour <http://cedric.dufour.name>
+//
+// Glider's Swiss Knife (GliderSK) is free software:
+// you can redistribute it and/or modify it under the terms of the GNU General
+// Public License as published by the Free Software Foundation, Version 3.
+//
+// Glider's Swiss Knife (GliderSK) is distributed in the hope that it will be
+// useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+//
+// See the GNU General Public License for more details.
+//
+// SPDX-License-Identifier: GPL-3.0
+// License-Filename: LICENSE/GPL-3.0.txt
+
+using Toybox.Application as App;
+using Toybox.Attention as Attn;
+using Toybox.Graphics as Gfx;
+using Toybox.Time;
+using Toybox.Time.Gregorian;
+using Toybox.System as Sys;
+using Toybox.WatchUi as Ui;
+
+class ViewVariometer extends Ui.View {
+
+  //
+  // VARIABLES
+  //
+
+  // Display mode (internal)
+  private var bShow;
+
+  // Resources (to be loaded on onShow() and freed on onHide())
+  // ... fonts
+  private var oRezFontMeter;
+  private var oRezFontStatus;
+  // ... strings
+  private var sValueActivityStandby;
+  private var sValueActivityRecording;
+  private var sValueActivityPaused;
+
+
+  //
+  // FUNCTIONS: Ui.View (override/implement)
+  //
+
+  function initialize() {
+    View.initialize();
+
+    // Display mode
+    // ... internal
+    self.bShow = false;
+  }
+
+  function onLayout(_oDC) {
+    // No layout; see drawLayout() below
+  }
+
+  function onShow() {
+    //Sys.println("DEBUG: ViewVariometer.onShow()");
+
+    // Load resources
+    // ... fonts
+    self.oRezFontMeter = Ui.loadResource(Rez.Fonts.fontMeter);
+    self.oRezFontStatus = Ui.loadResource(Rez.Fonts.fontStatus);
+    // ... strings
+    self.sValueActivityStandby = Ui.loadResource(Rez.Strings.valueActivityStandby);
+    self.sValueActivityRecording = Ui.loadResource(Rez.Strings.valueActivityRecording);
+    self.sValueActivityPaused = Ui.loadResource(Rez.Strings.valueActivityPaused);
+
+    // Reload settings (which may have been changed by user)
+    App.getApp().loadSettings();
+
+    // Unmute tones
+    App.getApp().unmuteTones($.GSK_TONES_SAFETY | $.GSK_TONES_VARIOMETER);
+
+    // Done
+    self.bShow = true;
+    $.GSK_CurrentView = self;
+    return true;
+  }
+
+  function onUpdate(_oDC) {
+    //Sys.println("DEBUG: ViewVariometer.onUpdate()");
+
+    // Update layout
+    View.onUpdate(_oDC);
+    self.drawLayout(_oDC);
+    
+    // Done
+    return true;
+  }
+
+  function onHide() {
+    //Sys.println("DEBUG: ViewVariometer.onHide()");
+    $.GSK_CurrentView = null;
+    self.bShow = false;
+
+    // Mute tones
+    App.getApp().muteTones();
+
+    // Free resources
+    // ... fonts
+    self.oRezFontMeter = null;
+    self.oRezFontStatus = null;
+    // ... strings
+    self.sValueActivityStandby = null;
+    self.sValueActivityRecording = null;
+    self.sValueActivityPaused = null;
+  }
+
+
+  //
+  // FUNCTIONS: self
+  //
+
+  function updateUi() {
+    //Sys.println("DEBUG: ViewVariometer.updateUi()");
+
+    // Request UI update
+    if(self.bShow) {
+      Ui.requestUpdate();
+    }
+  }
+
+
+  //
+  // FUNCTIONS: self (cont'd) - layout-specific
+  //
+
+  (:layout_240x240)
+  function drawLayout(_oDC) {
+    // Draw background
+    _oDC.setPenWidth(120);
+
+    // ... background
+    _oDC.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
+    _oDC.clear();
+
+    // ... variometer
+    _oDC.setColor(Gfx.COLOR_DK_GRAY, Gfx.COLOR_DK_GRAY);
+    _oDC.drawArc(120, 120, 60, Gfx.ARC_COUNTER_CLOCKWISE, 15, 345);
+    _oDC.setColor($.GSK_Settings.iBackgroundColor, $.GSK_Settings.iBackgroundColor);
+    _oDC.drawArc(120, 120, 60, Gfx.ARC_CLOCKWISE, 15, 345);
+    if($.GSK_Processing.fVariometer != null) {
+      if($.GSK_Processing.fVariometer > 0.0f) {
+        var iAngle = (180.0f*$.GSK_Processing.fVariometer/$.GSK_Settings.fVariometerRange).toNumber();
+        if(iAngle != 0) {
+          if(iAngle > 165) { iAngle = 165; }  // ... leave room for unit text
+          _oDC.setColor(Gfx.COLOR_GREEN, Gfx.COLOR_GREEN);
+          _oDC.drawArc(120, 120, 60, Gfx.ARC_CLOCKWISE, 180, 180-iAngle);
+        }
+      }
+      else if($.GSK_Processing.fVariometer < 0.0f) {
+        var iAngle = -(180.0f*$.GSK_Processing.fVariometer/$.GSK_Settings.fVariometerRange).toNumber();
+        if(iAngle != 0) {
+          if(iAngle > 165) { iAngle = 165; }  // ... leave room for unit text
+          _oDC.setColor(Gfx.COLOR_RED, Gfx.COLOR_RED);
+          _oDC.drawArc(120, 120, 60, Gfx.ARC_COUNTER_CLOCKWISE, 180, 180+iAngle);
+        }
+      }
+    }
+
+    // ... text
+    _oDC.setColor($.GSK_Settings.iBackgroundColor, $.GSK_Settings.iBackgroundColor);
+    _oDC.fillCircle(100, 120, 90);
+
+    // Draw values
+    _oDC.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+    var fValue;
+    var sValue;
+
+    // ... altitude
+    if($.GSK_Processing.fAltitude != null) {
+      fValue = $.GSK_Processing.fAltitude * $.GSK_Settings.fUnitElevationConstant;
+      sValue = fValue.format("%.0f");
+    }
+    else {
+      sValue = "---";
+    }
+    _oDC.drawText(100, 42, Gfx.FONT_MEDIUM, Lang.format("$1$ $2$", [sValue, $.GSK_Settings.sUnitElevation]), Gfx.TEXT_JUSTIFY_CENTER);
+
+    // ... variometer
+    if($.GSK_Processing.fVariometer != null) {
+      if($.GSK_Processing.fVariometer > 0.0f) {
+        _oDC.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_GREEN, Gfx.COLOR_TRANSPARENT);
+      }
+      else if($.GSK_Processing.fVariometer < 0.0f) {
+        _oDC.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
+      }
+      fValue = $.GSK_Processing.fVariometer * $.GSK_Settings.fUnitVerticalSpeedConstant;
+      if($.GSK_Settings.fUnitVerticalSpeedConstant < 100.0f) {
+        sValue = fValue.format("%+.01f");
+      }
+      else {
+        sValue = fValue.format("%+.0f");
+      }
+    }
+    else {
+      sValue = "---";
+    }
+    _oDC.drawText(100, 83, self.oRezFontMeter, sValue, Gfx.TEXT_JUSTIFY_CENTER);
+    _oDC.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+    _oDC.drawText(212, 105, Gfx.FONT_TINY, $.GSK_Settings.sUnitVerticalSpeed, Gfx.TEXT_JUSTIFY_CENTER);
+
+    // ... time
+    var oTimeNow = Time.now();
+    var oTimeInfo = $.GSK_Settings.bTimeUTC ? Gregorian.utcInfo(oTimeNow, Time.FORMAT_SHORT) : Gregorian.info(oTimeNow, Time.FORMAT_SHORT);
+    sValue = Lang.format("$1$$2$$3$ $4$", [oTimeInfo.hour.format("%02d"), oTimeNow.value() % 2 ? "." : ":", oTimeInfo.min.format("%02d"), $.GSK_Settings.sUnitTime]);
+    _oDC.drawText(100, 162, Gfx.FONT_MEDIUM, sValue, Gfx.TEXT_JUSTIFY_CENTER);
+
+    // Draw status
+
+    // ... activity
+    if($.GSK_ActivitySession == null) {  // ... stand-by
+      _oDC.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_DK_GRAY : Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
+      sValue = self.sValueActivityStandby;
+    }
+    else if($.GSK_ActivitySession.isRecording()) {  // ... recording
+      _oDC.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
+      sValue = self.sValueActivityRecording;
+    }
+    else {  // ... paused
+      _oDC.setColor(Gfx.COLOR_YELLOW, Gfx.COLOR_TRANSPARENT);
+      sValue = self.sValueActivityPaused;
+    }
+    _oDC.drawText(100, 75, self.oRezFontStatus, sValue, Gfx.TEXT_JUSTIFY_CENTER);
+   
+    // ... battery
+    _oDC.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_DK_GRAY : Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
+    sValue = Lang.format("$1$%", [Sys.getSystemStats().battery.format("%.0f")]);
+    _oDC.drawText(100, 148, self.oRezFontStatus, sValue, Gfx.TEXT_JUSTIFY_CENTER);
+  }
+}
+
+class ViewDelegateVariometer extends ViewDelegateGlobal {
+
+  function initialize() {
+    ViewDelegateGlobal.initialize();
+  }
+
+  function onKey(oEvent) {
+    //Sys.println("DEBUG: ViewDelegateVariometer.onKey()");
+    var iKey = oEvent.getKey();
+    if(iKey == Ui.KEY_UP) {
+      Ui.switchToView(new ViewVarioplot(), new ViewDelegateVarioplot(), Ui.SLIDE_IMMEDIATE);
+      return true;
+    }
+    if(iKey == Ui.KEY_DOWN) {
+      Ui.switchToView(new ViewGlobal(), new ViewDelegateGlobal(), Ui.SLIDE_IMMEDIATE);
+      return true;
+    }
+    return false;
+  }
+
+}

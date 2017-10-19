@@ -1,0 +1,7 @@
+<!-- -*- mode:xml; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab: -->
+<menu id="menuActivity" title="@Strings.menuActivity">
+  <menu-item id="menuActivityResume">@Strings.menuActivityResume</menu-item>
+  <menu-item id="menuActivityPause">@Strings.menuActivityPause</menu-item>
+  <menu-item id="menuActivitySave">@Strings.menuActivitySave</menu-item>
+  <menu-item id="menuActivityDiscard">@Strings.menuActivityDiscard</menu-item>
+</menu>

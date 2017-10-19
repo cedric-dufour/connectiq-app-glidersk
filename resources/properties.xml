@@ -1,0 +1,23 @@
+<!-- -*- mode:xml; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab: -->
+<properties>
+  <!-- User preferences (NB: heights are in meters) -->
+  <property id="userTimeConstant" type="number">3</property>
+  <property id="userVariometerRange" type="number">0</property>
+  <property id="userVariometerMode" type="number">0</property>
+  <property id="userEnergyEfficiency" type="number">75</property>
+  <property id="userPlotRange" type="number">1</property>
+  <property id="userPlotZoom" type="number">6</property>
+  <property id="userFinesseReference" type="number">20</property>
+  <property id="userHeightDecision" type="float">500.0</property>
+  <property id="userHeightWarning" type="float">400.0</property>
+  <property id="userHeightCritical" type="float">300.0</property>
+  <property id="userUnitDistance" type="number">-1</property>
+  <property id="userUnitElevation" type="number">-1</property>
+  <property id="userUnitRateOfTurn" type="number">0</property>
+  <property id="userTimeUTC" type="boolean">false</property>
+  <property id="userBackgroundColor" type="number">16777215</property>
+  <property id="userVariometerTones" type="boolean">true</property>
+  <property id="userSafetyTones" type="boolean">true</property>
+  <property id="userMuteDistance" type="float">2000.0</property>
+  <property id="userLapKey" type="boolean">true</property>
+</properties>

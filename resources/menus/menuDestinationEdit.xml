@@ -1,0 +1,8 @@
+<!-- -*- mode:xml; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab: -->
+<menu id="menuDestinationEdit" title="@Strings.menuDestinationEdit">
+  <menu-item id="menuDestinationName">@Strings.menuDestinationName</menu-item>
+  <menu-item id="menuDestinationLatitude">@Strings.menuDestinationLatitude</menu-item>
+  <menu-item id="menuDestinationLongitude">@Strings.menuDestinationLongitude</menu-item>
+  <menu-item id="menuDestinationElevation">@Strings.menuDestinationElevation</menu-item>
+  <menu-item id="menuDestinationToCurrent">@Strings.menuDestinationToCurrent</menu-item>
+</menu>

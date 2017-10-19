@@ -1,0 +1,147 @@
+<!-- -*- mode:xml; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab: -->
+<strings>
+  <string id="AppName">GliderSK</string>
+  <string id="AppVersion">1.0.20171019a</string>
+  <!-- Properties -->
+  <string id="titleVersion">Version</string>
+  <string id="titleLicense">License</string>
+  <string id="titleAuthor">Author</string>
+  <!-- Menu (settings) -->
+  <string id="menuSettings">Settings</string>
+  <!-- Menu (settings:general) -->
+  <string id="menuSettingsGeneral">General</string>
+  <string id="titleTimeConstant">Time Constant</string>
+  <string id="helpTimeConstant">Specify the time constants (in seconds) used for exponentially averaging (EMA) sensor values</string>
+  <string id="titleBackgroundColor">Background Color</string>
+  <string id="helpBackgroundColor">Specify the background color</string>
+  <string id="titleLapKey">Lap Key</string>
+  <string id="helpLapKey">Specify whether the BACK key adds a new lap to a recording activity</string>
+  <!-- Menu (settings:sounds) -->
+  <string id="menuSettingsSounds">Sounds</string>
+  <string id="titleVariometerTones">Variometer Tones</string>
+  <string id="helpVariometerTones">Specify whether to play variometer tones</string>
+  <string id="titleSafetyTones">Safety Tones</string>
+  <string id="helpSafetyTones">Specify whether to play alert tones when below warning or critical height (or GPS signal is lost)</string>
+  <string id="titleMuteDistance">Mute Distance</string>
+  <string id="helpMuteDistance">Specify the distance (from destination) under which to mute all sounds (and let you concentrate on your take-off or landing)</string>
+  <!-- Menu (settings:variometer) -->
+  <string id="menuSettingsVariometer">Variometer</string>
+  <string id="titleVariometerRange">Variometer Range</string>
+  <string id="helpVariometerRange">Specify the range used for the variometer display and tones</string>
+  <string id="valueVariometerRangeSmall">3.0m/s / 600ft/min</string>
+  <string id="valueVariometerRangeMedium">6.0m/s / 1200ft/min</string>
+  <string id="valueVariometerRangeLarge">9.0m/s / 1800ft/min</string>
+  <string id="titleVariometerMode">Variometer Mode</string>
+  <string id="helpVariometerMode">Specify whether the variometer tracks altitude variation only or compensates for cinetic energy (speed) variations</string>
+  <string id="valueVariometerModeAltitude">δAlt.</string>
+  <string id="valueVariometerModeEnergy">δE</string>
+  <string id="titleEnergyEfficiency">Energy Efficiency</string>
+  <string id="helpEnergyEfficiency">Percentage of the short-term cinetic energy (speed) variations that may be recovered as potential energy (altitude)</string>
+  <string id="titlePlotRange">Plot Range</string>
+  <string id="helpPlotRange">Specify the time range (in minutes) for plotting the variometer-vs-location history</string>
+  <string id="titlePlotZoom">Plot Zoom</string>
+  <string id="helpPlotZoom">Specify the variometer-vs-location history plot zoom level</string>
+  <!-- Menu (settings:units) -->
+  <string id="menuSettingsUnits">Units</string>
+  <string id="titleUnitDistance">Distance Unit</string>
+  <string id="helpUnitDistance">Select your preferred unit for displaying distance (and horizontal speed) values</string>
+  <string id="valueUnitDistanceAuto">auto</string>
+  <string id="valueUnitDistanceMetric">km</string>
+  <string id="valueUnitDistanceStatute">sm</string>
+  <string id="valueUnitDistanceNautical">nm</string>
+  <string id="titleUnitElevation">Elevation Unit</string>
+  <string id="helpUnitElevation">Select your preferred unit for displaying elevation (and vertical speed) values</string>
+  <string id="valueUnitElevationAuto">auto</string>
+  <string id="valueUnitElevationMetric">m</string>
+  <string id="valueUnitElevationStatute">ft</string>
+  <string id="titleUnitRateOfTurn">Rate-of-Turn Unit</string>
+  <string id="helpUnitRateOfTurn">Select your preferred unit for displaying rate-of-turn values</string>
+  <string id="valueUnitRateOfTurnDegree">°/s</string>
+  <string id="valueUnitRateOfTurnRpm">rpm</string>
+  <string id="titleTimeUTC">Timezone</string>
+  <string id="helpTimeUTC">Specify whether to display the Local Time (LT) or Universal Time Coordinates (UTC/Z)</string>
+  <string id="valueTimeLT">LT</string>
+  <string id="valueTimeUTC">UTC</string>
+  <!-- Menu (settings:safety) -->
+  <string id="menuSettingsSafety">Safety</string>
+  <string id="titleFinesseReference">Reference Finesse</string>
+  <string id="helpFinesseReference">Specify the finesse to apply for worst-case altitude estimation</string>
+  <string id="titleHeightDecision">Decision Height</string>
+  <string id="helpHeightDecision">Specify the height (in meters, Above Ground Level) under which to switch from altitude estimation (using worst-case finesse and best-case heading) to actual altitude calculation (using actual finesse and heading)</string>
+  <string id="titleHeightWarning">Warning Height</string>
+  <string id="helpHeightWarning">Specify the height (in meters, Above Ground Level) under which to issue warning alerts (yellow background/low-frequency tone)</string>
+  <string id="titleHeightCritical">Critical Height</string>
+  <string id="helpHeightCritical">Specify the height (in meters, Above Ground Level) under which to issue critical alerts (red background/high-frequency tone)</string>
+  <!-- Menu (settings:about) -->
+  <string id="menuSettingsAbout">About</string>
+  <!-- Menu (varioplot) -->
+  <string id="menuVarioplot">Variometer Plot</string>
+  <string id="menuPanZoom">Pan/Zoom</string>
+  <!-- Menu (safety) -->
+  <string id="menuSafety">Safety</string>
+  <string id="menuDestinationLoad">Load Destination</string>
+  <string id="menuDestinationEdit">Edit Destination</string>
+  <string id="menuDestinationSave">Save Destination</string>
+  <string id="menuDestinationDelete">Delete Destination</string>
+  <!-- Menu (destination) -->
+  <string id="menuDestinationName">Name</string>
+  <string id="menuDestinationLatitude">Latitude</string>
+  <string id="menuDestinationLongitude">Longitude</string>
+  <string id="menuDestinationElevation">Elevation</string>
+  <string id="menuDestinationToCurrent">To Current</string>
+  <!-- Menu (activity) -->
+  <string id="menuActivity">Activity</string>
+  <string id="menuActivityStart">Start</string>
+  <string id="menuActivityResume">Resume</string>
+  <string id="menuActivityPause">Pause</string>
+  <string id="menuActivitySave">Save</string>
+  <string id="menuActivityDiscard">Discard</string>
+  <!-- Menu (shared) -->
+  <string id="menuConfirm">Confirm</string>
+  <string id="valueOn">On</string>
+  <string id="valueOff">Off</string>
+  <string id="valueColorWhite">White</string>
+  <string id="valueColorBlack">Black</string>
+  <!-- Layouts -->
+  <string id="labelDestination">Destination</string>
+  <string id="labelElevationAtDestination">Elevation</string>
+  <string id="labelDistanceToDestination">Distance</string>
+  <string id="labelAltitude">Altitude</string>
+  <string id="labelAltitudeAtDestination">At Dest.</string>
+  <string id="labelAcceleration">Accel.</string>
+  <string id="labelVerticalSpeed">Vert.Speed</string>
+  <string id="labelGroundSpeed">Gnd.Speed</string>
+  <string id="labelHeading">Heading</string>
+  <string id="labelRateOfTurn">R.o.Turn</string>
+  <string id="labelSpeedToDestination">Towd.Dest.</string>
+  <string id="labelFinesse">Finesse</string>
+  <string id="labelHeightDecision">Dcsn.Hght</string>
+  <string id="labelHeightWarning">Warn.Hght</string>
+  <string id="labelHeightCritical">Crit.Hght</string>
+  <string id="labelTimeConstant">Time Const.</string>
+  <!-- Values -->
+  <string id="valueActivityStandby">SBY</string>
+  <string id="valueActivityRecording">REC</string>
+  <string id="valueActivityPaused">PSD</string>
+  <string id="valueAltitudeGround">GND</string>
+  <!-- Units -->
+  <string id="unitDistanceMetric">km</string>
+  <string id="unitDistanceStatute">sm</string>
+  <string id="unitDistanceNautical">nm</string>
+  <string id="unitElevationMetric">m</string>
+  <string id="unitElevationStatute">ft</string>
+  <string id="unitHorizontalSpeedMetric">km/h</string>
+  <string id="unitHorizontalSpeedStatute">mph</string>
+  <string id="unitHorizontalSpeedNautical">kt</string>
+  <string id="unitVerticalSpeedMetric">m/s</string>
+  <string id="unitVerticalSpeedStatute">ft/m</string>
+  <string id="unitRateOfTurnDegree">°/s</string>
+  <string id="unitRateOfTurnRpm">rpm</string>
+  <string id="unitTimeLT">LT</string>
+  <string id="unitTimeUTC">Z</string>
+  <!-- FIT -->
+  <string id="titleVerticalSpeed">Vertical Speed</string>
+  <string id="titleRateOfTurn">Rate of Turn</string>
+  <string id="titleAcceleration">Acceleration</string>
+  <string id="unitNotAvailable">n/a</string>
+</strings>

@@ -1,0 +1,27 @@
+<!-- -*- mode:xml; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab: -->
+<fitContributions>
+  <fitField id="0"
+            displayInChart="true"
+            sortOrder="0"
+            precision="1"
+            chartTitle="@Strings.titleVerticalSpeed"
+            dataLabel="@Strings.labelVerticalSpeed"
+            unitLabel="@Strings.unitNotAvailable"
+            fillColor="#FF0000" />
+  <fitField id="1"
+            displayInChart="true"
+            sortOrder="0"
+            precision="1"
+            chartTitle="@Strings.titleRateOfTurn"
+            dataLabel="@Strings.labelRateOfTurn"
+            unitLabel="@Strings.unitNotAvailable"
+            fillColor="#FFFF00" />
+  <fitField id="2"
+            displayInChart="true"
+            sortOrder="0"
+            precision="1"
+            chartTitle="@Strings.titleAcceleration"
+            dataLabel="@Strings.labelAcceleration"
+            unitLabel="@Strings.unitNotAvailable"
+            fillColor="#FF00FF" />
+</fitContributions>
