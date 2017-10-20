@@ -95,6 +95,7 @@ class GskProcessing {
   public var fRateOfTurn;
   public var fSpeedToDestination;
   public var fDistanceToDestination;
+  public var fBearingToDestination;
   public var fAltitudeAtDestination;
   // ... processing status
   public var bAscent;
@@ -184,6 +185,7 @@ class GskProcessing {
     self.fRateOfTurn = null;
     self.fSpeedToDestination = null;
     self.fDistanceToDestination = null;
+    self.fBearingToDestination = null;
     self.fAltitudeAtDestination = null;
     // ... processing status
     self.bAscent = true;
@@ -279,34 +281,24 @@ class GskProcessing {
     if(_oInfo has :position and _oInfo.position != null) {
       self.oLocation = _oInfo.position;
       //Sys.println(Lang.format("DEBUG: (Position.Info) position = $1$, $2$", [self.oLocation.toDegrees()[0], self.oLocation.toDegrees()[1]]));
-      // ... distance to destination
+      // ... distance/bearing to destination
       if(self.oDestinationLocation != null) {
         var adPositionRadians = self.oLocation.toRadians();
         var adDestinationRadians = self.oDestinationLocation.toRadians();
         self.fDistanceToDestination = GskUtils.distance(adPositionRadians, adDestinationRadians);
-        // ... speed-to-destination
-        if(_oInfo has :speed and _oInfo.speed != null and _oInfo has :heading and _oInfo.heading != null) {
-          //Sys.println(Lang.format("DEBUG: (Position.Info) heading = $1$", [_oInfo.heading*180.0f/Math.PI]));
-          //Sys.println(Lang.format("DEBUG: (Calculated) bearing = $1$", [GskUtils.bearing(adPositionRadians, adDestinationRadians)*180.0f/Math.PI]));
-          fValue = _oInfo.speed * Math.cos(_oInfo.heading-GskUtils.bearing(adPositionRadians, adDestinationRadians));
-          if(self.fSpeedToDestination == null) {
-            self.fSpeedToDestination = fValue;
-          }
-          else {
-            self.fSpeedToDestination = self.fEmaCoefficient_present * fValue + self.fEmaCoefficient_past * self.fSpeedToDestination;
-          }
-          //Sys.println(Lang.format("DEBUG: (Calculated) speed-to(wards)-destination = $1$", [self.fSpeedToDestination]));
-        }
+        self.fBearingToDestination = GskUtils.bearing(adPositionRadians, adDestinationRadians);
+        //Sys.println(Lang.format("DEBUG: (Calculated) distance/bearing to destination = $1$ $2$", [self.fDistanceToDestination, self.fBearingToDestination*180.0f/Math.PI]));
       }
       else {
         //Sys.println("ERROR: No destination data");
         self.fDistanceToDestination = null;
+        self.fBearingToDestination = null;
       }
     }
     //else {
     //  Sys.println("WARNING: Position data have no position information (:position)");
     //}
-    if(self.oLocation == null or self.fDistanceToDestination == null or self.fSpeedToDestination == null) {
+    if(self.oLocation == null or self.oDestinationLocation == null) {
       bStateful = false;
     }
 
@@ -343,7 +335,6 @@ class GskProcessing {
     if(self.fGroundSpeed == null) {
       bStateful = false;
     }
-    // NOTE: energy data is not required for processing finalization
 
     // ... variometer
     if($.GSK_Settings.iVariometerMode == 0 and _oInfo has :altitude and _oInfo.altitude != null) {  // ... altimetric variometer
@@ -385,13 +376,8 @@ class GskProcessing {
     }
 
     // ... heading
-    if(self.fGroundSpeed != null and self.fGroundSpeed < 1.0f) {
-      // ... too slow to have meaningful heading/rate-of-turn data
-      self.fHeading = null;
-      self.iPreviousHeadingGpoch = null;
-      self.fRateOfTurn = null;
-    }
-    else if(_oInfo has :heading and _oInfo.heading != null) {
+    // NOTE: we consider heading meaningful only if ground speed is above 1.0 m/s
+    if(_oInfo has :speed and _oInfo.speed != null and _oInfo.speed >= 1.0f and _oInfo has :heading and _oInfo.heading != null) {
       self.fHeading = _oInfo.heading;
       //Sys.println(Lang.format("DEBUG: (Position.Info) heading = $1$", [self.fHeading]));
       // ... rate of turn
@@ -413,10 +399,31 @@ class GskProcessing {
       }
       self.iPreviousHeadingGpoch = self.iPositionGpoch;
       self.fPreviousHeading = self.fHeading;
+      // ... speed-to(wards)-destination
+      if(self.fBearingToDestination != null) {
+        fValue = _oInfo.speed * Math.cos(_oInfo.heading-self.fBearingToDestination);
+        if(self.fSpeedToDestination == null) {
+          self.fSpeedToDestination = fValue;
+        }
+        else {
+          self.fSpeedToDestination = self.fEmaCoefficient_present * fValue + self.fEmaCoefficient_past * self.fSpeedToDestination;
+        }
+        //Sys.println(Lang.format("DEBUG: (Calculated) speed-to(wards)-destination = $1$", [self.fSpeedToDestination]));
+      }
+      else {
+        self.fSpeedToDestination = null;
+      }
     }
-    //else {
-    //  Sys.println("WARNING: Position data have no heading information (:heading)");
-    //}
+    else {
+      //Sys.println("WARNING: Position data have no (meaningful) heading information (:heading)");
+      self.fHeading = null;
+      self.iPreviousHeadingGpoch = null;
+      self.fRateOfTurn = null;
+      self.fSpeedToDestination = null;
+    }
+    if(self.fSpeedToDestination == null) {
+      bStateful = false;
+    }
     // NOTE: heading and rate-of-turn data are not required for processing finalization
 
     // Plot buffer
