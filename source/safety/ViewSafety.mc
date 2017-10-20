@@ -335,10 +335,13 @@ class ViewSafety extends Ui.View {
       self.oRezValueTopLeft.setText($.GSK_NOVALUE_LEN3);
       self.oRezValueTopRight.setColor(Gfx.COLOR_LT_GRAY);
       self.oRezValueTopRight.setText($.GSK_NOVALUE_LEN3);
+      self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_DK_GRAY);
       self.oRezValueLeft.setColor(Gfx.COLOR_LT_GRAY);
       self.oRezValueLeft.setText($.GSK_NOVALUE_LEN3);
+      self.oRezDrawableGlobal.setColorAlertCenter(Gfx.COLOR_DK_GRAY);
       self.oRezValueCenter.setColor(Gfx.COLOR_LT_GRAY);
       self.oRezValueCenter.setText($.GSK_NOVALUE_LEN2);
+      self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_DK_GRAY);
       self.oRezValueRight.setColor(Gfx.COLOR_LT_GRAY);
       self.oRezValueRight.setText($.GSK_NOVALUE_LEN3);
       self.oRezValueBottomLeft.setColor(Gfx.COLOR_LT_GRAY);
@@ -404,7 +407,7 @@ class ViewSafety extends Ui.View {
       sValue = fValue.format("%.0f");
     }
     else {
-      self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_TRANSPARENT);
+      self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_DK_GRAY);
       sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueLeft.setText(sValue);
@@ -429,7 +432,7 @@ class ViewSafety extends Ui.View {
       sValue = fValue.format("%.0f");
     }
     else {
-      self.oRezDrawableGlobal.setColorAlertCenter(Gfx.COLOR_TRANSPARENT);
+      self.oRezDrawableGlobal.setColorAlertCenter(Gfx.COLOR_DK_GRAY);
       sValue = $.GSK_NOVALUE_LEN2;
     }
     self.oRezValueCenter.setText(sValue);
@@ -458,7 +461,7 @@ class ViewSafety extends Ui.View {
       }
     }
     else {
-      self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_TRANSPARENT);
+      self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_DK_GRAY);
       sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueRight.setText(sValue);
