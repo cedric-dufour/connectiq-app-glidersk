@@ -112,15 +112,15 @@ class GskApp extends App.AppBase {
     // Enable position events
     Pos.enableLocationEvents(Pos.LOCATION_CONTINUOUS, method(:onLocationEvent));
 
-    // Start UI update timer (every multiple of 15 seconds, to save energy)
+    // Start UI update timer (every multiple of 5 seconds, to save energy)
     // NOTE: in normal circumstances, UI update will be triggered by position events (every ~1 second)
     self.oUpdateTimer = new Timer.Timer();
-    var iUpdateTimerDelay = (60-Sys.getClockTime().sec)%15;
+    var iUpdateTimerDelay = (60-Sys.getClockTime().sec)%5;
     if(iUpdateTimerDelay > 0) {
       self.oUpdateTimer.start(method(:onUpdateTimer_init), 1000*iUpdateTimerDelay, false);
     }
     else {
-      self.oUpdateTimer.start(method(:onUpdateTimer), 15000, true);
+      self.oUpdateTimer.start(method(:onUpdateTimer), 5000, true);
     }
   }
 
@@ -233,7 +233,7 @@ class GskApp extends App.AppBase {
     //Sys.println("DEBUG: GskApp.onUpdateTimer_init()");
     self.onUpdateTimer();
     self.oUpdateTimer = new Timer.Timer();
-    self.oUpdateTimer.start(method(:onUpdateTimer), 15000, true);
+    self.oUpdateTimer.start(method(:onUpdateTimer), 5000, true);
   }
 
   function onUpdateTimer() {
