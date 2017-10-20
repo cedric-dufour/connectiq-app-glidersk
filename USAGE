@@ -85,24 +85,25 @@ and graphically, using visually appealing colors:
 Safety View
 -----------
 
-The GliderSK Safety view works by continuously calculating the altitude that
-would be reached at your destination, using a two-pass algorithm:
+The GliderSK Safety view works by continuously calculating the height (Above
+Ground Level) that would be reached at your destination, using a two-pass
+algorithm:
 
  - Pass 1: worst-case finesse and best-case heading
-   the altitude-at-destination is estimated using your actual ground
+   the height at destination is estimated using your actual ground
    speed (as if heading straight towards that destination) and the
    user-specified reference finesse (or the actual finesse if is lower
    than that).
 
  - Pass 2: actual (or worst-case) finesse and heading
    IF the resulting height (Above Ground Level) is below or equal to
-   the user-specified decision height, the altitude-at-destination
-   is calculated again, using the *actual* finesse (unless you're ascending,
+   the user-specified decision height, the height at destination is
+   calculated again, using the *actual* finesse (unless you're ascending,
    in which case the user-specified reference finesse is used) and
    the *actual* speed-towards-destination (which accounts for heading
    vs bearing discrepancies).
 
-Once the estimated or actual altitude at destination have been computed, alerts
+Once the estimated or actual height at destination have been computed, alerts
 will be issued according to the corresponding height:
 
  - Critical Alert: red background / high-frequency tone
@@ -126,9 +127,9 @@ in a single view, using visually appealing alert colors:
    / OR (if in ascent) /
    your reference finesse (grayed-out)
  - Right:
-   the actual altitude when reaching your current destination
+   the actual height when reaching your current destination
    / OR (if the corresponding height is above your decision height) /
-   the estimated altitude when reaching your current destination (grayed-out)
+   the estimated height when reaching your current destination (grayed-out)
  - Bottom-Left:
    your current vertical speed
  - Bottom-Right:
@@ -136,7 +137,7 @@ in a single view, using visually appealing alert colors:
    / OR [short-press the SELECT and DOWN button] /
    your current speed towards your current destination
 
-Both Left and Right (altitude) fields will have their background:
+Both Left and Right (altitude/height) fields will have their background:
  - RED if the corresponding height is below the critical height
  - YELLOW if is below or equal the warning height
  - GREEN otherwise.
@@ -220,11 +221,11 @@ The application allows you to specify the following settings:
  - Variometer -> Plot Range:
    the time range (in minutes) for plotting the variometer-vs-location history
  - Safety -> Reference Finesse:
-   the worst-case finesse to apply for altitude estimation (when in ascent)
+   the worst-case finesse to apply for height estimation (when in ascent)
  - Safety -> Decision Height:
-   the height (Above Ground Level) under which to switch from altitude
+   the height (Above Ground Level) under which to switch from height
    estimation (using worst-case finesse and best-case heading) to
-   actual altitude calculation (using actual finesse and heading)
+   actual height calculation (using actual finesse and heading)
  - Safety -> Warning Height:
    the height (Above Ground Level) under which to issue warning alerts
  - Safety -> Critical Height:

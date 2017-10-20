@@ -107,7 +107,7 @@
   <string id="labelElevationAtDestination">Elevation</string>
   <string id="labelDistanceToDestination">Distance</string>
   <string id="labelAltitude">Altitude</string>
-  <string id="labelAltitudeAtDestination">At Dest.</string>
+  <string id="labelHeightAtDestination">Hght Dest.</string>
   <string id="labelAcceleration">Accel.</string>
   <string id="labelVerticalSpeed">Vert.Speed</string>
   <string id="labelGroundSpeed">Gnd.Speed</string>
@@ -123,7 +123,7 @@
   <string id="valueActivityStandby">SBY</string>
   <string id="valueActivityRecording">REC</string>
   <string id="valueActivityPaused">PSD</string>
-  <string id="valueAltitudeGround">GND</string>
+  <string id="valueHeightGround">GND</string>
   <!-- Units -->
   <string id="unitDistanceMetric">km</string>
   <string id="unitDistanceStatute">sm</string>

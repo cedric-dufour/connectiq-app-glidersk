@@ -67,7 +67,7 @@ class ViewSafety extends Ui.View {
   private var sValueActivityStandby;
   private var sValueActivityRecording;
   private var sValueActivityPaused;
-  private var sValueAltitudeGround;
+  private var sValueHeightGround;
 
   // Settings (cache)
   // ... beautified units
@@ -122,7 +122,7 @@ class ViewSafety extends Ui.View {
     self.sValueActivityStandby = Ui.loadResource(Rez.Strings.valueActivityStandby);
     self.sValueActivityRecording = Ui.loadResource(Rez.Strings.valueActivityRecording);
     self.sValueActivityPaused = Ui.loadResource(Rez.Strings.valueActivityPaused);
-    self.sValueAltitudeGround = Ui.loadResource(Rez.Strings.valueAltitudeGround);
+    self.sValueHeightGround = Ui.loadResource(Rez.Strings.valueHeightGround);
 
     // Reload settings (which may have been changed by user)
     self.reloadSettings();
@@ -211,7 +211,7 @@ class ViewSafety extends Ui.View {
     self.sValueActivityStandby = null;
     self.sValueActivityRecording = null;
     self.sValueActivityPaused = null;
-    self.sValueAltitudeGround = null;
+    self.sValueHeightGround = null;
   }
 
 
@@ -266,8 +266,8 @@ class ViewSafety extends Ui.View {
     View.findDrawableById("unitLeft").setText(self.sUnitElevation_layout);
     // ... finesse
     View.findDrawableById("labelCenter").setText(Ui.loadResource(Rez.Strings.labelFinesse));
-    // ... altitude at destination
-    View.findDrawableById("labelRight").setText(Ui.loadResource(Rez.Strings.labelAltitudeAtDestination));
+    // ... height at destination
+    View.findDrawableById("labelRight").setText(Ui.loadResource(Rez.Strings.labelHeightAtDestination));
     View.findDrawableById("unitRight").setText(self.sUnitElevation_layout);
     // ... vertical speed
     View.findDrawableById("labelBottomLeft").setText(Ui.loadResource(Rez.Strings.labelVerticalSpeed));
@@ -437,9 +437,9 @@ class ViewSafety extends Ui.View {
     }
     self.oRezValueCenter.setText(sValue);
 
-    // ... altitude at destination
+    // ... height at destination
     self.oRezValueRight.setColor(iColorText);
-    if($.GSK_Processing.fAltitudeAtDestination != null) {
+    if($.GSK_Processing.fHeightAtDestination != null) {
       if($.GSK_Processing.iAccuracy > Pos.QUALITY_LAST_KNOWN and $.GSK_Processing.bEstimation) {
         self.oRezValueRight.setColor(Gfx.COLOR_DK_GRAY);
       }
@@ -452,12 +452,12 @@ class ViewSafety extends Ui.View {
       else {
         self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_GREEN);
       }
-      if($.GSK_Processing.fAltitudeAtDestination < 0.0f) {
-        sValue = self.sValueAltitudeGround;
+      if($.GSK_Processing.fHeightAtDestination <= 0.0f) {
+        sValue = self.sValueHeightGround;
       }
       else {
-        fValue = $.GSK_Processing.fAltitudeAtDestination * $.GSK_Settings.fUnitElevationConstant;
-        sValue = fValue.format("%.0f");
+        fValue = $.GSK_Processing.fHeightAtDestination * $.GSK_Settings.fUnitElevationConstant;
+        sValue = fValue.format("%+.0f");
       }
     }
     else {

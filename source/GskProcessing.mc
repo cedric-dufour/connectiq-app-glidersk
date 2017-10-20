@@ -96,6 +96,7 @@ class GskProcessing {
   public var fDistanceToDestination;
   public var fBearingToDestination;
   public var fAltitudeAtDestination;
+  public var fHeightAtDestination;
   // ... processing status
   public var bAscent;
   public var bEstimation;
@@ -185,6 +186,7 @@ class GskProcessing {
     self.fDistanceToDestination = null;
     self.fBearingToDestination = null;
     self.fAltitudeAtDestination = null;
+    self.fHeightAtDestination = null;
     // ... processing status
     self.bAscent = true;
     self.bEstimation = true;
@@ -287,7 +289,7 @@ class GskProcessing {
         var adDestinationRadians = self.oDestinationLocation.toRadians();
         self.fDistanceToDestination = GskUtils.distance(adPositionRadians, adDestinationRadians);
         self.fBearingToDestination = GskUtils.bearing(adPositionRadians, adDestinationRadians);
-        //Sys.println(Lang.format("DEBUG: (Calculated) distance/bearing to destination = $1$ $2$", [self.fDistanceToDestination, self.fBearingToDestination*180.0f/Math.PI]));
+        //Sys.println(Lang.format("DEBUG: (Calculated) distance/bearing to destination = $1$ / $2$", [self.fDistanceToDestination, self.fBearingToDestination*180.0f/Math.PI]));
       }
       else {
         //Sys.println("ERROR: No destination data");
@@ -298,7 +300,7 @@ class GskProcessing {
     //else {
     //  Sys.println("WARNING: Position data have no position information (:position)");
     //}
-    if(self.oLocation == null or self.oDestinationLocation == null) {
+    if(self.oLocation == null) {
       bStateful = false;
     }
 
@@ -422,9 +424,6 @@ class GskProcessing {
       self.fRateOfTurn = null;
       self.fSpeedToDestination = null;
     }
-    if(self.fSpeedToDestination == null) {
-      bStateful = false;
-    }
     // NOTE: heading and rate-of-turn data are not required for processing finalization
 
     // Finalize
@@ -452,12 +451,13 @@ class GskProcessing {
   function processSafety() {
     //Sys.println("DEBUG: GskProcessing.processSafety()");
     self.bSafetyStateful = false;
-    if(!self.bPositionStateful) {
+    if(!self.bPositionStateful or self.fDestinationElevation == null or self.fDistanceToDestination == null or self.fSpeedToDestination == null) {
       //Sys.println("ERROR: Incomplete data; cannot proceed");
       self.bAscent = false;
       self.fFinesse = null;
       self.bEstimation = true;
       self.fAltitudeAtDestination = null;
+      self.fHeightAtDestination = null;
       self.bAltitudeCritical = false;
       self.bAltitudeWarning = false;
       return;
@@ -484,7 +484,6 @@ class GskProcessing {
     //Sys.println(Lang.format("DEBUG: (Calculated) average finesse = $1$", [self.fFinesse]));
 
     // Safety
-    self.bEstimation = true;
     // ALGO: The trick here is to avoid alerts when our altitude is high enough, no matter what our descent rate (finesse) or heading are
     //       (we ARE enjoying ourself gliding in that blue-blue sky; that's what we want in the first place!).
     //       BUT, if the altitude becomes to low (height at destination below or equal to our decision height), then we must trigger
@@ -495,42 +494,48 @@ class GskProcessing {
       //       This is the worst-case scenario as far as finesse is concerned BUT the best-case scenario as far as our heading
       //       (vs. bearing to destination) is concerned.
       self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / (self.fFinesse < $.GSK_Settings.iFinesseReference ? self.fFinesse : $.GSK_Settings.iFinesseReference);
+      self.fHeightAtDestination = self.fAltitudeAtDestination-self.fDestinationElevation;
       // ALGO: Then, if the corresponding height at destination is below our decision height, let's re-calculate our altitude at
       //       destination by using our *actual* finesse (unless we're ascending) and our *actual* speed-to(wards)-destination
       //       (which accounts for our heading vs bearing to destination).
       //       No more worst-case/best-case scenario now; we're using only *actual*, meaningful values!
-      if(self.fAltitudeAtDestination-self.fDestinationElevation <= $.GSK_Settings.fHeightDecision) {
+      if(self.fHeightAtDestination <= $.GSK_Settings.fHeightDecision) {
         self.bEstimation = false;
         if(self.fSpeedToDestination > 0.0f) {
           self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / self.fFinesse * self.fGroundSpeed / self.fSpeedToDestination;
+          self.fHeightAtDestination = self.fAltitudeAtDestination-self.fDestinationElevation;
           // ALGO: Our finesse or speed-to(wards)-destination aren't good enough; we'll touch the ground before reaching our destination
-          if(self.fAltitudeAtDestination <= self.fDestinationElevation) {
-            self.fAltitudeAtDestination = -1.0f;
+          if(self.fHeightAtDestination <= 0.0f) {
+            self.fAltitudeAtDestination = self.fDestinationElevation;
+            self.fHeightAtDestination = 0.0f;
           }
         }
         else {
           // ALGO: We're moving away from our destination; we'll touch the ground before ever reaching our destination
-          self.fAltitudeAtDestination = -1.0f;
+          self.fAltitudeAtDestination = self.fDestinationElevation;
+          self.fHeightAtDestination = 0.0f;
         }
+      }
+      else {
+        self.bEstimation = true;
       }
     }
     else {
       // ALGO: We're not moving; we'll touch the ground before reaching our destination
-      self.fAltitudeAtDestination = -1.0f;
+      self.bEstimation = false;
+      self.fAltitudeAtDestination = self.fDestinationElevation;
+      self.fHeightAtDestination = 0.0f;
     }
-    //Sys.println(Lang.format("DEBUG: (Calculated) altitude at destination = $1$", [self.fAltitudeAtDestination]));
+    //Sys.println(Lang.format("DEBUG: (Calculated) altitude/height at destination = $1$ / $2$", [self.fAltitudeAtDestination, self.fHeightAtDestination]));
 
     // ... status
     self.bAltitudeCritical = false;
     self.bAltitudeWarning = false;
-    if(self.fDestinationElevation != null) {
-      var fHeight = self.fAltitudeAtDestination-self.fDestinationElevation;
-      if(fHeight <= $.GSK_Settings.fHeightCritical) {
-        self.bAltitudeCritical = true;
-      }
-      else if(fHeight <= $.GSK_Settings.fHeightWarning) {
-        self.bAltitudeWarning = true;
-      }
+    if(self.fHeightAtDestination <= $.GSK_Settings.fHeightCritical) {
+      self.bAltitudeCritical = true;
+    }
+    else if(self.fHeightAtDestination <= $.GSK_Settings.fHeightWarning) {
+      self.bAltitudeWarning = true;
     }
 
     // Done
