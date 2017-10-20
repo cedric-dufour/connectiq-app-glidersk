@@ -90,7 +90,7 @@ class ViewVariometer extends Ui.View {
     // Update layout
     View.onUpdate(_oDC);
     self.drawLayout(_oDC);
-    
+
     // Done
     return true;
   }
@@ -169,10 +169,38 @@ class ViewVariometer extends Ui.View {
     _oDC.setColor($.GSK_Settings.iBackgroundColor, $.GSK_Settings.iBackgroundColor);
     _oDC.fillCircle(100, 120, 90);
 
-    // Draw values
-    _oDC.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-    var fValue;
+    // Draw non-position values
     var sValue;
+
+    // ... battery
+    _oDC.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_DK_GRAY : Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
+    sValue = Lang.format("$1$%", [Sys.getSystemStats().battery.format("%.0f")]);
+    _oDC.drawText(100, 148, self.oRezFontStatus, sValue, Gfx.TEXT_JUSTIFY_CENTER);
+
+    // ... activity
+    if($.GSK_ActivitySession == null) {  // ... stand-by
+      _oDC.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_DK_GRAY : Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
+      sValue = self.sValueActivityStandby;
+    }
+    else if($.GSK_ActivitySession.isRecording()) {  // ... recording
+      _oDC.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
+      sValue = self.sValueActivityRecording;
+    }
+    else {  // ... paused
+      _oDC.setColor(Gfx.COLOR_YELLOW, Gfx.COLOR_TRANSPARENT);
+      sValue = self.sValueActivityPaused;
+    }
+    _oDC.drawText(100, 75, self.oRezFontStatus, sValue, Gfx.TEXT_JUSTIFY_CENTER);
+
+    // ... time
+    var oTimeNow = Time.now();
+    var oTimeInfo = $.GSK_Settings.bTimeUTC ? Gregorian.utcInfo(oTimeNow, Time.FORMAT_SHORT) : Gregorian.info(oTimeNow, Time.FORMAT_SHORT);
+    sValue = Lang.format("$1$$2$$3$ $4$", [oTimeInfo.hour.format("%02d"), oTimeNow.value() % 2 ? "." : ":", oTimeInfo.min.format("%02d"), $.GSK_Settings.sUnitTime]);
+    _oDC.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+    _oDC.drawText(100, 162, Gfx.FONT_MEDIUM, sValue, Gfx.TEXT_JUSTIFY_CENTER);
+
+    // Draw position values
+    var fValue;
 
     // ... altitude
     if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fAltitude != null) {
@@ -180,7 +208,7 @@ class ViewVariometer extends Ui.View {
       sValue = fValue.format("%.0f");
     }
     else {
-      sValue = "---";
+      sValue = $.GSK_NOVALUE_LEN3;
     }
     _oDC.drawText(100, 42, Gfx.FONT_MEDIUM, Lang.format("$1$ $2$", [sValue, $.GSK_Settings.sUnitElevation]), Gfx.TEXT_JUSTIFY_CENTER);
 
@@ -201,39 +229,11 @@ class ViewVariometer extends Ui.View {
       }
     }
     else {
-      sValue = "---";
+      sValue = $.GSK_NOVALUE_LEN3;
     }
     _oDC.drawText(100, 83, self.oRezFontMeter, sValue, Gfx.TEXT_JUSTIFY_CENTER);
     _oDC.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
     _oDC.drawText(212, 105, Gfx.FONT_TINY, $.GSK_Settings.sUnitVerticalSpeed, Gfx.TEXT_JUSTIFY_CENTER);
-
-    // ... time
-    var oTimeNow = Time.now();
-    var oTimeInfo = $.GSK_Settings.bTimeUTC ? Gregorian.utcInfo(oTimeNow, Time.FORMAT_SHORT) : Gregorian.info(oTimeNow, Time.FORMAT_SHORT);
-    sValue = Lang.format("$1$$2$$3$ $4$", [oTimeInfo.hour.format("%02d"), oTimeNow.value() % 2 ? "." : ":", oTimeInfo.min.format("%02d"), $.GSK_Settings.sUnitTime]);
-    _oDC.drawText(100, 162, Gfx.FONT_MEDIUM, sValue, Gfx.TEXT_JUSTIFY_CENTER);
-
-    // Draw status
-
-    // ... activity
-    if($.GSK_ActivitySession == null) {  // ... stand-by
-      _oDC.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_DK_GRAY : Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
-      sValue = self.sValueActivityStandby;
-    }
-    else if($.GSK_ActivitySession.isRecording()) {  // ... recording
-      _oDC.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
-      sValue = self.sValueActivityRecording;
-    }
-    else {  // ... paused
-      _oDC.setColor(Gfx.COLOR_YELLOW, Gfx.COLOR_TRANSPARENT);
-      sValue = self.sValueActivityPaused;
-    }
-    _oDC.drawText(100, 75, self.oRezFontStatus, sValue, Gfx.TEXT_JUSTIFY_CENTER);
-   
-    // ... battery
-    _oDC.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_DK_GRAY : Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
-    sValue = Lang.format("$1$%", [Sys.getSystemStats().battery.format("%.0f")]);
-    _oDC.drawText(100, 148, self.oRezFontStatus, sValue, Gfx.TEXT_JUSTIFY_CENTER);
   }
 }
 

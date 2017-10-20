@@ -216,13 +216,8 @@ class ViewGlobal extends Ui.View {
   function updateLayout() {
     //Sys.println("DEBUG: ViewGlobal.updateLayout()");
 
-    // Set values (and dependent colors)
-    var fValue;
+    // Set header/footer values
     var sValue;
-    var iColorText = $.GSK_Settings.iBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
-    if($.GSK_Processing.iAccuracy <= Pos.QUALITY_LAST_KNOWN) {
-      iColorText = Gfx.COLOR_LT_GRAY;
-    }
 
     // ... position accuracy
     self.oRezDrawableHeader.setPositionAccuracy($.GSK_Processing.iAccuracy);
@@ -245,23 +240,55 @@ class ViewGlobal extends Ui.View {
     }
     self.oRezValueActivityStatus.setText(sValue);
 
-    // ... fields background
-    self.oRezDrawableGlobal.setColorContentBackground($.GSK_Processing.iAccuracy <= Pos.QUALITY_LAST_KNOWN ? Gfx.COLOR_DK_RED : Gfx.COLOR_TRANSPARENT);
+    // ... time
+    var oTimeNow = Time.now();
+    var oTimeInfo = $.GSK_Settings.bTimeUTC ? Gregorian.utcInfo(oTimeNow, Time.FORMAT_SHORT) : Gregorian.info(oTimeNow, Time.FORMAT_SHORT);
+    self.oRezValueTime.setText(Lang.format("$1$$2$$3$ $4$", [oTimeInfo.hour.format("%02d"), oTimeNow.value() % 2 ? "." : ":", oTimeInfo.min.format("%02d"), $.GSK_Settings.sUnitTime]));
+
+    // Set position values (and dependent colors)
+    var fValue;
+    var iColorText;
+    if($.GSK_Processing.iAccuracy == Pos.QUALITY_NOT_AVAILABLE) {
+      self.oRezDrawableGlobal.setColorContentBackground(Gfx.COLOR_DK_RED);
+      self.oRezValueTopLeft.setColor(Gfx.COLOR_LT_GRAY);
+      self.oRezValueTopLeft.setText($.GSK_NOVALUE_LEN3);
+      self.oRezValueTopRight.setColor(Gfx.COLOR_LT_GRAY);
+      self.oRezValueTopRight.setText($.GSK_NOVALUE_LEN3);
+      self.oRezValueLeft.setColor(Gfx.COLOR_LT_GRAY);
+      self.oRezValueLeft.setText($.GSK_NOVALUE_LEN3);
+      self.oRezValueCenter.setColor(Gfx.COLOR_LT_GRAY);
+      self.oRezValueCenter.setText($.GSK_NOVALUE_LEN2);
+      self.oRezValueRight.setColor(Gfx.COLOR_LT_GRAY);
+      self.oRezValueRight.setText($.GSK_NOVALUE_LEN3);
+      self.oRezValueBottomLeft.setColor(Gfx.COLOR_LT_GRAY);
+      self.oRezValueBottomLeft.setText($.GSK_NOVALUE_LEN3);
+      self.oRezValueBottomRight.setColor(Gfx.COLOR_LT_GRAY);
+      self.oRezValueBottomRight.setText($.GSK_NOVALUE_LEN3);
+      return;
+    }
+    else if($.GSK_Processing.iAccuracy == Pos.QUALITY_LAST_KNOWN) {
+      self.oRezDrawableGlobal.setColorContentBackground(Gfx.COLOR_DK_RED);
+      iColorText = Gfx.COLOR_LT_GRAY;
+    }
+    else {
+      self.oRezDrawableGlobal.setColorContentBackground(Gfx.COLOR_TRANSPARENT);
+      iColorText = $.GSK_Settings.iBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
+    }
 
     // ... acceleration
     self.oRezValueTopLeft.setColor(iColorText);
-    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fAcceleration != null) {
+    if($.GSK_Processing.fAcceleration != null) {
       fValue = $.GSK_Processing.fAcceleration;
       sValue = fValue.format("%.01f");
     }
     else {
-      sValue = "---";
+      sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueTopLeft.setText(sValue);
 
     // ... rate of turn
     self.oRezValueTopRight.setColor(iColorText);
-    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fRateOfTurn != null) {
+    if($.GSK_Processing.fRateOfTurn != null) {
       if($.GSK_Processing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
         if($.GSK_Processing.fRateOfTurn < 0.0f) {
           self.oRezValueTopRight.setColor(Gfx.COLOR_RED);
@@ -279,46 +306,46 @@ class ViewGlobal extends Ui.View {
       }
     }
     else {
-      sValue = "---";
+      sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueTopRight.setText(sValue);
 
     // ... altitude
     self.oRezValueLeft.setColor(iColorText);
-    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fAltitude != null) {
+    if($.GSK_Processing.fAltitude != null) {
       fValue = $.GSK_Processing.fAltitude * $.GSK_Settings.fUnitElevationConstant;
       sValue = fValue.format("%.0f");
     }
     else {
-      sValue = "---";
+      sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueLeft.setText(sValue);
 
     // ... finesse
     self.oRezValueCenter.setColor(iColorText);
-    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fFinesse != null and !$.GSK_Processing.bAscent) {
+    if($.GSK_Processing.fFinesse != null and !$.GSK_Processing.bAscent) {
       fValue = $.GSK_Processing.fFinesse;
       sValue = fValue.format("%.0f");
     }
     else {
-      sValue = "--";
+      sValue = $.GSK_NOVALUE_LEN2;
     }
     self.oRezValueCenter.setText(sValue);
 
     // ... heading
     self.oRezValueRight.setColor(iColorText);
-    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fHeading != null) {
+    if($.GSK_Processing.fHeading != null) {
       fValue = (($.GSK_Processing.fHeading * 180.0f / Math.PI).toNumber() + 360) % 360;
       sValue = fValue.format("%d");
     }
     else {
-      sValue = "---";
+      sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueRight.setText(sValue);
 
     // ... variometer
     self.oRezValueBottomLeft.setColor(iColorText);
-    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fVariometer != null) {
+    if($.GSK_Processing.fVariometer != null) {
       if($.GSK_Processing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
         if($.GSK_Processing.fVariometer > 0.0f) {
           self.oRezValueBottomLeft.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_GREEN);
@@ -336,26 +363,20 @@ class ViewGlobal extends Ui.View {
       }
     }
     else {
-      sValue = "---";
+      sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueBottomLeft.setText(sValue);
 
     // ... ground speed
     self.oRezValueBottomRight.setColor(iColorText);
-    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fGroundSpeed != null) {
+    if($.GSK_Processing.fGroundSpeed != null) {
       fValue = $.GSK_Processing.fGroundSpeed * $.GSK_Settings.fUnitHorizontalSpeedConstant;
       sValue = fValue.format("%.0f");
     }
     else {
-      sValue = "---";
+      sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueBottomRight.setText(sValue);
-
-    // ... current time
-    var oTimeNow = Time.now();
-    var oTimeInfo = $.GSK_Settings.bTimeUTC ? Gregorian.utcInfo(oTimeNow, Time.FORMAT_SHORT) : Gregorian.info(oTimeNow, Time.FORMAT_SHORT);
-    self.oRezValueTime.setText(Lang.format("$1$$2$$3$ $4$", [oTimeInfo.hour.format("%02d"), oTimeNow.value() % 2 ? "." : ":", oTimeInfo.min.format("%02d"), $.GSK_Settings.sUnitTime]));
-
   }
 
 }

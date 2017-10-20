@@ -26,6 +26,10 @@ using Toybox.Timer;
 using Toybox.WatchUi as Ui;
 
 // Constants
+// ... no-value strings
+const GSK_NOVALUE_LEN2 = "--";
+const GSK_NOVALUE_LEN3 = "---";
+const GSK_NOVALUE_LEN4 = "----";
 // ... FIR fields
 const GSK_FITFIELD_VERTICALSPEED = 0;
 const GSK_FITFIELD_RATEOFTURN = 1;

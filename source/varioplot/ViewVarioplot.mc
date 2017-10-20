@@ -229,14 +229,14 @@ class ViewVarioplot extends Ui.View {
   function updateLayout() {
     //Sys.println("DEBUG: ViewVarioplot.updateLayout()");
 
-    // Set values (and dependent colors)
+    // Set header/footer values
     var sValue;
-
-    // ... battery level
-    self.oRezValueBatteryLevel.setText(Lang.format("$1$%", [Sys.getSystemStats().battery.format("%.0f")]));
 
     // ... position accuracy
     self.oRezDrawableHeader.setPositionAccuracy($.GSK_Processing.iAccuracy);
+
+    // ... battery level
+    self.oRezValueBatteryLevel.setText(Lang.format("$1$%", [Sys.getSystemStats().battery.format("%.0f")]));
 
     // ... activity status
     if($.GSK_ActivitySession == null) {  // ... stand-by
@@ -253,7 +253,7 @@ class ViewVarioplot extends Ui.View {
     }
     self.oRezValueActivityStatus.setText(sValue);
 
-    // ... current time
+    // ... time
     var oTimeNow = Time.now();
     var oTimeInfo = $.GSK_Settings.bTimeUTC ? Gregorian.utcInfo(oTimeNow, Time.FORMAT_SHORT) : Gregorian.info(oTimeNow, Time.FORMAT_SHORT);
     self.oRezValueTime.setText(Lang.format("$1$$2$$3$ $4$", [oTimeInfo.hour.format("%02d"), oTimeNow.value() % 2 ? "." : ":", oTimeInfo.min.format("%02d"), $.GSK_Settings.sUnitTime]));
@@ -371,7 +371,7 @@ class ViewVarioplot extends Ui.View {
   function drawValues_positioned(_oDC, _iXleft, _iXright, _iYtop, _iYbottom) {
     //Sys.println("DEBUG: ViewVarioplot.drawValues()");
 
-    // Draw values
+    // Draw position values
     var fValue;
     var sValue;
     _oDC.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);  // DUMMY
@@ -382,7 +382,7 @@ class ViewVarioplot extends Ui.View {
       sValue = fValue.format("%.0f");
     }
     else {
-      sValue = "---";
+      sValue = $.GSK_NOVALUE_LEN3;
     }
     _oDC.drawText(_iXleft, _iYtop, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.GSK_Settings.sUnitElevation]), Gfx.TEXT_JUSTIFY_LEFT);
 
@@ -397,7 +397,7 @@ class ViewVarioplot extends Ui.View {
       }
     }
     else {
-      sValue = "---";
+      sValue = $.GSK_NOVALUE_LEN3;
     }
     _oDC.drawText(_iXright, _iYtop, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.GSK_Settings.sUnitVerticalSpeed]), Gfx.TEXT_JUSTIFY_RIGHT);
 
@@ -407,7 +407,7 @@ class ViewVarioplot extends Ui.View {
       sValue = fValue.format("%.0f");
     }
     else {
-      sValue = "---";
+      sValue = $.GSK_NOVALUE_LEN3;
     }
     _oDC.drawText(_iXleft, _iYbottom, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.GSK_Settings.sUnitHorizontalSpeed]), Gfx.TEXT_JUSTIFY_LEFT);
 
@@ -417,7 +417,7 @@ class ViewVarioplot extends Ui.View {
       sValue = fValue.format("%.0f");
     }
     else {
-      sValue = "--";
+      sValue = $.GSK_NOVALUE_LEN2;
     }
     _oDC.drawText(_iXright, _iYbottom, self.oRezFontPlot, sValue, Gfx.TEXT_JUSTIFY_RIGHT);
   }
