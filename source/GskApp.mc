@@ -65,7 +65,7 @@ class GskApp extends App.AppBase {
   // VARIABLES
   //
 
-  // 10Hz timer
+  // Timers
   // ... UI update
   private var oUpdateTimer;
   private var iUpdateLastEpoch;
@@ -128,7 +128,7 @@ class GskApp extends App.AppBase {
     //Sys.println("DEBUG: GskApp.onStop()");
 
     // Stop timers
-    // ... update
+    // ... UI update
     if(self.oUpdateTimer != null) {
       self.oUpdateTimer.stop();
       self.oUpdateTimer = null;

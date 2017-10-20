@@ -378,11 +378,12 @@ class GskProcessing {
     // ... heading
     // NOTE: we consider heading meaningful only if ground speed is above 1.0 m/s
     if(_oInfo has :speed and _oInfo.speed != null and _oInfo.speed >= 1.0f and _oInfo has :heading and _oInfo.heading != null) {
+      // NOTE: I wish I could smoothen heading data but this is not easily achieved given the 359° <-> 0° discontinuity
       self.fHeading = _oInfo.heading;
       //Sys.println(Lang.format("DEBUG: (Position.Info) heading = $1$", [self.fHeading]));
       // ... rate of turn
       if(self.iPreviousHeadingGpoch != null and self.iPositionGpoch-self.iPreviousHeadingGpoch != 0) {
-        fValue = (self.fHeading-self.fPreviousHeading) / (self.iPositionGpoch-self.iPreviousHeadingGpoch);
+        fValue = (_oInfo.heading-self.fPreviousHeading) / (self.iPositionGpoch-self.iPreviousHeadingGpoch);
         while(fValue < -Math.PI) {
           fValue += 2.0f*Math.PI;
         }
@@ -398,7 +399,7 @@ class GskProcessing {
         //Sys.println(Lang.format("DEBUG: (Calculated) rate of turn = $1$", [self.fRateOfTurn]));
       }
       self.iPreviousHeadingGpoch = self.iPositionGpoch;
-      self.fPreviousHeading = self.fHeading;
+      self.fPreviousHeading = _oInfo.heading;
       // ... speed-to(wards)-destination
       if(self.fBearingToDestination != null) {
         fValue = _oInfo.speed * Math.cos(_oInfo.heading-self.fBearingToDestination);
