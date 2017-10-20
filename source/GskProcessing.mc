@@ -89,11 +89,9 @@ class GskProcessing {
   public var bSafetyStateful;
   public var iSafetyEpoch;
   // ... processing values (calculated)
-  public var fVerticalSpeed;
   public var fFinesse;
   public var fEnergyTotal;
   public var fEnergyCinetic;
-  public var fPotentialSpeed;  // ... potential speed, in m/s
   public var fRateOfTurn;
   public var fSpeedToDestination;
   public var fDistanceToDestination;
@@ -180,11 +178,9 @@ class GskProcessing {
     self.bSafetyStateful = false;
     self.iSafetyEpoch = null;
     // ... processing values (calculated)
-    self.fVerticalSpeed = null;
     self.fFinesse = null;
     self.fEnergyTotal = null;
     self.fEnergyCinetic = null;
-    self.fPotentialSpeed = null;
     self.fRateOfTurn = null;
     self.fSpeedToDestination = null;
     self.fDistanceToDestination = null;
@@ -323,27 +319,11 @@ class GskProcessing {
         self.fAltitude = self.fEmaCoefficient_present * _oInfo.altitude + self.fEmaCoefficient_past * self.fAltitude;
       }
       //Sys.println(Lang.format("DEBUG: (Position.Info) altitude = $1$", [self.fAltitude]));
-      // ... vertical speed
-      if(self.iPreviousAltitudeGpoch != null and self.iPositionGpoch-self.iPreviousAltitudeGpoch != 0) {
-        fValue = (_oInfo.altitude-self.fPreviousAltitude) / (self.iPositionGpoch-self.iPreviousAltitudeGpoch);
-        if(self.fVerticalSpeed == null) {
-          self.fVerticalSpeed = fValue;
-        }
-        else {
-          self.fVerticalSpeed = self.fEmaCoefficient_present * fValue + self.fEmaCoefficient_past * self.fVerticalSpeed;
-        }
-        //Sys.println(Lang.format("DEBUG: (Calculated) vertical speed = $1$", [self.fVerticalSpeed]));
-        if($.GSK_Settings.iVariometerMode == 0) {
-          self.fVariometer = self.fVerticalSpeed;
-        }
-      }
-      self.iPreviousAltitudeGpoch = self.iPositionGpoch;
-      self.fPreviousAltitude = _oInfo.altitude;
     }
     //else {
     //  Sys.println("WARNING: Position data have no altitude information (:altitude)");
     //}
-    if(self.fAltitude == null or ($.GSK_Settings.iVariometerMode == 0 and self.fVerticalSpeed == null)) {
+    if(self.fAltitude == null) {
       bStateful = false;
     }
 
@@ -356,37 +336,53 @@ class GskProcessing {
         self.fGroundSpeed = self.fEmaCoefficient_present * _oInfo.speed + self.fEmaCoefficient_past * self.fGroundSpeed;
       }
       //Sys.println(Lang.format("DEBUG: (Position.Info) ground speed = $1$", [self.fGroundSpeed]));
-      // ... energy (mass-normalized)
-      if(_oInfo has :altitude and _oInfo.altitude != null) {
-        self.fEnergyCinetic = 0.5f*_oInfo.speed*_oInfo.speed;
-        self.fEnergyTotal = self.fEnergyCinetic + 9.80665f*_oInfo.altitude;
-        //Sys.println(Lang.format("DEBUG: (Calculated) total energy = $1$", [self.fEnergyTotal]));
-        // ... "potential" speed
-        if(self.iPreviousEnergyGpoch != null and self.iPositionGpoch-self.iPreviousEnergyGpoch != 0) {
-          fValue = (self.fEnergyTotal-self.fPreviousEnergyTotal-self.fEnergyCineticLossFactor*(self.fEnergyCinetic-self.fPreviousEnergyCinetic)) / (self.iPositionGpoch-self.iPreviousEnergyGpoch) * 0.1019716213f;  // ... 1.0f / 9.80665f = 1.019716213f
-          if(self.fPotentialSpeed == null) {
-            self.fPotentialSpeed = fValue;
-          }
-          else {
-            self.fPotentialSpeed = self.fEmaCoefficient_present * fValue + self.fEmaCoefficient_past * self.fPotentialSpeed;
-          }
-          //Sys.println(Lang.format("DEBUG: (Calculated) potential speed = $1$", [self.fPotentialSpeed]));
-          if($.GSK_Settings.iVariometerMode == 1) {
-            self.fVariometer = self.fPotentialSpeed;
-          }
-        }
-        self.iPreviousEnergyGpoch = self.iPositionGpoch;
-        self.fPreviousEnergyTotal = self.fEnergyTotal;
-        self.fPreviousEnergyCinetic = self.fEnergyCinetic;
-      }
     }
     //else {
     //  Sys.println("WARNING: Position data have no speed information (:speed)");
     //}
-    if(self.fGroundSpeed == null or ($.GSK_Settings.iVariometerMode == 1 and self.fPotentialSpeed == null)) {
+    if(self.fGroundSpeed == null) {
       bStateful = false;
     }
     // NOTE: energy data is not required for processing finalization
+
+    // ... variometer
+    if($.GSK_Settings.iVariometerMode == 0 and _oInfo has :altitude and _oInfo.altitude != null) {  // ... altimetric variometer
+      if(self.iPreviousAltitudeGpoch != null and self.iPositionGpoch-self.iPreviousAltitudeGpoch != 0) {
+        fValue = (_oInfo.altitude-self.fPreviousAltitude) / (self.iPositionGpoch-self.iPreviousAltitudeGpoch);
+        if(self.fVariometer == null) {
+          self.fVariometer = fValue;
+        }
+        else {
+          self.fVariometer = self.fEmaCoefficient_present * fValue + self.fEmaCoefficient_past * self.fVariometer;
+        }
+        //Sys.println(Lang.format("DEBUG: (Calculated) altimetric variometer = $1$", [self.fVariometer]));
+      }
+      self.iPreviousAltitudeGpoch = self.iPositionGpoch;
+      self.fPreviousAltitude = _oInfo.altitude;
+      self.iPreviousEnergyGpoch = null;  // ... prevent artefact when switching variometer mode
+    }
+    else if($.GSK_Settings.iVariometerMode == 1 and _oInfo has :altitude and _oInfo.altitude != null and _oInfo has :speed and _oInfo.speed != null) {  // ... energetic variometer
+      self.fEnergyCinetic = 0.5f*_oInfo.speed*_oInfo.speed;
+      self.fEnergyTotal = self.fEnergyCinetic + 9.80665f*_oInfo.altitude;
+      //Sys.println(Lang.format("DEBUG: (Calculated) total energy = $1$", [self.fEnergyTotal]));
+      if(self.iPreviousEnergyGpoch != null and self.iPositionGpoch-self.iPreviousEnergyGpoch != 0) {
+        fValue = (self.fEnergyTotal-self.fPreviousEnergyTotal-self.fEnergyCineticLossFactor*(self.fEnergyCinetic-self.fPreviousEnergyCinetic)) / (self.iPositionGpoch-self.iPreviousEnergyGpoch) * 0.1019716213f;  // ... 1.0f / 9.80665f = 1.019716213f
+        if(self.fVariometer == null) {
+          self.fVariometer = fValue;
+        }
+        else {
+          self.fVariometer = self.fEmaCoefficient_present * fValue + self.fEmaCoefficient_past * self.fVariometer;
+        }
+        //Sys.println(Lang.format("DEBUG: (Calculated) energetic variometer = $1$", [self.fVariometer]));
+      }
+      self.iPreviousEnergyGpoch = self.iPositionGpoch;
+      self.fPreviousEnergyTotal = self.fEnergyTotal;
+      self.fPreviousEnergyCinetic = self.fEnergyCinetic;
+      self.iPreviousAltitudeGpoch = null;  // ... prevent artefact when switching variometer mode
+    }
+    if(self.fVariometer == null) {
+      bStateful = false;
+    }
 
     // ... heading
     if(self.fGroundSpeed != null and self.fGroundSpeed < 1.0f) {
