@@ -423,6 +423,18 @@ class GskProcessing {
     //}
     // NOTE: heading and rate-of-turn data are not required for processing finalization
 
+    // Plot buffer
+    if(bStateful and self.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
+      self.iPlotIndex = (self.iPlotIndex+1) % $.GSK_PLOTBUFFER_SIZE;
+      self.aiPlotEpoch[self.iPlotIndex] = self.iPositionEpoch;
+      // ... location as (integer) milliseconds of arc
+      var adPositionDegrees = self.oLocation.toDegrees();
+      self.aiPlotLatitude[self.iPlotIndex] = (adPositionDegrees[0]*3600000.0f).toNumber();
+      self.aiPlotLongitude[self.iPlotIndex] = (adPositionDegrees[1]*3600000.0f).toNumber();
+      // ... vertical speed as (integer) millimeter-per-second
+      self.aiPlotVariometer[self.iPlotIndex] = (self.fVariometer*1000.0f).toNumber();
+    }
+
     // Done
     if(bStateful) {
       self.bPositionStateful = true;
@@ -443,18 +455,6 @@ class GskProcessing {
       self.bAltitudeCritical = false;
       self.bAltitudeWarning = false;
       return;
-    }
-
-    // Plot buffer
-    if(self.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
-      self.iPlotIndex = (self.iPlotIndex+1) % $.GSK_PLOTBUFFER_SIZE;
-      self.aiPlotEpoch[self.iPlotIndex] = self.iPositionEpoch;
-      // ... location as (integer) milliseconds of arc
-      var adPositionDegrees = self.oLocation.toDegrees();
-      self.aiPlotLatitude[self.iPlotIndex] = (adPositionDegrees[0]*3600000.0f).toNumber();
-      self.aiPlotLongitude[self.iPlotIndex] = (adPositionDegrees[1]*3600000.0f).toNumber();
-      // ... vertical speed as (integer) millimeter-per-second
-      self.aiPlotVariometer[self.iPlotIndex] = (self.fVariometer*1000.0f).toNumber();
     }
 
     // Ascent/finesse
