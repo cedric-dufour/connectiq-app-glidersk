@@ -250,7 +250,16 @@ class GskProcessing {
     // Process position data
     var fValue;
     var bStateful = true;
-    self.bPositionStateful = false;
+
+    // ... accuracy
+    if(_oInfo has :accuracy and _oInfo.accuracy != null) {
+      self.iAccuracy = _oInfo.accuracy;
+      //Sys.println(Lang.format("DEBUG: (Position.Info) accuracy = $1$", [self.iAccuracy]));
+    }
+    else {
+      //Sys.println("WARNING: Position data have no accuracy information (:accuracy)");
+      self.iAccuracy = Pos.QUALITY_NOT_AVAILABLE;
+    }
 
     // ... timestamp
     // WARNING: the value of the position (GPS) timestamp is NOT the UTC epoch but the GPS timestamp (NOT translated to the proper year quadrant... BUG?)
@@ -262,19 +271,13 @@ class GskProcessing {
     else {
       //Sys.println("WARNING: Position data have no timestamp information (:when)");
       self.iAccuracy = Pos.QUALITY_NOT_AVAILABLE;
-      return;
     }
 
-    // ... accuracy
-    if(_oInfo has :accuracy and _oInfo.accuracy != null) {
-      self.iAccuracy = _oInfo.accuracy;
-      //Sys.println(Lang.format("DEBUG: (Position.Info) accuracy = $1$", [self.iAccuracy]));
-    }
-    else {
-      //Sys.println("WARNING: Position data have no accuracy information (:accuracy)");
-      self.iAccuracy = Pos.QUALITY_NOT_AVAILABLE;
+    // ... process ?
+    if(self.iAccuracy == Pos.QUALITY_NOT_AVAILABLE) {
       return;
     }
+    self.bPositionStateful = false;
 
     // ... position
     if(_oInfo has :position and _oInfo.position != null) {
