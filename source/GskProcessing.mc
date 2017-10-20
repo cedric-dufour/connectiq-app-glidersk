@@ -87,7 +87,6 @@ class GskProcessing {
   public var fHeading;
   // ... processing
   public var bSafetyStateful;
-  public var iSafetyEpoch;
   // ... processing values (calculated)
   public var fFinesse;
   public var fEnergyTotal;
@@ -160,12 +159,12 @@ class GskProcessing {
     self.bPositionStateful = false;
     self.iPositionEpoch = null;
     self.iPositionGpoch = null;
-    self.iAccuracy = 0;
+    self.iAccuracy = Pos.QUALITY_NOT_AVAILABLE;
     self.oLocation = null;
     self.fAltitude = null;
     self.fGroundSpeed = null;
     self.fHeading = null;
-    // ... we must calculate our own vertical speed 
+    // ... we must calculate our own vertical speed
     self.iPreviousAltitudeGpoch = null;
     self.fPreviousAltitude = 0.0f;
     // ... we must calculate our own potential energy "vertical speed"
@@ -177,7 +176,6 @@ class GskProcessing {
     self.fPreviousHeading = 0.0f;
     // ... processing
     self.bSafetyStateful = false;
-    self.iSafetyEpoch = null;
     // ... processing values (calculated)
     self.fFinesse = null;
     self.fEnergyTotal = null;
@@ -237,14 +235,14 @@ class GskProcessing {
     //else {
     //  Sys.println("WARNING: Sensor data have no acceleration information (:accel)");
     //}
-    
+
     // Done
     self.iSensorEpoch = _iEpoch;
   }
 
   function processPositionInfo(_oInfo, _iEpoch) {
     //Sys.println("DEBUG: GskProcessing.processPositionInfo()");
-    
+
     // Process position data
     var fValue;
     var bStateful = true;
@@ -257,6 +255,12 @@ class GskProcessing {
     else {
       //Sys.println("WARNING: Position data have no accuracy information (:accuracy)");
       self.iAccuracy = Pos.QUALITY_NOT_AVAILABLE;
+      return;
+    }
+    if(self.iAccuracy == Pos.QUALITY_NOT_AVAILABLE or (self.iAccuracy == Pos.QUALITY_LAST_KNOWN and self.iPositionEpoch == null)) {
+      //Sys.println("WARNING: Position accuracy is not good enough to continue or start processing");
+      self.iAccuracy = Pos.QUALITY_NOT_AVAILABLE;
+      return;
     }
 
     // ... timestamp
@@ -269,15 +273,11 @@ class GskProcessing {
     else {
       //Sys.println("WARNING: Position data have no timestamp information (:when)");
       self.iAccuracy = Pos.QUALITY_NOT_AVAILABLE;
-    }
-
-    // ... process ?
-    if(self.iAccuracy == Pos.QUALITY_NOT_AVAILABLE) {
       return;
     }
-    self.bPositionStateful = false;
 
     // ... position
+    self.bPositionStateful = false;
     if(_oInfo has :position and _oInfo.position != null) {
       self.oLocation = _oInfo.position;
       //Sys.println(Lang.format("DEBUG: (Position.Info) position = $1$, $2$", [self.oLocation.toDegrees()[0], self.oLocation.toDegrees()[1]]));
@@ -426,23 +426,25 @@ class GskProcessing {
     }
     // NOTE: heading and rate-of-turn data are not required for processing finalization
 
-    // Plot buffer
-    if(bStateful and self.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
-      self.iPlotIndex = (self.iPlotIndex+1) % $.GSK_PLOTBUFFER_SIZE;
-      self.aiPlotEpoch[self.iPlotIndex] = self.iPositionEpoch;
-      // ... location as (integer) milliseconds of arc
-      var adPositionDegrees = self.oLocation.toDegrees();
-      self.aiPlotLatitude[self.iPlotIndex] = (adPositionDegrees[0]*3600000.0f).toNumber();
-      self.aiPlotLongitude[self.iPlotIndex] = (adPositionDegrees[1]*3600000.0f).toNumber();
-      // ... vertical speed as (integer) millimeter-per-second
-      self.aiPlotVariometer[self.iPlotIndex] = (self.fVariometer*1000.0f).toNumber();
-    }
-
-    // Done
+    // Finalize
     if(bStateful) {
       self.bPositionStateful = true;
-      self.iPositionEpoch = _iEpoch;
+      if(self.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
+        self.iPositionEpoch = _iEpoch;
+
+        // Plot buffer
+        self.iPlotIndex = (self.iPlotIndex+1) % $.GSK_PLOTBUFFER_SIZE;
+        self.aiPlotEpoch[self.iPlotIndex] = self.iPositionEpoch;
+        // ... location as (integer) milliseconds of arc
+        var adPositionDegrees = self.oLocation.toDegrees();
+        self.aiPlotLatitude[self.iPlotIndex] = (adPositionDegrees[0]*3600000.0f).toNumber();
+        self.aiPlotLongitude[self.iPlotIndex] = (adPositionDegrees[1]*3600000.0f).toNumber();
+        // ... vertical speed as (integer) millimeter-per-second
+        self.aiPlotVariometer[self.iPlotIndex] = (self.fVariometer*1000.0f).toNumber();
+      }
     }
+
+    // ... safety
     self.processSafety();
   }
 
@@ -532,7 +534,6 @@ class GskProcessing {
 
     // Done
     self.bSafetyStateful = true;
-    self.iSafetyEpoch = self.iPositionEpoch;
   }
 
 }
