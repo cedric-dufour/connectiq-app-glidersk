@@ -19,6 +19,7 @@
 using Toybox.Application as App;
 using Toybox.Attention as Attn;
 using Toybox.Graphics as Gfx;
+using Toybox.Position as Pos;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
 using Toybox.System as Sys;
@@ -145,7 +146,7 @@ class ViewVariometer extends Ui.View {
     _oDC.drawArc(120, 120, 60, Gfx.ARC_COUNTER_CLOCKWISE, 15, 345);
     _oDC.setColor($.GSK_Settings.iBackgroundColor, $.GSK_Settings.iBackgroundColor);
     _oDC.drawArc(120, 120, 60, Gfx.ARC_CLOCKWISE, 15, 345);
-    if($.GSK_Processing.fVariometer != null) {
+    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fVariometer != null) {
       if($.GSK_Processing.fVariometer > 0.0f) {
         var iAngle = (180.0f*$.GSK_Processing.fVariometer/$.GSK_Settings.fVariometerRange).toNumber();
         if(iAngle != 0) {
@@ -174,7 +175,7 @@ class ViewVariometer extends Ui.View {
     var sValue;
 
     // ... altitude
-    if($.GSK_Processing.fAltitude != null) {
+    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fAltitude != null) {
       fValue = $.GSK_Processing.fAltitude * $.GSK_Settings.fUnitElevationConstant;
       sValue = fValue.format("%.0f");
     }
@@ -184,7 +185,7 @@ class ViewVariometer extends Ui.View {
     _oDC.drawText(100, 42, Gfx.FONT_MEDIUM, Lang.format("$1$ $2$", [sValue, $.GSK_Settings.sUnitElevation]), Gfx.TEXT_JUSTIFY_CENTER);
 
     // ... variometer
-    if($.GSK_Processing.fVariometer != null) {
+    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fVariometer != null) {
       if($.GSK_Processing.fVariometer > 0.0f) {
         _oDC.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_GREEN, Gfx.COLOR_TRANSPARENT);
       }

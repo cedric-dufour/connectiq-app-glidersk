@@ -377,7 +377,7 @@ class ViewVarioplot extends Ui.View {
     _oDC.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);  // DUMMY
 
     // ... altitude
-    if($.GSK_Processing.fAltitude != null) {
+    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fAltitude != null) {
       fValue = $.GSK_Processing.fAltitude * $.GSK_Settings.fUnitElevationConstant;
       sValue = fValue.format("%.0f");
     }
@@ -387,7 +387,7 @@ class ViewVarioplot extends Ui.View {
     _oDC.drawText(_iXleft, _iYtop, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.GSK_Settings.sUnitElevation]), Gfx.TEXT_JUSTIFY_LEFT);
 
     // ... variometer
-    if($.GSK_Processing.fVariometer != null) {
+    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fVariometer != null) {
       fValue = $.GSK_Processing.fVariometer * $.GSK_Settings.fUnitVerticalSpeedConstant;
       if($.GSK_Settings.fUnitVerticalSpeedConstant < 100.0f) {
         sValue = fValue.format("%+.01f");
@@ -402,7 +402,7 @@ class ViewVarioplot extends Ui.View {
     _oDC.drawText(_iXright, _iYtop, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.GSK_Settings.sUnitVerticalSpeed]), Gfx.TEXT_JUSTIFY_RIGHT);
 
     // ... ground speed
-    if($.GSK_Processing.iAccuracy > Pos.QUALITY_LAST_KNOWN and $.GSK_Processing.fGroundSpeed != null) {
+    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fGroundSpeed != null) {
       fValue = $.GSK_Processing.fGroundSpeed * $.GSK_Settings.fUnitHorizontalSpeedConstant;
       sValue = fValue.format("%.0f");
     }
@@ -412,7 +412,7 @@ class ViewVarioplot extends Ui.View {
     _oDC.drawText(_iXleft, _iYbottom, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.GSK_Settings.sUnitHorizontalSpeed]), Gfx.TEXT_JUSTIFY_LEFT);
 
     // ... finesse
-    if($.GSK_Processing.iAccuracy > Pos.QUALITY_LAST_KNOWN and !$.GSK_Processing.bAscent and $.GSK_Processing.fFinesse != null) {
+    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and !$.GSK_Processing.bAscent and $.GSK_Processing.fFinesse != null) {
       fValue = $.GSK_Processing.fFinesse;
       sValue = fValue.format("%.0f");
     }

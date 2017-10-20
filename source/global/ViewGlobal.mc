@@ -250,7 +250,7 @@ class ViewGlobal extends Ui.View {
 
     // ... acceleration
     self.oRezValueTopLeft.setColor(iColorText);
-    if($.GSK_Processing.fAcceleration != null) {
+    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fAcceleration != null) {
       fValue = $.GSK_Processing.fAcceleration;
       sValue = fValue.format("%.01f");
     }
@@ -285,7 +285,7 @@ class ViewGlobal extends Ui.View {
 
     // ... altitude
     self.oRezValueLeft.setColor(iColorText);
-    if($.GSK_Processing.fAltitude != null) {
+    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fAltitude != null) {
       fValue = $.GSK_Processing.fAltitude * $.GSK_Settings.fUnitElevationConstant;
       sValue = fValue.format("%.0f");
     }
@@ -318,7 +318,7 @@ class ViewGlobal extends Ui.View {
 
     // ... variometer
     self.oRezValueBottomLeft.setColor(iColorText);
-    if($.GSK_Processing.fVariometer != null) {
+    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fVariometer != null) {
       if($.GSK_Processing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
         if($.GSK_Processing.fVariometer > 0.0f) {
           self.oRezValueBottomLeft.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_GREEN);
