@@ -1,0 +1,23 @@
+* 1.0.20171021a
+  - Allow position processing to be finalized even with missing destination
+  - Show height rather than altitude at destination in Safety view
+  - Minor comments addition/correction
+  - Do not use last known position/course for more than 10 seconds
+  - Update UI every 5 seconds (rather than 15) when no position data are available
+  - Allow to differentiate Safety from Global view even when no position data are available
+
+  - Bail out of view rendering early when position accuracy is not available
+  - Consolidate heading-related processing (incl. speed-to(wards)-destination)
+  - Moved variometer processing to its own block
+  - Move plot buffer processing where it belongs
+  - Never show any data when position accuracy is not available
+  - Bail out of processing early if position accuracy is too low
+  - Add screenshots for each view (global, variometer, etc.)
+  - Bail out of processing early if position has no accuracy data
+
+* 1.0.20171019b
+  - FIX (CRITICAL): Safety height calculation for non-metric elevation unit
+  - FIX: Always refer to "reference finesse" in documentation/comments
+
+* 1.0.20171019a
+  - Post Tenebras Lux
