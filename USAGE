@@ -112,8 +112,8 @@ will be issued according to the corresponding height:
  - Warning Alert: yellow background / low-frequency tone
    when the height is below or equal to the user-specified warning height
 
-The GliderSK Safety Monitor displays all critical flight safety information
-in a single view, using visually appealing alert colors:
+The GliderSK Safety view displays all critical flight safety information in a
+single view, using visually appealing alert colors:
  - Top-Left:
    the name of your current destination
    / OR [short-press the SELECT and UP button] /
@@ -152,7 +152,7 @@ If a reasonable "last known" position is available, values will still be display
 (all grayed-out), otherwise no value will be displayed.
 
 By pressing the SELECT button a first time, the application will allow you to
-switch the Top-Left and Bottom-Right fields according to your preference:
+switch the Top-Left and Bottom-Right fields according to your preference.
 
 By pressing the SELECT button a second time, the application will display the
 current (critical) settings:
@@ -252,8 +252,8 @@ The application allows you to specify the following settings:
    whether the BACK key adds a new lap to a recording activity
 
 
-Warning! Gotchas!!!
--------------------
+WARNING!!! GOTCHAS!!!
+---------------------
 
 When using GPS devices, you should be aware that:
  - GPS is very accurate for location (latitude/longitude) information;
@@ -266,7 +266,7 @@ When using GPS devices, you should be aware that:
       !!! DO NOT USE GPS ELEVATION WITH GLIDERSK !!!
  - When using the barometric altimeter, make sure it is configured to
    act as an altimeter and not a barometer (or any subtle mix of the two).
-      !!! DO CONFIGURE THE ALTIMETER TO ACT AS BAROMETER !!!
+      !!! DO CONFIGURE THE ALTIMETER TO ACT AS ALTIMETER (ONLY) !!!
 
 The ConnectIQ framework does NOT allow applications - like GliderSK - to
 control the location source (GPS, GLONASS and/or UltraTrac) or elevation

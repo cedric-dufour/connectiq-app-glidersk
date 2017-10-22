@@ -5,7 +5,6 @@
   - Do not use last known position/course for more than 10 seconds
   - Update UI every 5 seconds (rather than 15) when no position data are available
   - Allow to differentiate Safety from Global view even when no position data are available
-
   - Bail out of view rendering early when position accuracy is not available
   - Consolidate heading-related processing (incl. speed-to(wards)-destination)
   - Moved variometer processing to its own block
