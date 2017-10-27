@@ -1,3 +1,8 @@
+* 1.0.20171027a
+  - Optimize floating points operations
+  - Smoothen heading values (EMA) like all other sensor/position values
+  - Corrections to USAGE file
+
 * 1.0.20171021a
   - Allow position processing to be finalized even with missing destination
   - Show height rather than altitude at destination in Safety view
