@@ -380,17 +380,39 @@ class GskProcessing {
     // ... heading
     // NOTE: we consider heading meaningful only if ground speed is above 1.0 m/s
     if(_oInfo has :speed and _oInfo.speed != null and _oInfo.speed >= 1.0f and _oInfo has :heading and _oInfo.heading != null) {
-      // NOTE: I wish I could smoothen heading data but this is not easily achieved given the 359° <-> 0° discontinuity
-      self.fHeading = _oInfo.heading;
-      //Sys.println(Lang.format("DEBUG: (Position.Info) heading = $1$", [self.fHeading]));
+      // WARNING: _oInfo.heading (in radians) may return negative values (at least in the simulator)
+      var fHeading_normalized;
+      fHeading_normalized = _oInfo.heading;
+      if(fHeading_normalized < 0.0f) {
+        fHeading_normalized += 6.28318530718f;
+      }
+      if(self.fHeading == null) {
+        self.fHeading = fHeading_normalized;
+      }
+      else if(self.fHeading > 4.71238898039f and fHeading_normalized < 1.5707963268f) {  // ... NW to NE discontinuity
+        self.fHeading = self.fEmaCoefficient_present * (fHeading_normalized + 6.28318530718f) + self.fEmaCoefficient_past * self.fHeading;
+        if(self.fHeading >= 6.28318530718f) {
+          self.fHeading -= 6.28318530718f;
+        }
+      }
+      else if(self.fHeading < 1.5707963268f and fHeading_normalized > 4.71238898039f) {  // ... NE to NW discontinuity
+        self.fHeading = self.fEmaCoefficient_present * (fHeading_normalized - 6.28318530718f) + self.fEmaCoefficient_past * self.fHeading;
+        if(self.fHeading < 0.0f) {
+          self.fHeading += 6.28318530718f;
+        }
+      }
+      else {
+        self.fHeading = self.fEmaCoefficient_present * fHeading_normalized + self.fEmaCoefficient_past * self.fHeading;
+      }
+      //Sys.println(Lang.format("DEBUG: (Position.Info) heading = $1$°", [self.fHeading * 57.2957795131f]));
       // ... rate of turn
       if(self.iPreviousHeadingGpoch != null and self.iPositionGpoch-self.iPreviousHeadingGpoch != 0) {
-        fValue = (_oInfo.heading-self.fPreviousHeading) / (self.iPositionGpoch-self.iPreviousHeadingGpoch);
-        while(fValue < -Math.PI) {
-          fValue += 2.0f*Math.PI;
+        fValue = (fHeading_normalized-self.fPreviousHeading) / (self.iPositionGpoch-self.iPreviousHeadingGpoch);
+        if(fValue < -3.14159265359f) {
+          fValue += 6.28318530718f;
         }
-        while(fValue > Math.PI) {
-          fValue -= 2.0f*Math.PI;
+        else if(fValue > 3.14159265359f) {
+          fValue -= 6.28318530718f;
         }
         if(self.fRateOfTurn == null) {
           self.fRateOfTurn = fValue;
@@ -398,13 +420,13 @@ class GskProcessing {
         else {
           self.fRateOfTurn = self.fEmaCoefficient_present * fValue + self.fEmaCoefficient_past * self.fRateOfTurn;
         }
-        //Sys.println(Lang.format("DEBUG: (Calculated) rate of turn = $1$", [self.fRateOfTurn]));
+        //Sys.println(Lang.format("DEBUG: (Calculated) rate of turn = $1$°", [self.fRateOfTurn * 57.2957795131f]));
       }
       self.iPreviousHeadingGpoch = self.iPositionGpoch;
-      self.fPreviousHeading = _oInfo.heading;
+      self.fPreviousHeading = fHeading_normalized;
       // ... speed-to(wards)-destination
       if(self.fBearingToDestination != null) {
-        fValue = _oInfo.speed * Math.cos(_oInfo.heading-self.fBearingToDestination);
+        fValue = _oInfo.speed * Math.cos(fHeading_normalized-self.fBearingToDestination);
         if(self.fSpeedToDestination == null) {
           self.fSpeedToDestination = fValue;
         }
