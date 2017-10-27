@@ -87,7 +87,8 @@ module GskUtils {
     //       Also, let's avoid (expensive) operations like division or exponentiation as much as possible
     var dLatD = _adLoc2[0] - _adLoc1[0];
     var dLonD = _adLoc2[1] - _adLoc1[1];
-    var dPhiD = Math.ln(Math.tan(0.5d*_adLoc2[0] + 0.25d*Math.PI) / Math.tan(0.5d*_adLoc1[0] + 0.25d*Math.PI));
+    //var dPhiD = Math.ln(Math.tan(0.5d*_adLoc2[0] + 0.25d*Math.PI) / Math.tan(0.5d*_adLoc1[0] + 0.25d*Math.PI));
+    var dPhiD = Math.ln(Math.tan(0.5d*_adLoc2[0] + 0.78539816339744830961d) / Math.tan(0.5d*_adLoc1[0] + 0.78539816339744830961d));
     var dQ;
     if(dPhiD != 0.0d) {
       dQ = dLatD/dPhiD;
@@ -95,8 +96,9 @@ module GskUtils {
     else {
       dQ = Math.cos(dLat1);
     }
-    if(dLonD.abs() > Math.PI) {
-      dLonD = dLonD > 0.0d ? dLonD - 2.0d*Math.PI : 2.0d*Math.PI + dLonD;
+    if(dLonD.abs() > 3.14159265358979323846d) {
+      //dLonD = dLonD > 0.0d ? dLonD - 2.0d*Math.PI : 2.0d*Math.PI + dLonD;
+      dLonD = dLonD > 0.0d ? dLonD - 6.28318530717958647692d : 6.28318530717958647692d + dLonD;
     }
     // Let's use Earth mean radius (https://en.wikipedia.org/wiki/Earth_radius#Mean_radius)
     var dDistance = 6371007.2d * Math.sqrt(dLatD*dLatD + dLonD*dLonD*dQ*dQ);
@@ -110,9 +112,11 @@ module GskUtils {
     // NOTE: We MUST use double precision math throughout the calculation to avoid rounding errors
     //       Also, let's avoid (expensive) operations like division or exponentiation as much as possible
     var dLonD = _adLoc2[1] - _adLoc1[1];
-    var dPhiD = Math.ln(Math.tan(0.5d*_adLoc2[0] + 0.25d*Math.PI) / Math.tan(0.5d*_adLoc1[0] + 0.25d*Math.PI));
-    if(dLonD.abs() > Math.PI) {
-      dLonD = dLonD > 0.0d ? dLonD - 2.0d*Math.PI : 2.0d*Math.PI + dLonD;
+    //var dPhiD = Math.ln(Math.tan(0.5d*_adLoc2[0] + 0.25d*Math.PI) / Math.tan(0.5d*_adLoc1[0] + 0.25d*Math.PI));
+    var dPhiD = Math.ln(Math.tan(0.5d*_adLoc2[0] + 0.78539816339744830961d) / Math.tan(0.5d*_adLoc1[0] + 0.78539816339744830961d));
+    if(dLonD.abs() > 3.14159265358979323846d) {
+      //dLonD = dLonD > 0.0d ? dLonD - 2.0d*Math.PI : 2.0d*Math.PI + dLonD;
+      dLonD = dLonD > 0.0d ? dLonD - 6.28318530717958647692d : 6.28318530717958647692d + dLonD;
     }
     var dBearing = Math.atan2(dLonD, dPhiD);
     return dBearing.toFloat();

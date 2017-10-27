@@ -148,7 +148,8 @@ class ViewRateOfTurn extends Ui.View {
     _oDC.drawArc(120, 120, 60, Gfx.ARC_CLOCKWISE, 285, 255);
     if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fRateOfTurn != null) {
       if($.GSK_Processing.fRateOfTurn > 0.0f) {
-        var iAngle = (900.0f*$.GSK_Processing.fRateOfTurn/Math.PI).toNumber();  // ... range 6 rpm <-> 36 °/s
+        //var iAngle = ($.GSK_Processing.fRateOfTurn * 900.0f/Math.PI).toNumber();  // ... range 6 rpm <-> 36 °/s
+        var iAngle = ($.GSK_Processing.fRateOfTurn * 286.4788975654f).toNumber();
         if(iAngle != 0) {
           if(iAngle > 165) { iAngle = 165; }  // ... leave room for unit text
           _oDC.setColor(Gfx.COLOR_GREEN, Gfx.COLOR_GREEN);
@@ -156,7 +157,8 @@ class ViewRateOfTurn extends Ui.View {
         }
       }
       else if($.GSK_Processing.fRateOfTurn < 0.0f) {
-        var iAngle = -(900.0f*$.GSK_Processing.fRateOfTurn/Math.PI).toNumber();  // ... range 6 rpm <-> 36 °/s
+        //var iAngle = -($.GSK_Processing.fRateOfTurn * 900.0f/Math.PI).toNumber();  // ... range 6 rpm <-> 36 °/s
+        var iAngle = -($.GSK_Processing.fRateOfTurn * 286.4788975654f).toNumber();
         if(iAngle != 0) {
           if(iAngle > 165) { iAngle = 165; }  // ... leave room for unit text
           _oDC.setColor(Gfx.COLOR_RED, Gfx.COLOR_RED);

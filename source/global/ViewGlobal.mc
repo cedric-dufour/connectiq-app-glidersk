@@ -335,7 +335,8 @@ class ViewGlobal extends Ui.View {
     // ... heading
     self.oRezValueRight.setColor(iColorText);
     if($.GSK_Processing.fHeading != null) {
-      fValue = (($.GSK_Processing.fHeading * 180.0f / Math.PI).toNumber() + 360) % 360;
+      //fValue = (($.GSK_Processing.fHeading * 180.0f/Math.PI).toNumber()) % 360;
+      fValue = (($.GSK_Processing.fHeading * 57.2957795131f).toNumber()) % 360;
       sValue = fValue.format("%d");
     }
     else {

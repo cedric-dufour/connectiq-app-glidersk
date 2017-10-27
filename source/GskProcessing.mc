@@ -289,7 +289,7 @@ class GskProcessing {
         var adDestinationRadians = self.oDestinationLocation.toRadians();
         self.fDistanceToDestination = GskUtils.distance(adPositionRadians, adDestinationRadians);
         self.fBearingToDestination = GskUtils.bearing(adPositionRadians, adDestinationRadians);
-        //Sys.println(Lang.format("DEBUG: (Calculated) distance/bearing to destination = $1$ / $2$", [self.fDistanceToDestination, self.fBearingToDestination*180.0f/Math.PI]));
+        //Sys.println(Lang.format("DEBUG: (Calculated) distance/bearing to destination = $1$ / $2$", [self.fDistanceToDestination, self.fBearingToDestination * 57.2957795131f]));
       }
       else {
         //Sys.println("ERROR: No destination data");

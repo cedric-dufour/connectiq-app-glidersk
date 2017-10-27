@@ -293,7 +293,8 @@ class ViewVarioplot extends Ui.View {
     // ... plot
     self.clipPlot(_oDC);
     var iCurrentIndex = (iEndIndex-iPlotRange+1+$.GSK_PLOTBUFFER_SIZE) % $.GSK_PLOTBUFFER_SIZE;
-    var fZoomX = $.GSK_Settings.fPlotZoom * Math.cos(iEndLatitude/1555200000.0d*Math.PI);
+    //var fZoomX = $.GSK_Settings.fPlotZoom * Math.cos(iEndLatitude / 1555200000.0d*Math.PI);
+    var fZoomX = $.GSK_Settings.fPlotZoom * Math.cos(iEndLatitude / 495035534.9930312523f);
     var fZoomY = $.GSK_Settings.fPlotZoom;
     var iMaxDeltaEpoch = $.GSK_Settings.iTimeConstant+1;
     var iLastEpoch = iEndEpoch;  // 
