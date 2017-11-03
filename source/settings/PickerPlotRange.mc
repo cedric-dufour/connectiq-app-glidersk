@@ -20,7 +20,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
-class PickerPlotRange extends GskPicker {
+class PickerPlotRange extends Ui.Picker {
 
   //
   // FUNCTIONS: Ui.Picker (override/implement)
@@ -32,7 +32,7 @@ class PickerPlotRange extends GskPicker {
 
     // Initialize picker
     var oFactory = new PickerFactoryNumber(1, 10, null);
-    GskPicker.initialize({
+    Picker.initialize({
       :title => new Ui.Text({ :text => Lang.format("$1$ [min]", [Ui.loadResource(Rez.Strings.titlePlotRange)]), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oFactory ],
       :defaults => [ oFactory.indexOf(iPlotRange) ]

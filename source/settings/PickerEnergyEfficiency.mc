@@ -20,7 +20,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
-class PickerEnergyEfficiency extends GskPicker {
+class PickerEnergyEfficiency extends Ui.Picker {
 
   //
   // FUNCTIONS: Ui.Picker (override/implement)
@@ -32,7 +32,7 @@ class PickerEnergyEfficiency extends GskPicker {
 
     // Initialize picker
     var oFactory = new PickerFactoryNumber(0, 100, null);
-    GskPicker.initialize({
+    Picker.initialize({
       :title => new Ui.Text({ :text => Lang.format("$1$ [%]", [Ui.loadResource(Rez.Strings.titleEnergyEfficiency)]), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oFactory ],
       :defaults => [ oFactory.indexOf(iEnergyEfficiency) ]

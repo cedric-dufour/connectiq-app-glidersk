@@ -24,13 +24,6 @@ License-Filename: LICENSE/GPL-3.0.txt
 Other resources are (and must be) used according to their original license,
 which is (should be made) available from their respective author.
 
-Picker* images (icons)
-----------------------
-Source: https://github.com/GNOME/gnome-icon-theme-symbolic
-See COPYRIGHT.icons and AUTHORS.icons for details
-Additional author:
- - Cedric Dufour <http://cedric.dufour.name> (coloring)
-
 Arial* fonts
 -------------
 Source: http://downloads.sourceforge.net/corefonts/

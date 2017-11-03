@@ -20,7 +20,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
-class PickerUnitElevation extends GskPicker {
+class PickerUnitElevation extends Ui.Picker {
 
   //
   // FUNCTIONS: Ui.Picker (override/implement)
@@ -32,7 +32,7 @@ class PickerUnitElevation extends GskPicker {
 
     // Initialize picker
     var oFactory = new PickerFactoryDictionary([-1, 0, 1], [Ui.loadResource(Rez.Strings.valueUnitElevationAuto), Ui.loadResource(Rez.Strings.valueUnitElevationMetric), Ui.loadResource(Rez.Strings.valueUnitElevationStatute)], null);
-    GskPicker.initialize({
+    Picker.initialize({
       :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.titleUnitElevation), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oFactory ],
       :defaults => [ oFactory.indexOfKey(iUnitElevation) ]

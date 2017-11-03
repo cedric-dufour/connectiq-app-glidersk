@@ -1,9 +1,6 @@
 <!-- -*- mode:xml; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab: -->
 <drawables>
   <bitmap id="AppIcon" filename="../resources/drawables/GliderSK-40x40.png" />
-  <bitmap id="iconPickerUp" filename="../resources/drawables/PickerUp-30x30.png" />
-  <bitmap id="iconPickerDown" filename="../resources/drawables/PickerDown-30x30.png" />
-  <bitmap id="iconPickerOk" filename="../resources/drawables/Blank.png" />
   <drawable-list id="drawHeaderAccuracy1" x="109" y="17" width="4" height="8" >
     <shape type="rectangle" x="0" y="0" width="fill" height="fill" />
   </drawable-list>

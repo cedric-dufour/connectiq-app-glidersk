@@ -20,7 +20,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
-class PickerBackgroundColor extends GskPicker {
+class PickerBackgroundColor extends Ui.Picker {
 
   //
   // FUNCTIONS: Ui.Picker (override/implement)
@@ -32,7 +32,7 @@ class PickerBackgroundColor extends GskPicker {
 
     // Initialize picker
     var oFactory = new PickerFactoryDictionary([Gfx.COLOR_WHITE, Gfx.COLOR_BLACK], [Ui.loadResource(Rez.Strings.valueColorWhite), Ui.loadResource(Rez.Strings.valueColorBlack)], null);
-    GskPicker.initialize({
+    Picker.initialize({
       :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.titleBackgroundColor), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oFactory ],
       :defaults => [ oFactory.indexOfKey(iColor) ]

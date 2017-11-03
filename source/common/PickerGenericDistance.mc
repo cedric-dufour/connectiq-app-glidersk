@@ -21,7 +21,7 @@ using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
-class PickerGenericDistance extends GskPicker {
+class PickerGenericDistance extends Ui.Picker {
 
   //
   // FUNCTIONS: Ui.Picker (override/implement)
@@ -45,7 +45,7 @@ class PickerGenericDistance extends GskPicker {
     // Initialize picker
     var oText_10e0 = new Ui.Text({ :text => "x1", :font => Gfx.FONT_TINY, :locX => Ui.LAYOUT_HALIGN_CENTER, :locY => Ui.LAYOUT_VALIGN_CENTER, :color => Gfx.COLOR_LT_GRAY });
     var oText_10e_1 = new Ui.Text({ :text => "x0.1", :font => Gfx.FONT_TINY, :locX => Ui.LAYOUT_HALIGN_CENTER, :locY => Ui.LAYOUT_VALIGN_CENTER, :color => Gfx.COLOR_LT_GRAY });
-    GskPicker.initialize({
+    Picker.initialize({
       :title => new Ui.Text({ :text => _sTitle, :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ new PickerFactoryNumber(0, 9, null), oText_10e0,
                     new PickerFactoryNumber(0, 9, null), oText_10e_1 ],

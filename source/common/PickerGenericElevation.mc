@@ -21,7 +21,7 @@ using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
-class PickerGenericElevation extends GskPicker {
+class PickerGenericElevation extends Ui.Picker {
 
   //
   // FUNCTIONS: Ui.Picker (override/implement)
@@ -56,7 +56,7 @@ class PickerGenericElevation extends GskPicker {
     var oText_10e2 = new Ui.Text({ :text => "x100", :font => Gfx.FONT_TINY, :locX => Ui.LAYOUT_HALIGN_CENTER, :locY => Ui.LAYOUT_VALIGN_CENTER, :color => Gfx.COLOR_LT_GRAY });
     var oText_10e1 = new Ui.Text({ :text => "x10", :font => Gfx.FONT_TINY, :locX => Ui.LAYOUT_HALIGN_CENTER, :locY => Ui.LAYOUT_VALIGN_CENTER, :color => Gfx.COLOR_LT_GRAY });
     var oText_10e0 = new Ui.Text({ :text => "x1", :font => Gfx.FONT_TINY, :locX => Ui.LAYOUT_HALIGN_CENTER, :locY => Ui.LAYOUT_VALIGN_CENTER, :color => Gfx.COLOR_LT_GRAY });
-    GskPicker.initialize({
+    Picker.initialize({
       :title => new Ui.Text({ :text => _sTitle, :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ new PickerFactoryNumber(0, $.GSK_Settings.iUnitElevation == Sys.UNIT_STATUTE ? 29 : 9, null), oText_10e3,
                     new PickerFactoryNumber(0, 9, null), oText_10e2,

@@ -20,7 +20,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
-class PickerVariometerRange extends GskPicker {
+class PickerVariometerRange extends Ui.Picker {
 
   //
   // FUNCTIONS: Ui.Picker (override/implement)
@@ -38,7 +38,7 @@ class PickerVariometerRange extends GskPicker {
         Lang.format("$1$\n$2$", [(6.0f*$.GSK_Settings.fUnitVerticalSpeedConstant).format(sFormat), $.GSK_Settings.sUnitVerticalSpeed]),
         Lang.format("$1$\n$2$", [(9.0f*$.GSK_Settings.fUnitVerticalSpeedConstant).format(sFormat), $.GSK_Settings.sUnitVerticalSpeed]) ];
     var oFactory = new PickerFactoryDictionary([0, 1, 2], asValues, { :font => Gfx.FONT_TINY });
-    GskPicker.initialize({
+    Picker.initialize({
       :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.titleVariometerRange), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oFactory ],
       :defaults => [ oFactory.indexOfKey(iVariometerRange) ]

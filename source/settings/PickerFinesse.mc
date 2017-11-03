@@ -20,7 +20,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
-class PickerFinesse extends GskPicker {
+class PickerFinesse extends Ui.Picker {
 
   //
   // FUNCTIONS: Ui.Picker (override/implement)
@@ -32,7 +32,7 @@ class PickerFinesse extends GskPicker {
 
     // Initialize picker
     var oFactory = new PickerFactoryNumber(1, 99, null);
-    GskPicker.initialize({
+    Picker.initialize({
         :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.titleFinesseReference), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
         :pattern => [ oFactory ],
           :defaults => [ oFactory.indexOf(iFinesse) ]

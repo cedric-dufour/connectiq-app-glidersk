@@ -20,7 +20,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
-class PickerUnitRateOfTurn extends GskPicker {
+class PickerUnitRateOfTurn extends Ui.Picker {
 
   //
   // FUNCTIONS: Ui.Picker (override/implement)
@@ -32,7 +32,7 @@ class PickerUnitRateOfTurn extends GskPicker {
 
     // Initialize picker
     var oFactory = new PickerFactoryDictionary([0, 1], [Ui.loadResource(Rez.Strings.valueUnitRateOfTurnDegree), Ui.loadResource(Rez.Strings.valueUnitRateOfTurnRpm)], null);
-    GskPicker.initialize({
+    Picker.initialize({
       :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.titleUnitRateOfTurn), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oFactory ],
       :defaults => [ oFactory.indexOfKey(iUnitRateOfTurn) ]

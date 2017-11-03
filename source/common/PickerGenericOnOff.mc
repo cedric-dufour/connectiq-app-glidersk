@@ -20,7 +20,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
-class PickerGenericOnOff extends GskPicker {
+class PickerGenericOnOff extends Ui.Picker {
 
   //
   // FUNCTIONS: Ui.Picker (override/implement)
@@ -32,7 +32,7 @@ class PickerGenericOnOff extends GskPicker {
 
     // Initialize picker
     var oFactory = new PickerFactoryDictionary([true, false], [Ui.loadResource(Rez.Strings.valueOn), Ui.loadResource(Rez.Strings.valueOff)], null);
-    GskPicker.initialize({
+    Picker.initialize({
       :title => new Ui.Text({ :text => _sTitle, :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oFactory ],
       :defaults => [ oFactory.indexOfKey(bOnOff != null ? bOnOff : false) ]

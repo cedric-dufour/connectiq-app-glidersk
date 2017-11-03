@@ -20,7 +20,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
-class PickerUnitDistance extends GskPicker {
+class PickerUnitDistance extends Ui.Picker {
 
   //
   // FUNCTIONS: Ui.Picker (override/implement)
@@ -32,7 +32,7 @@ class PickerUnitDistance extends GskPicker {
 
     // Initialize picker
     var oFactory = new PickerFactoryDictionary([-1, 0, 1 ,2], [Ui.loadResource(Rez.Strings.valueUnitDistanceAuto), Ui.loadResource(Rez.Strings.valueUnitDistanceMetric), Ui.loadResource(Rez.Strings.valueUnitDistanceStatute), Ui.loadResource(Rez.Strings.valueUnitDistanceNautical)], null);
-    GskPicker.initialize({
+    Picker.initialize({
       :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.titleUnitDistance), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oFactory ],
       :defaults => [ oFactory.indexOfKey(iUnitDistance) ]

@@ -21,7 +21,7 @@ using Toybox.Graphics as Gfx;
 using Toybox.Position as Pos;
 using Toybox.WatchUi as Ui;
 
-class PickerDestinationLoad extends GskPicker {
+class PickerDestinationLoad extends Ui.Picker {
 
   //
   // FUNCTIONS: Ui.Picker (override/implement)
@@ -85,7 +85,7 @@ class PickerDestinationLoad extends GskPicker {
     else {
       oPattern = new PickerFactoryDictionary([null], ["-"], { :color => Gfx.COLOR_DK_GRAY });
     }
-    GskPicker.initialize({
+    Picker.initialize({
       :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.menuDestinationLoad), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oPattern ]
     });
