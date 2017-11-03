@@ -394,7 +394,10 @@ class ViewSafety extends Ui.View {
     // ... altitude
     self.oRezValueLeft.setColor(iColorText);
     if($.GSK_Processing.fAltitude != null) {
-      if($.GSK_Processing.bAltitudeCritical) {
+      if(!$.GSK_Processing.bSafetyStateful) {
+        self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_DK_GRAY);
+      }
+      else if($.GSK_Processing.bAltitudeCritical) {
         self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_RED);
       }
       else if($.GSK_Processing.bAltitudeWarning) {
