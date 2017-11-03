@@ -39,6 +39,9 @@ class PickerDestinationEditLongitude extends GskPicker {
     var iLongitude_min = fLongitude.toNumber();
     fLongitude = (fLongitude - iLongitude_min) * 60.0f + 0.5f;
     var iLongitude_sec = fLongitude.toNumber();
+    if(iLongitude_sec >= 60) {
+      iLongitude_sec = 59;
+    }
 
     // Initialize picker
     var oFactory_qua = new PickerFactoryDictionary([1, -1], ["E", "W"], null);

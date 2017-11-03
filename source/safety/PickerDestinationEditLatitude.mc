@@ -39,6 +39,9 @@ class PickerDestinationEditLatitude extends GskPicker {
     var iLatitude_min = fLatitude.toNumber();
     fLatitude = (fLatitude - iLatitude_min) * 60.0f + 0.5f;
     var iLatitude_sec = fLatitude.toNumber();
+    if(iLatitude_sec >= 60) {
+      iLatitude_sec = 59;
+    }
 
     // Initialize picker
     var oFactory_qua = new PickerFactoryDictionary([1, -1], ["N", "S"], null);
