@@ -1,3 +1,15 @@
+* 1.0.20171103a
+  - Display heading (instead of altitude) information in Rate-of-Turn view
+  - Do not color altitude GREEN if safety data are not available
+  - Remove those wicked trailing spaces that keep creeping in...
+  - Move "public" constants where they belong
+  - Move "private" constants where they belong
+  - Do not show "From Current" in destination options if no GPS location is available
+  - Remove custom (icons) picker implementation
+  - Minot source code comments corrections
+  - Do not update global view if it's hidden
+  - FIX: Make sure we have a valid latitude/longitude seconds value when editing destination coordinates
+
 * 1.0.20171027a
   - Optimize floating points operations
   - Smoothen heading values (EMA) like all other sensor/position values
@@ -25,3 +37,4 @@
 
 * 1.0.20171019a
   - Post Tenebras Lux
+
