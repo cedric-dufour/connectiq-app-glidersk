@@ -21,7 +21,7 @@ using Toybox.WatchUi as Ui;
 
 // NOTE: Since Ui.Confirmation does not allow to pre-select "Yes" as an answer,
 //       let's us our own "confirmation" menu and save one key press
-class MenuDestinationEditToCurrent extends Ui.Menu {
+class MenuDestinationEditFromCurrent extends Ui.Menu {
 
   //
   // FUNCTIONS: Ui.Menu (override/implement)
@@ -30,12 +30,12 @@ class MenuDestinationEditToCurrent extends Ui.Menu {
   function initialize() {
     Menu.initialize();
     Menu.setTitle(Ui.loadResource(Rez.Strings.menuConfirm));
-    Menu.addItem(Lang.format("$1$ ?", [Ui.loadResource(Rez.Strings.menuDestinationToCurrent)]), :confirm);
+    Menu.addItem(Lang.format("$1$ ?", [Ui.loadResource(Rez.Strings.menuDestinationFromCurrent)]), :confirm);
   }
 
 }
 
-class MenuDelegateDestinationEditToCurrent extends Ui.MenuInputDelegate {
+class MenuDelegateDestinationEditFromCurrent extends Ui.MenuInputDelegate {
 
   //
   // FUNCTIONS: Ui.MenuInputDelegate (override/implement)

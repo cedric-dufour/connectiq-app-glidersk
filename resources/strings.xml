@@ -88,7 +88,7 @@
   <string id="menuDestinationLatitude">Latitude</string>
   <string id="menuDestinationLongitude">Longitude</string>
   <string id="menuDestinationElevation">Elevation</string>
-  <string id="menuDestinationToCurrent">To Current</string>
+  <string id="menuDestinationFromCurrent">From Current</string>
   <!-- Menu (activity) -->
   <string id="menuActivity">Activity</string>
   <string id="menuActivityStart">Start</string>

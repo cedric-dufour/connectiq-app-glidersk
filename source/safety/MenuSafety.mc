@@ -39,7 +39,7 @@ class MenuDelegateSafety extends Ui.MenuInputDelegate {
     }
     else if (item == :menuDestinationEdit) {
       //Sys.println("DEBUG: MenuDelegateSafety.onMenuItem(:menuDestinationEdit)");
-      Ui.pushView(new Rez.Menus.menuDestinationEdit(), new MenuDelegateDestinationEdit(), Ui.SLIDE_IMMEDIATE);
+      Ui.pushView(new MenuDestinationEdit(), new MenuDelegateDestinationEdit(), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuDestinationSave) {
       //Sys.println("DEBUG: MenuDelegateSafety.onMenuItem(:menuDestinationSave)");

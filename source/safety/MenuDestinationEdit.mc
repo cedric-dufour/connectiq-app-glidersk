@@ -20,7 +20,25 @@ using Toybox.Application as App;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
-// Menu: resources/menus/menuDestinationEdit.xml
+class MenuDestinationEdit extends Ui.Menu {
+
+  //
+  // FUNCTIONS: Ui.Menu (override/implement)
+  //
+
+  function initialize() {
+    Menu.initialize();
+    Menu.setTitle(Ui.loadResource(Rez.Strings.menuDestinationEdit));
+    Menu.addItem(Ui.loadResource(Rez.Strings.menuDestinationName), :menuDestinationName);
+    Menu.addItem(Ui.loadResource(Rez.Strings.menuDestinationLatitude), :menuDestinationLatitude);
+    Menu.addItem(Ui.loadResource(Rez.Strings.menuDestinationLongitude), :menuDestinationLongitude);
+    Menu.addItem(Ui.loadResource(Rez.Strings.menuDestinationElevation), :menuDestinationElevation);
+    if($.GSK_PositionLocation != null and $.GSK_PositionAltitude != null) {
+      Menu.addItem(Ui.loadResource(Rez.Strings.menuDestinationFromCurrent), :menuDestinationFromCurrent);
+    }
+  }
+  
+}
 
 class MenuDelegateDestinationEdit extends Ui.MenuInputDelegate {
 
@@ -49,9 +67,9 @@ class MenuDelegateDestinationEdit extends Ui.MenuInputDelegate {
       //Sys.println("DEBUG: MenuDelegateDestinationEdit.onMenuItem(:menuDestinationElevation)");
       Ui.pushView(new PickerDestinationEditElevation(), new PickerDelegateDestinationEditElevation(), Ui.SLIDE_IMMEDIATE);
     }
-    else if (item == :menuDestinationToCurrent) {
-      //Sys.println("DEBUG: MenuDelegateDestinationEdit.onMenuItem(:menuDestinationToCurrent)");
-      Ui.pushView(new MenuDestinationEditToCurrent(), new MenuDelegateDestinationEditToCurrent(), Ui.SLIDE_IMMEDIATE);
+    else if (item == :menuDestinationFromCurrent) {
+      //Sys.println("DEBUG: MenuDelegateDestinationEdit.onMenuItem(:menuDestinationFromCurrent)");
+      Ui.pushView(new MenuDestinationEditFromCurrent(), new MenuDelegateDestinationEditFromCurrent(), Ui.SLIDE_IMMEDIATE);
     }
   }
 
