@@ -210,7 +210,9 @@ class ViewGlobal extends Ui.View {
     //Sys.println("DEBUG: ViewGlobal.updateUi()");
 
     // Request UI update
-    Ui.requestUpdate();
+    if(self.bShow) {
+      Ui.requestUpdate();
+    }
   }
 
   function updateLayout() {
