@@ -25,18 +25,9 @@ using Toybox.Time;
 using Toybox.Timer;
 using Toybox.WatchUi as Ui;
 
-// Constants
-// ... no-value strings
-const GSK_NOVALUE_LEN2 = "--";
-const GSK_NOVALUE_LEN3 = "---";
-const GSK_NOVALUE_LEN4 = "----";
-// ... FIR fields
-const GSK_FITFIELD_VERTICALSPEED = 0;
-const GSK_FITFIELD_RATEOFTURN = 1;
-const GSK_FITFIELD_ACCELERATION = 2;
-// ... tones control
-const GSK_TONES_SAFETY = 1;
-const GSK_TONES_VARIOMETER = 2;
+//
+// GLOBALS
+//
 
 // Application settings
 var GSK_Settings = null;
@@ -59,7 +50,36 @@ var GSK_FitField_Acceleration = null;
 // Current view
 var GSK_CurrentView = null;
 
+//
+// CONSTANTS
+//
+
+// No-value strings
+// NOTE: Those ought to be defined in the GskApp class like other constants but code then fails with an "Invalid Value" error when called upon; BUG?
+const GSK_NOVALUE_LEN2 = "--";
+const GSK_NOVALUE_LEN3 = "---";
+const GSK_NOVALUE_LEN4 = "----";
+
+
+//
+// CLASS
+//
+
 class GskApp extends App.AppBase {
+
+  //
+  // CONSTANTS
+  //
+
+  // FIT fields (as per resources/fit.xml)
+  public const FITFIELD_VERTICALSPEED = 0;
+  public const FITFIELD_RATEOFTURN = 1;
+  public const FITFIELD_ACCELERATION = 2;
+
+  // Tones control
+  public const TONES_SAFETY = 1;
+  public const TONES_VARIOMETER = 2;
+
 
   //
   // VARIABLES
@@ -282,11 +302,11 @@ class GskApp extends App.AppBase {
     // Enable tones
     self.iTones = 0;
     if(Attn has :playTone) {
-      if(_iTones & GSK_TONES_SAFETY and $.GSK_Settings.bSafetyTones) {
-        self.iTones |= GSK_TONES_SAFETY;
+      if(_iTones & self.TONES_SAFETY and $.GSK_Settings.bSafetyTones) {
+        self.iTones |= self.TONES_SAFETY;
       }
-      if(_iTones & GSK_TONES_VARIOMETER and $.GSK_Settings.bVariometerTones) {
-        self.iTones |= GSK_TONES_VARIOMETER;
+      if(_iTones & self.TONES_VARIOMETER and $.GSK_Settings.bVariometerTones) {
+        self.iTones |= self.TONES_VARIOMETER;
       }
     }
 
@@ -296,7 +316,7 @@ class GskApp extends App.AppBase {
       self.iTonesTick = 1000;
       self.iTonesLastTick = 0;
       self.oTonesTimer = new Timer.Timer();
-      self.oTonesTimer.start(method(:onTonesTimer), self.iTones & GSK_TONES_VARIOMETER ? 100 : 1000, true);
+      self.oTonesTimer.start(method(:onTonesTimer), self.iTones & self.TONES_VARIOMETER ? 100 : 1000, true);
     }
   }
 
@@ -312,22 +332,22 @@ class GskApp extends App.AppBase {
     }
 
     // Alert tones (priority over variometer)
-    if(self.iTones & GSK_TONES_SAFETY) {
+    if(self.iTones & self.TONES_SAFETY) {
       if($.GSK_Processing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {  // position accuracy is good enough
-        if($.GSK_Processing.bAltitudeCritical and self.iTonesTick-self.iTonesLastTick >= (self.iTones & GSK_TONES_VARIOMETER ? 10 : 1)) {
+        if($.GSK_Processing.bAltitudeCritical and self.iTonesTick-self.iTonesLastTick >= (self.iTones & self.TONES_VARIOMETER ? 10 : 1)) {
           //Sys.println(Lang.format("DEBUG: playTone = altitude critical @ $1$", [self.iTonesTick]));
           Attn.playTone(Attn.TONE_LOUD_BEEP);
           self.iTonesLastTick = self.iTonesTick;
           return;
         }
-        else if($.GSK_Processing.bAltitudeWarning and self.iTonesTick-self.iTonesLastTick >= (self.iTones & GSK_TONES_VARIOMETER ? 30 : 3)) {
+        else if($.GSK_Processing.bAltitudeWarning and self.iTonesTick-self.iTonesLastTick >= (self.iTones & self.TONES_VARIOMETER ? 30 : 3)) {
           //Sys.println(Lang.format("DEBUG: playTone: altitude warning @ $1$", [self.iTonesTick]));
           Attn.playTone(Attn.TONE_LOUD_BEEP);
           self.iTonesLastTick = self.iTonesTick;
           return;
         }
       }
-      else if(self.iTonesTick-self.iTonesLastTick >= (self.iTones & GSK_TONES_VARIOMETER ? 20 : 2)) {
+      else if(self.iTonesTick-self.iTonesLastTick >= (self.iTones & self.TONES_VARIOMETER ? 20 : 2)) {
         //Sys.println(Lang.format("DEBUG: playTone: position accuracy @ $1$", [self.iTonesTick]));
         Attn.playTone(Attn.TONE_ALARM);
         self.iTonesLastTick = self.iTonesTick;
@@ -338,7 +358,7 @@ class GskApp extends App.AppBase {
     // Variometer
     // ALGO: Tones "tick" is 100ms; we work between 200ms (2 ticks) and 2000ms (20 ticks) pediod,
     //       depending on the ratio between the ascent speed and the variometer range.
-    if(self.iTones & GSK_TONES_VARIOMETER)
+    if(self.iTones & self.TONES_VARIOMETER)
     {
       if($.GSK_Processing.fVariometer != null and $.GSK_Processing.fVariometer > 0.05f) {
         if(self.iTonesTick-self.iTonesLastTick >= 20.0f-18.0f*$.GSK_Processing.fVariometer/$.GSK_Settings.fVariometerRange) {

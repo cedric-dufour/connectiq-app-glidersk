@@ -137,7 +137,7 @@ class ViewSafety extends Ui.View {
     self.oRezValueTime.setColor(iColorText);
 
     // Unmute tones
-    App.getApp().unmuteTones($.GSK_TONES_SAFETY);
+    App.getApp().unmuteTones(GskApp.TONES_SAFETY);
 
     // Done
     self.bShow = true;

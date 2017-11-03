@@ -76,7 +76,7 @@ class ViewRateOfTurn extends Ui.View {
     App.getApp().loadSettings();
 
     // Unmute tones
-    App.getApp().unmuteTones($.GSK_TONES_SAFETY);
+    App.getApp().unmuteTones(GskApp.TONES_SAFETY);
 
     // Done
     self.bShow = true;

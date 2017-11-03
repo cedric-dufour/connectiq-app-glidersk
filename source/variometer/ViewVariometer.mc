@@ -76,7 +76,7 @@ class ViewVariometer extends Ui.View {
     App.getApp().loadSettings();
 
     // Unmute tones
-    App.getApp().unmuteTones($.GSK_TONES_SAFETY | $.GSK_TONES_VARIOMETER);
+    App.getApp().unmuteTones(GskApp.TONES_SAFETY | GskApp.TONES_VARIOMETER);
 
     // Done
     self.bShow = true;

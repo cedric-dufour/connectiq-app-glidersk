@@ -52,11 +52,11 @@ class MenuDelegateActivityStart extends Ui.MenuInputDelegate {
       if($.GSK_ActivitySession == null) {
         // NOTE: "Flying" activity number is 20 (cf. https://www.thisisant.com/resources/fit -> Profiles.xlsx)
         $.GSK_ActivitySession = AR.createSession({ :name=>"GliderSK", :sport=>20, :subSport=>AR.SUB_SPORT_GENERIC });
-        $.GSK_FitField_VerticalSpeed = $.GSK_ActivitySession.createField("VerticalSpeed", $.GSK_FITFIELD_VERTICALSPEED, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_Settings.sUnitVerticalSpeed });
+        $.GSK_FitField_VerticalSpeed = $.GSK_ActivitySession.createField("VerticalSpeed", GskApp.FITFIELD_VERTICALSPEED, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_Settings.sUnitVerticalSpeed });
         $.GSK_FitField_VerticalSpeed_UnitConstant = $.GSK_Settings.fUnitVerticalSpeedConstant;
-        $.GSK_FitField_RateOfTurn = $.GSK_ActivitySession.createField("RateOfTurn", $.GSK_FITFIELD_RATEOFTURN, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_Settings.sUnitRateOfTurn });
+        $.GSK_FitField_RateOfTurn = $.GSK_ActivitySession.createField("RateOfTurn", GskApp.FITFIELD_RATEOFTURN, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_Settings.sUnitRateOfTurn });
         $.GSK_FitField_RateOfTurn_UnitConstant = $.GSK_Settings.fUnitRateOfTurnConstant;
-        $.GSK_FitField_Acceleration = $.GSK_ActivitySession.createField("Acceleration", $.GSK_FITFIELD_ACCELERATION, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>"g" });
+        $.GSK_FitField_Acceleration = $.GSK_ActivitySession.createField("Acceleration", GskApp.FITFIELD_ACCELERATION, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>"g" });
       }
       $.GSK_ActivitySession.start();
       if(Attn has :playTone) {

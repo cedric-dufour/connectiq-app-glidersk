@@ -44,9 +44,15 @@ using Toybox.System as Sys;
 //   https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
 //   https://dsp.stackexchange.com/questions/40462/exponential-moving-average-cut-off-frequency
 
-const GSK_PLOTBUFFER_SIZE = 600;  // 10 minutes = 600 seconds
-
 class GskProcessing {
+
+  //
+  // CONSTANTS
+  //
+
+  // Plot buffer
+  public const PLOTBUFFER_SIZE = 600;  // 10 minutes = 600 seconds
+
 
   //
   // VARIABLES
@@ -133,14 +139,14 @@ class GskProcessing {
     self.resetPositionData();
     // ... plot buffer
     self.iPlotIndex = -1;
-    self.aiPlotEpoch = new [$.GSK_PLOTBUFFER_SIZE];
-    for(var i=0; i<$.GSK_PLOTBUFFER_SIZE; i++) { self.aiPlotEpoch[i] = null; }
-    self.aiPlotLatitude = new [$.GSK_PLOTBUFFER_SIZE];
-    for(var i=0; i<$.GSK_PLOTBUFFER_SIZE; i++) { self.aiPlotLatitude[i] = null; }
-    self.aiPlotLongitude = new [$.GSK_PLOTBUFFER_SIZE];
-    for(var i=0; i<$.GSK_PLOTBUFFER_SIZE; i++) { self.aiPlotLongitude[i] = null; }
-    self.aiPlotVariometer = new [$.GSK_PLOTBUFFER_SIZE];
-    for(var i=0; i<$.GSK_PLOTBUFFER_SIZE; i++) { self.aiPlotVariometer[i] = null; }
+    self.aiPlotEpoch = new [self.PLOTBUFFER_SIZE];
+    for(var i=0; i<self.PLOTBUFFER_SIZE; i++) { self.aiPlotEpoch[i] = null; }
+    self.aiPlotLatitude = new [self.PLOTBUFFER_SIZE];
+    for(var i=0; i<self.PLOTBUFFER_SIZE; i++) { self.aiPlotLatitude[i] = null; }
+    self.aiPlotLongitude = new [self.PLOTBUFFER_SIZE];
+    for(var i=0; i<self.PLOTBUFFER_SIZE; i++) { self.aiPlotLongitude[i] = null; }
+    self.aiPlotVariometer = new [self.PLOTBUFFER_SIZE];
+    for(var i=0; i<self.PLOTBUFFER_SIZE; i++) { self.aiPlotVariometer[i] = null; }
   }
 
   function resetSensorData() {
@@ -455,7 +461,7 @@ class GskProcessing {
         self.iPositionEpoch = _iEpoch;
 
         // Plot buffer
-        self.iPlotIndex = (self.iPlotIndex+1) % $.GSK_PLOTBUFFER_SIZE;
+        self.iPlotIndex = (self.iPlotIndex+1) % self.PLOTBUFFER_SIZE;
         self.aiPlotEpoch[self.iPlotIndex] = self.iPositionEpoch;
         // ... location as (integer) milliseconds of arc
         var adPositionDegrees = self.oLocation.toDegrees();

@@ -135,7 +135,7 @@ class ViewVarioplot extends Ui.View {
     }
 
     // Unmute tones
-    App.getApp().unmuteTones($.GSK_TONES_SAFETY | $.GSK_TONES_VARIOMETER);
+    App.getApp().unmuteTones(GskApp.TONES_SAFETY | GskApp.TONES_VARIOMETER);
 
     // Done
     self.bShow = true;
@@ -292,7 +292,7 @@ class ViewVarioplot extends Ui.View {
 
     // ... plot
     self.clipPlot(_oDC);
-    var iCurrentIndex = (iEndIndex-iPlotRange+1+$.GSK_PLOTBUFFER_SIZE) % $.GSK_PLOTBUFFER_SIZE;
+    var iCurrentIndex = (iEndIndex-iPlotRange+1+GskProcessing.PLOTBUFFER_SIZE) % GskProcessing.PLOTBUFFER_SIZE;
     //var fZoomX = $.GSK_Settings.fPlotZoom * Math.cos(iEndLatitude / 1555200000.0d*Math.PI);
     var fZoomX = $.GSK_Settings.fPlotZoom * Math.cos(iEndLatitude / 495035534.9930312523f);
     var fZoomY = $.GSK_Settings.fPlotZoom;
@@ -359,7 +359,7 @@ class ViewVarioplot extends Ui.View {
       else {
         bDraw = false;
       }
-      iCurrentIndex = (iCurrentIndex+1) % $.GSK_PLOTBUFFER_SIZE;
+      iCurrentIndex = (iCurrentIndex+1) % GskProcessing.PLOTBUFFER_SIZE;
     }
     _oDC.clearClip();
   }
