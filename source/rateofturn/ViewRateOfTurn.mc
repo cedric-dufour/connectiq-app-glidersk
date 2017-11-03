@@ -204,15 +204,16 @@ class ViewRateOfTurn extends Ui.View {
     // Draw position values
     var fValue;
 
-    // ... altitude
-    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fAltitude != null) {
-      fValue = $.GSK_Processing.fAltitude * $.GSK_Settings.fUnitElevationConstant;
+    // ... heading
+    if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fHeading != null) {
+      //fValue = (($.GSK_Processing.fHeading * 180.0f/Math.PI).toNumber()) % 360;
+      fValue = (($.GSK_Processing.fHeading * 57.2957795131f).toNumber()) % 360;
       sValue = fValue.format("%.0f");
     }
     else {
       sValue = $.GSK_NOVALUE_LEN3;
     }
-    _oDC.drawText(120, 22, Gfx.FONT_MEDIUM, Lang.format("$1$ $2$", [sValue, $.GSK_Settings.sUnitElevation]), Gfx.TEXT_JUSTIFY_CENTER);
+    _oDC.drawText(120, 22, Gfx.FONT_MEDIUM, Lang.format("$1$°", [sValue]), Gfx.TEXT_JUSTIFY_CENTER);
 
     // ... rate of turn
     if($.GSK_Processing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_Processing.fRateOfTurn != null) {
