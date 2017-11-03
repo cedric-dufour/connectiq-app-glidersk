@@ -223,7 +223,7 @@ class GskApp extends App.AppBase {
   function onLocationEvent(_oInfo) {
     //Sys.println("DEBUG: GskApp.onLocationEvent()");
     var iEpoch = Time.now().value();
-      
+
     // Save location
     if(_oInfo has :position) {
       $.GSK_PositionLocation = _oInfo.position;

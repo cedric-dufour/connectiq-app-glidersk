@@ -33,7 +33,7 @@ class MenuSettingsAbout extends Ui.Menu {
     Menu.addItem(Lang.format("$1$: GPL 3.0", [Ui.loadResource(Rez.Strings.titleLicense)]), :aboutLicense);
     Menu.addItem(Lang.format("$1$: Cédric Dufour", [Ui.loadResource(Rez.Strings.titleAuthor)]), :aboutAuthor);
   }
-  
+
 }
 
 class MenuDelegateSettingsAbout extends Ui.MenuInputDelegate {

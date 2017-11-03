@@ -37,7 +37,7 @@ class MenuDestinationEdit extends Ui.Menu {
       Menu.addItem(Ui.loadResource(Rez.Strings.menuDestinationFromCurrent), :menuDestinationFromCurrent);
     }
   }
-  
+
 }
 
 class MenuDelegateDestinationEdit extends Ui.MenuInputDelegate {

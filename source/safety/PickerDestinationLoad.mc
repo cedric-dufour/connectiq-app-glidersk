@@ -64,7 +64,7 @@ class PickerDestinationLoad extends Ui.Picker {
         var aiMemoryIndices_sorted = GskUtils.sort(afMemoryDistances);
         aiMemoryKeys_sorted = new [iMemoryUsed];
         asMemoryValues_sorted = new [iMemoryUsed];
-        
+
         for(var i=0; i<iMemoryUsed; i++) {
           aiMemoryKeys_sorted[i] = aiMemoryKeys[aiMemoryIndices_sorted[i]];
           asMemoryValues_sorted[i] = Lang.format("($1$$2$)\n$3$", [(afMemoryDistances[i]*$.GSK_Settings.fUnitDistanceConstant).format("%.0f"), $.GSK_Settings.sUnitDistance, asMemoryValues[aiMemoryIndices_sorted[i]]]);

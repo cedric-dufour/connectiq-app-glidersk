@@ -74,7 +74,7 @@ class ViewVarioplot extends Ui.View {
     View.initialize();
 
     // Display mode
-    // ... internal 
+    // ... internal
     self.bShow = false;
     self.iPanZoom = 0;
   }
@@ -82,7 +82,7 @@ class ViewVarioplot extends Ui.View {
   function onLayout(_oDC) {
     // Layout
     View.setLayout(Rez.Layouts.LayoutVarioplot(_oDC));
-    
+
     // Screen center coordinates
     self.iCenterX = (_oDC.getWidth()/2).toNumber();
     self.iCenterY = (_oDC.getHeight()/2).toNumber();
@@ -177,7 +177,7 @@ class ViewVarioplot extends Ui.View {
       self.oRezButtonKeyUp = null;
       self.oRezButtonKeyDown = null;
     }
-    
+
     // Done
     return true;
   }
@@ -263,7 +263,7 @@ class ViewVarioplot extends Ui.View {
   function clipPlot(_oDC) {
     _oDC.setClip(0, 31, 240, 178);
   }
-  
+
   function drawPlot(_oDC) {
     //Sys.println("DEBUG: ViewVarioplot.drawPlot()");
     var iNowEpoch = Time.now().value();
@@ -297,7 +297,7 @@ class ViewVarioplot extends Ui.View {
     var fZoomX = $.GSK_Settings.fPlotZoom * Math.cos(iEndLatitude / 495035534.9930312523f);
     var fZoomY = $.GSK_Settings.fPlotZoom;
     var iMaxDeltaEpoch = $.GSK_Settings.iTimeConstant+1;
-    var iLastEpoch = iEndEpoch;  // 
+    var iLastEpoch = iEndEpoch;  //
     var iLastX = 0;
     var iLastY = 0;
     var iLastColor = 0;
@@ -363,12 +363,12 @@ class ViewVarioplot extends Ui.View {
     }
     _oDC.clearClip();
   }
-  
+
   (:layout_240x240)
   function drawValues(_oDC) {
     self.drawValues_positioned(_oDC, 40, 200, 30, 193);
   }
-  
+
   function drawValues_positioned(_oDC, _iXleft, _iXright, _iYtop, _iYbottom) {
     //Sys.println("DEBUG: ViewVarioplot.drawValues()");
 
