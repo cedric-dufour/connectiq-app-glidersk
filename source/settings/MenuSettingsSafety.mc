@@ -33,21 +33,21 @@ class MenuDelegateSettingsSafety extends Ui.MenuInputDelegate {
 
   function onMenuItem(item) {
     if (item == :menuFinesseReference) {
-      //Sys.println("DEBUG: MenuDelegateSettings.onMenuItem(:menuFinesseReference)");
+      //Sys.println("DEBUG: MenuDelegateSettingsSafety.onMenuItem(:menuFinesseReference)");
       Ui.pushView(new PickerFinesse(), new PickerDelegateFinesse(), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuHeightDecision) {
-      //Sys.println("DEBUG: MenuDelegateSettings.onMenuItem(:menuHeightDecision)");
+      //Sys.println("DEBUG: MenuDelegateSettingsSafety.onMenuItem(:menuHeightDecision)");
       $.GSK_Settings.load();  // ... reload potentially modified settings
       Ui.pushView(new PickerGenericElevation("userHeightDecision", Lang.format("$1$ [$2$]", [Ui.loadResource(Rez.Strings.titleHeightDecision), $.GSK_Settings.sUnitElevation])), new PickerDelegateGenericElevation("userHeightDecision"), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuHeightWarning) {
-      //Sys.println("DEBUG: MenuDelegateSettings.onMenuItem(:menuHeightWarning)");
+      //Sys.println("DEBUG: MenuDelegateSettingsSafety.onMenuItem(:menuHeightWarning)");
       $.GSK_Settings.load();  // ... reload potentially modified settings
       Ui.pushView(new PickerGenericElevation("userHeightWarning", Lang.format("$1$ [$2$]", [Ui.loadResource(Rez.Strings.titleHeightWarning), $.GSK_Settings.sUnitElevation])), new PickerDelegateGenericElevation("userHeightWarning"), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuHeightCritical) {
-      //Sys.println("DEBUG: MenuDelegateSettings.onMenuItem(:menuHeightCritical)");
+      //Sys.println("DEBUG: MenuDelegateSettingsSafety.onMenuItem(:menuHeightCritical)");
       $.GSK_Settings.load();  // ... reload potentially modified settings
       Ui.pushView(new PickerGenericElevation("userHeightCritical", Lang.format("$1$ [$2$]", [Ui.loadResource(Rez.Strings.titleHeightCritical), $.GSK_Settings.sUnitElevation])), new PickerDelegateGenericElevation("userHeightCritical"), Ui.SLIDE_IMMEDIATE);
     }

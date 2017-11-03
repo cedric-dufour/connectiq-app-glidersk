@@ -33,15 +33,15 @@ class MenuDelegateSettingsGeneral extends Ui.MenuInputDelegate {
 
   function onMenuItem(item) {
     if (item == :menuTimeConstant) {
-      //Sys.println("DEBUG: MenuDelegateSettings.onMenuItem(:menuTimeConstant)");
+      //Sys.println("DEBUG: MenuDelegateSettingsGeneral.onMenuItem(:menuTimeConstant)");
       Ui.pushView(new PickerTimeConstant(), new PickerDelegateTimeConstant(), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuBackgroundColor) {
-      //Sys.println("DEBUG: MenuDelegateSettings.onMenuItem(:menuBackgroundColor)");
+      //Sys.println("DEBUG: MenuDelegateSettingsGeneral.onMenuItem(:menuBackgroundColor)");
       Ui.pushView(new PickerBackgroundColor(), new PickerDelegateBackgroundColor(), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuLapKey) {
-      //Sys.println("DEBUG: MenuDelegateSettings.onMenuItem(:menuLapKey)");
+      //Sys.println("DEBUG: MenuDelegateSettingsGeneral.onMenuItem(:menuLapKey)");
       Ui.pushView(new PickerGenericOnOff("userLapKey", Ui.loadResource(Rez.Strings.titleLapKey)), new PickerDelegateGenericOnOff("userLapKey"), Ui.SLIDE_IMMEDIATE);
     }
   }

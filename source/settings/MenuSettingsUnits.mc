@@ -33,19 +33,19 @@ class MenuDelegateSettingsUnits extends Ui.MenuInputDelegate {
 
   function onMenuItem(item) {
     if (item == :menuUnitDistance) {
-      //Sys.println("DEBUG: MenuDelegateSettings.onMenuItem(:menuUnitDistance)");
+      //Sys.println("DEBUG: MenuDelegateSettingsUnits.onMenuItem(:menuUnitDistance)");
       Ui.pushView(new PickerUnitDistance(), new PickerDelegateUnitDistance(), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuUnitElevation) {
-      //Sys.println("DEBUG: MenuDelegateSettings.onMenuItem(:menuUnitElevation)");
+      //Sys.println("DEBUG: MenuDelegateSettingsUnits.onMenuItem(:menuUnitElevation)");
       Ui.pushView(new PickerUnitElevation(), new PickerDelegateUnitElevation(), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuUnitRateOfTurn) {
-      //Sys.println("DEBUG: MenuDelegateSettings.onMenuItem(:menuUnitRateOfTurn)");
+      //Sys.println("DEBUG: MenuDelegateSettingsUnits.onMenuItem(:menuUnitRateOfTurn)");
       Ui.pushView(new PickerUnitRateOfTurn(), new PickerDelegateUnitRateOfTurn(), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuTimeUTC) {
-      //Sys.println("DEBUG: MenuDelegateSettings.onMenuItem(:menuTimeUTC)");
+      //Sys.println("DEBUG: MenuDelegateSettingsUnits.onMenuItem(:menuTimeUTC)");
       Ui.pushView(new PickerTimeUTC(), new PickerDelegateTimeUTC(), Ui.SLIDE_IMMEDIATE);
     }
   }

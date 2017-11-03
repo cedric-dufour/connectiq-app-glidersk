@@ -33,15 +33,15 @@ class MenuDelegateSettingsSounds extends Ui.MenuInputDelegate {
 
   function onMenuItem(item) {
     if (item == :menuVariometerTones) {
-      //Sys.println("DEBUG: MenuDelegateVariometerTones.onMenuItem(:menuVariometerTones)");
+      //Sys.println("DEBUG: MenuDelegateSettingsSounds.onMenuItem(:menuVariometerTones)");
       Ui.pushView(new PickerGenericOnOff("userVariometerTones", Ui.loadResource(Rez.Strings.titleVariometerTones)), new PickerDelegateGenericOnOff("userVariometerTones"), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuSafetyTones) {
-      //Sys.println("DEBUG: MenuDelegateSafetyTones.onMenuItem(:menuSafetyTones)");
+      //Sys.println("DEBUG: MenuDelegateSettingsSounds.onMenuItem(:menuSafetyTones)");
       Ui.pushView(new PickerGenericOnOff("userSafetyTones", Ui.loadResource(Rez.Strings.titleSafetyTones)), new PickerDelegateGenericOnOff("userSafetyTones"), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuMuteDistance) {
-      //Sys.println("DEBUG: MenuDelegateMuteDistance.onMenuItem(:menuMuteDistance)");
+      //Sys.println("DEBUG: MenuDelegateSettingsSounds.onMenuItem(:menuMuteDistance)");
       $.GSK_Settings.load();  // ... reload potentially modified settings
       Ui.pushView(new PickerGenericDistance("userMuteDistance", Lang.format("$1$ [$2$]", [Ui.loadResource(Rez.Strings.titleMuteDistance), $.GSK_Settings.sUnitDistance])), new PickerDelegateGenericDistance("userMuteDistance"), Ui.SLIDE_IMMEDIATE);
     }

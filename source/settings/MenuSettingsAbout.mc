@@ -23,7 +23,7 @@ using Toybox.WatchUi as Ui;
 class MenuSettingsAbout extends Ui.Menu {
 
   //
-  // FUNCTIONS: Ui.MenuInputDelegate (override/implement)
+  // FUNCTIONS: Ui.Menu (override/implement)
   //
 
   function initialize() {
