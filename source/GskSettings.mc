@@ -21,29 +21,33 @@ using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
-// Constants
-// ... default values
-const GSK_SETTINGS_UNITDISTANCE = -1;
-const GSK_SETTINGS_UNITELEVATION = -1;
-const GSK_SETTINGS_UNITRATEOFTURN = 0;
-const GSK_SETTINGS_TIMEUTC = false;
-const GSK_SETTINGS_TIMECONSTANT = 3;
-const GSK_SETTINGS_VARIOMETERRANGE = 0;
-const GSK_SETTINGS_VARIOMETERMODE = 0;
-const GSK_SETTINGS_ENERGYEFFICIENCY = 75;
-const GSK_SETTINGS_PLOTRANGE = 1;
-const GSK_SETTINGS_PLOTZOOM = 6;
-const GSK_SETTINGS_FINESSEREFERENCE = 20;
-const GSK_SETTINGS_HEIGHTDECISION = 500.0f;
-const GSK_SETTINGS_HEIGHTWARNING = 400.0f;
-const GSK_SETTINGS_HEIGHTCRITICAL = 300.0f;
-const GSK_SETTINGS_BACKGROUNDCOLOR = Gfx.COLOR_WHITE;
-const GSK_SETTINGS_VARIOMETERTONES = true;
-const GSK_SETTINGS_SAFETYTONES = true;
-const GSK_SETTINGS_MUTEDISTANCE = 2000.0f;
-const GSK_SETTINGS_LAPKEY = true;
-
 class GskSettings {
+
+  //
+  // CONSTANTS
+  //
+
+  // Default values
+  private const DEFAULT_UNITDISTANCE = -1;
+  private const DEFAULT_UNITELEVATION = -1;
+  private const DEFAULT_UNITRATEOFTURN = 0;
+  private const DEFAULT_TIMEUTC = false;
+  private const DEFAULT_TIMECONSTANT = 3;
+  private const DEFAULT_VARIOMETERRANGE = 0;
+  private const DEFAULT_VARIOMETERMODE = 0;
+  private const DEFAULT_ENERGYEFFICIENCY = 75;
+  private const DEFAULT_PLOTRANGE = 1;
+  private const DEFAULT_PLOTZOOM = 6;
+  private const DEFAULT_FINESSEREFERENCE = 20;
+  private const DEFAULT_HEIGHTDECISION = 500.0f;
+  private const DEFAULT_HEIGHTWARNING = 400.0f;
+  private const DEFAULT_HEIGHTCRITICAL = 300.0f;
+  private const DEFAULT_BACKGROUNDCOLOR = Gfx.COLOR_WHITE;
+  private const DEFAULT_VARIOMETERTONES = true;
+  private const DEFAULT_SAFETYTONES = true;
+  private const DEFAULT_MUTEDISTANCE = 2000.0f;
+  private const DEFAULT_LAPKEY = true;
+
 
   //
   // VARIABLES
@@ -97,27 +101,27 @@ class GskSettings {
 
   function initialize() {
     // Units
-    self.setUnitDistance($.GSK_SETTINGS_UNITDISTANCE);
-    self.setUnitElevation($.GSK_SETTINGS_UNITELEVATION);
-    self.setUnitRateOfTurn($.GSK_SETTINGS_UNITRATEOFTURN);
-    self.setTimeUTC($.GSK_SETTINGS_TIMEUTC);
+    self.setUnitDistance(self.DEFAULT_UNITDISTANCE);
+    self.setUnitElevation(self.DEFAULT_UNITELEVATION);
+    self.setUnitRateOfTurn(self.DEFAULT_UNITRATEOFTURN);
+    self.setTimeUTC(self.DEFAULT_TIMEUTC);
 
     // Other constants
-    self.setTimeConstant($.GSK_SETTINGS_TIMECONSTANT);
-    self.setVariometerRange($.GSK_SETTINGS_VARIOMETERRANGE);
-    self.setVariometerMode($.GSK_SETTINGS_VARIOMETERMODE);
-    self.setEnergyEfficiency($.GSK_SETTINGS_ENERGYEFFICIENCY);
-    self.setPlotRange($.GSK_SETTINGS_PLOTRANGE);
-    self.setPlotZoom($.GSK_SETTINGS_PLOTZOOM);
-    self.setFinesseReference($.GSK_SETTINGS_FINESSEREFERENCE);
-    self.setHeightDecision($.GSK_SETTINGS_HEIGHTDECISION);
-    self.setHeightWarning($.GSK_SETTINGS_HEIGHTWARNING);
-    self.setHeightCritical($.GSK_SETTINGS_HEIGHTCRITICAL);
-    self.setBackgroundColor($.GSK_SETTINGS_BACKGROUNDCOLOR);
-    self.setVariometerTones($.GSK_SETTINGS_VARIOMETERTONES);
-    self.setSafetyTones($.GSK_SETTINGS_SAFETYTONES);
-    self.setMuteDistance($.GSK_SETTINGS_MUTEDISTANCE);
-    self.setLapKey($.GSK_SETTINGS_LAPKEY);
+    self.setTimeConstant(self.DEFAULT_TIMECONSTANT);
+    self.setVariometerRange(self.DEFAULT_VARIOMETERRANGE);
+    self.setVariometerMode(self.DEFAULT_VARIOMETERMODE);
+    self.setEnergyEfficiency(self.DEFAULT_ENERGYEFFICIENCY);
+    self.setPlotRange(self.DEFAULT_PLOTRANGE);
+    self.setPlotZoom(self.DEFAULT_PLOTZOOM);
+    self.setFinesseReference(self.DEFAULT_FINESSEREFERENCE);
+    self.setHeightDecision(self.DEFAULT_HEIGHTDECISION);
+    self.setHeightWarning(self.DEFAULT_HEIGHTWARNING);
+    self.setHeightCritical(self.DEFAULT_HEIGHTCRITICAL);
+    self.setBackgroundColor(self.DEFAULT_BACKGROUNDCOLOR);
+    self.setVariometerTones(self.DEFAULT_VARIOMETERTONES);
+    self.setSafetyTones(self.DEFAULT_SAFETYTONES);
+    self.setMuteDistance(self.DEFAULT_MUTEDISTANCE);
+    self.setLapKey(self.DEFAULT_LAPKEY);
   }
 
   function load() {
@@ -149,7 +153,7 @@ class GskSettings {
 
   function setUnitDistance(_iUnitDistance) {
     if(_iUnitDistance == null or _iUnitDistance < 0 or _iUnitDistance > 2) {
-      _iUnitDistance = $.GSK_SETTINGS_UNITDISTANCE;
+      _iUnitDistance = self.DEFAULT_UNITDISTANCE;
     }
     self.iUnitDistance = _iUnitDistance;
     if(self.iUnitDistance < 0) {  // ... auto
@@ -189,7 +193,7 @@ class GskSettings {
 
   function setUnitElevation(_iUnitElevation) {
     if(_iUnitElevation == null or _iUnitElevation < 0 or _iUnitElevation > 1) {
-      _iUnitElevation = $.GSK_SETTINGS_UNITELEVATION;
+      _iUnitElevation = self.DEFAULT_UNITELEVATION;
     }
     self.iUnitElevation = _iUnitElevation;
     if(self.iUnitElevation < 0) {  // ... auto
@@ -221,7 +225,7 @@ class GskSettings {
 
   function setUnitRateOfTurn(_iUnitRateOfTurn) {
     if(_iUnitRateOfTurn == null or _iUnitRateOfTurn < 0 or _iUnitRateOfTurn > 1) {
-      _iUnitRateOfTurn = $.GSK_SETTINGS_UNITRATEOFTURN;
+      _iUnitRateOfTurn = self.DEFAULT_UNITRATEOFTURN;
     }
     self.iUnitRateOfTurn = _iUnitRateOfTurn;
     if(_iUnitRateOfTurn == 1) {  // ... revolution-per-minute
@@ -238,7 +242,7 @@ class GskSettings {
 
   function setTimeUTC(_bTimeUTC) {
     if(_bTimeUTC == null) {
-      _bTimeUTC = $.GSK_SETTINGS_TIMEUTC;
+      _bTimeUTC = self.DEFAULT_TIMEUTC;
     }
     if(_bTimeUTC) {
       self.bTimeUTC = true;
@@ -252,7 +256,7 @@ class GskSettings {
 
   function setTimeConstant(_iTimeConstant) {
     if(_iTimeConstant == null) {
-      _iTimeConstant = $.GSK_SETTINGS_TIMECONSTANT;
+      _iTimeConstant = self.DEFAULT_TIMECONSTANT;
     }
     else if(_iTimeConstant > 10) {
       _iTimeConstant = 10;
@@ -265,7 +269,7 @@ class GskSettings {
 
   function setVariometerRange(_iVariometerRange) {
     if(_iVariometerRange == null) {
-      _iVariometerRange = $.GSK_SETTINGS_VARIOMETERRANGE;
+      _iVariometerRange = self.DEFAULT_VARIOMETERRANGE;
     }
     else if(_iVariometerRange > 2) {
       _iVariometerRange = 2;
@@ -283,7 +287,7 @@ class GskSettings {
 
   function setVariometerMode(_iVariometerMode) {
     if(_iVariometerMode == null) {
-      _iVariometerMode = $.GSK_SETTINGS_VARIOMETERMODE;
+      _iVariometerMode = self.DEFAULT_VARIOMETERMODE;
     }
     else if(_iVariometerMode > 1) {
       _iVariometerMode = 1;
@@ -296,7 +300,7 @@ class GskSettings {
 
   function setEnergyEfficiency(_iEnergyEfficiency) {
     if(_iEnergyEfficiency == null) {
-      _iEnergyEfficiency = $.GSK_SETTINGS_ENERGYEFFICIENCY;
+      _iEnergyEfficiency = self.DEFAULT_ENERGYEFFICIENCY;
     }
     else if(_iEnergyEfficiency > 100) {
       _iEnergyEfficiency = 100;
@@ -310,7 +314,7 @@ class GskSettings {
 
   function setPlotRange(_iPlotRange) {
     if(_iPlotRange == null) {
-      _iPlotRange = $.GSK_SETTINGS_PLOTRANGE;
+      _iPlotRange = self.DEFAULT_PLOTRANGE;
     }
     else if(_iPlotRange > 10) {
       _iPlotRange = 10;
@@ -323,7 +327,7 @@ class GskSettings {
 
   function setPlotZoom(_iPlotZoom) {
     if(_iPlotZoom == null) {
-      _iPlotZoom = $.GSK_SETTINGS_PLOTZOOM;
+      _iPlotZoom = self.DEFAULT_PLOTZOOM;
     }
     else if(_iPlotZoom > 9) {
       _iPlotZoom = 9;
@@ -348,7 +352,7 @@ class GskSettings {
 
   function setFinesseReference(_iFinesseReference) {
     if(_iFinesseReference == null) {
-      _iFinesseReference = $.GSK_SETTINGS_FINESSEREFERENCE;
+      _iFinesseReference = self.DEFAULT_FINESSEREFERENCE;
     }
     else if(_iFinesseReference > 99) {
       _iFinesseReference = 99;
@@ -361,7 +365,7 @@ class GskSettings {
 
   function setHeightDecision(_fHeightDecision) {
     if(_fHeightDecision == null) {
-      _fHeightDecision = $.GSK_SETTINGS_HEIGHTDECISION;
+      _fHeightDecision = self.DEFAULT_HEIGHTDECISION;
     }
     else if(_fHeightDecision > 9999.0f) {
       _fHeightDecision = 9999.0f;
@@ -374,7 +378,7 @@ class GskSettings {
 
   function setHeightWarning(_fHeightWarning) {
     if(_fHeightWarning == null) {
-      _fHeightWarning = $.GSK_SETTINGS_HEIGHTWARNING;
+      _fHeightWarning = self.DEFAULT_HEIGHTWARNING;
     }
     else if(_fHeightWarning > 9999.0f) {
       _fHeightWarning = 9999.0f;
@@ -387,7 +391,7 @@ class GskSettings {
 
   function setHeightCritical(_fHeightCritical) {
     if(_fHeightCritical == null) {
-      _fHeightCritical = $.GSK_SETTINGS_HEIGHTCRITICAL;
+      _fHeightCritical = self.DEFAULT_HEIGHTCRITICAL;
     }
     else if(_fHeightCritical > 9999.0f) {
       _fHeightCritical = 9999.0f;
@@ -400,28 +404,28 @@ class GskSettings {
 
   function setBackgroundColor(_iBackgroundColor) {
     if(_iBackgroundColor == null) {
-      _iBackgroundColor = $.GSK_SETTINGS_BACKGROUNDCOLOR;
+      _iBackgroundColor = self.DEFAULT_BACKGROUNDCOLOR;
     }
     self.iBackgroundColor = _iBackgroundColor;
   }
 
   function setVariometerTones(_bVariometerTones) {
     if(_bVariometerTones == null) {
-      _bVariometerTones = $.GSK_SETTINGS_VARIOMETERTONES;
+      _bVariometerTones = self.DEFAULT_VARIOMETERTONES;
     }
     self.bVariometerTones = _bVariometerTones;
   }
 
   function setSafetyTones(_bSafetyTones) {
     if(_bSafetyTones == null) {
-      _bSafetyTones = $.GSK_SETTINGS_SAFETYTONES;
+      _bSafetyTones = self.DEFAULT_SAFETYTONES;
     }
     self.bSafetyTones = _bSafetyTones;
   }
 
   function setMuteDistance(_fMuteDistance) {
     if(_fMuteDistance == null) {
-      _fMuteDistance = $.GSK_SETTINGS_MUTEDISTANCE;
+      _fMuteDistance = self.DEFAULT_MUTEDISTANCE;
     }
     else if(_fMuteDistance > 9999.0f) {
       _fMuteDistance = 9999.0f;
@@ -434,7 +438,7 @@ class GskSettings {
 
   function setLapKey(_bLapKey) {
     if(_bLapKey == null) {
-      _bLapKey = $.GSK_SETTINGS_LAPKEY;
+      _bLapKey = self.DEFAULT_LAPKEY;
     }
     self.bLapKey = _bLapKey;
   }
