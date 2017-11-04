@@ -141,7 +141,9 @@
   <string id="unitTimeUTC">Z</string>
   <!-- FIT -->
   <string id="titleVerticalSpeed">Vertical Speed</string>
+  <string id="unitVerticalSpeed">m/s|ft/m</string>
   <string id="titleRateOfTurn">Rate of Turn</string>
+  <string id="unitRateOfTurn">°/s|rpm</string>
   <string id="titleAcceleration">Acceleration</string>
-  <string id="unitNotAvailable">n/a</string>
+  <string id="unitAcceleration">g</string>
 </strings>
