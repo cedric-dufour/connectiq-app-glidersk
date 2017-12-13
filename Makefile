@@ -13,20 +13,22 @@ MY_SOURCES := $(shell find -L source -name '*.mc')
 .PHONY: help
 help:
 	@echo 'Targets:'
-	@echo '  ciq-help  - display the build environment help'
-	@echo '  help      - display this help message'
-	@echo '  debug     - build the project (*.prg; including debug symbols)'
-	@echo '  release   - build the project (*.prg; excluding debug symbols)'
-	@echo '  iq        - package the project (*.iq)'
-	@echo '  simulator - launch the project in the simulator'
-	@echo '  clean     - delete all build output'
+	@echo '  ciq-help    - display the build environment help'
+	@echo '  help        - display this help message'
+	@echo '  debug       - build the project (*.prg; including debug symbols)'
+	@echo '  release     - build the project (*.prg; excluding debug symbols)'
+	@echo '  iq          - package the project (*.iq)'
+	@echo '  run-debug   - launch the project in the simulator (debug version)'
+	@echo '  run-release - launch the project in the simulator (release version)'
+	@echo '  clean       - delete all build output'
 .DEFAULT_GOAL := help
+
 
 ## Build
 
 # debug
 OUTPUT_DEBUG := bin/${MY_PROJECT}.debug.prg
-${OUTPUT_DEBUG}: ${MY_MANIFEST} ${MY_RESOURCES} ${MY_SOURCES} | ${CIQ_MONKEYC} ${CIQ_DEVKEY}  
+${OUTPUT_DEBUG}: ${MY_MANIFEST} ${MY_RESOURCES} ${MY_SOURCES} | ${CIQ_MONKEYC} ${CIQ_DEVKEY}
 	mkdir -p bin
 	${CIQ_MONKEYC} -w \
 	  -o $@ \
@@ -40,7 +42,7 @@ debug: ${OUTPUT_DEBUG}
 
 # release
 OUTPUT_RELEASE := bin/${MY_PROJECT}.prg
-${OUTPUT_RELEASE}: ${MY_MANIFEST} ${MY_RESOURCES} ${MY_SOURCES} | ${CIQ_MONKEYC} ${CIQ_DEVKEY}  
+${OUTPUT_RELEASE}: ${MY_MANIFEST} ${MY_RESOURCES} ${MY_SOURCES} | ${CIQ_MONKEYC} ${CIQ_DEVKEY}
 	mkdir -p bin
 	${CIQ_MONKEYC} -w -r \
 	  -o $@ \
@@ -54,7 +56,7 @@ release: ${OUTPUT_RELEASE}
 
 # IQ
 OUTPUT_IQ := bin/${MY_PROJECT}.iq
-${OUTPUT_IQ}: ${MY_MANIFEST} ${MY_RESOURCES} ${MY_SOURCES} | ${CIQ_MONKEYC} ${CIQ_DEVKEY}  
+${OUTPUT_IQ}: ${MY_MANIFEST} ${MY_RESOURCES} ${MY_SOURCES} | ${CIQ_MONKEYC} ${CIQ_DEVKEY}
 	mkdir -p bin
 	${CIQ_MONKEYC} -e -w -r \
 	  -o $@ \
@@ -66,10 +68,15 @@ iq: ${OUTPUT_IQ}
 
 
 ## Simulator
-.PHONY: simulator
-simulator: ${OUTPUT_DEBUG} | ${CIQ_SIMULATOR} ${CIQ_MONKEYDO}
+.PHONY: run-debug
+run-debug: ${OUTPUT_DEBUG} | ${CIQ_SIMULATOR} ${CIQ_MONKEYDO}
 	${CIQ_SIMULATOR} & sleep 1
 	${CIQ_MONKEYDO} ${OUTPUT_DEBUG} ${CIQ_DEVICE}
+
+.PHONY: run-release
+run-release: ${OUTPUT_RELEASE} | ${CIQ_SIMULATOR} ${CIQ_MONKEYDO}
+	${CIQ_SIMULATOR} & sleep 1
+	${CIQ_MONKEYDO} ${OUTPUT_RELEASE} ${CIQ_DEVICE}
 
 
 ## (Un-)Install
