@@ -34,7 +34,7 @@ class ViewGlobal extends Ui.View {
   // Display mode (internal)
   private var bShow;
 
-  // Resources (to be loaded on onShow() and freed on onHide())
+  // Resources
   // ... drawable
   private var oRezDrawableHeader;
   private var oRezDrawableGlobal;
@@ -78,11 +78,6 @@ class ViewGlobal extends Ui.View {
 
   function onLayout(_oDC) {
     View.setLayout(Rez.Layouts.LayoutGlobal(_oDC));
-    return true;
-  }
-
-  function onShow() {
-    //Sys.println("DEBUG: ViewGlobal.onShow()");
 
     // Load resources
     // ... drawable
@@ -101,6 +96,15 @@ class ViewGlobal extends Ui.View {
     self.oRezValueBottomRight = View.findDrawableById("valueBottomRight");
     // ... footer
     self.oRezValueTime = View.findDrawableById("valueTime");
+
+    // Done
+    return true;
+  }
+
+  function onShow() {
+    //Sys.println("DEBUG: ViewGlobal.onShow()");
+
+    // Load resources
     // ... strings
     self.sValueActivityStandby = Ui.loadResource(Rez.Strings.valueActivityStandby);
     self.sValueActivityRecording = Ui.loadResource(Rez.Strings.valueActivityRecording);
@@ -167,22 +171,6 @@ class ViewGlobal extends Ui.View {
     App.getApp().muteTones();
 
     // Free resources
-    // ... drawable
-    self.oRezDrawableHeader = null;
-    self.oRezDrawableGlobal = null;
-    // ... header
-    self.oRezValueBatteryLevel = null;
-    self.oRezValueActivityStatus = null;
-    // ... fields
-    self.oRezValueTopLeft = null;
-    self.oRezValueTopRight = null;
-    self.oRezValueLeft = null;
-    self.oRezValueCenter = null;
-    self.oRezValueRight = null;
-    self.oRezValueBottomLeft = null;
-    self.oRezValueBottomRight = null;
-    // ... footer
-    self.oRezValueTime = null;
     // ... strings
     self.sValueActivityStandby = null;
     self.sValueActivityRecording = null;

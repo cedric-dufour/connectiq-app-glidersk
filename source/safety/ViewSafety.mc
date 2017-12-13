@@ -42,7 +42,7 @@ class ViewSafety extends Ui.View {
   private var bShowElevationAtDestination;
   private var bShowSpeedToDestination;
 
-  // Resources (to be loaded on onShow() and freed on onHide())
+  // Resources
   // ... drawable
   private var oRezDrawableHeader;
   private var oRezDrawableGlobal;
@@ -94,11 +94,6 @@ class ViewSafety extends Ui.View {
 
   function onLayout(_oDC) {
     View.setLayout(Rez.Layouts.LayoutGlobal(_oDC));
-    return true;
-  }
-
-  function onShow() {
-    //Sys.println("DEBUG: ViewSafety.onShow()");
 
     // Load resources
     // ... drawable
@@ -118,6 +113,15 @@ class ViewSafety extends Ui.View {
     self.oRezValueBottomRight = View.findDrawableById("valueBottomRight");
     // ... footer
     self.oRezValueTime = View.findDrawableById("valueTime");
+
+    // Done
+    return true;
+  }
+
+  function onShow() {
+    //Sys.println("DEBUG: ViewSafety.onShow()");
+
+    // Load resources
     // ... strings
     self.sValueActivityStandby = Ui.loadResource(Rez.Strings.valueActivityStandby);
     self.sValueActivityRecording = Ui.loadResource(Rez.Strings.valueActivityRecording);
@@ -187,23 +191,6 @@ class ViewSafety extends Ui.View {
     App.getApp().muteTones();
 
     // Free resources
-    // ... drawable
-    self.oRezDrawableHeader = null;
-    self.oRezDrawableGlobal = null;
-    // ... header
-    self.oRezLabelAppName = null;
-    self.oRezValueBatteryLevel = null;
-    self.oRezValueActivityStatus = null;
-    // ... fields
-    self.oRezValueTopLeft = null;
-    self.oRezValueTopRight = null;
-    self.oRezValueLeft = null;
-    self.oRezValueCenter = null;
-    self.oRezValueRight = null;
-    self.oRezValueBottomLeft = null;
-    self.oRezValueBottomRight = null;
-    // ... footer
-    self.oRezValueTime = null;
     // ... buttons
     self.oRezButtonKeyUp = null;
     self.oRezButtonKeyDown = null;

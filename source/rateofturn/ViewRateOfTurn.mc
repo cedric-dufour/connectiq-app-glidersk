@@ -34,7 +34,7 @@ class ViewRateOfTurn extends Ui.View {
   // Display mode (internal)
   private var bShow;
 
-  // Resources (to be loaded on onShow() and freed on onHide())
+  // Resources
   // ... fonts
   private var oRezFontMeter;
   private var oRezFontStatus;

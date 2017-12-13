@@ -40,11 +40,9 @@ class ViewVarioplot extends Ui.View {
   private var bShow;
   private var iPanZoom;
 
-  // Resources (to be loaded on onShow() and freed on onHide())
+  // Resources
   // ... drawable
   private var oRezDrawableHeader;
-  // ... fonts
-  private var oRezFontPlot;
   // ... header
   private var oRezValueBatteryLevel;
   private var oRezValueActivityStatus;
@@ -53,6 +51,8 @@ class ViewVarioplot extends Ui.View {
   // ... buttons
   private var oRezButtonKeyUp;
   private var oRezButtonKeyDown;
+  // ... fonts
+  private var oRezFontPlot;
   // ... string
   private var sValueActivityStandby;
   private var sValueActivityRecording;
@@ -83,10 +83,20 @@ class ViewVarioplot extends Ui.View {
     // Layout
     View.setLayout(Rez.Layouts.LayoutVarioplot(_oDC));
 
+    // Load resources
+    // ... drawable
+    self.oRezDrawableHeader = View.findDrawableById("DrawableHeader");
+    // ... header
+    self.oRezValueBatteryLevel = View.findDrawableById("valueBatteryLevel");
+    self.oRezValueActivityStatus = View.findDrawableById("valueActivityStatus");
+    // ... footer
+    self.oRezValueTime = View.findDrawableById("valueTime");
+
     // Screen center coordinates
     self.iCenterX = (_oDC.getWidth()/2).toNumber();
     self.iCenterY = (_oDC.getHeight()/2).toNumber();
 
+    // Done
     return true;
   }
 
@@ -94,15 +104,8 @@ class ViewVarioplot extends Ui.View {
     //Sys.println("DEBUG: ViewVarioplot.onShow()");
 
     // Load resources
-    // ... drawable
-    self.oRezDrawableHeader = View.findDrawableById("DrawableHeader");
     // ... fonts
     self.oRezFontPlot = Ui.loadResource(Rez.Fonts.fontPlot);
-    // ... header
-    self.oRezValueBatteryLevel = View.findDrawableById("valueBatteryLevel");
-    self.oRezValueActivityStatus = View.findDrawableById("valueActivityStatus");
-    // ... footer
-    self.oRezValueTime = View.findDrawableById("valueTime");
     // ... strings
     self.sValueActivityStandby = Ui.loadResource(Rez.Strings.valueActivityStandby);
     self.sValueActivityRecording = Ui.loadResource(Rez.Strings.valueActivityRecording);
@@ -194,18 +197,11 @@ class ViewVarioplot extends Ui.View {
     App.getApp().muteTones();
 
     // Free resources
-    // ... drawable
-    self.oRezDrawableHeader = null;
-    // ... fonts
-    self.oRezFontPlot = null;
-    // ... header
-    self.oRezValueBatteryLevel = null;
-    self.oRezValueActivityStatus = null;
-    // ... footer
-    self.oRezValueTime = null;
     // ... buttons
     self.oRezButtonKeyUp = null;
     self.oRezButtonKeyDown = null;
+    // ... fonts
+    self.oRezFontPlot = null;
     // ... strings
     self.sValueActivityStandby = null;
     self.sValueActivityRecording = null;
