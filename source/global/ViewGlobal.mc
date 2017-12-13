@@ -17,6 +17,7 @@
 // License-Filename: LICENSE/GPL-3.0.txt
 
 using Toybox.Application as App;
+using Toybox.Attention as Attn;
 using Toybox.Graphics as Gfx;
 using Toybox.Position as Pos;
 using Toybox.Time;
