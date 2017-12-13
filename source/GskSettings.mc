@@ -24,32 +24,6 @@ using Toybox.WatchUi as Ui;
 class GskSettings {
 
   //
-  // CONSTANTS
-  //
-
-  // Default values
-  private const DEFAULT_UNITDISTANCE = -1;
-  private const DEFAULT_UNITELEVATION = -1;
-  private const DEFAULT_UNITRATEOFTURN = 0;
-  private const DEFAULT_TIMEUTC = false;
-  private const DEFAULT_TIMECONSTANT = 3;
-  private const DEFAULT_VARIOMETERRANGE = 0;
-  private const DEFAULT_VARIOMETERMODE = 0;
-  private const DEFAULT_ENERGYEFFICIENCY = 75;
-  private const DEFAULT_PLOTRANGE = 1;
-  private const DEFAULT_PLOTZOOM = 6;
-  private const DEFAULT_FINESSEREFERENCE = 20;
-  private const DEFAULT_HEIGHTDECISION = 500.0f;
-  private const DEFAULT_HEIGHTWARNING = 400.0f;
-  private const DEFAULT_HEIGHTCRITICAL = 300.0f;
-  private const DEFAULT_BACKGROUNDCOLOR = Gfx.COLOR_WHITE;
-  private const DEFAULT_VARIOMETERTONES = true;
-  private const DEFAULT_SAFETYTONES = true;
-  private const DEFAULT_MUTEDISTANCE = 2000.0f;
-  private const DEFAULT_LAPKEY = true;
-
-
-  //
   // VARIABLES
   //
 
@@ -99,31 +73,6 @@ class GskSettings {
   // FUNCTIONS: self
   //
 
-  function initialize() {
-    // Units
-    self.setUnitDistance(self.DEFAULT_UNITDISTANCE);
-    self.setUnitElevation(self.DEFAULT_UNITELEVATION);
-    self.setUnitRateOfTurn(self.DEFAULT_UNITRATEOFTURN);
-    self.setTimeUTC(self.DEFAULT_TIMEUTC);
-
-    // Other constants
-    self.setTimeConstant(self.DEFAULT_TIMECONSTANT);
-    self.setVariometerRange(self.DEFAULT_VARIOMETERRANGE);
-    self.setVariometerMode(self.DEFAULT_VARIOMETERMODE);
-    self.setEnergyEfficiency(self.DEFAULT_ENERGYEFFICIENCY);
-    self.setPlotRange(self.DEFAULT_PLOTRANGE);
-    self.setPlotZoom(self.DEFAULT_PLOTZOOM);
-    self.setFinesseReference(self.DEFAULT_FINESSEREFERENCE);
-    self.setHeightDecision(self.DEFAULT_HEIGHTDECISION);
-    self.setHeightWarning(self.DEFAULT_HEIGHTWARNING);
-    self.setHeightCritical(self.DEFAULT_HEIGHTCRITICAL);
-    self.setBackgroundColor(self.DEFAULT_BACKGROUNDCOLOR);
-    self.setVariometerTones(self.DEFAULT_VARIOMETERTONES);
-    self.setSafetyTones(self.DEFAULT_SAFETYTONES);
-    self.setMuteDistance(self.DEFAULT_MUTEDISTANCE);
-    self.setLapKey(self.DEFAULT_LAPKEY);
-  }
-
   function load() {
     var oApplication = App.getApp();
 
@@ -153,7 +102,7 @@ class GskSettings {
 
   function setUnitDistance(_iUnitDistance) {
     if(_iUnitDistance == null or _iUnitDistance < 0 or _iUnitDistance > 2) {
-      _iUnitDistance = self.DEFAULT_UNITDISTANCE;
+      _iUnitDistance = -1;
     }
     self.iUnitDistance = _iUnitDistance;
     if(self.iUnitDistance < 0) {  // ... auto
@@ -167,33 +116,33 @@ class GskSettings {
     }
     if(_iUnitDistance == 2) {  // ... nautical
       // ... [nm]
-      self.sUnitDistance = Ui.loadResource(Rez.Strings.unitDistanceNautical);
+      self.sUnitDistance = "nm";
       self.fUnitDistanceConstant = 0.000539956803456f;  // ... m -> nm
       // ... [kt]
-      self.sUnitHorizontalSpeed = Ui.loadResource(Rez.Strings.unitHorizontalSpeedNautical);
+      self.sUnitHorizontalSpeed = "kt";
       self.fUnitHorizontalSpeedConstant = 1.94384449244f;  // ... m/s -> kt
     }
     else if(_iUnitDistance == Sys.UNIT_STATUTE) {  // ... statute
       // ... [sm]
-      self.sUnitDistance = Ui.loadResource(Rez.Strings.unitDistanceStatute);
+      self.sUnitDistance = "sm";
       self.fUnitDistanceConstant = 0.000621504039776f;  // ... m -> sm
       // ... [mph]
-      self.sUnitHorizontalSpeed = Ui.loadResource(Rez.Strings.unitHorizontalSpeedStatute);
+      self.sUnitHorizontalSpeed = "mph";
       self.fUnitHorizontalSpeedConstant = 2.23741454319f;  // ... m/s -> mph
     }
     else {  // ... metric
       // ... [km]
-      self.sUnitDistance = Ui.loadResource(Rez.Strings.unitDistanceMetric);
+      self.sUnitDistance = "km";
       self.fUnitDistanceConstant = 0.001f;  // ... m -> km
       // ... [km/h]
-      self.sUnitHorizontalSpeed = Ui.loadResource(Rez.Strings.unitHorizontalSpeedMetric);
+      self.sUnitHorizontalSpeed = "km/h";
       self.fUnitHorizontalSpeedConstant = 3.6f;  // ... m/s -> km/h
     }
   }
 
   function setUnitElevation(_iUnitElevation) {
     if(_iUnitElevation == null or _iUnitElevation < 0 or _iUnitElevation > 1) {
-      _iUnitElevation = self.DEFAULT_UNITELEVATION;
+      _iUnitElevation = -1;
     }
     self.iUnitElevation = _iUnitElevation;
     if(self.iUnitElevation < 0) {  // ... auto
@@ -207,56 +156,56 @@ class GskSettings {
     }
     if(_iUnitElevation == Sys.UNIT_STATUTE) {  // ... statute
       // ... [ft]
-      self.sUnitElevation = Ui.loadResource(Rez.Strings.unitElevationStatute);
+      self.sUnitElevation = "ft";
       self.fUnitElevationConstant = 3.280839895f;  // ... m -> ft
       // ... [ft/min]
-      self.sUnitVerticalSpeed = Ui.loadResource(Rez.Strings.unitVerticalSpeedStatute);
+      self.sUnitVerticalSpeed = "ft/m";
       self.fUnitVerticalSpeedConstant = 196.8503937f;  // ... m/s -> ft/min
     }
     else {  // ... metric
       // ... [m]
-      self.sUnitElevation = Ui.loadResource(Rez.Strings.unitElevationMetric);
+      self.sUnitElevation = "m";
       self.fUnitElevationConstant = 1.0f;  // ... m -> m
       // ... [m/s]
-      self.sUnitVerticalSpeed = Ui.loadResource(Rez.Strings.unitVerticalSpeedMetric);
+      self.sUnitVerticalSpeed = "m/s";
       self.fUnitVerticalSpeedConstant = 1.0f;  // ... m/s -> m/s
     }
   }
 
   function setUnitRateOfTurn(_iUnitRateOfTurn) {
     if(_iUnitRateOfTurn == null or _iUnitRateOfTurn < 0 or _iUnitRateOfTurn > 1) {
-      _iUnitRateOfTurn = self.DEFAULT_UNITRATEOFTURN;
+      _iUnitRateOfTurn = 0;
     }
     self.iUnitRateOfTurn = _iUnitRateOfTurn;
     if(_iUnitRateOfTurn == 1) {  // ... revolution-per-minute
       // ... [rpm]
-      self.sUnitRateOfTurn = Ui.loadResource(Rez.Strings.unitRateOfTurnRpm);
+      self.sUnitRateOfTurn = "rpm";
       self.fUnitRateOfTurnConstant = 9.54929658551f;  // ... rad/s -> rpm
     }
     else {  // ... degree-per-second
       // ... [deg/s]
-      self.sUnitRateOfTurn = Ui.loadResource(Rez.Strings.unitRateOfTurnDegree);
+      self.sUnitRateOfTurn = "°/s";
       self.fUnitRateOfTurnConstant = 57.2957795131f;  // ... rad/s -> deg/s
     }
   }
 
   function setTimeUTC(_bTimeUTC) {
     if(_bTimeUTC == null) {
-      _bTimeUTC = self.DEFAULT_TIMEUTC;
+      _bTimeUTC = false;
     }
     if(_bTimeUTC) {
       self.bTimeUTC = true;
-      self.sUnitTime = Ui.loadResource(Rez.Strings.unitTimeUTC);
+      self.sUnitTime = "Z";
     }
     else {
       self.bTimeUTC = false;
-      self.sUnitTime = Ui.loadResource(Rez.Strings.unitTimeLT);
+      self.sUnitTime = "LT";
     }
   }
 
   function setTimeConstant(_iTimeConstant) {
     if(_iTimeConstant == null) {
-      _iTimeConstant = self.DEFAULT_TIMECONSTANT;
+      _iTimeConstant = 3;
     }
     else if(_iTimeConstant > 10) {
       _iTimeConstant = 10;
@@ -269,7 +218,7 @@ class GskSettings {
 
   function setVariometerRange(_iVariometerRange) {
     if(_iVariometerRange == null) {
-      _iVariometerRange = self.DEFAULT_VARIOMETERRANGE;
+      _iVariometerRange = 0;
     }
     else if(_iVariometerRange > 2) {
       _iVariometerRange = 2;
@@ -287,7 +236,7 @@ class GskSettings {
 
   function setVariometerMode(_iVariometerMode) {
     if(_iVariometerMode == null) {
-      _iVariometerMode = self.DEFAULT_VARIOMETERMODE;
+      _iVariometerMode = 0;
     }
     else if(_iVariometerMode > 1) {
       _iVariometerMode = 1;
@@ -300,7 +249,7 @@ class GskSettings {
 
   function setEnergyEfficiency(_iEnergyEfficiency) {
     if(_iEnergyEfficiency == null) {
-      _iEnergyEfficiency = self.DEFAULT_ENERGYEFFICIENCY;
+      _iEnergyEfficiency = 75;
     }
     else if(_iEnergyEfficiency > 100) {
       _iEnergyEfficiency = 100;
@@ -314,7 +263,7 @@ class GskSettings {
 
   function setPlotRange(_iPlotRange) {
     if(_iPlotRange == null) {
-      _iPlotRange = self.DEFAULT_PLOTRANGE;
+      _iPlotRange = 1;
     }
     else if(_iPlotRange > 10) {
       _iPlotRange = 10;
@@ -327,7 +276,7 @@ class GskSettings {
 
   function setPlotZoom(_iPlotZoom) {
     if(_iPlotZoom == null) {
-      _iPlotZoom = self.DEFAULT_PLOTZOOM;
+      _iPlotZoom = 6;
     }
     else if(_iPlotZoom > 9) {
       _iPlotZoom = 9;
@@ -352,7 +301,7 @@ class GskSettings {
 
   function setFinesseReference(_iFinesseReference) {
     if(_iFinesseReference == null) {
-      _iFinesseReference = self.DEFAULT_FINESSEREFERENCE;
+      _iFinesseReference = 20;
     }
     else if(_iFinesseReference > 99) {
       _iFinesseReference = 99;
@@ -365,7 +314,7 @@ class GskSettings {
 
   function setHeightDecision(_fHeightDecision) {
     if(_fHeightDecision == null) {
-      _fHeightDecision = self.DEFAULT_HEIGHTDECISION;
+      _fHeightDecision = 500.0f;
     }
     else if(_fHeightDecision > 9999.0f) {
       _fHeightDecision = 9999.0f;
@@ -378,7 +327,7 @@ class GskSettings {
 
   function setHeightWarning(_fHeightWarning) {
     if(_fHeightWarning == null) {
-      _fHeightWarning = self.DEFAULT_HEIGHTWARNING;
+      _fHeightWarning = 400.0f;
     }
     else if(_fHeightWarning > 9999.0f) {
       _fHeightWarning = 9999.0f;
@@ -391,7 +340,7 @@ class GskSettings {
 
   function setHeightCritical(_fHeightCritical) {
     if(_fHeightCritical == null) {
-      _fHeightCritical = self.DEFAULT_HEIGHTCRITICAL;
+      _fHeightCritical = 300.0f;
     }
     else if(_fHeightCritical > 9999.0f) {
       _fHeightCritical = 9999.0f;
@@ -404,28 +353,28 @@ class GskSettings {
 
   function setBackgroundColor(_iBackgroundColor) {
     if(_iBackgroundColor == null) {
-      _iBackgroundColor = self.DEFAULT_BACKGROUNDCOLOR;
+      _iBackgroundColor = Gfx.COLOR_WHITE;
     }
     self.iBackgroundColor = _iBackgroundColor;
   }
 
   function setVariometerTones(_bVariometerTones) {
     if(_bVariometerTones == null) {
-      _bVariometerTones = self.DEFAULT_VARIOMETERTONES;
+      _bVariometerTones = true;
     }
     self.bVariometerTones = _bVariometerTones;
   }
 
   function setSafetyTones(_bSafetyTones) {
     if(_bSafetyTones == null) {
-      _bSafetyTones = self.DEFAULT_SAFETYTONES;
+      _bSafetyTones = true;
     }
     self.bSafetyTones = _bSafetyTones;
   }
 
   function setMuteDistance(_fMuteDistance) {
     if(_fMuteDistance == null) {
-      _fMuteDistance = self.DEFAULT_MUTEDISTANCE;
+      _fMuteDistance = 2000.0f;
     }
     else if(_fMuteDistance > 9999.0f) {
       _fMuteDistance = 9999.0f;
@@ -438,7 +387,7 @@ class GskSettings {
 
   function setLapKey(_bLapKey) {
     if(_bLapKey == null) {
-      _bLapKey = self.DEFAULT_LAPKEY;
+      _bLapKey = true;
     }
     self.bLapKey = _bLapKey;
   }

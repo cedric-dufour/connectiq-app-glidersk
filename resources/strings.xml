@@ -124,21 +124,6 @@
   <string id="valueActivityRecording">REC</string>
   <string id="valueActivityPaused">PSD</string>
   <string id="valueHeightGround">GND</string>
-  <!-- Units -->
-  <string id="unitDistanceMetric">km</string>
-  <string id="unitDistanceStatute">sm</string>
-  <string id="unitDistanceNautical">nm</string>
-  <string id="unitElevationMetric">m</string>
-  <string id="unitElevationStatute">ft</string>
-  <string id="unitHorizontalSpeedMetric">km/h</string>
-  <string id="unitHorizontalSpeedStatute">mph</string>
-  <string id="unitHorizontalSpeedNautical">kt</string>
-  <string id="unitVerticalSpeedMetric">m/s</string>
-  <string id="unitVerticalSpeedStatute">ft/m</string>
-  <string id="unitRateOfTurnDegree">°/s</string>
-  <string id="unitRateOfTurnRpm">rpm</string>
-  <string id="unitTimeLT">LT</string>
-  <string id="unitTimeUTC">Z</string>
   <!-- FIT -->
   <string id="titleVerticalSpeed">Vertical Speed</string>
   <string id="unitVerticalSpeed">m/s|ft/m</string>
