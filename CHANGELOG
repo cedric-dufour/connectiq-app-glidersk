@@ -1,3 +1,11 @@
+* 1.0.20171216a
+  - FIX: Crash when attempting to record an activity lap (with back key)
+  - Perfs: Optimize memory usage (get rid of external settings)
+  - Perfs: Optmize memory usage (avoid unnecessary resources and constants)
+  - Perfs: Retrieve (cache) drawables resources onLayout()
+  - Devel: Add release project simulation target (and consolidate targets names)
+  - Added support for DescentMk1
+
 * 1.0.20171104a
   - FIX: (hopefully) make Vertical Speed chart appear in Garmin Connect
          activity detail (along Rate-of-Turn and Acceleration charts)
