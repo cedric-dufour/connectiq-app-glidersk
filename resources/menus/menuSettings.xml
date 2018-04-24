@@ -1,9 +1,9 @@
 <!-- -*- mode:xml; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab: -->
 <menu id="menuSettings" title="@Strings.menuSettings">
-  <menu-item id="menuSettingsGeneral">@Strings.menuSettingsGeneral</menu-item>
-  <menu-item id="menuSettingsSounds">@Strings.menuSettingsSounds</menu-item>
-  <menu-item id="menuSettingsVariometer">@Strings.menuSettingsVariometer</menu-item>
-  <menu-item id="menuSettingsSafety">@Strings.menuSettingsSafety</menu-item>
-  <menu-item id="menuSettingsUnits">@Strings.menuSettingsUnits</menu-item>
-  <menu-item id="menuSettingsAbout">@Strings.menuSettingsAbout</menu-item>
+  <menu-item id="menuSettingsGeneral" label="@Strings.menuSettingsGeneral" />
+  <menu-item id="menuSettingsSounds" label="@Strings.menuSettingsSounds" />
+  <menu-item id="menuSettingsVariometer" label="@Strings.menuSettingsVariometer" />
+  <menu-item id="menuSettingsSafety" label="@Strings.menuSettingsSafety" />
+  <menu-item id="menuSettingsUnits" label="@Strings.menuSettingsUnits" />
+  <menu-item id="menuSettingsAbout" label="@Strings.menuSettingsAbout" />
 </menu>

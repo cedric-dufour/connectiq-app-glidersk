@@ -1,6 +1,6 @@
 <!-- -*- mode:xml; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab: -->
 <menu id="menuSettingsGeneral" title="@Strings.menuSettingsGeneral">
-  <menu-item id="menuTimeConstant">@Strings.titleTimeConstant</menu-item>
-  <menu-item id="menuBackgroundColor">@Strings.titleBackgroundColor</menu-item>
-  <menu-item id="menuLapKey">@Strings.titleLapKey</menu-item>
+  <menu-item id="menuTimeConstant" label="@Strings.titleTimeConstant" />
+  <menu-item id="menuBackgroundColor" label="@Strings.titleBackgroundColor" />
+  <menu-item id="menuLapKey" label="@Strings.titleLapKey" />
 </menu>
