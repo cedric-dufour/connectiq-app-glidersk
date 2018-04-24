@@ -4,7 +4,7 @@ include Makefile.ciq
 
 ## Project resources
 MY_PROJECT := GliderSK
-MY_MANIFEST := manifest.xml
+MY_JUNGLES := ./monkey.jungle
 MY_RESOURCES := $(shell find -L resources* -name '*.xml')
 MY_SOURCES := $(shell find -L source -name '*.mc')
 
@@ -27,7 +27,7 @@ help:
 ## Build
 
 # debug
-OUTPUT_DEBUG := bin/${MY_PROJECT}.debug.prg
+OUTPUT_DEBUG := ./bin/${MY_PROJECT}.debug.prg
 ${OUTPUT_DEBUG}: ${MY_MANIFEST} ${MY_RESOURCES} ${MY_SOURCES} | ${CIQ_MONKEYC} ${CIQ_DEVKEY}
 	mkdir -p bin
 	${CIQ_MONKEYC} -w \
@@ -35,13 +35,11 @@ ${OUTPUT_DEBUG}: ${MY_MANIFEST} ${MY_RESOURCES} ${MY_SOURCES} | ${CIQ_MONKEYC} $
 	  -d ${CIQ_DEVICE} \
 	  -s ${CIQ_SDK} \
 	  -y ${CIQ_DEVKEY} \
-	  -m ${MY_MANIFEST} \
-	  -z $(shell echo ${MY_RESOURCES} | tr ' ' ':') \
-	  ${MY_SOURCES}
+	  -f ${MY_JUNGLES}
 debug: ${OUTPUT_DEBUG}
 
 # release
-OUTPUT_RELEASE := bin/${MY_PROJECT}.prg
+OUTPUT_RELEASE := ./bin/${MY_PROJECT}.prg
 ${OUTPUT_RELEASE}: ${MY_MANIFEST} ${MY_RESOURCES} ${MY_SOURCES} | ${CIQ_MONKEYC} ${CIQ_DEVKEY}
 	mkdir -p bin
 	${CIQ_MONKEYC} -w -r \
@@ -49,21 +47,17 @@ ${OUTPUT_RELEASE}: ${MY_MANIFEST} ${MY_RESOURCES} ${MY_SOURCES} | ${CIQ_MONKEYC}
 	  -d ${CIQ_DEVICE} \
 	  -s ${CIQ_SDK} \
 	  -y ${CIQ_DEVKEY} \
-	  -m ${MY_MANIFEST} \
-	  -z $(shell echo ${MY_RESOURCES} | tr ' ' ':') \
-	  ${MY_SOURCES}
+	  -f ${MY_JUNGLES}
 release: ${OUTPUT_RELEASE}
 
 # IQ
-OUTPUT_IQ := bin/${MY_PROJECT}.iq
+OUTPUT_IQ := ./bin/${MY_PROJECT}.iq
 ${OUTPUT_IQ}: ${MY_MANIFEST} ${MY_RESOURCES} ${MY_SOURCES} | ${CIQ_MONKEYC} ${CIQ_DEVKEY}
 	mkdir -p bin
 	${CIQ_MONKEYC} -e -w -r \
 	  -o $@ \
 	  -y ${CIQ_DEVKEY} \
-	  -m ${MY_MANIFEST} \
-	  -z $(shell echo ${MY_RESOURCES} | tr ' ' ':') \
-	  ${MY_SOURCES}
+	  -f ${MY_JUNGLES}
 iq: ${OUTPUT_IQ}
 
 
