@@ -1,3 +1,9 @@
+* 1.1.20180426b
+  - Devel: added Exponential Moving Average analysis spreadsheet (EMA.ods)
+  - Devel: Switched build system to Jungle file (SDK >= 2.4.0)
+  - SDK 2.4.x: Use label attribute instead of tag content for menu(-item) resources
+  - SDK 2.4.x: Switch data storage from Object Store to Application.Storage
+
 * 1.0.20171216a
   - FIX: Crash when attempting to record an activity lap (with back key)
   - Perfs: Optimize memory usage (get rid of external settings)
