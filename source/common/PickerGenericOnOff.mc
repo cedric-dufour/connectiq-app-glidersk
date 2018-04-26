@@ -28,7 +28,7 @@ class PickerGenericOnOff extends Ui.Picker {
 
   function initialize(_sPropertyId, _sTitle) {
     // Get property
-    var bOnOff = App.getApp().getProperty(_sPropertyId);
+    var bOnOff = App.Properties.getValue(_sPropertyId);
 
     // Initialize picker
     var oFactory = new PickerFactoryDictionary([true, false], [Ui.loadResource(Rez.Strings.valueOn), Ui.loadResource(Rez.Strings.valueOff)], null);
@@ -61,7 +61,7 @@ class PickerDelegateGenericOnOff extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     // Set property and exit
-    App.getApp().setProperty(self.sPropertyId, _amValues[0]);
+    App.Properties.setValue(self.sPropertyId, _amValues[0]);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

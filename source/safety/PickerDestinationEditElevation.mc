@@ -29,7 +29,7 @@ class PickerDestinationEditElevation extends Ui.Picker {
 
   function initialize() {
     // Get property
-    var dictDestination = App.getApp().getProperty("storDestInUse");
+    var dictDestination = App.Storage.getValue("storDestInUse");
     var fElevation = dictDestination != null ? dictDestination["elevation"] : 0.0f;
     if(fElevation < 0.0f) { fElevation = 0.0f; }
 
@@ -88,7 +88,7 @@ class PickerDelegateDestinationEditElevation extends Ui.PickerDelegate {
     fElevation = fElevation / $.GSK_Settings.fUnitElevationConstant;  // ... to meters
 
     // Update/create destination (dictionary)
-    var dictDestination = App.getApp().getProperty("storDestInUse");
+    var dictDestination = App.Storage.getValue("storDestInUse");
     if(dictDestination != null) {
       dictDestination["elevation"] = fElevation;
     }
@@ -97,7 +97,7 @@ class PickerDelegateDestinationEditElevation extends Ui.PickerDelegate {
     }
 
     // Set property and exit
-    App.getApp().setProperty("storDestInUse", dictDestination);
+    App.Storage.setValue("storDestInUse", dictDestination);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

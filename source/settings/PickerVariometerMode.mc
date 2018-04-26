@@ -28,7 +28,7 @@ class PickerVariometerMode extends Ui.Picker {
 
   function initialize() {
     // Get property
-    var iVariometerMode = App.getApp().getProperty("userVariometerMode");
+    var iVariometerMode = App.Properties.getValue("userVariometerMode");
 
     // Initialize picker
     var asValues =
@@ -56,7 +56,7 @@ class PickerDelegateVariometerMode extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     // Set property and exit
-    App.getApp().setProperty("userVariometerMode", _amValues[0]);
+    App.Properties.setValue("userVariometerMode", _amValues[0]);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

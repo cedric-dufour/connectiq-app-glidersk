@@ -28,7 +28,7 @@ class PickerUnitDistance extends Ui.Picker {
 
   function initialize() {
     // Get property
-    var iUnitDistance = App.getApp().getProperty("userUnitDistance");
+    var iUnitDistance = App.Properties.getValue("userUnitDistance");
 
     // Initialize picker
     var oFactory = new PickerFactoryDictionary([-1, 0, 1 ,2], [Ui.loadResource(Rez.Strings.valueUnitDistanceAuto), Ui.loadResource(Rez.Strings.valueUnitDistanceMetric), Ui.loadResource(Rez.Strings.valueUnitDistanceStatute), Ui.loadResource(Rez.Strings.valueUnitDistanceNautical)], null);
@@ -53,7 +53,7 @@ class PickerDelegateUnitDistance extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     // Set property and exit
-    App.getApp().setProperty("userUnitDistance", _amValues[0]);
+    App.Properties.setValue("userUnitDistance", _amValues[0]);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

@@ -28,7 +28,7 @@ class PickerDestinationEditName extends Ui.TextPicker {
 
   function initialize() {
     // Get property
-    var dictDestination = App.getApp().getProperty("storDestInUse");
+    var dictDestination = App.Storage.getValue("storDestInUse");
 
     // Initialize picker
     TextPicker.initialize(dictDestination != null ? dictDestination["name"] : "");
@@ -48,7 +48,7 @@ class PickerDelegateDestinationEditName extends Ui.TextPickerDelegate {
 
   function onTextEntered(_sText, _bChanged) {
     // Update/create destination (dictionary)
-    var dictDestination = App.getApp().getProperty("storDestInUse");
+    var dictDestination = App.Storage.getValue("storDestInUse");
     if(dictDestination != null) {
       dictDestination["name"] = _sText;
     }
@@ -57,7 +57,7 @@ class PickerDelegateDestinationEditName extends Ui.TextPickerDelegate {
     }
 
     // Set property and exit
-    App.getApp().setProperty("storDestInUse", dictDestination);
+    App.Storage.setValue("storDestInUse", dictDestination);
   }
 
   function onCancel() {

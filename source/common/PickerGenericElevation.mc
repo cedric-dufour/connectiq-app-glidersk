@@ -29,7 +29,7 @@ class PickerGenericElevation extends Ui.Picker {
 
   function initialize(_sPropertyId, _sTitle) {
     // Get property
-    var fElevation = App.getApp().getProperty(_sPropertyId);
+    var fElevation = App.Properties.getValue(_sPropertyId);
     if(fElevation == null or fElevation < 0.0f ) { fElevation = 0.0f; }
 
     // Use user-specified elevation unit (NB: always use metric units in object store)
@@ -94,7 +94,7 @@ class PickerDelegateGenericElevation extends Ui.PickerDelegate {
     fElevation = fElevation / $.GSK_Settings.fUnitElevationConstant;  // ... to meters
 
     // Set property and exit
-    App.getApp().setProperty(self.sPropertyId, fElevation);
+    App.Properties.setValue(self.sPropertyId, fElevation);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

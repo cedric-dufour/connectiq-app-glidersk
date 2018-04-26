@@ -28,13 +28,12 @@ class PickerDestinationSave extends Ui.Picker {
 
   function initialize() {
     // Destination memory
-    var iMemorySize = 50;
-    var aiMemoryKeys = new [iMemorySize];
-    var asMemoryValues = new [iMemorySize];
-    for(var n=0; n<iMemorySize; n++) {
+    var aiMemoryKeys = new [$.GSK_STORAGE_SLOTS];
+    var asMemoryValues = new [$.GSK_STORAGE_SLOTS];
+    for(var n=0; n<$.GSK_STORAGE_SLOTS; n++) {
       aiMemoryKeys[n] = n;
       var s = n.format("%02d");
-      var dictDestination = App.getApp().getProperty("storDest"+s);
+      var dictDestination = App.Storage.getValue("storDest"+s);
       if(dictDestination != null) {
         asMemoryValues[n] = Lang.format("[$1$]\n$2$", [s, dictDestination["name"]]);
       }
@@ -64,12 +63,12 @@ class PickerDelegateDestinationSave extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     // Save destination
-    var dictDestination = App.getApp().getProperty("storDestInUse");
+    var dictDestination = App.Storage.getValue("storDestInUse");
     if(dictDestination != null) {
       // Set property (destination memory)
       // WARNING: We MUST store a new (different) dictionary instance (deep copy)!
       var s = _amValues[0].format("%02d");
-      App.getApp().setProperty("storDest"+s, GskUtils.copy(dictDestination));
+      App.Storage.setValue("storDest"+s, GskUtils.copy(dictDestination));
     }
 
     // Exit

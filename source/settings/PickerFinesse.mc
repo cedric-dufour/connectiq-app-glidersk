@@ -28,7 +28,7 @@ class PickerFinesse extends Ui.Picker {
 
   function initialize() {
     // Get property
-    var iFinesse = App.getApp().getProperty("userFinesseReference");
+    var iFinesse = App.Properties.getValue("userFinesseReference");
 
     // Initialize picker
     var oFactory = new PickerFactoryNumber(1, 99, null);
@@ -53,7 +53,7 @@ class PickerDelegateFinesse extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     // Set property and exit
-    App.getApp().setProperty("userFinesseReference", _amValues[0]);
+    App.Properties.setValue("userFinesseReference", _amValues[0]);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

@@ -28,7 +28,7 @@ class PickerPlotRange extends Ui.Picker {
 
   function initialize() {
     // Get property
-    var iPlotRange = App.getApp().getProperty("userPlotRange");
+    var iPlotRange = App.Properties.getValue("userPlotRange");
 
     // Initialize picker
     var oFactory = new PickerFactoryNumber(1, 10, null);
@@ -53,7 +53,7 @@ class PickerDelegatePlotRange extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     // Set property and exit
-    App.getApp().setProperty("userPlotRange", _amValues[0]);
+    App.Properties.setValue("userPlotRange", _amValues[0]);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

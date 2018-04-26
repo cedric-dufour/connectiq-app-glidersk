@@ -28,7 +28,7 @@ class PickerVariometerRange extends Ui.Picker {
 
   function initialize() {
     // Get property
-    var iVariometerRange = App.getApp().getProperty("userVariometerRange");
+    var iVariometerRange = App.Properties.getValue("userVariometerRange");
 
     // Initialize picker
     $.GSK_Settings.load();  // ... reload potentially modified settings
@@ -59,7 +59,7 @@ class PickerDelegateVariometerRange extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     // Set property and exit
-    App.getApp().setProperty("userVariometerRange", _amValues[0]);
+    App.Properties.setValue("userVariometerRange", _amValues[0]);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

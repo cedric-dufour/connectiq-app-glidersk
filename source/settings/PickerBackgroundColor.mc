@@ -28,7 +28,7 @@ class PickerBackgroundColor extends Ui.Picker {
 
   function initialize() {
     // Get property
-    var iColor = App.getApp().getProperty("userBackgroundColor");
+    var iColor = App.Properties.getValue("userBackgroundColor");
 
     // Initialize picker
     var oFactory = new PickerFactoryDictionary([Gfx.COLOR_WHITE, Gfx.COLOR_BLACK], [Ui.loadResource(Rez.Strings.valueColorWhite), Ui.loadResource(Rez.Strings.valueColorBlack)], null);
@@ -53,7 +53,7 @@ class PickerDelegateBackgroundColor extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     // Set property and exit
-    App.getApp().setProperty("userBackgroundColor", _amValues[0]);
+    App.Properties.setValue("userBackgroundColor", _amValues[0]);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

@@ -90,6 +90,8 @@ uninstall: | ${DESTDIR}/Garmin/Apps
 	@rm -fv ${DESTDIR}/Garmin/Apps/${MY_PROJECT}.prg \
 	  ${DESTDIR}/Garmin/Apps/SETTINGS/${MY_PROJECT}.SET \
 	  ${DESTDIR}/Garmin/Apps/DATA/${MY_PROJECT}.STR \
+	  ${DESTDIR}/Garmin/Apps/DATA/${MY_PROJECT}.IDX \
+	  ${DESTDIR}/Garmin/Apps/DATA/${MY_PROJECT}.DAT \
 	  ${DESTDIR}/Garmin/Apps/LOGS/${MY_PROJECT}.TXT \
 	  ${DESTDIR}/Garmin/Apps/LOGS/${MY_PROJECT}.BAK
 

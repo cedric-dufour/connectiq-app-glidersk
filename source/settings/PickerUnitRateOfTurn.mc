@@ -28,7 +28,7 @@ class PickerUnitRateOfTurn extends Ui.Picker {
 
   function initialize() {
     // Get property
-    var iUnitRateOfTurn = App.getApp().getProperty("userUnitRateOfTurn");
+    var iUnitRateOfTurn = App.Properties.getValue("userUnitRateOfTurn");
 
     // Initialize picker
     var oFactory = new PickerFactoryDictionary([0, 1], [Ui.loadResource(Rez.Strings.valueUnitRateOfTurnDegree), Ui.loadResource(Rez.Strings.valueUnitRateOfTurnRpm)], null);
@@ -53,7 +53,7 @@ class PickerDelegateUnitRateOfTurn extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     // Set property and exit
-    App.getApp().setProperty("userUnitRateOfTurn", _amValues[0]);
+    App.Properties.setValue("userUnitRateOfTurn", _amValues[0]);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

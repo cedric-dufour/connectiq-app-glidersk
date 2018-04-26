@@ -50,9 +50,13 @@ var GSK_FitField_Acceleration = null;
 // Current view
 var GSK_CurrentView = null;
 
+
 //
 // CONSTANTS
 //
+
+// Storage slots
+const GSK_STORAGE_SLOTS = 100;
 
 // No-value strings
 // NOTE: Those ought to be defined in the GskApp class like other constants but code then fails with an "Invalid Value" error when called upon; BUG?
@@ -122,6 +126,9 @@ class GskApp extends App.AppBase {
   function onStart(state) {
     //Sys.println("DEBUG: GskApp.onStart()");
 
+    // Upgrade
+    self.upgradeSdk();
+
     // Load settings
     self.loadSettings();
 
@@ -183,6 +190,31 @@ class GskApp extends App.AppBase {
   // FUNCTIONS: self
   //
 
+  function upgradeSdk() {
+    //Sys.println("DEBUG: GskApp.upgradeSdk()");
+
+    // Migrate data from Object Store to Application.Storage (SDK >= 2.4.0)
+    // TODO: Delete after December 1st, 2018
+
+    // ... destination
+    if(AppBase.getProperty("storDestInUse") != null) {
+      // ... in use
+      Sys.println("DEBUG[upgrade]: Migrating 'storDestInUse'");
+      App.Storage.setValue("storDestInUse", AppBase.getProperty("storDestInUse"));
+      AppBase.deleteProperty("storDestInUse");
+      // ... memory slots
+      for(var n=0; n<$.GSK_STORAGE_SLOTS; n++) {
+        var s = n.format("%02d");
+        var dictLocation = AppBase.getProperty("storDest"+s);
+        if(dictLocation != null) {
+          Sys.println("DEBUG[upgrade]: Migrating 'storDest"+s+"'");
+          App.Storage.setValue("storDest"+s, dictLocation);
+          AppBase.deleteProperty("storDest"+s);
+        }
+      }
+    }
+  }
+
   function loadSettings() {
     //Sys.println("DEBUG: GskApp.loadSettings()");
 
@@ -193,14 +225,14 @@ class GskApp extends App.AppBase {
     $.GSK_Processing.importSettings();
 
     // ... safety destination
-    var dictDestination = AppBase.getProperty("storDestInUse");
+    var dictDestination = App.Storage.getValue("storDestInUse");
     if(dictDestination == null) {
       // Hey! Gsk was born at LSGB ;-)
       dictDestination = { "name" => "LSGB", "latitude" => 46.2583333333f, "longitude" => 6.98638888889f, "elevation" => 400.0f };
       // Yet, for debugging in the simulator (which is fond of Kansas City), KOJC or KIXD make more sense
       //dictDestination = { "name" => "KOJC", "latitude" => 38.8476019f, "longitude" => -94.7375858f, "elevation" => 334.1f };
       //dictDestination = { "name" => "KIXD", "latitude" => 38.8309167f, "longitude" => -94.8903056f, "elevation" => 331.4f };
-      AppBase.setProperty("storDestInUse", dictDestination);
+      App.Storage.setValue("storDestInUse", dictDestination);
     }
     $.GSK_Processing.setDestination(dictDestination["name"], new Pos.Location({ :latitude => dictDestination["latitude"], :longitude => dictDestination["longitude"], :format => :degrees}), dictDestination["elevation"]);
 

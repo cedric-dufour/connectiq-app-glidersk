@@ -28,7 +28,7 @@ class PickerUnitElevation extends Ui.Picker {
 
   function initialize() {
     // Get property
-    var iUnitElevation = App.getApp().getProperty("userUnitElevation");
+    var iUnitElevation = App.Properties.getValue("userUnitElevation");
 
     // Initialize picker
     var oFactory = new PickerFactoryDictionary([-1, 0, 1], [Ui.loadResource(Rez.Strings.valueUnitElevationAuto), Ui.loadResource(Rez.Strings.valueUnitElevationMetric), Ui.loadResource(Rez.Strings.valueUnitElevationStatute)], null);
@@ -53,7 +53,7 @@ class PickerDelegateUnitElevation extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     // Set property and exit
-    App.getApp().setProperty("userUnitElevation", _amValues[0]);
+    App.Properties.setValue("userUnitElevation", _amValues[0]);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

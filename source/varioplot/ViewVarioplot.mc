@@ -488,7 +488,7 @@ class ViewDelegateVarioplot extends Ui.BehaviorDelegate {
         var fPlotZoom_ratio = $.GSK_Settings.fPlotZoom/fPlotZoom_previous;
         $.GSK_ViewVarioplot_OffsetY = ($.GSK_ViewVarioplot_OffsetY*fPlotZoom_ratio).toNumber();
         $.GSK_ViewVarioplot_OffsetX = ($.GSK_ViewVarioplot_OffsetX*fPlotZoom_ratio).toNumber();
-        App.getApp().setProperty("userPlotZoom", $.GSK_Settings.iPlotZoom);
+        App.Properties.setValue("userPlotZoom", $.GSK_Settings.iPlotZoom);
         Ui.requestUpdate();
       }
       else if($.GSK_ViewVarioplot_PanZoom == 2) {  // ... pan up
@@ -511,7 +511,7 @@ class ViewDelegateVarioplot extends Ui.BehaviorDelegate {
         var fPlotZoom_ratio = $.GSK_Settings.fPlotZoom/fPlotZoom_previous;
         $.GSK_ViewVarioplot_OffsetY = ($.GSK_ViewVarioplot_OffsetY*fPlotZoom_ratio).toNumber();
         $.GSK_ViewVarioplot_OffsetX = ($.GSK_ViewVarioplot_OffsetX*fPlotZoom_ratio).toNumber();
-        App.getApp().setProperty("userPlotZoom", $.GSK_Settings.iPlotZoom);
+        App.Properties.setValue("userPlotZoom", $.GSK_Settings.iPlotZoom);
         Ui.requestUpdate();
       }
       else if($.GSK_ViewVarioplot_PanZoom == 2) {  // ... pan down

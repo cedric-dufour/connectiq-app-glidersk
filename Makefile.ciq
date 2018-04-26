@@ -22,7 +22,7 @@ endif
 
 # Target SDK version
 ifndef CIQ_SDK
-CIQ_SDK := 2.3.2
+CIQ_SDK := 2.4.0
 endif
 
 # Target device

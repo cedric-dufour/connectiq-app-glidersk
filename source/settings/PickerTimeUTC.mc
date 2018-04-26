@@ -28,7 +28,7 @@ class PickerTimeUTC extends Ui.Picker {
 
   function initialize() {
     // Get property
-    var bTimeUTC = App.getApp().getProperty("userTimeUTC");
+    var bTimeUTC = App.Properties.getValue("userTimeUTC");
 
     // Initialize picker
     var oFactory = new PickerFactoryDictionary([false, true], [Ui.loadResource(Rez.Strings.valueTimeLT), Ui.loadResource(Rez.Strings.valueTimeUTC)], null);
@@ -53,7 +53,7 @@ class PickerDelegateTimeUTC extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     // Set property and exit
-    App.getApp().setProperty("userTimeUTC", _amValues[0]);
+    App.Properties.setValue("userTimeUTC", _amValues[0]);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

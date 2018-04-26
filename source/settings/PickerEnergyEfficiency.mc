@@ -28,7 +28,7 @@ class PickerEnergyEfficiency extends Ui.Picker {
 
   function initialize() {
     // Get property
-    var iEnergyEfficiency = App.getApp().getProperty("userEnergyEfficiency");
+    var iEnergyEfficiency = App.Properties.getValue("userEnergyEfficiency");
 
     // Initialize picker
     var oFactory = new PickerFactoryNumber(0, 100, null);
@@ -53,7 +53,7 @@ class PickerDelegateEnergyEfficiency extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     // Set property and exit
-    App.getApp().setProperty("userEnergyEfficiency", _amValues[0]);
+    App.Properties.setValue("userEnergyEfficiency", _amValues[0]);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

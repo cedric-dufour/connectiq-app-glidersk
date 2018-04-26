@@ -28,7 +28,7 @@ class PickerDestinationEditLongitude extends Ui.Picker {
 
   function initialize() {
     // Get property
-    var dictDestination = App.getApp().getProperty("storDestInUse");
+    var dictDestination = App.Storage.getValue("storDestInUse");
     var fLongitude = dictDestination != null ? dictDestination["longitude"] : 0.0f;
 
     // Split components
@@ -76,7 +76,7 @@ class PickerDelegateDestinationEditLongitude extends Ui.PickerDelegate {
     var fLongitude = _amValues[0] * (_amValues[2] + _amValues[4]/60.0f + _amValues[6]/3600.0f);
 
     // Update/create destination (dictionary)
-    var dictDestination = App.getApp().getProperty("storDestInUse");
+    var dictDestination = App.Storage.getValue("storDestInUse");
     if(dictDestination != null) {
       dictDestination["longitude"] = fLongitude;
     }
@@ -85,7 +85,7 @@ class PickerDelegateDestinationEditLongitude extends Ui.PickerDelegate {
     }
 
     // Set property and exit
-    App.getApp().setProperty("storDestInUse", dictDestination);
+    App.Storage.setValue("storDestInUse", dictDestination);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

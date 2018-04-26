@@ -48,7 +48,7 @@ class MenuDelegateDestinationEditFromCurrent extends Ui.MenuInputDelegate {
   function onMenuItem(item) {
     if (item == :confirm and $.GSK_PositionLocation != null and $.GSK_PositionAltitude != null) {
       // Update destination (dictionary) with current location/altitude
-      var dictDestination = App.getApp().getProperty("storDestInUse");
+      var dictDestination = App.Storage.getValue("storDestInUse");
       if(dictDestination == null) {
         dictDestination = { "name" => "----", "latitude" => 0.0f, "longitude" => 0.0f, "elevation" => 0.0f };
       }
@@ -56,7 +56,7 @@ class MenuDelegateDestinationEditFromCurrent extends Ui.MenuInputDelegate {
       dictDestination["latitude"] = $.GSK_PositionLocation.toDegrees()[0];
       dictDestination["longitude"] = $.GSK_PositionLocation.toDegrees()[1];
       dictDestination["elevation"] = $.GSK_PositionAltitude;
-      App.getApp().setProperty("storDestInUse", dictDestination);
+      App.Storage.setValue("storDestInUse", dictDestination);
     }
   }
 

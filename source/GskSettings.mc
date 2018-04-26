@@ -74,30 +74,28 @@ class GskSettings {
   //
 
   function load() {
-    var oApplication = App.getApp();
-
     // Units
-    self.setUnitDistance(oApplication.getProperty("userUnitDistance"));
-    self.setUnitElevation(oApplication.getProperty("userUnitElevation"));
-    self.setUnitRateOfTurn(oApplication.getProperty("userUnitRateOfTurn"));
-    self.setTimeUTC(oApplication.getProperty("userTimeUTC"));
+    self.setUnitDistance(App.Properties.getValue("userUnitDistance"));
+    self.setUnitElevation(App.Properties.getValue("userUnitElevation"));
+    self.setUnitRateOfTurn(App.Properties.getValue("userUnitRateOfTurn"));
+    self.setTimeUTC(App.Properties.getValue("userTimeUTC"));
 
     // Other settings
-    self.setTimeConstant(oApplication.getProperty("userTimeConstant"));
-    self.setVariometerRange(oApplication.getProperty("userVariometerRange"));
-    self.setVariometerMode(oApplication.getProperty("userVariometerMode"));
-    self.setEnergyEfficiency(oApplication.getProperty("userEnergyEfficiency"));
-    self.setPlotRange(oApplication.getProperty("userPlotRange"));
-    self.setPlotZoom(oApplication.getProperty("userPlotZoom"));
-    self.setFinesseReference(oApplication.getProperty("userFinesseReference"));
-    self.setHeightDecision(oApplication.getProperty("userHeightDecision"));
-    self.setHeightWarning(oApplication.getProperty("userHeightWarning"));
-    self.setHeightCritical(oApplication.getProperty("userHeightCritical"));
-    self.setBackgroundColor(oApplication.getProperty("userBackgroundColor"));
-    self.setVariometerTones(oApplication.getProperty("userVariometerTones"));
-    self.setSafetyTones(oApplication.getProperty("userSafetyTones"));
-    self.setMuteDistance(oApplication.getProperty("userMuteDistance"));
-    self.setLapKey(oApplication.getProperty("userLapKey"));
+    self.setTimeConstant(App.Properties.getValue("userTimeConstant"));
+    self.setVariometerRange(App.Properties.getValue("userVariometerRange"));
+    self.setVariometerMode(App.Properties.getValue("userVariometerMode"));
+    self.setEnergyEfficiency(App.Properties.getValue("userEnergyEfficiency"));
+    self.setPlotRange(App.Properties.getValue("userPlotRange"));
+    self.setPlotZoom(App.Properties.getValue("userPlotZoom"));
+    self.setFinesseReference(App.Properties.getValue("userFinesseReference"));
+    self.setHeightDecision(App.Properties.getValue("userHeightDecision"));
+    self.setHeightWarning(App.Properties.getValue("userHeightWarning"));
+    self.setHeightCritical(App.Properties.getValue("userHeightCritical"));
+    self.setBackgroundColor(App.Properties.getValue("userBackgroundColor"));
+    self.setVariometerTones(App.Properties.getValue("userVariometerTones"));
+    self.setSafetyTones(App.Properties.getValue("userSafetyTones"));
+    self.setMuteDistance(App.Properties.getValue("userMuteDistance"));
+    self.setLapKey(App.Properties.getValue("userLapKey"));
   }
 
   function setUnitDistance(_iUnitDistance) {

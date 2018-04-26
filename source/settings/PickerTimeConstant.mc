@@ -28,7 +28,7 @@ class PickerTimeConstant extends Ui.Picker {
 
   function initialize() {
     // Get property
-    var iTimeConstant = App.getApp().getProperty("userTimeConstant");
+    var iTimeConstant = App.Properties.getValue("userTimeConstant");
 
     // Initialize picker
     var oFactory = new PickerFactoryNumber(0, 10, null);
@@ -53,7 +53,7 @@ class PickerDelegateTimeConstant extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     // Set property and exit
-    App.getApp().setProperty("userTimeConstant", _amValues[0]);
+    App.Properties.setValue("userTimeConstant", _amValues[0]);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

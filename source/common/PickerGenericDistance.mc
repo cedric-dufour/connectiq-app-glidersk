@@ -29,7 +29,7 @@ class PickerGenericDistance extends Ui.Picker {
 
   function initialize(_sPropertyId, _sTitle) {
     // Get property
-    var fDistance = App.getApp().getProperty(_sPropertyId);
+    var fDistance = App.Properties.getValue(_sPropertyId);
     if(fDistance == null or fDistance < 0.0f ) { fDistance = 0.0f; }
 
     // Use user-specified distance unit (NB: always use metric units in object store)
@@ -81,7 +81,7 @@ class PickerDelegateGenericDistance extends Ui.PickerDelegate {
     fDistance = fDistance / $.GSK_Settings.fUnitDistanceConstant;  // ... to meters
 
     // Set property and exit
-    App.getApp().setProperty(self.sPropertyId, fDistance);
+    App.Properties.setValue(self.sPropertyId, fDistance);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 
