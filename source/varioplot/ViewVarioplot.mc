@@ -480,7 +480,7 @@ class ViewDelegateVarioplot extends Ui.BehaviorDelegate {
     var iKey = oEvent.getKey();
     if(iKey == Ui.KEY_UP) {
       if($.GSK_ViewVarioplot_PanZoom == 0) {
-        Ui.switchToView(new ViewRateOfTurn(), new ViewDelegateRateOfTurn(), Ui.SLIDE_IMMEDIATE);
+        Ui.switchToView(new ViewVariometer(), new ViewDelegateVariometer(), Ui.SLIDE_IMMEDIATE);
       }
       else if($.GSK_ViewVarioplot_PanZoom == 1) {  // ... zoom in
         var fPlotZoom_previous = $.GSK_Settings.fPlotZoom;
@@ -503,7 +503,7 @@ class ViewDelegateVarioplot extends Ui.BehaviorDelegate {
     }
     if(iKey == Ui.KEY_DOWN) {
       if($.GSK_ViewVarioplot_PanZoom == 0) {
-        Ui.switchToView(new ViewVariometer(), new ViewDelegateVariometer(), Ui.SLIDE_IMMEDIATE);
+        Ui.switchToView(new ViewTimers(), new ViewDelegateTimers(), Ui.SLIDE_IMMEDIATE);
       }
       else if($.GSK_ViewVarioplot_PanZoom == 1) {  // ... zoom out
         var fPlotZoom_previous = $.GSK_Settings.fPlotZoom;

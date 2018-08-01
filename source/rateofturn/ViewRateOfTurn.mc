@@ -254,7 +254,7 @@ class ViewDelegateRateOfTurn extends ViewDelegateGlobal {
       return true;
     }
     if(iKey == Ui.KEY_DOWN) {
-      Ui.switchToView(new ViewVarioplot(), new ViewDelegateVarioplot(), Ui.SLIDE_IMMEDIATE);
+      Ui.switchToView(new ViewVariometer(), new ViewDelegateVariometer(), Ui.SLIDE_IMMEDIATE);
       return true;
     }
     return false;

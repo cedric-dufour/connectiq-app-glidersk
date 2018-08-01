@@ -38,9 +38,13 @@ var GSK_PositionAltitude = null;
 
 // Processing logic
 var GSK_Processing = null;
+var GSK_TimeStart = null;
 
 // Activity session (recording)
 var GSK_ActivitySession = null;
+var GSK_ActivitySession_TimeStart = null;
+var GSK_ActivitySession_TimeLap = null;
+var GSK_ActivitySession_CountLaps = null;
 var GSK_FitField_VerticalSpeed = null;
 var GSK_FitField_VerticalSpeed_UnitConstant = 1.0f;
 var GSK_FitField_RateOfTurn = null;
@@ -116,6 +120,7 @@ class GskApp extends App.AppBase {
     $.GSK_Processing = new GskProcessing();
 
     // Timers
+    $.GSK_TimeStart = Time.now();
     // ... UI update
     self.oUpdateTimer = null;
     self.iUpdateLastEpoch = 0;

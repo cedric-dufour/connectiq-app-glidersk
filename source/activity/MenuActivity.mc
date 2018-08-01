@@ -43,7 +43,7 @@ class MenuDelegateActivity extends Ui.MenuInputDelegate {
       }
     }
     else if (item == :menuActivityPause) {
-      //Sys.println("DEBUG: MenuDelegateActivity.onMenuItem(:menuActivityResumeLater)");
+      //Sys.println("DEBUG: MenuDelegateActivity.onMenuItem(:menuActivityPause)");
       if($.GSK_ActivitySession.isRecording()) {
         $.GSK_ActivitySession.stop();
         if(Attn has :playTone) {

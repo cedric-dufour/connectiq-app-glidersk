@@ -247,11 +247,11 @@ class ViewDelegateVariometer extends ViewDelegateGlobal {
     //Sys.println("DEBUG: ViewDelegateVariometer.onKey()");
     var iKey = oEvent.getKey();
     if(iKey == Ui.KEY_UP) {
-      Ui.switchToView(new ViewVarioplot(), new ViewDelegateVarioplot(), Ui.SLIDE_IMMEDIATE);
+      Ui.switchToView(new ViewRateOfTurn(), new ViewDelegateRateOfTurn(), Ui.SLIDE_IMMEDIATE);
       return true;
     }
     if(iKey == Ui.KEY_DOWN) {
-      Ui.switchToView(new ViewGlobal(), new ViewDelegateGlobal(), Ui.SLIDE_IMMEDIATE);
+      Ui.switchToView(new ViewVarioplot(), new ViewDelegateVarioplot(), Ui.SLIDE_IMMEDIATE);
       return true;
     }
     return false;

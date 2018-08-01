@@ -100,6 +100,12 @@
   <string id="labelHeightWarning">Warn.Hght</string>
   <string id="labelHeightCritical">Crit.Hght</string>
   <string id="labelTimeConstant">Time Const.</string>
+  <string id="labelActivity">Activity</string>
+  <string id="labelRecording">Recording</string>
+  <string id="labelLap">Lap</string>
+  <string id="unitStart">start</string>
+  <string id="unitElapsed">elapsed</string>
+  <string id="unitCount">count</string>
   <!-- Values -->
   <string id="valueActivityStandby">SBY</string>
   <string id="valueActivityRecording">REC</string>

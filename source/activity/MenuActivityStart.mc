@@ -19,6 +19,7 @@
 using Toybox.ActivityRecording as AR;
 using Toybox.Attention as Attn;
 using Toybox.FitContributor as FC;
+using Toybox.Time;
 using Toybox.WatchUi as Ui;
 
 // NOTE: Since Ui.Confirmation does not allow to pre-select "Yes" as an answer,
@@ -59,6 +60,9 @@ class MenuDelegateActivityStart extends Ui.MenuInputDelegate {
         $.GSK_FitField_Acceleration = $.GSK_ActivitySession.createField("Acceleration", GskApp.FITFIELD_ACCELERATION, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>"g" });
       }
       $.GSK_ActivitySession.start();
+      $.GSK_ActivitySession_TimeStart = Time.now();
+      $.GSK_ActivitySession_TimeLap = Time.now();
+      $.GSK_ActivitySession_CountLaps = 1;
       if(Attn has :playTone) {
         Attn.playTone(Attn.TONE_START);
       }

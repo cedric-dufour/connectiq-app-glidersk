@@ -17,7 +17,6 @@
 // License-Filename: LICENSE/GPL-3.0.txt
 
 using Toybox.Application as App;
-using Toybox.Attention as Attn;
 using Toybox.Graphics as Gfx;
 using Toybox.Position as Pos;
 using Toybox.Time;
@@ -25,7 +24,7 @@ using Toybox.Time.Gregorian;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
-class ViewGlobal extends Ui.View {
+class ViewTimers extends Ui.View {
 
   //
   // VARIABLES
@@ -119,26 +118,23 @@ class ViewGlobal extends Ui.View {
     self.oRezDrawableHeader.setColorBackground($.GSK_Settings.iBackgroundColor);
     // ... battery level
     self.oRezValueBatteryLevel.setColor(iColorText);
-    // ... acceleration
-    View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelAcceleration));
-    View.findDrawableById("unitTopLeft").setText("[g]");
-    // ... rate of turn
-    View.findDrawableById("labelTopRight").setText(Ui.loadResource(Rez.Strings.labelRateOfTurn));
-    View.findDrawableById("unitTopRight").setText(self.sUnitRateOfTurn_layout);
-    // ... altitude
-    View.findDrawableById("labelLeft").setText(Ui.loadResource(Rez.Strings.labelAltitude));
-    View.findDrawableById("unitLeft").setText(self.sUnitElevation_layout);
-    // ... finesse
-    View.findDrawableById("labelCenter").setText(Ui.loadResource(Rez.Strings.labelFinesse));
-    // ... heading
-    View.findDrawableById("labelRight").setText(Ui.loadResource(Rez.Strings.labelHeading));
-    View.findDrawableById("unitRight").setText("[°]");
-    // ... vertical speed
-    View.findDrawableById("labelBottomLeft").setText(Ui.loadResource(Rez.Strings.labelVerticalSpeed));
-    View.findDrawableById("unitBottomLeft").setText(self.sUnitVerticalSpeed_layout);
-    // ... ground speed
-    View.findDrawableById("labelBottomRight").setText(Ui.loadResource(Rez.Strings.labelGroundSpeed));
-    View.findDrawableById("unitBottomRight").setText(self.sUnitHorizontalSpeed_layout);
+    // ... activity: start
+    View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelActivity));
+    View.findDrawableById("unitTopLeft").setText(Ui.loadResource(Rez.Strings.unitStart));
+    // ... activity: elapsed
+    View.findDrawableById("unitTopRight").setText(Ui.loadResource(Rez.Strings.unitElapsed));
+    // ... lap: start
+    View.findDrawableById("labelLeft").setText(Ui.loadResource(Rez.Strings.labelLap));
+    View.findDrawableById("unitLeft").setText(Ui.loadResource(Rez.Strings.unitStart));
+    // ... lap: count
+    View.findDrawableById("labelCenter").setText(Ui.loadResource(Rez.Strings.unitCount));
+    // ... lap: elapsed
+    View.findDrawableById("unitRight").setText(Ui.loadResource(Rez.Strings.unitElapsed));
+    // ... recording: start
+    View.findDrawableById("labelBottomLeft").setText(Ui.loadResource(Rez.Strings.labelRecording));
+    View.findDrawableById("unitBottomLeft").setText(Ui.loadResource(Rez.Strings.unitStart));
+    // ... recording: elapsed
+    View.findDrawableById("unitBottomRight").setText(Ui.loadResource(Rez.Strings.unitElapsed));
     // ... time
     self.oRezValueTime.setColor(iColorText);
 
@@ -187,12 +183,6 @@ class ViewGlobal extends Ui.View {
 
     // (Re)load settings
     App.getApp().loadSettings();
-
-    // Units beautifying
-    self.sUnitHorizontalSpeed_layout = "["+$.GSK_Settings.sUnitHorizontalSpeed+"]";
-    self.sUnitElevation_layout = "["+$.GSK_Settings.sUnitElevation+"]";
-    self.sUnitVerticalSpeed_layout = "["+$.GSK_Settings.sUnitVerticalSpeed+"]";
-    self.sUnitRateOfTurn_layout = "["+$.GSK_Settings.sUnitRateOfTurn+"]";
   }
 
   function updateUi() {
@@ -237,27 +227,11 @@ class ViewGlobal extends Ui.View {
     self.oRezValueTime.setText(Lang.format("$1$$2$$3$ $4$", [oTimeInfo.hour.format("%02d"), oTimeNow.value() % 2 ? "." : ":", oTimeInfo.min.format("%02d"), $.GSK_Settings.sUnitTime]));
 
     // Set position values (and dependent colors)
-    var fValue;
+    var iDuration;
+    var iDuration_h;
+    var iDuration_m;
     var iColorText;
-    if($.GSK_Processing.iAccuracy == Pos.QUALITY_NOT_AVAILABLE) {
-      self.oRezDrawableGlobal.setColorContentBackground(Gfx.COLOR_DK_RED);
-      self.oRezValueTopLeft.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueTopLeft.setText($.GSK_NOVALUE_LEN3);
-      self.oRezValueTopRight.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueTopRight.setText($.GSK_NOVALUE_LEN3);
-      self.oRezValueLeft.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueLeft.setText($.GSK_NOVALUE_LEN3);
-      self.oRezValueCenter.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueCenter.setText($.GSK_NOVALUE_LEN2);
-      self.oRezValueRight.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueRight.setText($.GSK_NOVALUE_LEN3);
-      self.oRezValueBottomLeft.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueBottomLeft.setText($.GSK_NOVALUE_LEN3);
-      self.oRezValueBottomRight.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueBottomRight.setText($.GSK_NOVALUE_LEN3);
-      return;
-    }
-    else if($.GSK_Processing.iAccuracy == Pos.QUALITY_LAST_KNOWN) {
+    if($.GSK_Processing.iAccuracy == Pos.QUALITY_NOT_AVAILABLE or $.GSK_Processing.iAccuracy == Pos.QUALITY_LAST_KNOWN) {
       self.oRezDrawableGlobal.setColorContentBackground(Gfx.COLOR_DK_RED);
       iColorText = Gfx.COLOR_LT_GRAY;
     }
@@ -266,104 +240,82 @@ class ViewGlobal extends Ui.View {
       iColorText = $.GSK_Settings.iBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
     }
 
-    // ... acceleration
+    // ... activity: start
     self.oRezValueTopLeft.setColor(iColorText);
-    if($.GSK_Processing.fAcceleration != null) {
-      fValue = $.GSK_Processing.fAcceleration;
-      sValue = fValue.format("%.01f");
+    if($.GSK_TimeStart != null) {
+      oTimeInfo = $.GSK_Settings.bTimeUTC ? Gregorian.utcInfo($.GSK_TimeStart, Time.FORMAT_SHORT) : Gregorian.info($.GSK_TimeStart, Time.FORMAT_SHORT);
+      sValue = Lang.format("$1$:$2$", [oTimeInfo.hour.format("%02d"), oTimeInfo.min.format("%02d")]);
     }
     else {
       sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueTopLeft.setText(sValue);
 
-    // ... rate of turn
+    // ... activity: elapsed
     self.oRezValueTopRight.setColor(iColorText);
-    if($.GSK_Processing.fRateOfTurn != null) {
-      if($.GSK_Processing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
-        if($.GSK_Processing.fRateOfTurn < 0.0f) {
-          self.oRezValueTopRight.setColor(Gfx.COLOR_RED);
-        }
-        else if($.GSK_Processing.fRateOfTurn > 0.0f) {
-          self.oRezValueTopRight.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_GREEN);
-        }
-      }
-      fValue = $.GSK_Processing.fRateOfTurn * $.GSK_Settings.fUnitRateOfTurnConstant;
-      if($.GSK_Settings.iUnitRateOfTurn == 1) {
-        sValue = fValue.format("%+.01f");
-      }
-      else {
-        sValue = fValue.format("%+.0f");
-      }
+    if($.GSK_TimeStart != null) {
+      iDuration = Math.floor(oTimeNow.subtract($.GSK_TimeStart).value() / 60.0).toNumber();
+      iDuration_m = iDuration % 60;
+      iDuration_h = (iDuration-iDuration_m) / 60;
+      sValue = Lang.format("$1$:$2$", [iDuration_h.format("%d"), iDuration_m.format("%02d")]);
     }
     else {
       sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueTopRight.setText(sValue);
 
-    // ... altitude
+    // ... lap: start
     self.oRezValueLeft.setColor(iColorText);
-    if($.GSK_Processing.fAltitude != null) {
-      fValue = $.GSK_Processing.fAltitude * $.GSK_Settings.fUnitElevationConstant;
-      sValue = fValue.format("%.0f");
+    if($.GSK_ActivitySession_TimeLap != null) {
+      oTimeInfo = $.GSK_Settings.bTimeUTC ? Gregorian.utcInfo($.GSK_ActivitySession_TimeLap, Time.FORMAT_SHORT) : Gregorian.info($.GSK_ActivitySession_TimeLap, Time.FORMAT_SHORT);
+      sValue = Lang.format("$1$:$2$", [oTimeInfo.hour.format("%02d"), oTimeInfo.min.format("%02d")]);
     }
     else {
       sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueLeft.setText(sValue);
 
-    // ... finesse
+    // ... lap: count
     self.oRezValueCenter.setColor(iColorText);
-    if($.GSK_Processing.fFinesse != null and !$.GSK_Processing.bAscent) {
-      fValue = $.GSK_Processing.fFinesse;
-      sValue = fValue.format("%.0f");
+    if($.GSK_ActivitySession_CountLaps) {
+      sValue = $.GSK_ActivitySession_CountLaps.format("%d");
     }
     else {
       sValue = $.GSK_NOVALUE_LEN2;
     }
     self.oRezValueCenter.setText(sValue);
 
-    // ... heading
+    // ... lap: elapsed
     self.oRezValueRight.setColor(iColorText);
-    if($.GSK_Processing.fHeading != null) {
-      //fValue = (($.GSK_Processing.fHeading * 180.0f/Math.PI).toNumber()) % 360;
-      fValue = (($.GSK_Processing.fHeading * 57.2957795131f).toNumber()) % 360;
-      sValue = fValue.format("%d");
+    if($.GSK_ActivitySession_TimeLap != null) {
+      iDuration = Math.floor(oTimeNow.subtract($.GSK_ActivitySession_TimeLap).value() / 60.0).toNumber();
+      iDuration_m = iDuration % 60;
+      iDuration_h = (iDuration-iDuration_m) / 60;
+      sValue = Lang.format("$1$:$2$", [iDuration_h.format("%d"), iDuration_m.format("%02d")]);
     }
     else {
       sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueRight.setText(sValue);
 
-    // ... variometer
+    // ... recording: start
     self.oRezValueBottomLeft.setColor(iColorText);
-    if($.GSK_Processing.fVariometer != null) {
-      if($.GSK_Processing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
-        if($.GSK_Processing.fVariometer > 0.0f) {
-          self.oRezValueBottomLeft.setColor($.GSK_Settings.iBackgroundColor ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_GREEN);
-        }
-        else if($.GSK_Processing.fVariometer < 0.0f) {
-          self.oRezValueBottomLeft.setColor(Gfx.COLOR_RED);
-        }
-      }
-      fValue = $.GSK_Processing.fVariometer * $.GSK_Settings.fUnitVerticalSpeedConstant;
-      if($.GSK_Settings.fUnitVerticalSpeedConstant < 100.0f) {
-        sValue = fValue.format("%+.1f");
-      }
-      else {
-        sValue = fValue.format("%+.0f");
-      }
+    if($.GSK_ActivitySession_TimeStart != null) {
+      oTimeInfo = $.GSK_Settings.bTimeUTC ? Gregorian.utcInfo($.GSK_ActivitySession_TimeStart, Time.FORMAT_SHORT) : Gregorian.info($.GSK_ActivitySession_TimeStart, Time.FORMAT_SHORT);
+      sValue = Lang.format("$1$:$2$", [oTimeInfo.hour.format("%02d"), oTimeInfo.min.format("%02d")]);
     }
     else {
       sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueBottomLeft.setText(sValue);
 
-    // ... ground speed
+    // ... recording: elapsed
     self.oRezValueBottomRight.setColor(iColorText);
-    if($.GSK_Processing.fGroundSpeed != null) {
-      fValue = $.GSK_Processing.fGroundSpeed * $.GSK_Settings.fUnitHorizontalSpeedConstant;
-      sValue = fValue.format("%.0f");
+    if($.GSK_ActivitySession_TimeStart != null) {
+      iDuration = Math.floor(oTimeNow.subtract($.GSK_ActivitySession_TimeStart).value() / 60.0).toNumber();
+      iDuration_m = iDuration % 60;
+      iDuration_h = (iDuration-iDuration_m) / 60;
+      sValue = Lang.format("$1$:$2$", [iDuration_h.format("%d"), iDuration_m.format("%02d")]);
     }
     else {
       sValue = $.GSK_NOVALUE_LEN3;
@@ -373,57 +325,21 @@ class ViewGlobal extends Ui.View {
 
 }
 
-class ViewDelegateGlobal extends Ui.BehaviorDelegate {
+class ViewDelegateTimers extends ViewDelegateGlobal {
 
   function initialize() {
-    BehaviorDelegate.initialize();
-  }
-
-  function onMenu() {
-    //Sys.println("DEBUG: ViewDelegateGlobal.onMenu()");
-    Ui.pushView(new Rez.Menus.menuSettings(), new MenuDelegateSettings(), Ui.SLIDE_IMMEDIATE);
-    return true;
-  }
-
-  function onSelect() {
-    //Sys.println("DEBUG: ViewDelegateGlobal.onSelect()");
-    if($.GSK_ActivitySession == null) {
-      Ui.pushView(new MenuActivityStart(), new MenuDelegateActivityStart(), Ui.SLIDE_IMMEDIATE);
-    }
-    else {
-      Ui.pushView(new Rez.Menus.menuActivity(), new MenuDelegateActivity(), Ui.SLIDE_IMMEDIATE);
-    }
-    return true;
-  }
-
-  function onBack() {
-    //Sys.println("DEBUG: ViewDelegateGlobal.onBack()");
-    if($.GSK_Settings.bLapKey and $.GSK_ActivitySession != null) {
-      if($.GSK_ActivitySession.isRecording()) {
-        $.GSK_ActivitySession.addLap();
-        $.GSK_ActivitySession_TimeLap = Time.now();
-        $.GSK_ActivitySession_CountLaps += 1;
-        if(Attn has :playTone) {
-          Attn.playTone(Attn.TONE_LAP);
-        }
-      }
-      else {
-        Ui.pushView(new Rez.Menus.menuActivity(), new MenuDelegateActivity(), Ui.SLIDE_IMMEDIATE);
-      }
-      return true;
-    }
-    return false;
+    ViewDelegateGlobal.initialize();
   }
 
   function onKey(oEvent) {
-    //Sys.println("DEBUG: ViewDelegateGlobal.onKey()");
+    //Sys.println("DEBUG: ViewDelegateRateOfTurn.onKey()");
     var iKey = oEvent.getKey();
     if(iKey == Ui.KEY_UP) {
-      Ui.switchToView(new ViewTimers(), new ViewDelegateTimers(), Ui.SLIDE_IMMEDIATE);
+      Ui.switchToView(new ViewVarioplot(), new ViewDelegateVarioplot(), Ui.SLIDE_IMMEDIATE);
       return true;
     }
     if(iKey == Ui.KEY_DOWN) {
-      Ui.switchToView(new ViewSafety(), new ViewDelegateSafety(), Ui.SLIDE_IMMEDIATE);
+      Ui.switchToView(new ViewGlobal(), new ViewDelegateGlobal(), Ui.SLIDE_IMMEDIATE);
       return true;
     }
     return false;

@@ -34,54 +34,6 @@ any further bells or whistles:
    your current ground speed
 
 
-Variometer View
----------------
-
-The GliderSK Variometer displays your current ascent/descent rate both textu-
-ally and graphically, using visually appealing colors:
- - GREEN for ascent
- - RED for descent
-
-
-Varioplot View
---------------
-
-The GliderSK Varioplot graphically displays you ascent/descent rate along your
-flight path, using visually appealing colors ranging from:
- - (Bright) GREEN for maximum ascent rate
- - (Bright) RED for maximum descent rate
-
-In addition, the following values will be displayed in the corner of the plot:
- - Top-Left:
-   your current altitude
- - Top-Right:
-   your current vertical speed
- - Bottom-Left:
-   your current ground speed
- - Bottom-Right:
-   your current finesse
-
-By pressing the MENU button (long-pressing the UP button), you will enter the
-Variometer Plot control menu:
- - Pan/Zoom:
-   enter Pan/Zoom mode, where short pressing the following buttons will
-   result in:
-     SELECT: switch between zoom in/out, pan up/down, pan left/right
-     UP:     zoom in  /OR/ pan up   /OR/ pan left
-     DOWN:   zoom out /OR/ pan down /OR/ pan right
- - Settings:
-   (see further below)
-
-
-Rate-of-Turn View
------------------
-
-The GliderSK Rate-of-Turn displays your current rate-of-turn both textually
-and graphically, using visually appealing colors:
- - GREEN for right (starboard) turns
- - RED for left (port) turns
-
-
 Safety View
 -----------
 
@@ -185,6 +137,63 @@ Safety destination selection menu (and access to the Settings menu):
    delete a destination from the destination memory
  - Settings:
    (see further below)
+
+
+Rate-of-Turn View
+-----------------
+
+The GliderSK Rate-of-Turn displays your current rate-of-turn both textually
+and graphically, using visually appealing colors:
+ - GREEN for right (starboard) turns
+ - RED for left (port) turns
+
+
+Variometer View
+---------------
+
+The GliderSK Variometer displays your current ascent/descent rate both textu-
+ally and graphically, using visually appealing colors:
+ - GREEN for ascent
+ - RED for descent
+
+
+Varioplot View
+--------------
+
+The GliderSK Varioplot graphically displays you ascent/descent rate along your
+flight path, using visually appealing colors ranging from:
+ - (Bright) GREEN for maximum ascent rate
+ - (Bright) RED for maximum descent rate
+
+In addition, the following values will be displayed in the corner of the plot:
+ - Top-Left:
+   your current altitude
+ - Top-Right:
+   your current vertical speed
+ - Bottom-Left:
+   your current ground speed
+ - Bottom-Right:
+   your current finesse
+
+By pressing the MENU button (long-pressing the UP button), you will enter the
+Variometer Plot control menu:
+ - Pan/Zoom:
+   enter Pan/Zoom mode, where short pressing the following buttons will
+   result in:
+     SELECT: switch between zoom in/out, pan up/down, pan left/right
+     UP:     zoom in  /OR/ pan up   /OR/ pan left
+     DOWN:   zoom out /OR/ pan down /OR/ pan right
+ - Settings:
+   (see further below)
+
+
+Timers View
+-----------
+
+The GliderSK Timers view displays the start and elapsed times since:
+ - the activity (application) was started
+ - the (last) recording was started (see Activity Recording below)
+ - the last recording lap
 
 
 Activity Recording

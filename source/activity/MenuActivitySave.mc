@@ -52,6 +52,9 @@ class MenuDelegateActivitySave extends Ui.MenuInputDelegate {
       }
       $.GSK_ActivitySession.save();
       $.GSK_ActivitySession = null;
+      $.GSK_ActivitySession_TimeStart = null;
+      $.GSK_ActivitySession_TimeLap = null;
+      $.GSK_ActivitySession_CountLaps = null;
       $.GSK_FitField_VerticalSpeed = null;
       $.GSK_FitField_RateOfTurn = null;
       $.GSK_FitField_Acceleration = null;
