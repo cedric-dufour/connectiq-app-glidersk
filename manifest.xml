@@ -3,7 +3,6 @@
         <iq:products>
             <iq:product id="fenix5x"/>
             <iq:product id="d2charlie"/>
-            <iq:product id="descentmk1"/>
         </iq:products>
         <iq:permissions>
             <iq:uses-permission id="Sensor"/>
