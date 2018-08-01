@@ -263,8 +263,8 @@ class GskSettings {
     if(_iPlotRange == null) {
       _iPlotRange = 1;
     }
-    else if(_iPlotRange > 10) {
-      _iPlotRange = 10;
+    else if(_iPlotRange > 5) {
+      _iPlotRange = 5;
     }
     else if(_iPlotRange < 1) {
       _iPlotRange = 1;

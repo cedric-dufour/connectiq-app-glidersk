@@ -51,7 +51,7 @@ class GskProcessing {
   //
 
   // Plot buffer
-  public const PLOTBUFFER_SIZE = 600;  // 10 minutes = 600 seconds
+  public const PLOTBUFFER_SIZE = 300;  // 5 minutes = 300 seconds
 
 
   //

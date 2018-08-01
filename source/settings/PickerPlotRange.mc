@@ -31,7 +31,7 @@ class PickerPlotRange extends Ui.Picker {
     var iPlotRange = App.Properties.getValue("userPlotRange");
 
     // Initialize picker
-    var oFactory = new PickerFactoryNumber(1, 10, null);
+    var oFactory = new PickerFactoryNumber(1, 5, null);
     Picker.initialize({
       :title => new Ui.Text({ :text => Lang.format("$1$ [min]", [Ui.loadResource(Rez.Strings.titlePlotRange)]), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oFactory ],
