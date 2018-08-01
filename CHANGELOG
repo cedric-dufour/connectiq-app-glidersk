@@ -1,3 +1,10 @@
+* 1.1.20180801a
+  - Remove Descent Mk1 form supported devices (not yet upgraded to CIQ 2.4.x)
+    REF: https://forums.garmin.com/forum/on-the-trail/wrist-worn/decent-mk1/1361969-descent-mk-still-running-ciq-2-3
+  - Reduce the varioplot maximum range from 10 to 5 minutes
+    FIX: Watchdog Tripped Error - Code Executed Too Long
+  - Added Timers view
+
 * 1.1.20180426b
   - Devel: added Exponential Moving Average analysis spreadsheet (EMA.ods)
   - Devel: Switched build system to Jungle file (SDK >= 2.4.0)
