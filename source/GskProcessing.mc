@@ -95,6 +95,7 @@ class GskProcessing {
   // ... processing
   public var bSafetyStateful;
   // ... processing values (calculated)
+  public var fVariometer;
   public var fFinesse;
   public var fEnergyTotal;
   public var fEnergyCinetic;
@@ -109,8 +110,6 @@ class GskProcessing {
   public var bEstimation;
   public var bAltitudeCritical;
   public var bAltitudeWarning;
-  // ... variometer
-  public var fVariometer;
   // ... plot buffer (using integer-only operations!)
   public var iPlotIndex;
   public var aiPlotEpoch;
@@ -186,6 +185,7 @@ class GskProcessing {
     // ... processing
     self.bSafetyStateful = false;
     // ... processing values (calculated)
+    self.fVariometer = null;
     self.fFinesse = null;
     self.fEnergyTotal = null;
     self.fEnergyCinetic = null;
@@ -200,8 +200,6 @@ class GskProcessing {
     self.bEstimation = true;
     self.bAltitudeCritical = false;
     self.bAltitudeWarning = false;
-    // ... variometer
-    self.fVariometer = null;
   }
 
   function importSettings() {
@@ -364,33 +362,21 @@ class GskProcessing {
     }
 
     // ... variometer
-    if($.GSK_Settings.iVariometerMode == 0 and _oInfo has :altitude and _oInfo.altitude != null) {  // ... altimetric variometer
+    if($.GSK_Settings.iVariometerMode == 0 and self.fAltitude != null) {  // ... altimetric variometer
       if(self.iPreviousAltitudeGpoch != null and self.iPositionGpoch-self.iPreviousAltitudeGpoch != 0) {
-        fValue = (_oInfo.altitude-self.fPreviousAltitude) / (self.iPositionGpoch-self.iPreviousAltitudeGpoch);
-        if(self.fVariometer == null) {
-          self.fVariometer = fValue;
-        }
-        else {
-          self.fVariometer = self.fEmaCoefficient_present * fValue + self.fEmaCoefficient_past * self.fVariometer;
-        }
+        self.fVariometer = (self.fAltitude-self.fPreviousAltitude) / (self.iPositionGpoch-self.iPreviousAltitudeGpoch);
         //Sys.println(Lang.format("DEBUG: (Calculated) altimetric variometer = $1$", [self.fVariometer]));
       }
       self.iPreviousAltitudeGpoch = self.iPositionGpoch;
-      self.fPreviousAltitude = _oInfo.altitude;
+      self.fPreviousAltitude = self.fAltitude;
       self.iPreviousEnergyGpoch = null;  // ... prevent artefact when switching variometer mode
     }
-    else if($.GSK_Settings.iVariometerMode == 1 and _oInfo has :altitude and _oInfo.altitude != null and _oInfo has :speed and _oInfo.speed != null) {  // ... energetic variometer
-      self.fEnergyCinetic = 0.5f*_oInfo.speed*_oInfo.speed;
-      self.fEnergyTotal = self.fEnergyCinetic + 9.80665f*_oInfo.altitude;
+    else if($.GSK_Settings.iVariometerMode == 1 and self.fAltitude != null and self.fGroundSpeed != null) {  // ... energetic variometer
+      self.fEnergyCinetic = 0.5f*self.fGroundSpeed*self.fGroundSpeed;
+      self.fEnergyTotal = self.fEnergyCinetic + 9.80665f*self.fAltitude;
       //Sys.println(Lang.format("DEBUG: (Calculated) total energy = $1$", [self.fEnergyTotal]));
       if(self.iPreviousEnergyGpoch != null and self.iPositionGpoch-self.iPreviousEnergyGpoch != 0) {
-        fValue = (self.fEnergyTotal-self.fPreviousEnergyTotal-self.fEnergyCineticLossFactor*(self.fEnergyCinetic-self.fPreviousEnergyCinetic)) / (self.iPositionGpoch-self.iPreviousEnergyGpoch) * 0.1019716213f;  // ... 1.0f / 9.80665f = 1.019716213f
-        if(self.fVariometer == null) {
-          self.fVariometer = fValue;
-        }
-        else {
-          self.fVariometer = self.fEmaCoefficient_present * fValue + self.fEmaCoefficient_past * self.fVariometer;
-        }
+        self.fVariometer = (self.fEnergyTotal-self.fPreviousEnergyTotal-self.fEnergyCineticLossFactor*(self.fEnergyCinetic-self.fPreviousEnergyCinetic)) / (self.iPositionGpoch-self.iPreviousEnergyGpoch) * 0.1019716213f;  // ... 1.0f / 9.80665f = 1.019716213f
         //Sys.println(Lang.format("DEBUG: (Calculated) energetic variometer = $1$", [self.fVariometer]));
       }
       self.iPreviousEnergyGpoch = self.iPositionGpoch;
@@ -404,7 +390,7 @@ class GskProcessing {
 
     // ... heading
     // NOTE: we consider heading meaningful only if ground speed is above 1.0 m/s
-    if(_oInfo has :speed and _oInfo.speed != null and _oInfo.speed >= 1.0f and _oInfo has :heading and _oInfo.heading != null) {
+    if(self.fGroundSpeed != null and self.fGroundSpeed >= 1.0f and _oInfo has :heading and _oInfo.heading != null) {
       // WARNING: _oInfo.heading (in radians) may return negative values (at least in the simulator)
       var fHeading_normalized;
       fHeading_normalized = _oInfo.heading;
@@ -432,32 +418,21 @@ class GskProcessing {
       //Sys.println(Lang.format("DEBUG: (Position.Info) heading = $1$°", [self.fHeading * 57.2957795131f]));
       // ... rate of turn
       if(self.iPreviousHeadingGpoch != null and self.iPositionGpoch-self.iPreviousHeadingGpoch != 0) {
-        fValue = (fHeading_normalized-self.fPreviousHeading) / (self.iPositionGpoch-self.iPreviousHeadingGpoch);
+        fValue = (self.fHeading-self.fPreviousHeading) / (self.iPositionGpoch-self.iPreviousHeadingGpoch);
         if(fValue < -3.14159265359f) {
           fValue += 6.28318530718f;
         }
         else if(fValue > 3.14159265359f) {
           fValue -= 6.28318530718f;
         }
-        if(self.fRateOfTurn == null) {
-          self.fRateOfTurn = fValue;
-        }
-        else {
-          self.fRateOfTurn = self.fEmaCoefficient_present * fValue + self.fEmaCoefficient_past * self.fRateOfTurn;
-        }
+        self.fRateOfTurn = fValue;
         //Sys.println(Lang.format("DEBUG: (Calculated) rate of turn = $1$°", [self.fRateOfTurn * 57.2957795131f]));
       }
       self.iPreviousHeadingGpoch = self.iPositionGpoch;
-      self.fPreviousHeading = fHeading_normalized;
+      self.fPreviousHeading = self.fHeading;
       // ... speed-to(wards)-destination
       if(self.fBearingToDestination != null) {
-        fValue = _oInfo.speed * Math.cos(fHeading_normalized-self.fBearingToDestination);
-        if(self.fSpeedToDestination == null) {
-          self.fSpeedToDestination = fValue;
-        }
-        else {
-          self.fSpeedToDestination = self.fEmaCoefficient_present * fValue + self.fEmaCoefficient_past * self.fSpeedToDestination;
-        }
+        self.fSpeedToDestination = self.fGroundSpeed * Math.cos(self.fHeading-self.fBearingToDestination);
         //Sys.println(Lang.format("DEBUG: (Calculated) speed-to(wards)-destination = $1$", [self.fSpeedToDestination]));
       }
       else {
