@@ -16,10 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
-using Toybox.ActivityRecording as AR;
-using Toybox.Attention as Attn;
-using Toybox.FitContributor as FC;
-using Toybox.Time;
+using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
 // NOTE: Since Ui.Confirmation does not allow to pre-select "Yes" as an answer,
@@ -50,22 +47,7 @@ class MenuDelegateActivityStart extends Ui.MenuInputDelegate {
 
   function onMenuItem(item) {
     if (item == :confirm) {
-      if($.GSK_ActivitySession == null) {
-        // NOTE: "Flying" activity number is 20 (cf. https://www.thisisant.com/resources/fit -> Profiles.xlsx)
-        $.GSK_ActivitySession = AR.createSession({ :name=>"GliderSK", :sport=>20, :subSport=>AR.SUB_SPORT_GENERIC });
-        $.GSK_FitField_VerticalSpeed = $.GSK_ActivitySession.createField("VerticalSpeed", GskApp.FITFIELD_VERTICALSPEED, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_Settings.sUnitVerticalSpeed });
-        $.GSK_FitField_VerticalSpeed_UnitConstant = $.GSK_Settings.fUnitVerticalSpeedConstant;
-        $.GSK_FitField_RateOfTurn = $.GSK_ActivitySession.createField("RateOfTurn", GskApp.FITFIELD_RATEOFTURN, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_Settings.sUnitRateOfTurn });
-        $.GSK_FitField_RateOfTurn_UnitConstant = $.GSK_Settings.fUnitRateOfTurnConstant;
-        $.GSK_FitField_Acceleration = $.GSK_ActivitySession.createField("Acceleration", GskApp.FITFIELD_ACCELERATION, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>"g" });
-      }
-      $.GSK_ActivitySession.start();
-      $.GSK_ActivitySession_TimeStart = Time.now();
-      $.GSK_ActivitySession_TimeLap = Time.now();
-      $.GSK_ActivitySession_CountLaps = 1;
-      if(Attn has :playTone) {
-        Attn.playTone(Attn.TONE_START);
-      }
+      App.getApp().startActivity();
     }
   }
 

@@ -17,7 +17,6 @@
 // License-Filename: LICENSE/GPL-3.0.txt
 
 using Toybox.Application as App;
-using Toybox.Attention as Attn;
 using Toybox.Graphics as Gfx;
 using Toybox.Position as Pos;
 using Toybox.Time;
@@ -470,14 +469,7 @@ class ViewDelegateVarioplot extends Ui.BehaviorDelegate {
       return true;
     }
     else if($.GSK_ActivitySession != null) {
-      if($.GSK_Settings.bLapKey and $.GSK_ActivitySession.isRecording()) {
-        $.GSK_ActivitySession.addLap();
-        $.GSK_ActivitySession_TimeLap = Time.now();
-        $.GSK_ActivitySession_CountLaps += 1;
-        if(Attn has :playTone) {
-          Attn.playTone(Attn.TONE_LAP);
-        }
-      }
+      App.getApp().lapActivity();
       return true;
     }
     return false;

@@ -16,7 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
-using Toybox.Attention as Attn;
+using Toybox.Application as App;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
@@ -35,21 +35,11 @@ class MenuDelegateActivity extends Ui.MenuInputDelegate {
   function onMenuItem(item) {
     if (item == :menuActivityResume) {
       //Sys.println("DEBUG: MenuDelegateActivity.onMenuItem(:menuActivityResume)");
-      if(!$.GSK_ActivitySession.isRecording()) {
-        $.GSK_ActivitySession.start();
-        if(Attn has :playTone) {
-          Attn.playTone(Attn.TONE_START);
-        }
-      }
+      App.getApp().resumeActivity();
     }
     else if (item == :menuActivityPause) {
       //Sys.println("DEBUG: MenuDelegateActivity.onMenuItem(:menuActivityPause)");
-      if($.GSK_ActivitySession.isRecording()) {
-        $.GSK_ActivitySession.stop();
-        if(Attn has :playTone) {
-          Attn.playTone(Attn.TONE_STOP);
-        }
-      }
+      App.getApp().pauseActivity();
     }
     else if (item == :menuActivitySave) {
       //Sys.println("DEBUG: MenuDelegateActivity.onMenuItem(:menuActivitySave)");

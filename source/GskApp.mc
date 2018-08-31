@@ -16,8 +16,10 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+using Toybox.ActivityRecording as AR;
 using Toybox.Application as App;
 using Toybox.Attention as Attn;
+using Toybox.FitContributor as FC;
 using Toybox.Position as Pos;
 using Toybox.Sensor;
 using Toybox.System as Sys;
@@ -408,4 +410,91 @@ class GskApp extends App.AppBase {
     }
   }
 
+  function initActivity() {
+    // NOTE: "Flying" activity number is 20 (cf. https://www.thisisant.com/resources/fit -> Profiles.xlsx)
+    $.GSK_ActivitySession = AR.createSession({ :name=>"GliderSK", :sport=>20, :subSport=>AR.SUB_SPORT_GENERIC });
+    $.GSK_FitField_VerticalSpeed = $.GSK_ActivitySession.createField("VerticalSpeed", GskApp.FITFIELD_VERTICALSPEED, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_Settings.sUnitVerticalSpeed });
+    $.GSK_FitField_VerticalSpeed_UnitConstant = $.GSK_Settings.fUnitVerticalSpeedConstant;
+    $.GSK_FitField_RateOfTurn = $.GSK_ActivitySession.createField("RateOfTurn", GskApp.FITFIELD_RATEOFTURN, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_Settings.sUnitRateOfTurn });
+    $.GSK_FitField_RateOfTurn_UnitConstant = $.GSK_Settings.fUnitRateOfTurnConstant;
+    $.GSK_FitField_Acceleration = $.GSK_ActivitySession.createField("Acceleration", GskApp.FITFIELD_ACCELERATION, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>"g" });
+  }
+
+  function startActivity() {
+    if($.GSK_ActivitySession != null) {
+      return;
+    }
+    self.initActivity();
+    $.GSK_ActivitySession.start();
+    $.GSK_ActivitySession_TimeStart = Time.now();
+    $.GSK_ActivitySession_TimeLap = Time.now();
+    $.GSK_ActivitySession_CountLaps = 1;
+    if(Attn has :playTone) {
+      Attn.playTone(Attn.TONE_START);
+    }
+  }
+
+  function lapActivity() {
+    if($.GSK_ActivitySession == null or !$.GSK_Settings.bLapKey or !$.GSK_ActivitySession.isRecording()) {
+      return;
+    }
+    $.GSK_ActivitySession.addLap();
+    $.GSK_ActivitySession_TimeLap = Time.now();
+    $.GSK_ActivitySession_CountLaps += 1;
+    if(Attn has :playTone) {
+      Attn.playTone(Attn.TONE_LAP);
+    }
+  }
+
+  function pauseActivity() {
+    if($.GSK_ActivitySession == null or !$.GSK_ActivitySession.isRecording()) {
+      return;
+    }
+    $.GSK_ActivitySession.stop();
+    if(Attn has :playTone) {
+      Attn.playTone(Attn.TONE_STOP);
+    }
+  }
+
+  function resumeActivity() {
+    if($.GSK_ActivitySession == null or $.GSK_ActivitySession.isRecording()) {
+      return;
+    }
+    $.GSK_ActivitySession.start();
+    if(Attn has :playTone) {
+      Attn.playTone(Attn.TONE_START);
+    }
+  }
+
+  function stopActivity(_bSave) {
+    if($.GSK_ActivitySession == null) {
+      return;
+    }
+    if($.GSK_ActivitySession.isRecording()) {
+      $.GSK_ActivitySession.stop();
+    }
+    if(_bSave) {
+      $.GSK_ActivitySession.save();
+      if(Attn has :playTone) {
+        Attn.playTone(Attn.TONE_STOP);
+      }
+    }
+    else {
+      $.GSK_ActivitySession.discard();
+      if(Attn has :playTone) {
+        Attn.playTone(Attn.TONE_RESET);
+      }
+    }
+    self.resetActivity();
+  }
+
+  function resetActivity() {
+    $.GSK_ActivitySession = null;
+    $.GSK_ActivitySession_TimeStart = null;
+    $.GSK_ActivitySession_TimeLap = null;
+    $.GSK_ActivitySession_CountLaps = null;
+    $.GSK_FitField_VerticalSpeed = null;
+    $.GSK_FitField_RateOfTurn = null;
+    $.GSK_FitField_Acceleration = null;
+  }
 }

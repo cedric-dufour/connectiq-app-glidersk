@@ -16,7 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
-using Toybox.Attention as Attn;
+using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
 // NOTE: Since Ui.Confirmation does not allow to pre-select "Yes" as an answer,
@@ -47,20 +47,7 @@ class MenuDelegateActivitySave extends Ui.MenuInputDelegate {
 
   function onMenuItem(item) {
     if (item == :confirm) {
-      if($.GSK_ActivitySession.isRecording()) {
-        $.GSK_ActivitySession.stop();
-      }
-      $.GSK_ActivitySession.save();
-      $.GSK_ActivitySession = null;
-      $.GSK_ActivitySession_TimeStart = null;
-      $.GSK_ActivitySession_TimeLap = null;
-      $.GSK_ActivitySession_CountLaps = null;
-      $.GSK_FitField_VerticalSpeed = null;
-      $.GSK_FitField_RateOfTurn = null;
-      $.GSK_FitField_Acceleration = null;
-      if(Attn has :playTone) {
-        Attn.playTone(Attn.TONE_STOP);
-      }
+      App.getApp().stopActivity(true);
       Ui.popView(Ui.SLIDE_IMMEDIATE);
     }
   }
