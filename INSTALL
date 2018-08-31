@@ -67,7 +67,7 @@ build environment:
   CIQ_MONKEYDO := ${CIQ_ROOT}/bin/monkeydo
     ConnectIQ simulation launcher
 
-  CIQ_SDK := 2.3.2
+  CIQ_SDK := 2.4.0
     Target SDK version
 
   CIQ_DEVICE := d2charlie
@@ -94,7 +94,7 @@ Build the project, including debug symbols:
 
 Launch the project in the device simulator:
 
-  SH> make simulator
+  SH> make run-debug
 
 
 Release Build and Installation
@@ -122,7 +122,7 @@ However, you can readily build and install it on any "compatible" device
 (featuring ConnectIQ 2.1 and above), e.g. the Fenix 5X:
 
   SH> export CIQ_DEVICE=fenix5x
-  SH> export CIQ_SDK=2.3.2
+  SH> export CIQ_SDK=2.4.0
 
 If you are comfortable with layout resources, you may also port it for other
 "form factors" (e.g. square watches, smaller round watches, etc.).
@@ -133,7 +133,7 @@ of the new (simulated) device.
 Enjoy!
 ------
 
-See the README file for usage instructions.
+See the USAGE file for usage instructions.
 
 
 Quirks
@@ -143,4 +143,8 @@ On Debian 8 (Jessie), you will need the libjpeg8 package from Debian 7 (Wheezy)
 to be able to run the ConnectIQ simulator:
 
   URL> https://packages.debian.org/wheezy/libjpeg8
+
+On Debian 9 (Stretch), you will also need the libpng12-0 package from Debian 8 (Jessie):
+
+  URL> https://packages.debian.org/jessie/libpng12-0
 
