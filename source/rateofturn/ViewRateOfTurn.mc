@@ -246,18 +246,16 @@ class ViewDelegateRateOfTurn extends ViewDelegateGlobal {
     ViewDelegateGlobal.initialize();
   }
 
-  function onKey(oEvent) {
-    //Sys.println("DEBUG: ViewDelegateRateOfTurn.onKey()");
-    var iKey = oEvent.getKey();
-    if(iKey == Ui.KEY_UP) {
-      Ui.switchToView(new ViewSafety(), new ViewDelegateSafety(), Ui.SLIDE_IMMEDIATE);
-      return true;
-    }
-    if(iKey == Ui.KEY_DOWN) {
-      Ui.switchToView(new ViewVariometer(), new ViewDelegateVariometer(), Ui.SLIDE_IMMEDIATE);
-      return true;
-    }
-    return false;
+  function onPreviousPage() {
+    //Sys.println("DEBUG: ViewDelegateRateOfTurn.onPreviousPage()");
+    Ui.switchToView(new ViewSafety(), new ViewDelegateSafety(), Ui.SLIDE_IMMEDIATE);
+    return true;
+  }
+
+  function onNextPage() {
+    //Sys.println("DEBUG: ViewDelegateRateOfTurn.onNextPage()");
+    Ui.switchToView(new ViewVariometer(), new ViewDelegateVariometer(), Ui.SLIDE_IMMEDIATE);
+    return true;
   }
 
 }

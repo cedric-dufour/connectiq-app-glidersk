@@ -475,56 +475,54 @@ class ViewDelegateVarioplot extends Ui.BehaviorDelegate {
     return false;
   }
 
-  function onKey(oEvent) {
-    //Sys.println("DEBUG: ViewDelegateVarioplot.onKey()");
-    var iKey = oEvent.getKey();
-    if(iKey == Ui.KEY_UP) {
-      if($.GSK_ViewVarioplot_PanZoom == 0) {
-        Ui.switchToView(new ViewVariometer(), new ViewDelegateVariometer(), Ui.SLIDE_IMMEDIATE);
-      }
-      else if($.GSK_ViewVarioplot_PanZoom == 1) {  // ... zoom in
-        var fPlotZoom_previous = $.GSK_Settings.fPlotZoom;
-        $.GSK_Settings.setPlotZoom($.GSK_Settings.iPlotZoom+1);
-        var fPlotZoom_ratio = $.GSK_Settings.fPlotZoom/fPlotZoom_previous;
-        $.GSK_ViewVarioplot_OffsetY = ($.GSK_ViewVarioplot_OffsetY*fPlotZoom_ratio).toNumber();
-        $.GSK_ViewVarioplot_OffsetX = ($.GSK_ViewVarioplot_OffsetX*fPlotZoom_ratio).toNumber();
-        App.Properties.setValue("userPlotZoom", $.GSK_Settings.iPlotZoom);
-        Ui.requestUpdate();
-      }
-      else if($.GSK_ViewVarioplot_PanZoom == 2) {  // ... pan up
-        $.GSK_ViewVarioplot_OffsetY += 10;
-        Ui.requestUpdate();
-      }
-      else if($.GSK_ViewVarioplot_PanZoom == 3) {  // ... pan left
-        $.GSK_ViewVarioplot_OffsetX += 10;
-        Ui.requestUpdate();
-      }
-      return true;
+  function onPreviousPage() {
+    //Sys.println("DEBUG: ViewDelegateVarioplot.onPreviousPage()");
+    if($.GSK_ViewVarioplot_PanZoom == 0) {
+      Ui.switchToView(new ViewVariometer(), new ViewDelegateVariometer(), Ui.SLIDE_IMMEDIATE);
     }
-    if(iKey == Ui.KEY_DOWN) {
-      if($.GSK_ViewVarioplot_PanZoom == 0) {
-        Ui.switchToView(new ViewTimers(), new ViewDelegateTimers(), Ui.SLIDE_IMMEDIATE);
-      }
-      else if($.GSK_ViewVarioplot_PanZoom == 1) {  // ... zoom out
-        var fPlotZoom_previous = $.GSK_Settings.fPlotZoom;
-        $.GSK_Settings.setPlotZoom($.GSK_Settings.iPlotZoom-1);
-        var fPlotZoom_ratio = $.GSK_Settings.fPlotZoom/fPlotZoom_previous;
-        $.GSK_ViewVarioplot_OffsetY = ($.GSK_ViewVarioplot_OffsetY*fPlotZoom_ratio).toNumber();
-        $.GSK_ViewVarioplot_OffsetX = ($.GSK_ViewVarioplot_OffsetX*fPlotZoom_ratio).toNumber();
-        App.Properties.setValue("userPlotZoom", $.GSK_Settings.iPlotZoom);
-        Ui.requestUpdate();
-      }
-      else if($.GSK_ViewVarioplot_PanZoom == 2) {  // ... pan down
-        $.GSK_ViewVarioplot_OffsetY -= 10;
-        Ui.requestUpdate();
-      }
-      else if($.GSK_ViewVarioplot_PanZoom == 3) {  // ... pan right
-        $.GSK_ViewVarioplot_OffsetX -= 10;
-        Ui.requestUpdate();
-      }
-      return true;
+    else if($.GSK_ViewVarioplot_PanZoom == 1) {  // ... zoom in
+      var fPlotZoom_previous = $.GSK_Settings.fPlotZoom;
+      $.GSK_Settings.setPlotZoom($.GSK_Settings.iPlotZoom+1);
+      var fPlotZoom_ratio = $.GSK_Settings.fPlotZoom/fPlotZoom_previous;
+      $.GSK_ViewVarioplot_OffsetY = ($.GSK_ViewVarioplot_OffsetY*fPlotZoom_ratio).toNumber();
+      $.GSK_ViewVarioplot_OffsetX = ($.GSK_ViewVarioplot_OffsetX*fPlotZoom_ratio).toNumber();
+      App.Properties.setValue("userPlotZoom", $.GSK_Settings.iPlotZoom);
+      Ui.requestUpdate();
     }
-    return false;
+    else if($.GSK_ViewVarioplot_PanZoom == 2) {  // ... pan up
+      $.GSK_ViewVarioplot_OffsetY += 10;
+      Ui.requestUpdate();
+    }
+    else if($.GSK_ViewVarioplot_PanZoom == 3) {  // ... pan left
+      $.GSK_ViewVarioplot_OffsetX += 10;
+      Ui.requestUpdate();
+    }
+    return true;
+  }
+
+  function onNextPage() {
+    //Sys.println("DEBUG: ViewDelegateVarioplot.onNextPage()");
+    if($.GSK_ViewVarioplot_PanZoom == 0) {
+      Ui.switchToView(new ViewTimers(), new ViewDelegateTimers(), Ui.SLIDE_IMMEDIATE);
+    }
+    else if($.GSK_ViewVarioplot_PanZoom == 1) {  // ... zoom out
+      var fPlotZoom_previous = $.GSK_Settings.fPlotZoom;
+      $.GSK_Settings.setPlotZoom($.GSK_Settings.iPlotZoom-1);
+      var fPlotZoom_ratio = $.GSK_Settings.fPlotZoom/fPlotZoom_previous;
+      $.GSK_ViewVarioplot_OffsetY = ($.GSK_ViewVarioplot_OffsetY*fPlotZoom_ratio).toNumber();
+      $.GSK_ViewVarioplot_OffsetX = ($.GSK_ViewVarioplot_OffsetX*fPlotZoom_ratio).toNumber();
+      App.Properties.setValue("userPlotZoom", $.GSK_Settings.iPlotZoom);
+      Ui.requestUpdate();
+    }
+    else if($.GSK_ViewVarioplot_PanZoom == 2) {  // ... pan down
+      $.GSK_ViewVarioplot_OffsetY -= 10;
+      Ui.requestUpdate();
+    }
+    else if($.GSK_ViewVarioplot_PanZoom == 3) {  // ... pan right
+      $.GSK_ViewVarioplot_OffsetX -= 10;
+      Ui.requestUpdate();
+    }
+    return true;
   }
 
 }

@@ -243,18 +243,16 @@ class ViewDelegateVariometer extends ViewDelegateGlobal {
     ViewDelegateGlobal.initialize();
   }
 
-  function onKey(oEvent) {
-    //Sys.println("DEBUG: ViewDelegateVariometer.onKey()");
-    var iKey = oEvent.getKey();
-    if(iKey == Ui.KEY_UP) {
-      Ui.switchToView(new ViewRateOfTurn(), new ViewDelegateRateOfTurn(), Ui.SLIDE_IMMEDIATE);
-      return true;
-    }
-    if(iKey == Ui.KEY_DOWN) {
-      Ui.switchToView(new ViewVarioplot(), new ViewDelegateVarioplot(), Ui.SLIDE_IMMEDIATE);
-      return true;
-    }
-    return false;
+  function onPreviousPage() {
+    //Sys.println("DEBUG: ViewDelegateVariometer.onPreviousPage()");
+    Ui.switchToView(new ViewRateOfTurn(), new ViewDelegateRateOfTurn(), Ui.SLIDE_IMMEDIATE);
+    return true;
+  }
+
+  function onNextPage() {
+    //Sys.println("DEBUG: ViewDelegateVariometer.onNextPage()");
+    Ui.switchToView(new ViewVarioplot(), new ViewDelegateVarioplot(), Ui.SLIDE_IMMEDIATE);
+    return true;
   }
 
 }

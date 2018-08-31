@@ -649,30 +649,28 @@ class ViewDelegateSafety extends Ui.BehaviorDelegate {
     return false;
   }
 
-  function onKey(oEvent) {
-    //Sys.println("DEBUG: ViewDelegateSafety.onKey()");
-    var iKey = oEvent.getKey();
-    if(iKey == Ui.KEY_UP) {
-      if($.GSK_ViewSafety_SelectFields) {
-        $.GSK_ViewSafety_ShowElevationAtDestination = !$.GSK_ViewSafety_ShowElevationAtDestination;
-        Ui.requestUpdate();
-      }
-      else if(!$.GSK_ViewSafety_ShowSettings) {
-        Ui.switchToView(new ViewGlobal(), new ViewDelegateGlobal(), Ui.SLIDE_IMMEDIATE);
-      }
-      return true;
+  function onPreviousPage() {
+    //Sys.println("DEBUG: ViewDelegateSafety.onPreviousPage()");
+    if($.GSK_ViewSafety_SelectFields) {
+      $.GSK_ViewSafety_ShowElevationAtDestination = !$.GSK_ViewSafety_ShowElevationAtDestination;
+      Ui.requestUpdate();
     }
-    if(iKey == Ui.KEY_DOWN) {
-      if($.GSK_ViewSafety_SelectFields) {
-        $.GSK_ViewSafety_ShowSpeedToDestination = !$.GSK_ViewSafety_ShowSpeedToDestination;
-        Ui.requestUpdate();
-      }
-      else if(!$.GSK_ViewSafety_ShowSettings) {
-        Ui.switchToView(new ViewRateOfTurn(), new ViewDelegateRateOfTurn(), Ui.SLIDE_IMMEDIATE);
-      }
-      return true;
+    else if(!$.GSK_ViewSafety_ShowSettings) {
+      Ui.switchToView(new ViewGlobal(), new ViewDelegateGlobal(), Ui.SLIDE_IMMEDIATE);
     }
-    return false;
+    return true;
+  }
+
+  function onNextPage() {
+    //Sys.println("DEBUG: ViewDelegateSafety.onNextPage()");
+    if($.GSK_ViewSafety_SelectFields) {
+      $.GSK_ViewSafety_ShowSpeedToDestination = !$.GSK_ViewSafety_ShowSpeedToDestination;
+      Ui.requestUpdate();
+    }
+    else if(!$.GSK_ViewSafety_ShowSettings) {
+      Ui.switchToView(new ViewRateOfTurn(), new ViewDelegateRateOfTurn(), Ui.SLIDE_IMMEDIATE);
+    }
+    return true;
   }
 
 }

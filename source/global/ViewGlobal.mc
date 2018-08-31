@@ -415,18 +415,16 @@ class ViewDelegateGlobal extends Ui.BehaviorDelegate {
     return false;
   }
 
-  function onKey(oEvent) {
-    //Sys.println("DEBUG: ViewDelegateGlobal.onKey()");
-    var iKey = oEvent.getKey();
-    if(iKey == Ui.KEY_UP) {
-      Ui.switchToView(new ViewTimers(), new ViewDelegateTimers(), Ui.SLIDE_IMMEDIATE);
-      return true;
-    }
-    if(iKey == Ui.KEY_DOWN) {
-      Ui.switchToView(new ViewSafety(), new ViewDelegateSafety(), Ui.SLIDE_IMMEDIATE);
-      return true;
-    }
-    return false;
+  function onPreviousPage() {
+    //Sys.println("DEBUG: ViewDelegateGlobal.onPreviousPage()");
+    Ui.switchToView(new ViewTimers(), new ViewDelegateTimers(), Ui.SLIDE_IMMEDIATE);
+    return true;
+  }
+
+  function onNextPage() {
+    //Sys.println("DEBUG: ViewDelegateGlobal.onNextPage()");
+    Ui.switchToView(new ViewSafety(), new ViewDelegateSafety(), Ui.SLIDE_IMMEDIATE);
+    return true;
   }
 
 }
