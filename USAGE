@@ -103,11 +103,12 @@ In case the positioning quality gets below Usable, all fields will turn RED.
 If a reasonable "last known" position is available, values will still be displayed
 (all grayed-out), otherwise no value will be displayed.
 
-By pressing the SELECT button a first time, the application will allow you to
-switch the Top-Left and Bottom-Right fields according to your preference.
+By pressing the MENU button (long-pressing the UP button) a first time, the
+application will allow you to switch the Top-Left and Bottom-Right fields
+according to your preference.
 
-By pressing the SELECT button a second time, the application will display the
-current (critical) settings:
+Then, by pressing the SELECT button, the application will toggle the display of
+the current safety-critical settings:
  - Top-Left:
    the name of your current destination
  - Top-Right:
@@ -123,8 +124,8 @@ current (critical) settings:
  - Bottom-Right:
    your chosen time constant
 
-By pressing the MENU button (long-pressing the UP button), you will enter the
-Safety destination selection menu (and access to the Settings menu):
+By pressing the MENU button (long-pressing the UP button) a second time, you will
+enter the Safety destination selection menu (and access to the Settings menu):
  - Load Destination:
    load your current destination from the destination memory, ordered
    by distance if your location is available
@@ -176,15 +177,13 @@ In addition, the following values will be displayed in the corner of the plot:
    your current finesse
 
 By pressing the MENU button (long-pressing the UP button), you will enter the
-Variometer Plot control menu:
- - Pan/Zoom:
-   enter Pan/Zoom mode, where short pressing the following buttons will
-   result in:
-     SELECT: switch between zoom in/out, pan up/down, pan left/right
-     UP:     zoom in  /OR/ pan up   /OR/ pan left
-     DOWN:   zoom out /OR/ pan down /OR/ pan right
- - Settings:
-   (see further below)
+Pan/Zoom mode, where short pressing the following buttons will result in:
+ - SELECT: switch between zoom in/out, pan up/down, pan left/right
+ - UP:     zoom in  /OR/ pan up   /OR/ pan left
+ - DOWN:   zoom out /OR/ pan down /OR/ pan right
+
+By pressing the MENU button (long-pressing the UP button) a second time, you
+will enter the Settings menu (see further below).
 
 
 Timers View
@@ -199,10 +198,9 @@ The GliderSK Timers view displays the start and elapsed times since:
 Activity Recording
 ------------------
 
-Unless explicitely stated otherwise for a given view, you may control your
-activity recording status (start, pause, resume, save, discard) by pressing the
-SELECT button. When recording, the BACK key will act as Lap Key (unless
-configured not to do so; see Settings below).
+Controlling your activity recording status (start, pause, resume, save, discard)
+is achieved by pressing the SELECT button. When recording, the BACK key will act
+as Lap Key (unless configured not to do so; see Settings below).
 
 GliderSK adds custom fields to the recorded FIT file:
  - Vertical Speed

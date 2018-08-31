@@ -55,9 +55,6 @@
   <string id="titleHeightCritical">Critical Height</string>
   <!-- Menu (settings:about) -->
   <string id="menuSettingsAbout">About</string>
-  <!-- Menu (varioplot) -->
-  <string id="menuVarioplot">Variometer Plot</string>
-  <string id="menuPanZoom">Pan/Zoom</string>
   <!-- Menu (safety) -->
   <string id="menuSafety">Safety</string>
   <string id="menuDestinationLoad">Load Destination</string>

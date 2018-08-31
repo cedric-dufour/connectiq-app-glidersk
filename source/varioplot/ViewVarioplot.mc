@@ -429,7 +429,16 @@ class ViewDelegateVarioplot extends Ui.BehaviorDelegate {
 
   function onMenu() {
     //Sys.println("DEBUG: ViewDelegateVarioplot.onMenu()");
-    Ui.pushView(new Rez.Menus.menuVarioplot(), new MenuDelegateVarioplot(), Ui.SLIDE_IMMEDIATE);
+    if($.GSK_ViewVarioplot_PanZoom) {
+      $.GSK_ViewVarioplot_PanZoom = 0;  // ... cancel pan/zoom
+      $.GSK_ViewVarioplot_OffsetX = 0;
+      $.GSK_ViewVarioplot_OffsetY = 0;
+      Ui.pushView(new Rez.Menus.menuSettings(), new MenuDelegateSettings(), Ui.SLIDE_IMMEDIATE);
+    }
+    else {
+      $.GSK_ViewVarioplot_PanZoom = 1;  // ... enter pan/zoom
+      Ui.requestUpdate();
+    }
     return true;
   }
 
@@ -453,8 +462,8 @@ class ViewDelegateVarioplot extends Ui.BehaviorDelegate {
 
   function onBack() {
     //Sys.println("DEBUG: ViewDelegateVarioplot.onBack()");
-    if($.GSK_ViewVarioplot_PanZoom) {  // ... cancel pan/zoom
-      $.GSK_ViewVarioplot_PanZoom = 0;
+    if($.GSK_ViewVarioplot_PanZoom) {
+      $.GSK_ViewVarioplot_PanZoom = 0;  // ... cancel pan/zoom
       $.GSK_ViewVarioplot_OffsetX = 0;
       $.GSK_ViewVarioplot_OffsetY = 0;
       Ui.requestUpdate();
@@ -463,6 +472,8 @@ class ViewDelegateVarioplot extends Ui.BehaviorDelegate {
     else if($.GSK_ActivitySession != null) {
       if($.GSK_Settings.bLapKey and $.GSK_ActivitySession.isRecording()) {
         $.GSK_ActivitySession.addLap();
+        $.GSK_ActivitySession_TimeLap = Time.now();
+        $.GSK_ActivitySession_CountLaps += 1;
         if(Attn has :playTone) {
           Attn.playTone(Attn.TONE_LAP);
         }

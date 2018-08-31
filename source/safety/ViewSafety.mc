@@ -17,6 +17,7 @@
 // License-Filename: LICENSE/GPL-3.0.txt
 
 using Toybox.Application as App;
+using Toybox.Attention as Attn;
 using Toybox.Graphics as Gfx;
 using Toybox.Position as Pos;
 using Toybox.Time;
@@ -614,7 +615,16 @@ class ViewDelegateSafety extends Ui.BehaviorDelegate {
 
   function onMenu() {
     //Sys.println("DEBUG: ViewDelegateSafety.onMenu()");
-    Ui.pushView(new Rez.Menus.menuSafety(), new MenuDelegateSafety(), Ui.SLIDE_IMMEDIATE);
+    if($.GSK_ViewSafety_ShowSettings or $.GSK_ViewSafety_SelectFields) {
+      $.GSK_ViewSafety_ShowSettings = false;
+      $.GSK_ViewSafety_SelectFields = false;
+      Ui.pushView(new Rez.Menus.menuSafety(), new MenuDelegateSafety(), Ui.SLIDE_IMMEDIATE);
+    }
+    else {
+      $.GSK_ViewSafety_ShowSettings = false;
+      $.GSK_ViewSafety_SelectFields = true;
+      Ui.requestUpdate();
+    }
     return true;
   }
 
@@ -622,7 +632,7 @@ class ViewDelegateSafety extends Ui.BehaviorDelegate {
     //Sys.println("DEBUG: ViewDelegateSafety.onSelect()");
     if($.GSK_ViewSafety_ShowSettings) {
       $.GSK_ViewSafety_ShowSettings = false;
-      $.GSK_ViewSafety_SelectFields = false;
+      $.GSK_ViewSafety_SelectFields = true;
       Ui.requestUpdate();
     }
     else if($.GSK_ViewSafety_SelectFields) {
@@ -630,10 +640,11 @@ class ViewDelegateSafety extends Ui.BehaviorDelegate {
       $.GSK_ViewSafety_SelectFields = false;
       Ui.requestUpdate();
     }
+    else if($.GSK_ActivitySession == null) {
+      Ui.pushView(new MenuActivityStart(), new MenuDelegateActivityStart(), Ui.SLIDE_IMMEDIATE);
+    }
     else {
-      $.GSK_ViewSafety_ShowSettings = false;
-      $.GSK_ViewSafety_SelectFields = true;
-      Ui.requestUpdate();
+      Ui.pushView(new Rez.Menus.menuActivity(), new MenuDelegateActivity(), Ui.SLIDE_IMMEDIATE);
     }
     return true;
   }
@@ -647,6 +658,14 @@ class ViewDelegateSafety extends Ui.BehaviorDelegate {
       return true;
     }
     else if($.GSK_ActivitySession != null) {
+      if($.GSK_Settings.bLapKey and $.GSK_ActivitySession.isRecording()) {
+        $.GSK_ActivitySession.addLap();
+        $.GSK_ActivitySession_TimeLap = Time.now();
+        $.GSK_ActivitySession_CountLaps += 1;
+        if(Attn has :playTone) {
+          Attn.playTone(Attn.TONE_LAP);
+        }
+      }
       return true;
     }
     return false;
