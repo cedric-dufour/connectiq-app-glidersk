@@ -94,7 +94,7 @@ module GskUtils {
       dQ = dLatD/dPhiD;
     }
     else {
-      dQ = Math.cos(dLat1);
+      dQ = Math.cos(_adLoc1[0]);
     }
     if(dLonD.abs() > 3.14159265358979323846d) {
       //dLonD = dLonD > 0.0d ? dLonD - 2.0d*Math.PI : 2.0d*Math.PI + dLonD;
