@@ -646,6 +646,9 @@ class ViewDelegateSafety extends Ui.BehaviorDelegate {
       Ui.requestUpdate();
       return true;
     }
+    else if($.GSK_ActivitySession != null) {
+      return true;
+    }
     return false;
   }
 

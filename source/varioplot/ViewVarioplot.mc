@@ -460,15 +460,12 @@ class ViewDelegateVarioplot extends Ui.BehaviorDelegate {
       Ui.requestUpdate();
       return true;
     }
-    else if($.GSK_Settings.bLapKey and $.GSK_ActivitySession != null) {
-      if($.GSK_ActivitySession.isRecording()) {
+    else if($.GSK_ActivitySession != null) {
+      if($.GSK_Settings.bLapKey and $.GSK_ActivitySession.isRecording()) {
         $.GSK_ActivitySession.addLap();
         if(Attn has :playTone) {
           Attn.playTone(Attn.TONE_LAP);
         }
-      }
-      else {
-        Ui.pushView(new Rez.Menus.menuActivity(), new MenuDelegateActivity(), Ui.SLIDE_IMMEDIATE);
       }
       return true;
     }

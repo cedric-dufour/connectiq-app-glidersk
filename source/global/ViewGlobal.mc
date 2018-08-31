@@ -398,17 +398,14 @@ class ViewDelegateGlobal extends Ui.BehaviorDelegate {
 
   function onBack() {
     //Sys.println("DEBUG: ViewDelegateGlobal.onBack()");
-    if($.GSK_Settings.bLapKey and $.GSK_ActivitySession != null) {
-      if($.GSK_ActivitySession.isRecording()) {
+    if($.GSK_ActivitySession != null) {
+      if($.GSK_Settings.bLapKey and $.GSK_ActivitySession.isRecording()) {
         $.GSK_ActivitySession.addLap();
         $.GSK_ActivitySession_TimeLap = Time.now();
         $.GSK_ActivitySession_CountLaps += 1;
         if(Attn has :playTone) {
           Attn.playTone(Attn.TONE_LAP);
         }
-      }
-      else {
-        Ui.pushView(new Rez.Menus.menuActivity(), new MenuDelegateActivity(), Ui.SLIDE_IMMEDIATE);
       }
       return true;
     }
