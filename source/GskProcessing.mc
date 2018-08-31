@@ -81,6 +81,7 @@ class GskProcessing {
   public var fDestinationElevation;
   // ... sensor values (fed by Toybox.Sensor)
   public var iSensorEpoch;
+  public var fSensorAltitude;
   public var fAcceleration;
   // ... position values (fed by Toybox.Position)
   public var bPositionStateful;
@@ -155,6 +156,7 @@ class GskProcessing {
     // Reset
     // ... sensor values
     self.iSensorEpoch = null;
+    self.fSensorAltitude = null;
     self.fAcceleration = null;
   }
 
@@ -228,6 +230,20 @@ class GskProcessing {
 
     // Process sensor data
     var fValue;
+
+    // ... altitude
+    if(_oInfo has :altitude and _oInfo.altitude != null) {
+      if(self.fSensorAltitude == null) {
+        self.fSensorAltitude = _oInfo.altitude;
+      }
+      else {
+        self.fSensorAltitude = self.fEmaCoefficient_present * _oInfo.altitude + self.fEmaCoefficient_past * self.fSensorAltitude;
+      }
+      //Sys.println(Lang.format("DEBUG: (Sensor.Info) altitude = $1$", [self.fSensorAltitude]));
+    }
+    //else {
+    //  Sys.println("WARNING: Sensor data have no altitude information (:altitude)");
+    //}
 
     // ... acceleration
     if(_oInfo has :accel and _oInfo.accel != null) {
@@ -311,7 +327,10 @@ class GskProcessing {
     }
 
     // ... altitude
-    if(_oInfo has :altitude and _oInfo.altitude != null) {
+    if(self.fSensorAltitude != null) {
+      self.fAltitude = self.fSensorAltitude;
+    }
+    else if(_oInfo has :altitude and _oInfo.altitude != null) {
       if(self.fAltitude == null) {
         self.fAltitude = _oInfo.altitude;
       }
