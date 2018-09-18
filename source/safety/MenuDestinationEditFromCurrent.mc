@@ -1,7 +1,7 @@
 // -*- mode:java; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab:
 
 // Glider's Swiss Knife (GliderSK)
-// Copyright (C) 2017 Cedric Dufour <http://cedric.dufour.name>
+// Copyright (C) 2017-2018 Cedric Dufour <http://cedric.dufour.name>
 //
 // Glider's Swiss Knife (GliderSK) is free software:
 // you can redistribute it and/or modify it under the terms of the GNU General
@@ -29,13 +29,13 @@ class MenuDestinationEditFromCurrent extends Ui.Menu {
 
   function initialize() {
     Menu.initialize();
-    Menu.setTitle(Ui.loadResource(Rez.Strings.menuConfirm));
-    Menu.addItem(Lang.format("$1$ ?", [Ui.loadResource(Rez.Strings.menuDestinationFromCurrent)]), :confirm);
+    Menu.setTitle(Ui.loadResource(Rez.Strings.titleConfirm));
+    Menu.addItem(Lang.format("$1$ ?", [Ui.loadResource(Rez.Strings.titleDestinationFromCurrent)]), :confirm);
   }
 
 }
 
-class MenuDelegateDestinationEditFromCurrent extends Ui.MenuInputDelegate {
+class MenuDestinationEditFromCurrentDelegate extends Ui.MenuInputDelegate {
 
   //
   // FUNCTIONS: Ui.MenuInputDelegate (override/implement)
@@ -46,16 +46,16 @@ class MenuDelegateDestinationEditFromCurrent extends Ui.MenuInputDelegate {
   }
 
   function onMenuItem(item) {
-    if (item == :confirm and $.GSK_PositionLocation != null and $.GSK_PositionAltitude != null) {
+    if (item == :confirm and $.GSK_oPositionLocation != null and $.GSK_oPositionAltitude != null) {
       // Update destination (dictionary) with current location/altitude
       var dictDestination = App.Storage.getValue("storDestInUse");
       if(dictDestination == null) {
         dictDestination = { "name" => "----", "latitude" => 0.0f, "longitude" => 0.0f, "elevation" => 0.0f };
       }
       dictDestination["name"] = "????";
-      dictDestination["latitude"] = $.GSK_PositionLocation.toDegrees()[0];
-      dictDestination["longitude"] = $.GSK_PositionLocation.toDegrees()[1];
-      dictDestination["elevation"] = $.GSK_PositionAltitude;
+      dictDestination["latitude"] = $.GSK_oPositionLocation.toDegrees()[0];
+      dictDestination["longitude"] = $.GSK_oPositionLocation.toDegrees()[1];
+      dictDestination["elevation"] = $.GSK_oPositionAltitude;
       App.Storage.setValue("storDestInUse", dictDestination);
     }
   }

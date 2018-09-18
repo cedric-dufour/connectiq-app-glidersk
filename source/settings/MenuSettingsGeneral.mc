@@ -1,7 +1,7 @@
 // -*- mode:java; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab:
 
 // Glider's Swiss Knife (GliderSK)
-// Copyright (C) 2017 Cedric Dufour <http://cedric.dufour.name>
+// Copyright (C) 2017-2018 Cedric Dufour <http://cedric.dufour.name>
 //
 // Glider's Swiss Knife (GliderSK) is free software:
 // you can redistribute it and/or modify it under the terms of the GNU General
@@ -19,9 +19,23 @@
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
-// Menu: resources/menus/menuSettingsGeneral.xml
+class MenuSettingsGeneral extends Ui.Menu {
 
-class MenuDelegateSettingsGeneral extends Ui.MenuInputDelegate {
+  //
+  // FUNCTIONS: Ui.Menu (override/implement)
+  //
+
+  function initialize() {
+    Menu.initialize();
+    Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsGeneral));
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralTimeConstant), :menuGeneralTimeConstant);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralBackgroundColor), :menuGeneralBackgroundColor);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralLapKey), :menuGeneralLapKey);
+  }
+
+}
+
+class MenuSettingsGeneralDelegate extends Ui.MenuInputDelegate {
 
   //
   // FUNCTIONS: Ui.MenuInputDelegate (override/implement)
@@ -32,17 +46,17 @@ class MenuDelegateSettingsGeneral extends Ui.MenuInputDelegate {
   }
 
   function onMenuItem(item) {
-    if (item == :menuTimeConstant) {
-      //Sys.println("DEBUG: MenuDelegateSettingsGeneral.onMenuItem(:menuTimeConstant)");
-      Ui.pushView(new PickerTimeConstant(), new PickerDelegateTimeConstant(), Ui.SLIDE_IMMEDIATE);
+    if (item == :menuGeneralTimeConstant) {
+      //Sys.println("DEBUG: MenuSettingsGeneralDelegate.onMenuItem(:menuGeneralTimeConstant)");
+      Ui.pushView(new PickerGeneralTimeConstant(), new PickerGeneralTimeConstantDelegate(), Ui.SLIDE_IMMEDIATE);
     }
-    else if (item == :menuBackgroundColor) {
-      //Sys.println("DEBUG: MenuDelegateSettingsGeneral.onMenuItem(:menuBackgroundColor)");
-      Ui.pushView(new PickerBackgroundColor(), new PickerDelegateBackgroundColor(), Ui.SLIDE_IMMEDIATE);
+    else if (item == :menuGeneralBackgroundColor) {
+      //Sys.println("DEBUG: MenuSettingsGeneralDelegate.onMenuItem(:menuGeneralBackgroundColor)");
+      Ui.pushView(new PickerGeneralBackgroundColor(), new PickerGeneralBackgroundColorDelegate(), Ui.SLIDE_IMMEDIATE);
     }
-    else if (item == :menuLapKey) {
-      //Sys.println("DEBUG: MenuDelegateSettingsGeneral.onMenuItem(:menuLapKey)");
-      Ui.pushView(new PickerGenericOnOff("userLapKey", Ui.loadResource(Rez.Strings.titleLapKey)), new PickerDelegateGenericOnOff("userLapKey"), Ui.SLIDE_IMMEDIATE);
+    else if (item == :menuGeneralLapKey) {
+      //Sys.println("DEBUG: MenuSettingsGeneralDelegate.onMenuItem(:menuGeneralLapKey)");
+      Ui.pushView(new PickerGeneralLapKey(), new PickerGeneralLapKeyDelegate(), Ui.SLIDE_IMMEDIATE);
     }
   }
 

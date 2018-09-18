@@ -217,8 +217,6 @@ Unless explicitely stated otherwise for a given view, you may enter the Settings
 menu by pressing the MENU button (long-pressing the UP button).
 
 The application allows you to specify the following settings:
- - Time Constant:
-   time constants (in seconds) used for exponentially averaging (EMA) sensor values
  - Variometer -> Variometer Range:
    the range used for the variometer display and tones (3.0, 6.0 or 9.0 m/s)
  - Variometer -> Variometer Mode:
@@ -227,8 +225,8 @@ The application allows you to specify the following settings:
    percentage of the short-term cinetic energy (speed) variations that may be recovered as potential energy (altitude)
  - Variometer -> Plot Range:
    the time range (in minutes) for plotting the variometer-vs-location history
- - Safety -> Reference Finesse:
-   the worst-case finesse to apply for height estimation (when in ascent)
+ - Safety -> Finesse:
+   the finesse to apply for height estimation (when in ascent)
  - Safety -> Decision Height:
    the height (Above Ground Level) under which to switch from height
    estimation (using worst-case finesse and best-case heading) to
@@ -237,6 +235,20 @@ The application allows you to specify the following settings:
    the height (Above Ground Level) under which to issue warning alerts
  - Safety -> Critical Height:
    the height (Above Ground Level) under which to issue critical alerts
+ - Sounds -> Variometer Tones:
+   whether to play variometer tones
+ - Sounds -> Safety Tones:
+   whether to play alert tones when below warning or critical height
+   (or GPS signal is lost)
+ - Sounds -> Mute distance:
+   the distance (from destination) under which to mute all sounds
+   (and let you concentrate on your take-off or landing)
+ - General -> Time Constant:
+   time constants (in seconds) used for exponentially averaging (EMA) sensor values
+ - General -> Background Color:
+   the background color
+ - General -> Lap Key:
+   whether the BACK key adds a new lap to a recording activity
  - Units -> Distance Unit:
    preferred units for displaying distance (and horizontal speed) values
  - Units -> Elevation Unit:
@@ -245,18 +257,6 @@ The application allows you to specify the following settings:
    your preferred unit for displaying rate-of-turn values
  - Units -> Timezone:
    display Local Time (LT) or Universal Time Coordinates (UTC/Z)
- - Background Color:
-   the background color
- - Sounds -> Variometer Tones:
-   whether to play variometer tones
- - Sounds -> Alert Tones:
-   whether to play alert tones when below warning or critical height
-   (or GPS signal is lost)
- - Sounds -> Mute distance:
-   the distance (from destination) under which to mute all sounds
-   (and let you concentrate on your take-off or landing)
- - Lap Key:
-   whether the BACK key adds a new lap to a recording activity
 
 
 WARNING!!! GOTCHAS!!!

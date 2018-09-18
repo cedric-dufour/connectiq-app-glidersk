@@ -1,7 +1,7 @@
 // -*- mode:java; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab:
 
 // Glider's Swiss Knife (GliderSK)
-// Copyright (C) 2017 Cedric Dufour <http://cedric.dufour.name>
+// Copyright (C) 2017-2018 Cedric Dufour <http://cedric.dufour.name>
 //
 // Glider's Swiss Knife (GliderSK) is free software:
 // you can redistribute it and/or modify it under the terms of the GNU General
@@ -38,10 +38,10 @@ class PickerDestinationLoad extends Ui.Picker {
       var dictDestination = App.Storage.getValue("storDest"+s);
       if(dictDestination != null) {
         aiMemoryKeys[iMemoryUsed] = n;
-        if($.GSK_PositionLocation != null) {  // ... we have a current position
+        if($.GSK_oPositionLocation != null) {  // ... we have a current position
           var oMemoryLocation = new Pos.Location({ :latitude => dictDestination["latitude"], :longitude => dictDestination["longitude"], :format => :degrees });
           asMemoryValues[iMemoryUsed] = dictDestination["name"];
-          afMemoryDistances[iMemoryUsed] = GskUtils.distance($.GSK_PositionLocation.toRadians(), oMemoryLocation.toRadians());
+          afMemoryDistances[iMemoryUsed] = LangUtils.distance($.GSK_oPositionLocation.toRadians(), oMemoryLocation.toRadians());
         }
         else {  // ... we have no current position
           asMemoryValues[iMemoryUsed] = Lang.format("[$1$]\n$2$", [s, dictDestination["name"]]);
@@ -58,15 +58,15 @@ class PickerDestinationLoad extends Ui.Picker {
       aiMemoryKeys = aiMemoryKeys.slice(0, iMemoryUsed);
       asMemoryValues = asMemoryValues.slice(0, iMemoryUsed);
       afMemoryDistances = afMemoryDistances.slice(0, iMemoryUsed);
-      if($.GSK_PositionLocation != null) {  // ... we have a current position
+      if($.GSK_oPositionLocation != null) {  // ... we have a current position
         // Sort destination per increasing distance from current location
-        var aiMemoryIndices_sorted = GskUtils.sort(afMemoryDistances);
+        var aiMemoryIndices_sorted = LangUtils.sort(afMemoryDistances);
         aiMemoryKeys_sorted = new [iMemoryUsed];
         asMemoryValues_sorted = new [iMemoryUsed];
 
         for(var i=0; i<iMemoryUsed; i++) {
           aiMemoryKeys_sorted[i] = aiMemoryKeys[aiMemoryIndices_sorted[i]];
-          asMemoryValues_sorted[i] = Lang.format("($1$$2$)\n$3$", [(afMemoryDistances[i]*$.GSK_Settings.fUnitDistanceConstant).format("%.0f"), $.GSK_Settings.sUnitDistance, asMemoryValues[aiMemoryIndices_sorted[i]]]);
+          asMemoryValues_sorted[i] = Lang.format("($1$$2$)\n$3$", [(afMemoryDistances[i]*$.GSK_oSettings.fUnitDistanceCoefficient).format("%.0f"), $.GSK_oSettings.sUnitDistance, asMemoryValues[aiMemoryIndices_sorted[i]]]);
         }
       }
       else {  // ... we have no current position
@@ -85,17 +85,17 @@ class PickerDestinationLoad extends Ui.Picker {
       oPattern = new PickerFactoryDictionary([null], ["-"], { :color => Gfx.COLOR_DK_GRAY });
     }
     Picker.initialize({
-      :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.menuDestinationLoad), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
+      :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.titleDestinationLoad), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oPattern ]
     });
   }
 
 }
 
-class PickerDelegateDestinationLoad extends Ui.PickerDelegate {
+class PickerDestinationLoadDelegate extends Ui.PickerDelegate {
 
   //
-  // FUNCTIONS: Ui.Picker (override/implement)
+  // FUNCTIONS: Ui.PickerDelegate (override/implement)
   //
 
   function initialize() {
@@ -111,7 +111,7 @@ class PickerDelegateDestinationLoad extends Ui.PickerDelegate {
 
       // Set property
       // WARNING: We MUST store a new (different) dictionary instance (deep copy)!
-      App.Storage.setValue("storDestInUse", GskUtils.copy(dictDestination));
+      App.Storage.setValue("storDestInUse", LangUtils.copy(dictDestination));
     }
 
     // Exit

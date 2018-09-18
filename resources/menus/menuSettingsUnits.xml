@@ -1,7 +1,0 @@
-<!-- -*- mode:xml; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab: -->
-<menu id="menuSettingsUnits" title="@Strings.menuSettingsUnits">
-  <menu-item id="menuUnitDistance" label="@Strings.titleUnitDistance" />
-  <menu-item id="menuUnitElevation" label="@Strings.titleUnitElevation" />
-  <menu-item id="menuUnitRateOfTurn" label="@Strings.titleUnitRateOfTurn" />
-  <menu-item id="menuTimeUTC" label="@Strings.titleTimeUTC" />
-</menu>

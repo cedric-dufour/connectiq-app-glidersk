@@ -1,7 +1,7 @@
 // -*- mode:java; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab:
 
 // Glider's Swiss Knife (GliderSK)
-// Copyright (C) 2017 Cedric Dufour <http://cedric.dufour.name>
+// Copyright (C) 2017-2018 Cedric Dufour <http://cedric.dufour.name>
 //
 // Glider's Swiss Knife (GliderSK) is free software:
 // you can redistribute it and/or modify it under the terms of the GNU General
@@ -17,7 +17,6 @@
 // License-Filename: LICENSE/GPL-3.0.txt
 
 using Toybox.Application as App;
-using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
 class PickerDestinationEditName extends Ui.TextPicker {
@@ -36,7 +35,7 @@ class PickerDestinationEditName extends Ui.TextPicker {
 
 }
 
-class PickerDelegateDestinationEditName extends Ui.TextPickerDelegate {
+class PickerDestinationEditNameDelegate extends Ui.TextPickerDelegate {
 
   //
   // FUNCTIONS: Ui.PickerDelegate (override/implement)

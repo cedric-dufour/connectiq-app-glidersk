@@ -1,7 +1,7 @@
 // -*- mode:java; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab:
 
 // Glider's Swiss Knife (GliderSK)
-// Copyright (C) 2017 Cedric Dufour <http://cedric.dufour.name>
+// Copyright (C) 2017-2018 Cedric Dufour <http://cedric.dufour.name>
 //
 // Glider's Swiss Knife (GliderSK) is free software:
 // you can redistribute it and/or modify it under the terms of the GNU General
@@ -31,12 +31,12 @@ class PickerVariometerRange extends Ui.Picker {
     var iVariometerRange = App.Properties.getValue("userVariometerRange");
 
     // Initialize picker
-    $.GSK_Settings.load();  // ... reload potentially modified settings
-    var sFormat = $.GSK_Settings.fUnitVerticalSpeedConstant < 100.0f ? "%.01f" : "%.0f";
+    $.GSK_oSettings.load();  // ... reload potentially modified settings
+    var sFormat = $.GSK_oSettings.fUnitVerticalSpeedCoefficient < 100.0f ? "%.01f" : "%.0f";
     var asValues =
-      [ Lang.format("$1$\n$2$", [(3.0f*$.GSK_Settings.fUnitVerticalSpeedConstant).format(sFormat), $.GSK_Settings.sUnitVerticalSpeed]),
-        Lang.format("$1$\n$2$", [(6.0f*$.GSK_Settings.fUnitVerticalSpeedConstant).format(sFormat), $.GSK_Settings.sUnitVerticalSpeed]),
-        Lang.format("$1$\n$2$", [(9.0f*$.GSK_Settings.fUnitVerticalSpeedConstant).format(sFormat), $.GSK_Settings.sUnitVerticalSpeed]) ];
+      [ Lang.format("$1$\n$2$", [(3.0f*$.GSK_oSettings.fUnitVerticalSpeedCoefficient).format(sFormat), $.GSK_oSettings.sUnitVerticalSpeed]),
+        Lang.format("$1$\n$2$", [(6.0f*$.GSK_oSettings.fUnitVerticalSpeedCoefficient).format(sFormat), $.GSK_oSettings.sUnitVerticalSpeed]),
+        Lang.format("$1$\n$2$", [(9.0f*$.GSK_oSettings.fUnitVerticalSpeedCoefficient).format(sFormat), $.GSK_oSettings.sUnitVerticalSpeed]) ];
     var oFactory = new PickerFactoryDictionary([0, 1, 2], asValues, { :font => Gfx.FONT_TINY });
     Picker.initialize({
       :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.titleVariometerRange), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
@@ -47,10 +47,10 @@ class PickerVariometerRange extends Ui.Picker {
 
 }
 
-class PickerDelegateVariometerRange extends Ui.PickerDelegate {
+class PickerVariometerRangeDelegate extends Ui.PickerDelegate {
 
   //
-  // FUNCTIONS: Ui.Picker (override/implement)
+  // FUNCTIONS: Ui.PickerDelegate (override/implement)
   //
 
   function initialize() {

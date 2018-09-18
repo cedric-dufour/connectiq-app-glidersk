@@ -1,7 +1,7 @@
 // -*- mode:java; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab:
 
 // Glider's Swiss Knife (GliderSK)
-// Copyright (C) 2017 Cedric Dufour <http://cedric.dufour.name>
+// Copyright (C) 2017-2018 Cedric Dufour <http://cedric.dufour.name>
 //
 // Glider's Swiss Knife (GliderSK) is free software:
 // you can redistribute it and/or modify it under the terms of the GNU General
@@ -44,10 +44,10 @@ class PickerVariometerMode extends Ui.Picker {
 
 }
 
-class PickerDelegateVariometerMode extends Ui.PickerDelegate {
+class PickerVariometerModeDelegate extends Ui.PickerDelegate {
 
   //
-  // FUNCTIONS: Ui.Picker (override/implement)
+  // FUNCTIONS: Ui.PickerDelegate (override/implement)
   //
 
   function initialize() {

@@ -1,8 +1,0 @@
-<!-- -*- mode:xml; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab: -->
-<menu id="menuSafety" title="@Strings.menuSafety">
-  <menu-item id="menuDestinationLoad" label="@Strings.menuDestinationLoad" />
-  <menu-item id="menuDestinationEdit" label="@Strings.menuDestinationEdit" />
-  <menu-item id="menuDestinationSave" label="@Strings.menuDestinationSave" />
-  <menu-item id="menuDestinationDelete" label="@Strings.menuDestinationDelete" />
-  <menu-item id="menuSettings" label="@Strings.menuSettings" />
-</menu>

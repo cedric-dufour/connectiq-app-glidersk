@@ -1,7 +1,7 @@
 // -*- mode:java; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab:
 
 // Glider's Swiss Knife (GliderSK)
-// Copyright (C) 2017 Cedric Dufour <http://cedric.dufour.name>
+// Copyright (C) 2017-2018 Cedric Dufour <http://cedric.dufour.name>
 //
 // Glider's Swiss Knife (GliderSK) is free software:
 // you can redistribute it and/or modify it under the terms of the GNU General
@@ -41,10 +41,10 @@ class PickerUnitElevation extends Ui.Picker {
 
 }
 
-class PickerDelegateUnitElevation extends Ui.PickerDelegate {
+class PickerUnitElevationDelegate extends Ui.PickerDelegate {
 
   //
-  // FUNCTIONS: Ui.Picker (override/implement)
+  // FUNCTIONS: Ui.PickerDelegate (override/implement)
   //
 
   function initialize() {
@@ -54,6 +54,7 @@ class PickerDelegateUnitElevation extends Ui.PickerDelegate {
   function onAccept(_amValues) {
     // Set property and exit
     App.Properties.setValue("userUnitElevation", _amValues[0]);
+    $.GSK_oSettings.load();  // ... use proper units in settings
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

@@ -1,7 +1,7 @@
 // -*- mode:java; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab:
 
 // Glider's Swiss Knife (GliderSK)
-// Copyright (C) 2017 Cedric Dufour <http://cedric.dufour.name>
+// Copyright (C) 2017-2018 Cedric Dufour <http://cedric.dufour.name>
 //
 // Glider's Swiss Knife (GliderSK) is free software:
 // you can redistribute it and/or modify it under the terms of the GNU General
@@ -19,9 +19,24 @@
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
-// Menu: resources/menus/menuSettingsVariometer.xml
+class MenuSettingsVariometer extends Ui.Menu {
 
-class MenuDelegateSettingsVariometer extends Ui.MenuInputDelegate {
+  //
+  // FUNCTIONS: Ui.Menu (override/implement)
+  //
+
+  function initialize() {
+    Menu.initialize();
+    Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsVariometer));
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleVariometerRange), :menuVariometerRange);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleVariometerMode), :menuVariometerMode);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleVariometerEnergyEfficiency), :menuVariometerEnergyEfficiency);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleVariometerPlotRange), :menuVariometerPlotRange);
+  }
+
+}
+
+class MenuSettingsVariometerDelegate extends Ui.MenuInputDelegate {
 
   //
   // FUNCTIONS: Ui.MenuInputDelegate (override/implement)
@@ -33,20 +48,20 @@ class MenuDelegateSettingsVariometer extends Ui.MenuInputDelegate {
 
   function onMenuItem(item) {
     if (item == :menuVariometerRange) {
-      //Sys.println("DEBUG: MenuDelegateSettingsVariometer.onMenuItem(:menuVariometerRange)");
-      Ui.pushView(new PickerVariometerRange(), new PickerDelegateVariometerRange(), Ui.SLIDE_IMMEDIATE);
+      //Sys.println("DEBUG: MenuSettingsVariometerDelegate.onMenuItem(:menuVariometerRange)");
+      Ui.pushView(new PickerVariometerRange(), new PickerVariometerRangeDelegate(), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuVariometerMode) {
-      //Sys.println("DEBUG: MenuDelegateSettingsVariometer.onMenuItem(:menuVariometerMode)");
-      Ui.pushView(new PickerVariometerMode(), new PickerDelegateVariometerMode(), Ui.SLIDE_IMMEDIATE);
+      //Sys.println("DEBUG: MenuSettingsVariometerDelegate.onMenuItem(:menuVariometerMode)");
+      Ui.pushView(new PickerVariometerMode(), new PickerVariometerModeDelegate(), Ui.SLIDE_IMMEDIATE);
     }
-    else if (item == :menuEnergyEfficiency) {
-      //Sys.println("DEBUG: MenuDelegateSettingsVariometer.onMenuItem(:menuEnergyEfficiency)");
-      Ui.pushView(new PickerEnergyEfficiency(), new PickerDelegateEnergyEfficiency(), Ui.SLIDE_IMMEDIATE);
+    else if (item == :menuVariometerEnergyEfficiency) {
+      //Sys.println("DEBUG: MenuSettingsVariometerDelegate.onMenuItem(:menuVariometerEnergyEfficiency)");
+      Ui.pushView(new PickerVariometerEnergyEfficiency(), new PickerVariometerEnergyEfficiencyDelegate(), Ui.SLIDE_IMMEDIATE);
     }
-    else if (item == :menuPlotRange) {
-      //Sys.println("DEBUG: MenuDelegateSettingsVariometer.onMenuItem(:menuPlotRange)");
-      Ui.pushView(new PickerPlotRange(), new PickerDelegatePlotRange(), Ui.SLIDE_IMMEDIATE);
+    else if (item == :menuVariometerPlotRange) {
+      //Sys.println("DEBUG: MenuSettingsVariometerDelegate.onMenuItem(:menuVariometerPlotRange)");
+      Ui.pushView(new PickerVariometerPlotRange(), new PickerVariometerPlotRangeDelegate(), Ui.SLIDE_IMMEDIATE);
     }
   }
 

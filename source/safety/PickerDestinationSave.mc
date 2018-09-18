@@ -1,7 +1,7 @@
 // -*- mode:java; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab:
 
 // Glider's Swiss Knife (GliderSK)
-// Copyright (C) 2017 Cedric Dufour <http://cedric.dufour.name>
+// Copyright (C) 2017-2018 Cedric Dufour <http://cedric.dufour.name>
 //
 // Glider's Swiss Knife (GliderSK) is free software:
 // you can redistribute it and/or modify it under the terms of the GNU General
@@ -44,17 +44,17 @@ class PickerDestinationSave extends Ui.Picker {
 
     // Initialize picker
     Picker.initialize({
-      :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.menuDestinationSave), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
+      :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.titleDestinationSave), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ new PickerFactoryDictionary(aiMemoryKeys, asMemoryValues, { :font => Gfx.FONT_TINY }) ]
     });
   }
 
 }
 
-class PickerDelegateDestinationSave extends Ui.PickerDelegate {
+class PickerDestinationSaveDelegate extends Ui.PickerDelegate {
 
   //
-  // FUNCTIONS: Ui.Picker (override/implement)
+  // FUNCTIONS: Ui.PickerDelegate (override/implement)
   //
 
   function initialize() {
@@ -68,7 +68,7 @@ class PickerDelegateDestinationSave extends Ui.PickerDelegate {
       // Set property (destination memory)
       // WARNING: We MUST store a new (different) dictionary instance (deep copy)!
       var s = _amValues[0].format("%02d");
-      App.Storage.setValue("storDest"+s, GskUtils.copy(dictDestination));
+      App.Storage.setValue("storDest"+s, LangUtils.copy(dictDestination));
     }
 
     // Exit

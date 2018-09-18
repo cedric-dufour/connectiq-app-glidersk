@@ -1,7 +1,7 @@
 // -*- mode:java; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab:
 
 // Glider's Swiss Knife (GliderSK)
-// Copyright (C) 2017 Cedric Dufour <http://cedric.dufour.name>
+// Copyright (C) 2017-2018 Cedric Dufour <http://cedric.dufour.name>
 //
 // Glider's Swiss Knife (GliderSK) is free software:
 // you can redistribute it and/or modify it under the terms of the GNU General
@@ -19,9 +19,23 @@
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
-// Menu: resources/menus/menuSettingsSounds.xml
+class MenuSettingsSounds extends Ui.Menu {
 
-class MenuDelegateSettingsSounds extends Ui.MenuInputDelegate {
+  //
+  // FUNCTIONS: Ui.Menu (override/implement)
+  //
+
+  function initialize() {
+    Menu.initialize();
+    Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsSounds));
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleSoundsVariometerTones), :menuSoundsVariometerTones);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleSoundsSafetyTones), :menuSoundsSafetyTones);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleSoundsMuteDistance), :menuSoundsMuteDistance);
+  }
+
+}
+
+class MenuSettingsSoundsDelegate extends Ui.MenuInputDelegate {
 
   //
   // FUNCTIONS: Ui.MenuInputDelegate (override/implement)
@@ -32,18 +46,17 @@ class MenuDelegateSettingsSounds extends Ui.MenuInputDelegate {
   }
 
   function onMenuItem(item) {
-    if (item == :menuVariometerTones) {
-      //Sys.println("DEBUG: MenuDelegateSettingsSounds.onMenuItem(:menuVariometerTones)");
-      Ui.pushView(new PickerGenericOnOff("userVariometerTones", Ui.loadResource(Rez.Strings.titleVariometerTones)), new PickerDelegateGenericOnOff("userVariometerTones"), Ui.SLIDE_IMMEDIATE);
+    if (item == :menuSoundsVariometerTones) {
+      //Sys.println("DEBUG: MenuSettingsSoundsDelegate.onMenuItem(:menuSoundsVariometerTones)");
+      Ui.pushView(new PickerSoundsVariometerTones(), new PickerSoundsVariometerTonesDelegate(), Ui.SLIDE_IMMEDIATE);
     }
-    else if (item == :menuSafetyTones) {
-      //Sys.println("DEBUG: MenuDelegateSettingsSounds.onMenuItem(:menuSafetyTones)");
-      Ui.pushView(new PickerGenericOnOff("userSafetyTones", Ui.loadResource(Rez.Strings.titleSafetyTones)), new PickerDelegateGenericOnOff("userSafetyTones"), Ui.SLIDE_IMMEDIATE);
+    else if (item == :menuSoundsSafetyTones) {
+      //Sys.println("DEBUG: MenuSettingsSoundsDelegate.onMenuItem(:menuSoundsSafetyTones)");
+      Ui.pushView(new PickerSoundsSafetyTones(), new PickerSoundsSafetyTonesDelegate(), Ui.SLIDE_IMMEDIATE);
     }
-    else if (item == :menuMuteDistance) {
-      //Sys.println("DEBUG: MenuDelegateSettingsSounds.onMenuItem(:menuMuteDistance)");
-      $.GSK_Settings.load();  // ... reload potentially modified settings
-      Ui.pushView(new PickerGenericDistance("userMuteDistance", Lang.format("$1$ [$2$]", [Ui.loadResource(Rez.Strings.titleMuteDistance), $.GSK_Settings.sUnitDistance])), new PickerDelegateGenericDistance("userMuteDistance"), Ui.SLIDE_IMMEDIATE);
+    else if (item == :menuSoundsMuteDistance) {
+      //Sys.println("DEBUG: MenuSettingsSoundsDelegate.onMenuItem(:menuSoundsMuteDistance)");
+      Ui.pushView(new PickerSoundsMuteDistance(), new PickerSoundsMuteDistanceDelegate(), Ui.SLIDE_IMMEDIATE);
     }
   }
 

@@ -1,7 +1,7 @@
 // -*- mode:java; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab:
 
 // Glider's Swiss Knife (GliderSK)
-// Copyright (C) 2017 Cedric Dufour <http://cedric.dufour.name>
+// Copyright (C) 2017-2018 Cedric Dufour <http://cedric.dufour.name>
 //
 // Glider's Swiss Knife (GliderSK) is free software:
 // you can redistribute it and/or modify it under the terms of the GNU General
@@ -28,19 +28,19 @@ class MenuDestinationEdit extends Ui.Menu {
 
   function initialize() {
     Menu.initialize();
-    Menu.setTitle(Ui.loadResource(Rez.Strings.menuDestinationEdit));
-    Menu.addItem(Ui.loadResource(Rez.Strings.menuDestinationName), :menuDestinationName);
-    Menu.addItem(Ui.loadResource(Rez.Strings.menuDestinationLatitude), :menuDestinationLatitude);
-    Menu.addItem(Ui.loadResource(Rez.Strings.menuDestinationLongitude), :menuDestinationLongitude);
-    Menu.addItem(Ui.loadResource(Rez.Strings.menuDestinationElevation), :menuDestinationElevation);
-    if($.GSK_PositionLocation != null and $.GSK_PositionAltitude != null) {
-      Menu.addItem(Ui.loadResource(Rez.Strings.menuDestinationFromCurrent), :menuDestinationFromCurrent);
+    Menu.setTitle(Ui.loadResource(Rez.Strings.titleDestinationEdit));
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationName), :menuDestinationName);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationLatitude), :menuDestinationLatitude);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationLongitude), :menuDestinationLongitude);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationElevation), :menuDestinationElevation);
+    if($.GSK_oPositionLocation != null and $.GSK_oPositionAltitude != null) {
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationFromCurrent), :menuDestinationFromCurrent);
     }
   }
 
 }
 
-class MenuDelegateDestinationEdit extends Ui.MenuInputDelegate {
+class MenuDestinationEditDelegate extends Ui.MenuInputDelegate {
 
   //
   // FUNCTIONS: Ui.MenuInputDelegate (override/implement)
@@ -52,24 +52,24 @@ class MenuDelegateDestinationEdit extends Ui.MenuInputDelegate {
 
   function onMenuItem(item) {
     if (item == :menuDestinationName) {
-      //Sys.println("DEBUG: MenuDelegateDestinationEdit.onMenuItem(:menuDestinationName)");
-      Ui.pushView(new PickerDestinationEditName(), new PickerDelegateDestinationEditName(), Ui.SLIDE_IMMEDIATE);
+      //Sys.println("DEBUG: MenuDestinationEditDelegate.onMenuItem(:menuDestinationName)");
+      Ui.pushView(new PickerDestinationEditName(), new PickerDestinationEditNameDelegate(), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuDestinationLatitude) {
-      //Sys.println("DEBUG: MenuDelegateDestinationEdit.onMenuItem(:menuDestinationLatitude)");
-      Ui.pushView(new PickerDestinationEditLatitude(), new PickerDelegateDestinationEditLatitude(), Ui.SLIDE_IMMEDIATE);
+      //Sys.println("DEBUG: MenuDestinationEditDelegate.onMenuItem(:menuDestinationLatitude)");
+      Ui.pushView(new PickerDestinationEditLatitude(), new PickerDestinationEditLatitudeDelegate(), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuDestinationLongitude) {
-      //Sys.println("DEBUG: MenuDelegateDestinationEdit.onMenuItem(:menuDestinationLongitude)");
-      Ui.pushView(new PickerDestinationEditLongitude(), new PickerDelegateDestinationEditLongitude(), Ui.SLIDE_IMMEDIATE);
+      //Sys.println("DEBUG: MenuDestinationEditDelegate.onMenuItem(:menuDestinationLongitude)");
+      Ui.pushView(new PickerDestinationEditLongitude(), new PickerDestinationEditLongitudeDelegate(), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuDestinationElevation) {
-      //Sys.println("DEBUG: MenuDelegateDestinationEdit.onMenuItem(:menuDestinationElevation)");
-      Ui.pushView(new PickerDestinationEditElevation(), new PickerDelegateDestinationEditElevation(), Ui.SLIDE_IMMEDIATE);
+      //Sys.println("DEBUG: MenuDestinationEditDelegate.onMenuItem(:menuDestinationElevation)");
+      Ui.pushView(new PickerDestinationEditElevation(), new PickerDestinationEditElevationDelegate(), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuDestinationFromCurrent) {
-      //Sys.println("DEBUG: MenuDelegateDestinationEdit.onMenuItem(:menuDestinationFromCurrent)");
-      Ui.pushView(new MenuDestinationEditFromCurrent(), new MenuDelegateDestinationEditFromCurrent(), Ui.SLIDE_IMMEDIATE);
+      //Sys.println("DEBUG: MenuDestinationEditDelegate.onMenuItem(:menuDestinationFromCurrent)");
+      Ui.pushView(new MenuDestinationEditFromCurrent(), new MenuDestinationEditFromCurrentDelegate(), Ui.SLIDE_IMMEDIATE);
     }
   }
 

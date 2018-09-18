@@ -1,7 +1,7 @@
 // -*- mode:java; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab:
 
 // Glider's Swiss Knife (GliderSK)
-// Copyright (C) 2017 Cedric Dufour <http://cedric.dufour.name>
+// Copyright (C) 2017-2018 Cedric Dufour <http://cedric.dufour.name>
 //
 // Glider's Swiss Knife (GliderSK) is free software:
 // you can redistribute it and/or modify it under the terms of the GNU General
@@ -19,9 +19,24 @@
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
-// Menu: resources/menus/menuSettingsSafety.xml
+class MenuSettingsSafety extends Ui.Menu {
 
-class MenuDelegateSettingsSafety extends Ui.MenuInputDelegate {
+  //
+  // FUNCTIONS: Ui.Menu (override/implement)
+  //
+
+  function initialize() {
+    Menu.initialize();
+    Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsSafety));
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyFinesse), :menuSafetyFinesse);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightDecision), :menuSafetyHeightDecision);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightWarning), :menuSafetyHeightWarning);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightCritical), :menuSafetyHeightCritical);
+  }
+
+}
+
+class MenuSettingsSafetyDelegate extends Ui.MenuInputDelegate {
 
   //
   // FUNCTIONS: Ui.MenuInputDelegate (override/implement)
@@ -32,24 +47,21 @@ class MenuDelegateSettingsSafety extends Ui.MenuInputDelegate {
   }
 
   function onMenuItem(item) {
-    if (item == :menuFinesseReference) {
-      //Sys.println("DEBUG: MenuDelegateSettingsSafety.onMenuItem(:menuFinesseReference)");
-      Ui.pushView(new PickerFinesse(), new PickerDelegateFinesse(), Ui.SLIDE_IMMEDIATE);
+    if (item == :menuSafetyFinesse) {
+      //Sys.println("DEBUG: MenuSettingsSafetyDelegate.onMenuItem(:menuSafetyFinesse)");
+      Ui.pushView(new PickerSafetyFinesse(), new PickerSafetyFinesseDelegate(), Ui.SLIDE_IMMEDIATE);
     }
-    else if (item == :menuHeightDecision) {
-      //Sys.println("DEBUG: MenuDelegateSettingsSafety.onMenuItem(:menuHeightDecision)");
-      $.GSK_Settings.load();  // ... reload potentially modified settings
-      Ui.pushView(new PickerGenericElevation("userHeightDecision", Lang.format("$1$ [$2$]", [Ui.loadResource(Rez.Strings.titleHeightDecision), $.GSK_Settings.sUnitElevation])), new PickerDelegateGenericElevation("userHeightDecision"), Ui.SLIDE_IMMEDIATE);
+    else if (item == :menuSafetyHeightDecision) {
+      //Sys.println("DEBUG: MenuSettingsSafetyDelegate.onMenuItem(:menuSafetyHeightDecision)");
+      Ui.pushView(new PickerSafetyHeightDecision(), new PickerSafetyHeightDecisionDelegate(), Ui.SLIDE_IMMEDIATE);
     }
-    else if (item == :menuHeightWarning) {
-      //Sys.println("DEBUG: MenuDelegateSettingsSafety.onMenuItem(:menuHeightWarning)");
-      $.GSK_Settings.load();  // ... reload potentially modified settings
-      Ui.pushView(new PickerGenericElevation("userHeightWarning", Lang.format("$1$ [$2$]", [Ui.loadResource(Rez.Strings.titleHeightWarning), $.GSK_Settings.sUnitElevation])), new PickerDelegateGenericElevation("userHeightWarning"), Ui.SLIDE_IMMEDIATE);
+    else if (item == :menuSafetyHeightWarning) {
+      //Sys.println("DEBUG: MenuSettingsSafetyDelegate.onMenuItem(:menuSafetyHeightWarning)");
+      Ui.pushView(new PickerSafetyHeightWarning(), new PickerSafetyHeightWarningDelegate(), Ui.SLIDE_IMMEDIATE);
     }
-    else if (item == :menuHeightCritical) {
-      //Sys.println("DEBUG: MenuDelegateSettingsSafety.onMenuItem(:menuHeightCritical)");
-      $.GSK_Settings.load();  // ... reload potentially modified settings
-      Ui.pushView(new PickerGenericElevation("userHeightCritical", Lang.format("$1$ [$2$]", [Ui.loadResource(Rez.Strings.titleHeightCritical), $.GSK_Settings.sUnitElevation])), new PickerDelegateGenericElevation("userHeightCritical"), Ui.SLIDE_IMMEDIATE);
+    else if (item == :menuSafetyHeightCritical) {
+      //Sys.println("DEBUG: MenuSettingsSafetyDelegate.onMenuItem(:menuSafetyHeightCritical)");
+      Ui.pushView(new PickerSafetyHeightCritical(), new PickerSafetyHeightCriticalDelegate(), Ui.SLIDE_IMMEDIATE);
     }
   }
 

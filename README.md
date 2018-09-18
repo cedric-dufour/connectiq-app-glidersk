@@ -3,7 +3,7 @@ GliderSK (Garmin ConnectIQ) App
 The Glider Swiss Knife for Garmin ConnectIQ devices
 
 
-   ![GliderSK-Overview](/GliderSK-Overview.jpg)
+   ![GliderSK-Overview](GliderSK-Overview.jpg)
 
 
 GliderSK - shortname for Glider Swiss Knife - is a Garmin ConnectIQ Application

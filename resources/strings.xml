@@ -7,31 +7,36 @@
   <string id="titleLicense">License</string>
   <string id="titleAuthor">Author</string>
   <!-- Menu (settings) -->
-  <string id="menuSettings">Settings</string>
-  <!-- Menu (settings:general) -->
-  <string id="menuSettingsGeneral">General</string>
-  <string id="titleTimeConstant">Time Constant</string>
-  <string id="titleBackgroundColor">Background Color</string>
-  <string id="titleLapKey">Lap Key</string>
-  <!-- Menu (settings:sounds) -->
-  <string id="menuSettingsSounds">Sounds</string>
-  <string id="titleVariometerTones">Variometer Tones</string>
-  <string id="titleSafetyTones">Safety Tones</string>
-  <string id="titleMuteDistance">Mute Distance</string>
+  <string id="titleSettings">Settings</string>
   <!-- Menu (settings:variometer) -->
-  <string id="menuSettingsVariometer">Variometer</string>
-  <string id="titleVariometerRange">Variometer Range</string>
+  <string id="titleSettingsVariometer">Variometer</string>
+  <string id="titleVariometerRange">Range</string>
   <string id="valueVariometerRangeSmall">3.0m/s / 600ft/min</string>
   <string id="valueVariometerRangeMedium">6.0m/s / 1200ft/min</string>
   <string id="valueVariometerRangeLarge">9.0m/s / 1800ft/min</string>
-  <string id="titleVariometerMode">Variometer Mode</string>
+  <string id="titleVariometerMode">Mode</string>
   <string id="valueVariometerModeAltitude">δAlt.</string>
   <string id="valueVariometerModeEnergy">δE</string>
-  <string id="titleEnergyEfficiency">Energy Efficiency</string>
-  <string id="titlePlotRange">Plot Range</string>
-  <string id="titlePlotZoom">Plot Zoom</string>
+  <string id="titleVariometerEnergyEfficiency">Energy Efficiency</string>
+  <string id="titleVariometerPlotRange">Plot Range</string>
+  <!-- Menu (settings:safety) -->
+  <string id="titleSettingsSafety">Safety</string>
+  <string id="titleSafetyFinesse">Finesse</string>
+  <string id="titleSafetyHeightDecision">Decision Height</string>
+  <string id="titleSafetyHeightWarning">Warning Height</string>
+  <string id="titleSafetyHeightCritical">Critical Height</string>
+  <!-- Menu (settings:sounds) -->
+  <string id="titleSettingsSounds">Sounds</string>
+  <string id="titleSoundsVariometerTones">Variometer Tones</string>
+  <string id="titleSoundsSafetyTones">Safety Tones</string>
+  <string id="titleSoundsMuteDistance">Mute Distance</string>
+  <!-- Menu (settings:general) -->
+  <string id="titleSettingsGeneral">General</string>
+  <string id="titleGeneralTimeConstant">Time Constant</string>
+  <string id="titleGeneralBackgroundColor">Background Color</string>
+  <string id="titleGeneralLapKey">Lap Key</string>
   <!-- Menu (settings:units) -->
-  <string id="menuSettingsUnits">Units</string>
+  <string id="titleSettingsUnits">Units</string>
   <string id="titleUnitDistance">Distance Unit</string>
   <string id="valueUnitDistanceAuto">auto</string>
   <string id="valueUnitDistanceMetric">km</string>
@@ -44,38 +49,32 @@
   <string id="titleUnitRateOfTurn">Rate-of-Turn Unit</string>
   <string id="valueUnitRateOfTurnDegree">°/s</string>
   <string id="valueUnitRateOfTurnRpm">rpm</string>
-  <string id="titleTimeUTC">Timezone</string>
-  <string id="valueTimeLT">LT</string>
-  <string id="valueTimeUTC">UTC</string>
-  <!-- Menu (settings:safety) -->
-  <string id="menuSettingsSafety">Safety</string>
-  <string id="titleFinesseReference">Reference Finesse</string>
-  <string id="titleHeightDecision">Decision Height</string>
-  <string id="titleHeightWarning">Warning Height</string>
-  <string id="titleHeightCritical">Critical Height</string>
+  <string id="titleUnitTimeUTC">Timezone</string>
+  <string id="valueUnitTimeLT">LT</string>
+  <string id="valueUnitTimeUTC">UTC</string>
   <!-- Menu (settings:about) -->
-  <string id="menuSettingsAbout">About</string>
-  <!-- Menu (safety) -->
-  <string id="menuSafety">Safety</string>
-  <string id="menuDestinationLoad">Load Destination</string>
-  <string id="menuDestinationEdit">Edit Destination</string>
-  <string id="menuDestinationSave">Save Destination</string>
-  <string id="menuDestinationDelete">Delete Destination</string>
+  <string id="titleSettingsAbout">About</string>
   <!-- Menu (destination) -->
-  <string id="menuDestinationName">Name</string>
-  <string id="menuDestinationLatitude">Latitude</string>
-  <string id="menuDestinationLongitude">Longitude</string>
-  <string id="menuDestinationElevation">Elevation</string>
-  <string id="menuDestinationFromCurrent">From Current</string>
+  <string id="titleDestination">Destination</string>
+  <string id="titleDestinationLoad">Load</string>
+  <string id="titleDestinationEdit">Edit</string>
+  <string id="titleDestinationSave">Save</string>
+  <string id="titleDestinationDelete">Delete</string>
+  <!-- Menu (destination) -->
+  <string id="titleDestinationName">Name</string>
+  <string id="titleDestinationLatitude">Latitude</string>
+  <string id="titleDestinationLongitude">Longitude</string>
+  <string id="titleDestinationElevation">Elevation</string>
+  <string id="titleDestinationFromCurrent">From Current</string>
   <!-- Menu (activity) -->
-  <string id="menuActivity">Activity</string>
-  <string id="menuActivityStart">Start</string>
-  <string id="menuActivityResume">Resume</string>
-  <string id="menuActivityPause">Pause</string>
-  <string id="menuActivitySave">Save</string>
-  <string id="menuActivityDiscard">Discard</string>
-  <!-- Menu (shared) -->
-  <string id="menuConfirm">Confirm</string>
+  <string id="titleActivity">Activity</string>
+  <string id="titleActivityStart">Start</string>
+  <string id="titleActivityResume">Resume</string>
+  <string id="titleActivityPause">Pause</string>
+  <string id="titleActivitySave">Save</string>
+  <string id="titleActivityDiscard">Discard</string>
+  <!-- Values (generic) -->
+  <string id="titleConfirm">Confirm</string>
   <string id="valueOn">On</string>
   <string id="valueOff">Off</string>
   <string id="valueColorWhite">White</string>
