@@ -207,17 +207,21 @@ class GSK_ViewTimers extends Ui.View {
     self.oRezValueBatteryLevel.setText(Lang.format("$1$%", [Sys.getSystemStats().battery.format("%.0f")]));
 
     // ... activity status
+    var bRecording;
     if($.GSK_Activity_oSession == null) {  // ... stand-by
       self.oRezValueActivityStatus.setColor(Gfx.COLOR_LT_GRAY);
       sValue = self.sValueActivityStandby;
+      bRecording = false;
     }
     else if($.GSK_Activity_oSession.isRecording()) {  // ... recording
       self.oRezValueActivityStatus.setColor(Gfx.COLOR_RED);
       sValue = self.sValueActivityRecording;
+      bRecording = true;
     }
     else {  // ... paused
       self.oRezValueActivityStatus.setColor(Gfx.COLOR_YELLOW);
       sValue = self.sValueActivityPaused;
+      bRecording = true;
     }
     self.oRezValueActivityStatus.setText(sValue);
 
@@ -265,7 +269,7 @@ class GSK_ViewTimers extends Ui.View {
     self.oRezValueTopRight.setText(sValue);
 
     // ... lap: start
-    self.oRezValueLeft.setColor(iColorText);
+    self.oRezValueLeft.setColor(bRecording ? iColorText : Gfx.COLOR_LT_GRAY);
     if($.GSK_Activity_oTimeLap != null) {
       oTimeInfo = $.GSK_oSettings.bUnitTimeUTC ? Gregorian.utcInfo($.GSK_Activity_oTimeLap, Time.FORMAT_SHORT) : Gregorian.info($.GSK_Activity_oTimeLap, Time.FORMAT_SHORT);
       sValue = Lang.format("$1$:$2$", [oTimeInfo.hour.format("%02d"), oTimeInfo.min.format("%02d")]);
@@ -276,7 +280,7 @@ class GSK_ViewTimers extends Ui.View {
     self.oRezValueLeft.setText(sValue);
 
     // ... lap: count
-    self.oRezValueCenter.setColor(iColorText);
+    self.oRezValueCenter.setColor(bRecording ? iColorText : Gfx.COLOR_LT_GRAY);
     if($.GSK_Activity_iCountLaps) {
       sValue = $.GSK_Activity_iCountLaps.format("%d");
     }
@@ -286,7 +290,7 @@ class GSK_ViewTimers extends Ui.View {
     self.oRezValueCenter.setText(sValue);
 
     // ... lap: elapsed
-    self.oRezValueRight.setColor(iColorText);
+    self.oRezValueRight.setColor(bRecording ? iColorText : Gfx.COLOR_LT_GRAY);
     if($.GSK_Activity_oTimeLap != null) {
       iDuration = Math.floor(oTimeNow.subtract($.GSK_Activity_oTimeLap).value() / 60.0).toNumber();
       iDuration_m = iDuration % 60;
@@ -299,7 +303,7 @@ class GSK_ViewTimers extends Ui.View {
     self.oRezValueRight.setText(sValue);
 
     // ... recording: start
-    self.oRezValueBottomLeft.setColor(iColorText);
+    self.oRezValueBottomLeft.setColor(bRecording ? iColorText : Gfx.COLOR_LT_GRAY);
     if($.GSK_Activity_oTimeStart != null) {
       oTimeInfo = $.GSK_oSettings.bUnitTimeUTC ? Gregorian.utcInfo($.GSK_Activity_oTimeStart, Time.FORMAT_SHORT) : Gregorian.info($.GSK_Activity_oTimeStart, Time.FORMAT_SHORT);
       sValue = Lang.format("$1$:$2$", [oTimeInfo.hour.format("%02d"), oTimeInfo.min.format("%02d")]);
@@ -310,7 +314,7 @@ class GSK_ViewTimers extends Ui.View {
     self.oRezValueBottomLeft.setText(sValue);
 
     // ... recording: elapsed
-    self.oRezValueBottomRight.setColor(iColorText);
+    self.oRezValueBottomRight.setColor(bRecording ? iColorText : Gfx.COLOR_LT_GRAY);
     if($.GSK_Activity_oTimeStart != null) {
       iDuration = Math.floor(oTimeNow.subtract($.GSK_Activity_oTimeStart).value() / 60.0).toNumber();
       iDuration_m = iDuration % 60;

@@ -457,14 +457,16 @@ class GSK_App extends App.AppBase {
         Attn.playTone(Attn.TONE_RESET);
       }
     }
-    self.resetActivity();
+    self.resetActivity(!_bSave);
   }
 
-  function resetActivity() {
+  function resetActivity(_bClearTimers) {
     $.GSK_Activity_oSession = null;
-    $.GSK_Activity_oTimeStart = null;
-    $.GSK_Activity_oTimeLap = null;
-    $.GSK_Activity_iCountLaps = null;
+    if(_bClearTimers) {
+      $.GSK_Activity_oTimeStart = null;
+      $.GSK_Activity_oTimeLap = null;
+      $.GSK_Activity_iCountLaps = null;
+    }
     $.GSK_Fit_VerticalSpeed_oField = null;
     $.GSK_Fit_RateOfTurn_oField = null;
     $.GSK_Fit_Acceleration_oField = null;
