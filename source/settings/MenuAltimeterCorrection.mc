@@ -29,9 +29,7 @@ class MenuAltimeterCorrection extends Ui.Menu {
     Menu.initialize();
     Menu.setTitle(Ui.loadResource(Rez.Strings.titleAltimeterCorrection));
     Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCorrectionAbsolute), :menuAltimeterCorrectionAbsolute);
-    if($.GSK_oAltimeter.fAltitudeActual != null) {
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCorrectionRelative), :menuAltimeterCorrectionRelative);
-    }
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCorrectionRelative), :menuAltimeterCorrectionRelative);
   }
 
 }
