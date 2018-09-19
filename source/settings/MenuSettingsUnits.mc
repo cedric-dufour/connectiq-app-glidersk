@@ -30,6 +30,7 @@ class MenuSettingsUnits extends Ui.Menu {
     Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsUnits));
     Menu.addItem(Ui.loadResource(Rez.Strings.titleUnitDistance), :menuUnitDistance);
     Menu.addItem(Ui.loadResource(Rez.Strings.titleUnitElevation), :menuUnitElevation);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleUnitPressure), :menuUnitPressure);
     Menu.addItem(Ui.loadResource(Rez.Strings.titleUnitRateOfTurn), :menuUnitRateOfTurn);
     Menu.addItem(Ui.loadResource(Rez.Strings.titleUnitTimeUTC), :menuUnitTimeUTC);
   }
@@ -54,6 +55,10 @@ class MenuSettingsUnitsDelegate extends Ui.MenuInputDelegate {
     else if (item == :menuUnitElevation) {
       //Sys.println("DEBUG: MenuSettingsUnitsDelegate.onMenuItem(:menuUnitElevation)");
       Ui.pushView(new PickerUnitElevation(), new PickerUnitElevationDelegate(), Ui.SLIDE_IMMEDIATE);
+    }
+    else if (item == :menuUnitPressure) {
+      //Sys.println("DEBUG: MenuSettingsUnitsDelegate.onMenuItem(:menuUnitPressure)");
+      Ui.pushView(new PickerUnitPressure(), new PickerUnitPressureDelegate(), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuUnitRateOfTurn) {
       //Sys.println("DEBUG: MenuSettingsUnitsDelegate.onMenuItem(:menuUnitRateOfTurn)");

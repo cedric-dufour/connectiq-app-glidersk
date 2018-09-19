@@ -8,6 +8,14 @@
   <string id="titleAuthor">Author</string>
   <!-- Menu (settings) -->
   <string id="titleSettings">Settings</string>
+  <!-- Menu (settings:altimeter) -->
+  <string id="titleSettingsAltimeter">Altimeter</string>
+  <string id="titleAltimeterCalibration">Calibrate</string>
+  <string id="titleAltimeterCalibrationQNH">QNH</string>
+  <string id="titleAltimeterCalibrationElevation">Elevation</string>
+  <string id="titleAltimeterCorrection">Correction</string>
+  <string id="titleAltimeterCorrectionAbsolute">Absolute</string>
+  <string id="titleAltimeterCorrectionRelative">Relative</string>
   <!-- Menu (settings:variometer) -->
   <string id="titleSettingsVariometer">Variometer</string>
   <string id="titleVariometerRange">Range</string>
@@ -46,6 +54,10 @@
   <string id="valueUnitElevationAuto">auto</string>
   <string id="valueUnitElevationMetric">m</string>
   <string id="valueUnitElevationStatute">ft</string>
+  <string id="titleUnitPressure">Pressure Unit</string>
+  <string id="valueUnitPressureAuto">auto</string>
+  <string id="valueUnitPressureMetric">mb</string>
+  <string id="valueUnitPressureStatute">inHg</string>
   <string id="titleUnitRateOfTurn">Rate-of-Turn Unit</string>
   <string id="valueUnitRateOfTurnDegree">°/s</string>
   <string id="valueUnitRateOfTurnRpm">rpm</string>
@@ -114,4 +126,6 @@
   <string id="unitRateOfTurn">°/s|rpm</string>
   <string id="titleAcceleration">Acceleration</string>
   <string id="unitAcceleration">g</string>
+  <string id="titleAltitude">(Barometric) Altitude</string>
+  <string id="unitAltitude">m|ft</string>
 </strings>

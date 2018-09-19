@@ -81,7 +81,7 @@ class GSK_Processing {
   public var fDestinationElevation;
   // ... sensor values (fed by Toybox.Sensor)
   public var iSensorEpoch;
-  public var fSensorAltitude;
+  //DEAD:public var fSensorAltitude;
   public var fAcceleration;
   // ... position values (fed by Toybox.Position)
   public var bPositionStateful;
@@ -155,7 +155,7 @@ class GSK_Processing {
     // Reset
     // ... sensor values
     self.iSensorEpoch = null;
-    self.fSensorAltitude = null;
+    //DEAD:self.fSensorAltitude = null;
     self.fAcceleration = null;
   }
 
@@ -229,19 +229,19 @@ class GSK_Processing {
     // Process sensor data
     var fValue;
 
-    // ... altitude
-    if(_oInfo has :altitude and _oInfo.altitude != null) {
-      if(self.fSensorAltitude == null) {
-        self.fSensorAltitude = _oInfo.altitude;
-      }
-      else {
-        self.fSensorAltitude = self.fEmaCoefficient_present * _oInfo.altitude + self.fEmaCoefficient_past * self.fSensorAltitude;
-      }
-      //Sys.println(Lang.format("DEBUG: (Sensor.Info) altitude = $1$", [self.fSensorAltitude]));
-    }
-    //else {
-    //  Sys.println("WARNING: Sensor data have no altitude information (:altitude)");
-    //}
+    //DEAD:// ... altitude
+    //DEAD:if(_oInfo has :altitude and _oInfo.altitude != null) {
+    //DEAD:  if(self.fSensorAltitude == null) {
+    //DEAD:    self.fSensorAltitude = _oInfo.altitude;
+    //DEAD:  }
+    //DEAD:  else {
+    //DEAD:    self.fSensorAltitude = self.fEmaCoefficient_present * _oInfo.altitude + self.fEmaCoefficient_past * self.fSensorAltitude;
+    //DEAD:  }
+    //DEAD:  //Sys.println(Lang.format("DEBUG: (Sensor.Info) altitude = $1$", [self.fSensorAltitude]));
+    //DEAD:}
+    //DEAD://else {
+    //DEAD://  Sys.println("WARNING: Sensor data have no altitude information (:altitude)");
+    //DEAD://}
 
     // ... acceleration
     if(_oInfo has :accel and _oInfo.accel != null) {
@@ -290,6 +290,7 @@ class GSK_Processing {
     //          https://en.wikipedia.org/wiki/Global_Positioning_System#Timekeeping
     if(_oInfo has :when and _oInfo.when != null) {
       self.iPositionGpoch = _oInfo.when.value();
+      self.iPositionGpoch = _iEpoch;  // SDK 3.0.x BUG!!! (:when remains constant)
       //Sys.println(Lang.format("DEBUG: (Position.Info) when = $1$", [self.self.iPositionGpoch]));
     }
     else {
@@ -325,18 +326,21 @@ class GSK_Processing {
     }
 
     // ... altitude
-    if(self.fSensorAltitude != null) {
-      self.fAltitude = self.fSensorAltitude;
+    if($.GSK_oAltimeter.fAltitudeActual != null) {  // ... the closest to the device's raw barometric sensor value
+      self.fAltitude = $.GSK_oAltimeter.fAltitudeActual;
     }
-    else if(_oInfo has :altitude and _oInfo.altitude != null) {
-      if(self.fAltitude == null) {
-        self.fAltitude = _oInfo.altitude;
-      }
-      else {
-        self.fAltitude = self.fEmaCoefficient_present * _oInfo.altitude + self.fEmaCoefficient_past * self.fAltitude;
-      }
-      //Sys.println(Lang.format("DEBUG: (Position.Info) altitude = $1$", [self.fAltitude]));
-    }
+    //DEAD:else if(self.fSensorAltitude != null) {  // ... sometimes flats-out (for several seconds/minutes)
+    //DEAD:  self.fAltitude = self.fSensorAltitude;
+    //DEAD:}
+    //DEAD:else if(_oInfo has :altitude and _oInfo.altitude != null) {  // ... GPS altitude? sucks!
+    //DEAD:  if(self.fAltitude == null) {
+    //DEAD:    self.fAltitude = _oInfo.altitude;
+    //DEAD:  }
+    //DEAD:  else {
+    //DEAD:    self.fAltitude = self.fEmaCoefficient_present * _oInfo.altitude + self.fEmaCoefficient_past * self.fAltitude;
+    //DEAD:  }
+    //DEAD:  //Sys.println(Lang.format("DEBUG: (Position.Info) altitude = $1$", [self.fAltitude]));
+    //DEAD:}
     //else {
     //  Sys.println("WARNING: Position data have no altitude information (:altitude)");
     //}

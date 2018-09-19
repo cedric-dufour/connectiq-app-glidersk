@@ -10,7 +10,23 @@ Usage instructions
   Always follow official or recommended procedures to insure flight safety,
          *independently* from the help this application can offer.
 
+  In particular, this application relies on barometric pressure to derive
+  the altitude and MUST NOT BE USED IN A PRESSURIZED AIRCRAFT.
+
    !!! WARNING !!! DISCLAIMER !!! WARNING !!! DISCLAIMER !!! WARNING !!!
+
+
+Foreword
+--------
+
+GliderSK relies on your device's raw barometric sensor to compute the altitude,
+using the ad-hoc International Civil Aviation Organization (ICAO) formulas and
+according to the International Standard Atmosphere (ISA).
+
+Consequently, you MUST calibrate GliderSK internal altimeter - using either
+the known QNH or elevation (see Settings below) - to obtain an accurate
+altitude reading (the device's "native" altimeter/barometer settings are
+ignored).
 
 
 Global View
@@ -217,6 +233,15 @@ Unless explicitely stated otherwise for a given view, you may enter the Settings
 menu by pressing the MENU button (long-pressing the UP button).
 
 The application allows you to specify the following settings:
+ - Altimeter -> Calibration -> QNH:
+   calibrate the altimeter using the current known QNH
+ - Altimeter -> Calibration -> Elevation:
+   calibrate the altimeter using the current known elevation
+   (QNH shall be adjusted accordingly)
+ - Altimeter -> Correction -> Absolute:
+   set the absolute device's sensor error correction
+ - Altimeter -> Correction -> Relative:
+   set the relative device's sensor error correction
  - Variometer -> Variometer Range:
    the range used for the variometer display and tones (3.0, 6.0 or 9.0 m/s)
  - Variometer -> Variometer Mode:
@@ -259,6 +284,34 @@ The application allows you to specify the following settings:
    display Local Time (LT) or Universal Time Coordinates (UTC/Z)
 
 
+Calibrating the Device Sensor
+-----------------------------
+
+GliderSK allows you to calibrate/correct your device's barometric sensor using
+the following formulas:
+
+   QFEcalibrated = QFEsensor * Crel + Cabs
+
+If you suspect your device's sensor is inaccurate, you shall:
+
+1. install the PilotAltimeter widget to access the device's *QFE* readings
+   (unfortunately, this falls out of GliderSK scope/purpose)
+
+2. take down multiple QFE readings, at different altitude, using your device's
+   *raw* QFE and a reliable, calibrated, reference barometer
+
+3. import those readings in a LibreOffice Calc (or Microsoft Excel) spreadsheet
+   and obtain the Crel and Cabs coefficients by performing a linear regression:
+
+     https://help.libreoffice.org/Calc/Regression_Analysis
+     (Crel = Slope and Cabs = Intercept)
+
+4. set Altimeter -> Correction -> Relative/Absolute values to the calculated
+   cofficients
+
+Not an easy feat. But if you must...
+
+
 WARNING!!! GOTCHAS!!!
 ---------------------
 
@@ -267,27 +320,14 @@ When using GPS devices, you should be aware that:
    even more so when coupled with GLONASS (at the cost of battery usage).
  - (Garmin) UltraTrac feature is very cool to save battery but does NOT
    refresh location information frequently enough for GliderSK purpose.
+
       !!! DO NOT USE ULTRATRAC WITH GLIDERSK !!!
- - GPS elevation sucks! Really! For (vertically) fast moving objects,
-   only barometric altimeter does the job.
-      !!! DO NOT USE GPS ELEVATION WITH GLIDERSK !!!
- - When using the barometric altimeter, make sure it is configured to
-   act as an altimeter and not a barometer (or any subtle mix of the two).
-      !!! DO CONFIGURE THE ALTIMETER TO ACT AS ALTIMETER (ONLY) !!!
 
 The ConnectIQ framework does NOT allow applications - like GliderSK - to
-control the location source (GPS, GLONASS and/or UltraTrac) or elevation
-source (GPS or barometric altimeter). The same applies for barometric alti-
-meter mode and calibration. The only way to circumvent that limitation is to
-      !!! USE A NATIVE GARMIN APPLICATION BEFOREHANDS !!!
-   (the ConnectIQ application will then retain its settings)
+control the location source (GPS, GLONASS and/or UltraTrac). The only way
+to circumvent that limitation is to
 
-Consequently, in order to have the best experience with GliderSK (e.g.
-on a Garmin D2 Charlie watch):
- - open the FLY activity and set its Altimeter setting to Pressure
-   and its GPS settings to GPS (or GPS+GLONASS)
- - switch to the Barometer widget and set its Watch Mode setting
-   to Altimeter
- - switch to the Altimeter widget and use its Calibrate option to
-   calibrate your elevation/altitude
+      !!! USE A NATIVE GARMIN APPLICATION BEFOREHANDS !!!
+
+The ConnectIQ application launched afterwards will then retain those settings.
 

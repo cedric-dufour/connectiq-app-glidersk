@@ -28,6 +28,10 @@ class GSK_Settings {
   //
 
   // Settings
+  // ... altimeter
+  public var fAltimeterCalibrationQNH;
+  public var fAltimeterCorrectionAbsolute;
+  public var fAltimeterCorrectionRelative;
   // ... variometer
   public var iVariometerRange;
   public var iVariometerMode;
@@ -50,6 +54,7 @@ class GSK_Settings {
   // ... units
   public var iUnitDistance;
   public var iUnitElevation;
+  public var iUnitPressure;
   public var iUnitRateOfTurn;
   public var bUnitTimeUTC;
 
@@ -59,6 +64,7 @@ class GSK_Settings {
   public var sUnitHorizontalSpeed;
   public var sUnitElevation;
   public var sUnitVerticalSpeed;
+  public var sUnitPressure;
   public var sUnitRateOfTurn;
   public var sUnitTime;
   // ... conversion coefficients
@@ -66,6 +72,7 @@ class GSK_Settings {
   public var fUnitHorizontalSpeedCoefficient;
   public var fUnitElevationCoefficient;
   public var fUnitVerticalSpeedCoefficient;
+  public var fUnitPressureCoefficient;
   public var fUnitRateOfTurnCoefficient;
 
   // Other
@@ -80,6 +87,9 @@ class GSK_Settings {
 
   function load() {
     // Settings
+    self.setAltimeterCalibrationQNH(App.Properties.getValue("userAltimeterCalibrationQNH"));
+    self.setAltimeterCorrectionAbsolute(App.Properties.getValue("userAltimeterCorrectionAbsolute"));
+    self.setAltimeterCorrectionRelative(App.Properties.getValue("userAltimeterCorrectionRelative"));
     // ... variometer
     self.setVariometerRange(App.Properties.getValue("userVariometerRange"));
     self.setVariometerMode(App.Properties.getValue("userVariometerMode"));
@@ -102,8 +112,49 @@ class GSK_Settings {
     // ... units
     self.setUnitDistance(App.Properties.getValue("userUnitDistance"));
     self.setUnitElevation(App.Properties.getValue("userUnitElevation"));
+    self.setUnitPressure(App.Properties.getValue("userUnitPressure"));
     self.setUnitRateOfTurn(App.Properties.getValue("userUnitRateOfTurn"));
     self.setUnitTimeUTC(App.Properties.getValue("userUnitTimeUTC"));
+  }
+
+  function setAltimeterCalibrationQNH(_fAltimeterCalibrationQNH) {  // [Pa]
+    // REF: https://en.wikipedia.org/wiki/Atmospheric_pressure#Records
+    if(_fAltimeterCalibrationQNH == null) {
+      _fAltimeterCalibrationQNH = 101325.0f;
+    }
+    else if(_fAltimeterCalibrationQNH > 110000.0f) {
+      _fAltimeterCalibrationQNH = 110000.0f;
+    }
+    else if(_fAltimeterCalibrationQNH < 85000.0f) {
+      _fAltimeterCalibrationQNH = 85000.0f;
+    }
+    self.fAltimeterCalibrationQNH = _fAltimeterCalibrationQNH;
+  }
+
+  function setAltimeterCorrectionAbsolute(_fAltimeterCorrectionAbsolute) {  // [Pa]
+    if(_fAltimeterCorrectionAbsolute == null) {
+      _fAltimeterCorrectionAbsolute = 0.0f;
+    }
+    else if(_fAltimeterCorrectionAbsolute > 9999.0f) {
+      _fAltimeterCorrectionAbsolute = 9999.0f;
+    }
+    else if(_fAltimeterCorrectionAbsolute < -9999.0f) {
+      _fAltimeterCorrectionAbsolute = -9999.0f;
+    }
+    self.fAltimeterCorrectionAbsolute = _fAltimeterCorrectionAbsolute;
+  }
+
+  function setAltimeterCorrectionRelative(_fAltimeterCorrectionRelative) {
+    if(_fAltimeterCorrectionRelative == null) {
+      _fAltimeterCorrectionRelative = 1.0f;
+    }
+    else if(_fAltimeterCorrectionRelative > 1.9999f) {
+      _fAltimeterCorrectionRelative = 1.9999f;
+    }
+    else if(_fAltimeterCorrectionRelative < 0.0001f) {
+      _fAltimeterCorrectionRelative = 0.0001f;
+    }
+    self.fAltimeterCorrectionRelative = _fAltimeterCorrectionRelative;
   }
 
   function setVariometerRange(_iVariometerRange) {
@@ -364,6 +415,33 @@ class GSK_Settings {
       // ... [m/s]
       self.sUnitVerticalSpeed = "m/s";
       self.fUnitVerticalSpeedCoefficient = 1.0f;  // ... m/s -> m/s
+    }
+  }
+
+  function setUnitPressure(_iUnitPressure) {
+    if(_iUnitPressure == null or _iUnitPressure < 0 or _iUnitPressure > 1) {
+      _iUnitPressure = -1;
+    }
+    self.iUnitPressure = _iUnitPressure;
+    if(self.iUnitPressure < 0) {  // ... auto
+      // NOTE: assume distance units are a good indicator of preferred pressure units
+      var oDeviceSettings = Sys.getDeviceSettings();
+      if(oDeviceSettings has :distanceUnits and oDeviceSettings.distanceUnits != null) {
+        _iUnitPressure = oDeviceSettings.distanceUnits;
+      }
+      else {
+        _iUnitPressure = Sys.UNIT_METRIC;
+      }
+    }
+    if(_iUnitPressure == Sys.UNIT_STATUTE) {  // ... statute
+      // ... [inHg]
+      self.sUnitPressure = "inHg";
+      self.fUnitPressureCoefficient = 0.0002953f;  // ... Pa -> inHg
+    }
+    else {  // ... metric
+      // ... [mb/hPa]
+      self.sUnitPressure = "mb";
+      self.fUnitPressureCoefficient = 0.01f;  // ... Pa -> mb/hPa
     }
   }
 

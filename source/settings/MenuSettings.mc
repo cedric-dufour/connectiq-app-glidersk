@@ -28,6 +28,7 @@ class MenuSettings extends Ui.Menu {
   function initialize() {
     Menu.initialize();
     Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettings));
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsAltimeter), :menuSettingsAltimeter);
     Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsVariometer), :menuSettingsVariometer);
     Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsSafety), :menuSettingsSafety);
     Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsSounds), :menuSettingsSounds);
@@ -49,7 +50,11 @@ class MenuSettingsDelegate extends Ui.MenuInputDelegate {
   }
 
   function onMenuItem(item) {
-    if (item == :menuSettingsVariometer) {
+    if (item == :menuSettingsAltimeter) {
+      //Sys.println("DEBUG: MenuSettingsDelegate.onMenuItem(:menuSettingsAltimeter)");
+      Ui.pushView(new MenuSettingsAltimeter(), new MenuSettingsAltimeterDelegate(), Ui.SLIDE_IMMEDIATE);
+    }
+    else if (item == :menuSettingsVariometer) {
       //Sys.println("DEBUG: MenuSettingsDelegate.onMenuItem(:menuSettingsVariometer)");
       Ui.pushView(new MenuSettingsVariometer(), new MenuSettingsVariometerDelegate(), Ui.SLIDE_IMMEDIATE);
     }

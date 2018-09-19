@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+using Toybox.Activity;
 using Toybox.ActivityRecording as AR;
 using Toybox.Application as App;
 using Toybox.Attention as Attn;
@@ -38,6 +39,9 @@ var GSK_oSettings = null;
 var GSK_oPositionLocation = null;
 var GSK_oPositionAltitude = null;
 
+// Internal altimeter
+var GSK_oAltimeter = null;
+
 // Processing logic
 var GSK_oProcessing = null;
 var GSK_oTimeStart = null;
@@ -47,6 +51,8 @@ var GSK_Activity_oSession = null;
 var GSK_Activity_oTimeStart = null;
 var GSK_Activity_oTimeLap = null;
 var GSK_Activity_iCountLaps = null;
+var GSK_Fit_BarometricAltitude_oField = null;
+var GSK_Fit_BarometricAltitude_fUnitCoefficient = 1.0f;
 var GSK_Fit_VerticalSpeed_oField = null;
 var GSK_Fit_VerticalSpeed_fUnitCoefficient = 1.0f;
 var GSK_Fit_RateOfTurn_oField = null;
@@ -85,6 +91,7 @@ class GSK_App extends App.AppBase {
   public const FITFIELD_VERTICALSPEED = 0;
   public const FITFIELD_RATEOFTURN = 1;
   public const FITFIELD_ACCELERATION = 2;
+  public const FITFIELD_BAROMETRICALTITUDE = 3;
 
   // Tones control
   public const TONES_SAFETY = 1;
@@ -117,6 +124,9 @@ class GSK_App extends App.AppBase {
 
     // Application settings
     $.GSK_oSettings = new GSK_Settings();
+
+    // Internal altimeter
+    $.GSK_oAltimeter = new GSK_Altimeter();
 
     // Processing logic
     $.GSK_oProcessing = new GSK_Processing();
@@ -201,6 +211,7 @@ class GSK_App extends App.AppBase {
     $.GSK_oSettings.load();
 
     // Apply settings
+    $.GSK_oAltimeter.importSettings();
     $.GSK_oProcessing.importSettings();
 
     // ... safety destination
@@ -245,6 +256,12 @@ class GSK_App extends App.AppBase {
       $.GSK_oPositionAltitude = _oInfo.altitude;
     }
 
+    // Process altimeter data
+    var oActivityInfo = Activity.getActivityInfo();  // ... we need *raw ambient* pressure
+    if(oActivityInfo has :rawAmbientPressure and oActivityInfo.rawAmbientPressure != null) {
+      $.GSK_oAltimeter.setQFE(oActivityInfo.rawAmbientPressure);
+    }
+
     // Process position data
     $.GSK_oProcessing.processPositionInfo(_oInfo, iEpoch);
 
@@ -252,6 +269,9 @@ class GSK_App extends App.AppBase {
     self.updateUi(iEpoch);
 
     // Save FIT fields
+    if($.GSK_Fit_BarometricAltitude_oField != null and $.GSK_oProcessing.fAltitude != null) {
+      $.GSK_Fit_BarometricAltitude_oField.setData($.GSK_oProcessing.fAltitude * $.GSK_Fit_BarometricAltitude_fUnitCoefficient);
+    }
     if($.GSK_Fit_VerticalSpeed_oField != null and $.GSK_oProcessing.fVariometer != null) {
       $.GSK_Fit_VerticalSpeed_oField.setData($.GSK_oProcessing.fVariometer * $.GSK_Fit_VerticalSpeed_fUnitCoefficient);
     }
@@ -385,6 +405,8 @@ class GSK_App extends App.AppBase {
   function initActivity() {
     // NOTE: "Flying" activity number is 20 (cf. https://www.thisisant.com/resources/fit -> Profiles.xlsx)
     $.GSK_Activity_oSession = AR.createSession({ :name=>"GliderSK", :sport=>20, :subSport=>AR.SUB_SPORT_GENERIC });
+    $.GSK_Fit_BarometricAltitude_oField = $.GSK_Activity_oSession.createField("BarometricAltitude", GSK_App.FITFIELD_BAROMETRICALTITUDE, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_oSettings.sUnitElevation });
+    $.GSK_Fit_BarometricAltitude_fUnitCoefficient = $.GSK_oSettings.fUnitElevationCoefficient;
     $.GSK_Fit_VerticalSpeed_oField = $.GSK_Activity_oSession.createField("VerticalSpeed", GSK_App.FITFIELD_VERTICALSPEED, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_oSettings.sUnitVerticalSpeed });
     $.GSK_Fit_VerticalSpeed_fUnitCoefficient = $.GSK_oSettings.fUnitVerticalSpeedCoefficient;
     $.GSK_Fit_RateOfTurn_oField = $.GSK_Activity_oSession.createField("RateOfTurn", GSK_App.FITFIELD_RATEOFTURN, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_oSettings.sUnitRateOfTurn });
@@ -467,6 +489,7 @@ class GSK_App extends App.AppBase {
       $.GSK_Activity_oTimeLap = null;
       $.GSK_Activity_iCountLaps = null;
     }
+    $.GSK_Fit_BarometricAltitude_oField = null;
     $.GSK_Fit_VerticalSpeed_oField = null;
     $.GSK_Fit_RateOfTurn_oField = null;
     $.GSK_Fit_Acceleration_oField = null;
