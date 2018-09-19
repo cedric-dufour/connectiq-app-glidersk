@@ -1,14 +1,15 @@
+* 1.2.20180919a:
+  - USE RAW BAROMETRIC PRESSURE AND INTERNAL ALTITUDE DERIVATION
+    (using ICAO/ISA official formulas, ICAO Doc 9837)
+  - Keep displaying (grayd-out) timers values after Activity Save
+
 * 1.1.20180831a
   - FIX: Erroneous variable used in distance calculation function
   - FIX(?): Prioritize Sensor (barometric?) altitude over Position (GPS?) altitude
   - Apply the EMA filter only to Sensor/Position inputs and use those EMA-filtered values for other derived data
-  - Use onPreviousPage/onNextPage rather than onKey in behavior delegates
   - Prevent the BACK button to exit the application when Activity has been started
   - Uniformize activity recording control (buttons) in all views
   - Centralize activity recording code (in application class)
-  - Devel: update INSTALL file
-  - Update DONATE file, for all those eager to show their appreciation of open source and free software
-  - Devel: update default (d2charlie) CIQ target version to be compatible with SDK 3.0.2
 
 * 1.1.20180801a
   - Remove Descent Mk1 form supported devices (not yet upgraded to CIQ 2.4.x)
@@ -18,7 +19,6 @@
   - Added Timers view
 
 * 1.1.20180426b
-  - Devel: added Exponential Moving Average analysis spreadsheet (EMA.ods)
   - Devel: Switched build system to Jungle file (SDK >= 2.4.0)
   - SDK 2.4.x: Use label attribute instead of tag content for menu(-item) resources
   - SDK 2.4.x: Switch data storage from Object Store to Application.Storage
@@ -28,7 +28,6 @@
   - Perfs: Optimize memory usage (get rid of external settings)
   - Perfs: Optmize memory usage (avoid unnecessary resources and constants)
   - Perfs: Retrieve (cache) drawables resources onLayout()
-  - Devel: Add release project simulation target (and consolidate targets names)
   - Added support for DescentMk1
 
 * 1.0.20171104a
@@ -36,41 +35,26 @@
          activity detail (along Rate-of-Turn and Acceleration charts)
 
 * 1.0.20171103a
+  - FIX: Make sure we have a valid latitude/longitude seconds value when editing destination coordinates
   - Display heading (instead of altitude) information in Rate-of-Turn view
   - Do not color altitude GREEN if safety data are not available
-  - Remove those wicked trailing spaces that keep creeping in...
-  - Move "public" constants where they belong
-  - Move "private" constants where they belong
   - Do not show "From Current" in destination options if no GPS location is available
   - Remove custom (icons) picker implementation
-  - Minot source code comments corrections
-  - Do not update global view if it's hidden
-  - FIX: Make sure we have a valid latitude/longitude seconds value when editing destination coordinates
 
 * 1.0.20171027a
-  - Optimize floating points operations
   - Smoothen heading values (EMA) like all other sensor/position values
-  - Corrections to USAGE file
 
 * 1.0.20171021a
   - Allow position processing to be finalized even with missing destination
   - Show height rather than altitude at destination in Safety view
-  - Minor comments addition/correction
   - Do not use last known position/course for more than 10 seconds
   - Update UI every 5 seconds (rather than 15) when no position data are available
   - Allow to differentiate Safety from Global view even when no position data are available
-  - Bail out of view rendering early when position accuracy is not available
   - Consolidate heading-related processing (incl. speed-to(wards)-destination)
-  - Moved variometer processing to its own block
-  - Move plot buffer processing where it belongs
   - Never show any data when position accuracy is not available
-  - Bail out of processing early if position accuracy is too low
-  - Add screenshots for each view (global, variometer, etc.)
-  - Bail out of processing early if position has no accuracy data
 
 * 1.0.20171019b
   - FIX (CRITICAL): Safety height calculation for non-metric elevation unit
-  - FIX: Always refer to "reference finesse" in documentation/comments
 
 * 1.0.20171019a
   - Post Tenebras Lux
