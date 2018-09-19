@@ -20,6 +20,7 @@ help:
 	@echo '  iq          - package the project (*.iq)'
 	@echo '  run-debug   - launch the project in the simulator (debug version)'
 	@echo '  run-release - launch the project in the simulator (release version)'
+	@echo '  fit-view    - view the FIT-file'
 	@echo '  clean       - delete all build output'
 .DEFAULT_GOAL := help
 
@@ -71,6 +72,12 @@ run-debug: ${OUTPUT_DEBUG} | ${CIQ_SIMULATOR} ${CIQ_MONKEYDO}
 run-release: ${OUTPUT_RELEASE} | ${CIQ_SIMULATOR} ${CIQ_MONKEYDO}
 	${CIQ_SIMULATOR} & sleep 1
 	${CIQ_MONKEYDO} ${OUTPUT_RELEASE} ${CIQ_DEVICE}
+
+
+## FIT-file viewer
+.PHONY: fit-view
+fit-view: ${OUTPUT_IQ} ${CIQ_FITFILE} | ${CIQ_MONKEYGRAPH}
+	java -jar ${CIQ_MONKEYGRAPH}
 
 
 ## (Un-)Install
