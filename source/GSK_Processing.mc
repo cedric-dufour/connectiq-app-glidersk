@@ -290,7 +290,7 @@ class GSK_Processing {
     //          https://en.wikipedia.org/wiki/Global_Positioning_System#Timekeeping
     if(_oInfo has :when and _oInfo.when != null) {
       self.iPositionGpoch = _oInfo.when.value();
-      self.iPositionGpoch = _iEpoch;  // SDK 3.0.x BUG!!! (:when remains constant)
+      //DEVEL:self.iPositionGpoch = _iEpoch;  // SDK 3.0.x BUG!!! (:when remains constant)
       //Sys.println(Lang.format("DEBUG: (Position.Info) when = $1$", [self.self.iPositionGpoch]));
     }
     else {
