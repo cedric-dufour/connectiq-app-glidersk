@@ -1,9 +1,13 @@
+* 1.2.20180920a:
+  - FIX: altimeter relative correction settings not appearing when altitude is not yet known
+  - Differentiate acceleration and (barometric) altitude FIT fields color
+
 * 1.2.20180919a:
   - USE RAW BAROMETRIC PRESSURE AND INTERNAL ALTITUDE DERIVATION
     (using ICAO/ISA official formulas, ICAO Doc 9837)
   - Keep displaying (grayd-out) timers values after Activity Save
 
-* 1.1.20180831a
+* 1.1.20180831a:
   - FIX: Erroneous variable used in distance calculation function
   - FIX(?): Prioritize Sensor (barometric?) altitude over Position (GPS?) altitude
   - Apply the EMA filter only to Sensor/Position inputs and use those EMA-filtered values for other derived data
@@ -11,14 +15,14 @@
   - Uniformize activity recording control (buttons) in all views
   - Centralize activity recording code (in application class)
 
-* 1.1.20180801a
+* 1.1.20180801a:
   - Remove Descent Mk1 form supported devices (not yet upgraded to CIQ 2.4.x)
     REF: https://forums.garmin.com/forum/on-the-trail/wrist-worn/decent-mk1/1361969-descent-mk-still-running-ciq-2-3
   - Reduce the varioplot maximum range from 10 to 5 minutes
     FIX: Watchdog Tripped Error - Code Executed Too Long
   - Added Timers view
 
-* 1.1.20180426b
+* 1.1.20180426b:
   - Devel: Switched build system to Jungle file (SDK >= 2.4.0)
   - SDK 2.4.x: Use label attribute instead of tag content for menu(-item) resources
   - SDK 2.4.x: Switch data storage from Object Store to Application.Storage
@@ -30,21 +34,21 @@
   - Perfs: Retrieve (cache) drawables resources onLayout()
   - Added support for DescentMk1
 
-* 1.0.20171104a
+* 1.0.20171104a:
   - FIX: (hopefully) make Vertical Speed chart appear in Garmin Connect
          activity detail (along Rate-of-Turn and Acceleration charts)
 
-* 1.0.20171103a
+* 1.0.20171103a:
   - FIX: Make sure we have a valid latitude/longitude seconds value when editing destination coordinates
   - Display heading (instead of altitude) information in Rate-of-Turn view
   - Do not color altitude GREEN if safety data are not available
   - Do not show "From Current" in destination options if no GPS location is available
   - Remove custom (icons) picker implementation
 
-* 1.0.20171027a
+* 1.0.20171027a:
   - Smoothen heading values (EMA) like all other sensor/position values
 
-* 1.0.20171021a
+* 1.0.20171021a:
   - Allow position processing to be finalized even with missing destination
   - Show height rather than altitude at destination in Safety view
   - Do not use last known position/course for more than 10 seconds
@@ -53,9 +57,9 @@
   - Consolidate heading-related processing (incl. speed-to(wards)-destination)
   - Never show any data when position accuracy is not available
 
-* 1.0.20171019b
+* 1.0.20171019b:
   - FIX (CRITICAL): Safety height calculation for non-metric elevation unit
 
-* 1.0.20171019a
+* 1.0.20171019a:
   - Post Tenebras Lux
 
