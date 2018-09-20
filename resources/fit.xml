@@ -23,7 +23,7 @@
             chartTitle="@Strings.titleAcceleration"
             dataLabel="@Strings.labelAcceleration"
             unitLabel="@Strings.unitAcceleration"
-            fillColor="#FF00FF" />
+            fillColor="#00FFFF" />
   <fitField id="3"
             displayInChart="true"
             sortOrder="0"
