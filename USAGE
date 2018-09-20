@@ -304,7 +304,9 @@ If you suspect your device's sensor is inaccurate, you shall:
    and obtain the Crel and Cabs coefficients by performing a linear regression:
 
      https://help.libreoffice.org/Calc/Regression_Analysis
-     (Crel = Slope and Cabs = Intercept)
+     where Crel = Slope and Cabs = Intercept
+
+   (curve-fitting for dummies: https://xkcd.com/2048/)
 
 4. set Altimeter -> Correction -> Relative/Absolute values to the calculated
    cofficients
