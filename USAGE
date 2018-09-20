@@ -84,7 +84,7 @@ The GliderSK Safety view displays all critical flight safety information in a
 single view, using visually appealing alert colors:
  - Top-Left:
    the name of your current destination
-   / OR [short-press the SELECT and UP button] /
+   / OR /
    the elevation of your current destination
  - Top-Right:
    the distance to your current destination
@@ -102,7 +102,7 @@ single view, using visually appealing alert colors:
    your current vertical speed
  - Bottom-Right:
    your current ground speed
-   / OR [short-press the SELECT and DOWN button] /
+   / OR /
    your current speed towards your current destination
 
 Both Left and Right (altitude/height) fields will have their background:
@@ -110,7 +110,7 @@ Both Left and Right (altitude/height) fields will have their background:
  - YELLOW if is below or equal the warning height
  - GREEN otherwise.
 
-The Center (finesse) field will have its backround:
+The Center (finesse) field will have its background:
  - RED if the actual finesse is below or equal to the reference finesse
  - YELLOW if the actual finesse is above the reference finesse
  - GREEN if in ascent (and the reference finesse is used for calculation)
