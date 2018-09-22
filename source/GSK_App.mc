@@ -233,10 +233,22 @@ class GSK_App extends App.AppBase {
   function onSensorEvent(_oInfo) {
     //Sys.println("DEBUG: GSK_App.onSensorEvent());
 
+    // Process altimeter data
+    var oActivityInfo = Activity.getActivityInfo();  // ... we need *raw ambient* pressure
+    if(oActivityInfo has :rawAmbientPressure and oActivityInfo.rawAmbientPressure != null) {
+      $.GSK_oAltimeter.setQFE(oActivityInfo.rawAmbientPressure);
+    }
+
     // Process sensor data
     $.GSK_oProcessing.processSensorInfo(_oInfo, Time.now().value());
 
     // Save FIT fields
+    if($.GSK_Fit_BarometricAltitude_oField != null and $.GSK_oProcessing.fAltitude != null) {
+      $.GSK_Fit_BarometricAltitude_oField.setData($.GSK_oProcessing.fAltitude * $.GSK_Fit_BarometricAltitude_fUnitCoefficient);
+    }
+    if($.GSK_oSettings.iVariometerMode == 0 and $.GSK_Fit_VerticalSpeed_oField != null and $.GSK_oProcessing.fVariometer != null) {
+      $.GSK_Fit_VerticalSpeed_oField.setData($.GSK_oProcessing.fVariometer * $.GSK_Fit_VerticalSpeed_fUnitCoefficient);
+    }
     if($.GSK_Fit_Acceleration_oField != null and $.GSK_oProcessing.fAcceleration != null) {
       $.GSK_Fit_Acceleration_oField.setData($.GSK_oProcessing.fAcceleration);
     }
@@ -256,12 +268,6 @@ class GSK_App extends App.AppBase {
       $.GSK_oPositionAltitude = _oInfo.altitude;
     }
 
-    // Process altimeter data
-    var oActivityInfo = Activity.getActivityInfo();  // ... we need *raw ambient* pressure
-    if(oActivityInfo has :rawAmbientPressure and oActivityInfo.rawAmbientPressure != null) {
-      $.GSK_oAltimeter.setQFE(oActivityInfo.rawAmbientPressure);
-    }
-
     // Process position data
     $.GSK_oProcessing.processPositionInfo(_oInfo, iEpoch);
 
@@ -269,10 +275,7 @@ class GSK_App extends App.AppBase {
     self.updateUi(iEpoch);
 
     // Save FIT fields
-    if($.GSK_Fit_BarometricAltitude_oField != null and $.GSK_oProcessing.fAltitude != null) {
-      $.GSK_Fit_BarometricAltitude_oField.setData($.GSK_oProcessing.fAltitude * $.GSK_Fit_BarometricAltitude_fUnitCoefficient);
-    }
-    if($.GSK_Fit_VerticalSpeed_oField != null and $.GSK_oProcessing.fVariometer != null) {
+    if($.GSK_oSettings.iVariometerMode == 1 and $.GSK_Fit_VerticalSpeed_oField != null and $.GSK_oProcessing.fVariometer != null) {
       $.GSK_Fit_VerticalSpeed_oField.setData($.GSK_oProcessing.fVariometer * $.GSK_Fit_VerticalSpeed_fUnitCoefficient);
     }
     if($.GSK_Fit_RateOfTurn_oField != null and $.GSK_oProcessing.fRateOfTurn != null) {

@@ -61,7 +61,7 @@ class GSK_Processing {
   // Internal calculation objects
   private var fEnergyCineticLossFactor;
   // ... we must calculate our own vertical speed
-  private var iPreviousAltitudeGpoch;
+  private var iPreviousAltitudeEpoch;
   private var fPreviousAltitude;
   // ... we must calculate our own potential energy "vertical speed"
   private var iPreviousEnergyGpoch;
@@ -83,29 +83,32 @@ class GSK_Processing {
   public var iSensorEpoch;
   //DEAD:public var fSensorAltitude;
   public var fAcceleration;
+  // ... altimeter values (fed by Toybox.Activity, on Toybox.Sensor events)
+  public var fAltitude;
+  // ... altimeter calculated values
+  public var fVariometer;
   // ... position values (fed by Toybox.Position)
   public var bPositionStateful;
   public var iPositionEpoch;
   public var iPositionGpoch;
   public var iAccuracy;
   public var oLocation;
-  public var fAltitude;
   public var fGroundSpeed;
   public var fHeading;
-  // ... processing
-  public var bSafetyStateful;
-  // ... processing values (calculated)
-  public var fVariometer;
-  public var fFinesse;
+  // ... position calculated values
   public var fEnergyTotal;
   public var fEnergyCinetic;
   public var fRateOfTurn;
+  // ... safety processing
+  public var bSafetyStateful;
+  // ... safety calculated values
+  public var fFinesse;
   public var fSpeedToDestination;
   public var fDistanceToDestination;
   public var fBearingToDestination;
   public var fAltitudeAtDestination;
   public var fHeightAtDestination;
-  // ... processing status
+  // ... safety status
   public var bAscent;
   public var bEstimation;
   public var bAltitudeCritical;
@@ -153,28 +156,25 @@ class GSK_Processing {
     //Sys.println("DEBUG: GSK_Processing.resetSensorData()");
 
     // Reset
+    // ... we must calculate our own vertical speed
+    self.iPreviousAltitudeEpoch = null;
+    self.fPreviousAltitude = 0.0f;
     // ... sensor values
     self.iSensorEpoch = null;
     //DEAD:self.fSensorAltitude = null;
     self.fAcceleration = null;
+    // ... altimeter values
+    self.fAltitude = null;
+    // ... altimeter calculated values
+    if($.GSK_oSettings.iVariometerMode == 0) {
+      self.fVariometer = null;
+    }
   }
 
   function resetPositionData() {
     //Sys.println("DEBUG: GSK_Processing.resetPositionData()");
 
     // Reset
-    // ... position values
-    self.bPositionStateful = false;
-    self.iPositionEpoch = null;
-    self.iPositionGpoch = null;
-    self.iAccuracy = Pos.QUALITY_NOT_AVAILABLE;
-    self.oLocation = null;
-    self.fAltitude = null;
-    self.fGroundSpeed = null;
-    self.fHeading = null;
-    // ... we must calculate our own vertical speed
-    self.iPreviousAltitudeGpoch = null;
-    self.fPreviousAltitude = 0.0f;
     // ... we must calculate our own potential energy "vertical speed"
     self.iPreviousEnergyGpoch = null;
     self.fPreviousEnergyTotal = 0.0f;
@@ -182,20 +182,31 @@ class GSK_Processing {
     // ... we must calculate our own rate of turn
     self.iPreviousHeadingGpoch = null;
     self.fPreviousHeading = 0.0f;
-    // ... processing
-    self.bSafetyStateful = false;
-    // ... processing values (calculated)
-    self.fVariometer = null;
-    self.fFinesse = null;
+    // ... position values
+    self.bPositionStateful = false;
+    self.iPositionEpoch = null;
+    self.iPositionGpoch = null;
+    self.iAccuracy = Pos.QUALITY_NOT_AVAILABLE;
+    self.oLocation = null;
+    self.fGroundSpeed = null;
+    self.fHeading = null;
+    // ... position calculated values
+    if($.GSK_oSettings.iVariometerMode == 1) {
+      self.fVariometer = null;
+    }
     self.fEnergyTotal = null;
     self.fEnergyCinetic = null;
     self.fRateOfTurn = null;
+    // ... safety processing
+    self.bSafetyStateful = false;
+    // ... safety calculated values
+    self.fFinesse = null;
     self.fSpeedToDestination = null;
     self.fDistanceToDestination = null;
     self.fBearingToDestination = null;
     self.fAltitudeAtDestination = null;
     self.fHeightAtDestination = null;
-    // ... processing status
+    // ... safety status
     self.bAscent = true;
     self.bEstimation = true;
     self.bAltitudeCritical = false;
@@ -257,6 +268,25 @@ class GSK_Processing {
     //else {
     //  Sys.println("WARNING: Sensor data have no acceleration information (:accel)");
     //}
+
+    // ... altitude
+    if($.GSK_oAltimeter.fAltitudeActual != null) {  // ... the closest to the device's raw barometric sensor value
+      self.fAltitude = $.GSK_oAltimeter.fAltitudeActual;
+    }
+    //else {
+    //  Sys.println("WARNING: Internal altimeter has no altitude available");
+    //}
+
+    // ... variometer
+    if($.GSK_oSettings.iVariometerMode == 0 and self.fAltitude != null) {  // ... altimetric variometer
+      if(self.iPreviousAltitudeEpoch != null and self.iSensorEpoch-self.iPreviousAltitudeEpoch != 0) {
+        self.fVariometer = (self.fAltitude-self.fPreviousAltitude) / (self.iSensorEpoch-self.iPreviousAltitudeEpoch);
+        //Sys.println(Lang.format("DEBUG: (Calculated) altimetric variometer = $1$", [self.fVariometer]));
+      }
+      self.iPreviousAltitudeEpoch = self.iSensorEpoch;
+      self.fPreviousAltitude = self.fAltitude;
+      self.iPreviousEnergyGpoch = null;  // ... prevent artefact when switching variometer mode
+    }
 
     // Done
     self.iSensorEpoch = _iEpoch;
@@ -326,9 +356,6 @@ class GSK_Processing {
     }
 
     // ... altitude
-    if($.GSK_oAltimeter.fAltitudeActual != null) {  // ... the closest to the device's raw barometric sensor value
-      self.fAltitude = $.GSK_oAltimeter.fAltitudeActual;
-    }
     //DEAD:else if(self.fSensorAltitude != null) {  // ... sometimes flats-out (for several seconds/minutes)
     //DEAD:  self.fAltitude = self.fSensorAltitude;
     //DEAD:}
@@ -341,10 +368,10 @@ class GSK_Processing {
     //DEAD:  }
     //DEAD:  //Sys.println(Lang.format("DEBUG: (Position.Info) altitude = $1$", [self.fAltitude]));
     //DEAD:}
-    //else {
-    //  Sys.println("WARNING: Position data have no altitude information (:altitude)");
-    //}
-    if(self.fAltitude == null) {
+    //DEAD:else {
+    //DEAD:  Sys.println("WARNING: Position data have no altitude information (:altitude)");
+    //DEAD:}
+    if(self.fAltitude == null) {  // ... derived by internal altimeter on sensor events
       bStateful = false;
     }
 
@@ -366,16 +393,7 @@ class GSK_Processing {
     }
 
     // ... variometer
-    if($.GSK_oSettings.iVariometerMode == 0 and self.fAltitude != null) {  // ... altimetric variometer
-      if(self.iPreviousAltitudeGpoch != null and self.iPositionGpoch-self.iPreviousAltitudeGpoch != 0) {
-        self.fVariometer = (self.fAltitude-self.fPreviousAltitude) / (self.iPositionGpoch-self.iPreviousAltitudeGpoch);
-        //Sys.println(Lang.format("DEBUG: (Calculated) altimetric variometer = $1$", [self.fVariometer]));
-      }
-      self.iPreviousAltitudeGpoch = self.iPositionGpoch;
-      self.fPreviousAltitude = self.fAltitude;
-      self.iPreviousEnergyGpoch = null;  // ... prevent artefact when switching variometer mode
-    }
-    else if($.GSK_oSettings.iVariometerMode == 1 and self.fAltitude != null and self.fGroundSpeed != null) {  // ... energetic variometer
+    if($.GSK_oSettings.iVariometerMode == 1 and self.fAltitude != null and self.fGroundSpeed != null) {  // ... energetic variometer
       self.fEnergyCinetic = 0.5f*self.fGroundSpeed*self.fGroundSpeed;
       self.fEnergyTotal = self.fEnergyCinetic + 9.80665f*self.fAltitude;
       //Sys.println(Lang.format("DEBUG: (Calculated) total energy = $1$", [self.fEnergyTotal]));
@@ -386,7 +404,7 @@ class GSK_Processing {
       self.iPreviousEnergyGpoch = self.iPositionGpoch;
       self.fPreviousEnergyTotal = self.fEnergyTotal;
       self.fPreviousEnergyCinetic = self.fEnergyCinetic;
-      self.iPreviousAltitudeGpoch = null;  // ... prevent artefact when switching variometer mode
+      self.iPreviousAltitudeEpoch = null;  // ... prevent artefact when switching variometer mode
     }
     if(self.fVariometer == null) {
       bStateful = false;
