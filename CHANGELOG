@@ -1,3 +1,6 @@
+* 1.2.20180922a:
+  - Keep processing barometric altitude (and variometer) when GPS signal is lost
+
 * 1.2.20180920a:
   - FIX: altimeter relative correction settings not appearing when altitude is not yet known
   - Differentiate acceleration and (barometric) altitude FIT fields color
