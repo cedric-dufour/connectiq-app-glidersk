@@ -88,7 +88,7 @@ class PickerGenericPressure extends Ui.Picker {
     // Initialize picker
     Picker.initialize({
       :title => new Ui.Text({ :text => Lang.format("$1$ [$2$]", [_sTitle, sUnit]), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
-          :pattern => [ _bAllowNegative ? new PickerFactoryDictionary([-1, 1], ["-", "+"], null) : new Ui.Text({}),
+      :pattern => [ _bAllowNegative ? new PickerFactoryDictionary([-1, 1], ["-", "+"], null) : new Ui.Text({}),
                     new PickerFactoryNumber(0, iMaxSignificant, _iUnit == Sys.UNIT_STATUTE ? { :langFormat => "$1$." } : null),
                     new PickerFactoryNumber(0, 9, null),
                     new PickerFactoryNumber(0, 9, _iUnit == Sys.UNIT_METRIC ? { :langFormat => "$1$." } : null),

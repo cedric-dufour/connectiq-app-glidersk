@@ -269,7 +269,7 @@ class GSK_ViewGlobal extends Ui.View {
     self.oRezValueTopLeft.setColor(iColorText);
     if($.GSK_oProcessing.fAcceleration != null) {
       fValue = $.GSK_oProcessing.fAcceleration;
-      sValue = fValue.format("%.01f");
+      sValue = fValue.format("%.1f");
     }
     else {
       sValue = $.GSK_NOVALUE_LEN3;
@@ -289,7 +289,7 @@ class GSK_ViewGlobal extends Ui.View {
       }
       fValue = $.GSK_oProcessing.fRateOfTurn * $.GSK_oSettings.fUnitRateOfTurnCoefficient;
       if($.GSK_oSettings.iUnitRateOfTurn == 1) {
-        sValue = fValue.format("%+.01f");
+        sValue = fValue.format("%+.1f");
       }
       else {
         sValue = fValue.format("%+.0f");

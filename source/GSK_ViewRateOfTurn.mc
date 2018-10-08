@@ -225,7 +225,7 @@ class GSK_ViewRateOfTurn extends Ui.View {
       }
       fValue = $.GSK_oProcessing.fRateOfTurn * $.GSK_oSettings.fUnitRateOfTurnCoefficient;
       if($.GSK_oSettings.iUnitRateOfTurn == 1) {
-        sValue = fValue.format("%+.01f");
+        sValue = fValue.format("%+.1f");
       }
       else {
         sValue = fValue.format("%+.0f");

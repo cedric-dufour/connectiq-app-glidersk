@@ -385,7 +385,7 @@ class GSK_ViewVarioplot extends Ui.View {
     if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_oProcessing.fVariometer != null) {
       fValue = $.GSK_oProcessing.fVariometer * $.GSK_oSettings.fUnitVerticalSpeedCoefficient;
       if($.GSK_oSettings.fUnitVerticalSpeedCoefficient < 100.0f) {
-        sValue = fValue.format("%+.01f");
+        sValue = fValue.format("%+.1f");
       }
       else {
         sValue = fValue.format("%+.0f");

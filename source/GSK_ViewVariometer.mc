@@ -222,7 +222,7 @@ class GSK_ViewVariometer extends Ui.View {
       }
       fValue = $.GSK_oProcessing.fVariometer * $.GSK_oSettings.fUnitVerticalSpeedCoefficient;
       if($.GSK_oSettings.fUnitVerticalSpeedCoefficient < 100.0f) {
-        sValue = fValue.format("%+.01f");
+        sValue = fValue.format("%+.1f");
       }
       else {
         sValue = fValue.format("%+.0f");
