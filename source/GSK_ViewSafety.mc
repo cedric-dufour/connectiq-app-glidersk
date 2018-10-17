@@ -27,8 +27,8 @@ using Toybox.WatchUi as Ui;
 // Display mode (intent)
 var GSK_ViewSafety_bShowSettings = false;
 var GSK_ViewSafety_bSelectFields = false;
-var GSK_ViewSafety_bShowElevationAtDestination = false;
-var GSK_ViewSafety_bShowSpeedToDestination = false;
+var GSK_ViewSafety_iFieldTopLeft = 0;
+var GSK_ViewSafety_iFieldBottomRight = 0;
 
 class GSK_ViewSafety extends Ui.View {
 
@@ -39,8 +39,10 @@ class GSK_ViewSafety extends Ui.View {
   // Display mode (internal)
   private var bShow;
   private var bShowSettings;
-  private var bShowElevationAtDestination;
-  private var bShowSpeedToDestination;
+  private var bSelectFields;
+  private var iFieldTopLeft;
+  private var iFieldBottomRight;
+  private var bProcessingEstimation;
 
   // Resources
   // ... drawable
@@ -88,8 +90,10 @@ class GSK_ViewSafety extends Ui.View {
     // ... internal
     self.bShow = false;
     self.bShowSettings = false;
-    self.bShowElevationAtDestination = false;
-    self.bShowSpeedToDestination = false;
+    self.bSelectFields = false;
+    self.iFieldTopLeft = 0;
+    self.iFieldBottomRight = 0;
+    self.bProcessingEstimation = true;
   }
 
   function onLayout(_oDC) {
@@ -176,6 +180,15 @@ class GSK_ViewSafety extends Ui.View {
       self.oRezButtonKeyDown = null;
     }
 
+    // Draw bearing
+    if(!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings
+       and ($.GSK_oSettings.iSafetyBearingBug == 2 or ($.GSK_oSettings.iSafetyBearingBug == 1 and !$.GSK_oProcessing.bEstimation))
+       and $.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN
+       and $.GSK_oProcessing.fBearingToDestination != null
+       and $.GSK_oProcessing.fHeading != null) {
+      self.drawBearingBug(_oDC);
+    }
+
     // Done
     return true;
   }
@@ -236,14 +249,19 @@ class GSK_ViewSafety extends Ui.View {
     var iColorText = $.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
     // ... application name
     self.oRezLabelAppName.setColor(Gfx.COLOR_TRANSPARENT);
-    // ... destination (name) / elevation at destination
-    if(!$.GSK_ViewSafety_bShowElevationAtDestination) {  // ... destination (name)
-      View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelDestination));
-      View.findDrawableById("unitTopLeft").setText("");
+    // ... destination (name) / elevation at destination / bearing to destination
+    if((!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings and !$.GSK_oProcessing.bEstimation)
+       or $.GSK_ViewSafety_iFieldTopLeft == 2) {  // ... bearing to destination
+      View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelBearingToDestination));
+      View.findDrawableById("unitTopLeft").setText("[°]");
     }
-    else {  // ... elevation at destination
+    else if($.GSK_ViewSafety_iFieldTopLeft == 1) {  // ... elevation at destination
       View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelElevationAtDestination));
       View.findDrawableById("unitTopLeft").setText(self.sUnitElevation_layout);
+    }
+    else {  // ... destination (name)
+      View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelDestination));
+      View.findDrawableById("unitTopLeft").setText("");
     }
     // ... distance to destination
     View.findDrawableById("labelTopRight").setText(Ui.loadResource(Rez.Strings.labelDistanceToDestination));
@@ -260,11 +278,12 @@ class GSK_ViewSafety extends Ui.View {
     View.findDrawableById("labelBottomLeft").setText(Ui.loadResource(Rez.Strings.labelVerticalSpeed));
     View.findDrawableById("unitBottomLeft").setText(self.sUnitVerticalSpeed_layout);
     // ... ground speed / speed-to(wards)-destination
-    if(!$.GSK_ViewSafety_bShowSpeedToDestination) {  // ... ground speed
-      View.findDrawableById("labelBottomRight").setText(Ui.loadResource(Rez.Strings.labelGroundSpeed));
-    }
-    else {  // ... speed-to(wards)-destination
+    if((!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings and !$.GSK_oProcessing.bEstimation)
+       or $.GSK_ViewSafety_iFieldBottomRight == 1) {  // ... speed-to(wards)-destination
       View.findDrawableById("labelBottomRight").setText(Ui.loadResource(Rez.Strings.labelSpeedToDestination));
+    }
+    else {  // ... ground speed
+      View.findDrawableById("labelBottomRight").setText(Ui.loadResource(Rez.Strings.labelGroundSpeed));
     }
     View.findDrawableById("unitBottomRight").setText(self.sUnitHorizontalSpeed_layout);
   }
@@ -274,13 +293,17 @@ class GSK_ViewSafety extends Ui.View {
 
     // Adapt the layout
     if(self.bShowSettings != $.GSK_ViewSafety_bShowSettings
-       or self.bShowElevationAtDestination != $.GSK_ViewSafety_bShowElevationAtDestination
-       or self.bShowSpeedToDestination != $.GSK_ViewSafety_bShowSpeedToDestination
+       or self.bSelectFields != $.GSK_ViewSafety_bSelectFields
+       or self.iFieldTopLeft != $.GSK_ViewSafety_iFieldTopLeft
+       or self.iFieldBottomRight != $.GSK_ViewSafety_iFieldBottomRight
+       or self.bProcessingEstimation != $.GSK_oProcessing.bEstimation
        ) {
       self.adaptLayoutSafety();
       self.bShowSettings = $.GSK_ViewSafety_bShowSettings;
-      self.bShowElevationAtDestination = $.GSK_ViewSafety_bShowElevationAtDestination;
-      self.bShowSpeedToDestination = $.GSK_ViewSafety_bShowSpeedToDestination;
+      self.bSelectFields = $.GSK_ViewSafety_bSelectFields;
+      self.iFieldTopLeft = $.GSK_ViewSafety_iFieldTopLeft;
+      self.iFieldBottomRight = $.GSK_ViewSafety_iFieldBottomRight;
+      self.bProcessingEstimation = $.GSK_oProcessing.bEstimation;
     }
 
 
@@ -346,17 +369,20 @@ class GSK_ViewSafety extends Ui.View {
       iColorText = $.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
     }
 
-    // ... destination (name) / elevation at destination
-    self.oRezValueTopLeft.setColor(Gfx.COLOR_BLUE);
-    if(!$.GSK_ViewSafety_bShowElevationAtDestination) {  // ... destination (name)
-      if($.GSK_oProcessing.sDestinationName != null) {
-        sValue = $.GSK_oProcessing.sDestinationName;
+    // ... destination (name) / elevation at destination / bearing to destination
+    self.oRezValueTopLeft.setColor(Gfx.COLOR_PINK);
+    if((!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings and !$.GSK_oProcessing.bEstimation)
+       or $.GSK_ViewSafety_iFieldTopLeft == 2) {  // ... bearing to destination
+      if($.GSK_oProcessing.fBearingToDestination != null) {
+        //fValue = (($.GSK_oProcessing.fBearingToDestination * 180.0f/Math.PI).toNumber()) % 360;
+        fValue = (($.GSK_oProcessing.fBearingToDestination * 57.2957795131f).toNumber()) % 360;
+        sValue = fValue.format("%d");
       }
       else {
         sValue = $.GSK_NOVALUE_LEN3;
       }
     }
-    else {  // ... elevation at destination
+    else if($.GSK_ViewSafety_iFieldTopLeft == 1) {  // ... elevation at destination
       if($.GSK_oProcessing.fDestinationElevation != null) {
         fValue = $.GSK_oProcessing.fDestinationElevation * $.GSK_oSettings.fUnitElevationCoefficient;
         sValue = fValue.format("%.0f");
@@ -365,10 +391,18 @@ class GSK_ViewSafety extends Ui.View {
         sValue = $.GSK_NOVALUE_LEN3;
       }
     }
+    else {  // ... destination (name)
+      if($.GSK_oProcessing.sDestinationName != null) {
+        sValue = $.GSK_oProcessing.sDestinationName;
+      }
+      else {
+        sValue = $.GSK_NOVALUE_LEN3;
+      }
+    }
     self.oRezValueTopLeft.setText(sValue);
 
     // ... distance to destination
-    self.oRezValueTopRight.setColor(iColorText);
+    self.oRezValueTopRight.setColor(Gfx.COLOR_PINK);
     if($.GSK_oProcessing.fDistanceToDestination != null) {
       fValue = $.GSK_oProcessing.fDistanceToDestination * $.GSK_oSettings.fUnitDistanceCoefficient;
       sValue = fValue.format("%.1f");
@@ -482,16 +516,8 @@ class GSK_ViewSafety extends Ui.View {
 
     // ... ground speed / speed-to(wards)-destination
     self.oRezValueBottomRight.setColor(iColorText);
-    if(!$.GSK_ViewSafety_bShowSpeedToDestination) {  // ... ground speed
-      if($.GSK_oProcessing.fGroundSpeed != null) {
-        fValue = $.GSK_oProcessing.fGroundSpeed * $.GSK_oSettings.fUnitHorizontalSpeedCoefficient;
-        sValue = fValue.format("%.0f");
-      }
-      else {
-        sValue = $.GSK_NOVALUE_LEN3;
-      }
-    }
-    else {  // ... speed-to(wards)-destination
+    if((!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings and !$.GSK_oProcessing.bEstimation)
+       or $.GSK_ViewSafety_iFieldBottomRight == 1) {  // ... speed-to(wards)-destination
       if($.GSK_oProcessing.fSpeedToDestination != null) {
         if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
           if($.GSK_oProcessing.fSpeedToDestination > 0.0f) {
@@ -508,7 +534,28 @@ class GSK_ViewSafety extends Ui.View {
         sValue = $.GSK_NOVALUE_LEN3;
       }
     }
+    else {  // ... ground speed
+      if($.GSK_oProcessing.fGroundSpeed != null) {
+        fValue = $.GSK_oProcessing.fGroundSpeed * $.GSK_oSettings.fUnitHorizontalSpeedCoefficient;
+        sValue = fValue.format("%.0f");
+      }
+      else {
+        sValue = $.GSK_NOVALUE_LEN3;
+      }
+    }
     self.oRezValueBottomRight.setText(sValue);
+  }
+
+  (:layout_240x240)
+  function drawBearingBug(_oDC) {
+    // ... heading bug
+    var fBearingRelative = $.GSK_oProcessing.fBearingToDestination - $.GSK_oProcessing.fHeading;
+    _oDC.setColor(Gfx.COLOR_PURPLE, Gfx.COLOR_PURPLE);
+    var aPoints =
+      [[120.0f+119.0f*Math.sin(fBearingRelative), 120.0f-119.0f*Math.cos(fBearingRelative)],
+       [120.0f+100.0f*Math.sin(fBearingRelative-0.125f), 120.0f-100.0f*Math.cos(fBearingRelative-0.125f)],
+       [120.0f+100.0f*Math.sin(fBearingRelative+0.125f), 120.0f-100.0f*Math.cos(fBearingRelative+0.125f)]];
+    _oDC.fillPolygon(aPoints);
   }
 
   function adaptLayoutSettings() {
@@ -524,11 +571,11 @@ class GSK_ViewSafety extends Ui.View {
     // ... fields background
     self.oRezDrawableGlobal.setColorContentBackground(Gfx.COLOR_TRANSPARENT);
     // ... destination (name)
-    self.oRezValueTopLeft.setColor(Gfx.COLOR_BLUE);
+    self.oRezValueTopLeft.setColor(Gfx.COLOR_PINK);
     View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelDestination));
     View.findDrawableById("unitTopLeft").setText("");
     // ... elevation at destination
-    self.oRezValueTopRight.setColor(Gfx.COLOR_BLUE);
+    self.oRezValueTopRight.setColor(Gfx.COLOR_PINK);
     View.findDrawableById("labelTopRight").setText(Ui.loadResource(Rez.Strings.labelElevationAtDestination));
     View.findDrawableById("unitTopRight").setText(self.sUnitElevation_layout);
     // ... critical height
@@ -666,7 +713,7 @@ class GSK_ViewSafetyDelegate extends Ui.BehaviorDelegate {
   function onPreviousPage() {
     //Sys.println("DEBUG: GSK_ViewSafetyDelegate.onPreviousPage()");
     if($.GSK_ViewSafety_bSelectFields) {
-      $.GSK_ViewSafety_bShowElevationAtDestination = !$.GSK_ViewSafety_bShowElevationAtDestination;
+      $.GSK_ViewSafety_iFieldTopLeft = ($.GSK_ViewSafety_iFieldTopLeft + 1) % 3;
       Ui.requestUpdate();
     }
     else if(!$.GSK_ViewSafety_bShowSettings) {
@@ -678,7 +725,7 @@ class GSK_ViewSafetyDelegate extends Ui.BehaviorDelegate {
   function onNextPage() {
     //Sys.println("DEBUG: GSK_ViewSafetyDelegate.onNextPage()");
     if($.GSK_ViewSafety_bSelectFields) {
-      $.GSK_ViewSafety_bShowSpeedToDestination = !$.GSK_ViewSafety_bShowSpeedToDestination;
+      $.GSK_ViewSafety_iFieldBottomRight = ($.GSK_ViewSafety_iFieldBottomRight + 1) % 2;
       Ui.requestUpdate();
     }
     else if(!$.GSK_ViewSafety_bShowSettings) {

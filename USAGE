@@ -57,13 +57,13 @@ The GliderSK Safety view works by continuously calculating the height (Above
 Ground Level) that would be reached at your destination, using a two-pass
 algorithm:
 
- - Pass 1: worst-case finesse and best-case heading
+ - Pass 1 / Estimation: worst-case finesse and best-case heading
    the height at destination is estimated using your actual ground
    speed (as if heading straight towards that destination) and the
    user-specified reference finesse (or the actual finesse if is lower
    than that).
 
- - Pass 2: actual (or worst-case) finesse and heading
+ - Pass 2 / Alert: actual (or worst-case) finesse and heading
    IF the resulting height (Above Ground Level) is below or equal to
    the user-specified decision height, the height at destination is
    calculated again, using the *actual* finesse (unless you're ascending,
@@ -86,6 +86,8 @@ single view, using visually appealing alert colors:
    the name of your current destination
    / OR /
    the elevation of your current destination
+   / OR /
+   the bearing of your current destination
  - Top-Right:
    the distance to your current destination
  - Left:
@@ -260,6 +262,8 @@ The application allows you to specify the following settings:
    the height (Above Ground Level) under which to issue warning alerts
  - Safety -> Critical Height:
    the height (Above Ground Level) under which to issue critical alerts
+ - Safety -> Bearing Bug:
+   whether to always hide the bearing bug (off), always show it (on) or only in Pass 2 / Alert mode (auto)
  - Sounds -> Variometer Tones:
    whether to play variometer tones
  - Sounds -> Safety Tones:
