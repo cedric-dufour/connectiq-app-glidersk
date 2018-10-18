@@ -31,7 +31,7 @@ class PickerUnitPressure extends Ui.Picker {
     var iUnitPressure = App.Properties.getValue("userUnitPressure");
 
     // Initialize picker
-    var oFactory = new PickerFactoryDictionary([-1, 0, 1], [Ui.loadResource(Rez.Strings.valueUnitPressureAuto), Ui.loadResource(Rez.Strings.valueUnitPressureMetric), Ui.loadResource(Rez.Strings.valueUnitPressureStatute)], null);
+    var oFactory = new PickerFactoryDictionary([-1, 0, 1], [Ui.loadResource(Rez.Strings.valueAuto), Ui.loadResource(Rez.Strings.valueUnitPressureMetric), Ui.loadResource(Rez.Strings.valueUnitPressureStatute)], null);
     Picker.initialize({
       :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.titleUnitPressure), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oFactory ],

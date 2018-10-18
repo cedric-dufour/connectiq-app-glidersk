@@ -31,7 +31,7 @@ class PickerUnitElevation extends Ui.Picker {
     var iUnitElevation = App.Properties.getValue("userUnitElevation");
 
     // Initialize picker
-    var oFactory = new PickerFactoryDictionary([-1, 0, 1], [Ui.loadResource(Rez.Strings.valueUnitElevationAuto), Ui.loadResource(Rez.Strings.valueUnitElevationMetric), Ui.loadResource(Rez.Strings.valueUnitElevationStatute)], null);
+    var oFactory = new PickerFactoryDictionary([-1, 0, 1], [Ui.loadResource(Rez.Strings.valueAuto), Ui.loadResource(Rez.Strings.valueUnitElevationMetric), Ui.loadResource(Rez.Strings.valueUnitElevationStatute)], null);
     Picker.initialize({
       :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.titleUnitElevation), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oFactory ],

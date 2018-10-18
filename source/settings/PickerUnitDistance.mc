@@ -31,7 +31,7 @@ class PickerUnitDistance extends Ui.Picker {
     var iUnitDistance = App.Properties.getValue("userUnitDistance");
 
     // Initialize picker
-    var oFactory = new PickerFactoryDictionary([-1, 0, 1 ,2], [Ui.loadResource(Rez.Strings.valueUnitDistanceAuto), Ui.loadResource(Rez.Strings.valueUnitDistanceMetric), Ui.loadResource(Rez.Strings.valueUnitDistanceStatute), Ui.loadResource(Rez.Strings.valueUnitDistanceNautical)], null);
+    var oFactory = new PickerFactoryDictionary([-1, 0, 1 ,2], [Ui.loadResource(Rez.Strings.valueAuto), Ui.loadResource(Rez.Strings.valueUnitDistanceMetric), Ui.loadResource(Rez.Strings.valueUnitDistanceStatute), Ui.loadResource(Rez.Strings.valueUnitDistanceNautical)], null);
     Picker.initialize({
       :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.titleUnitDistance), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oFactory ],
