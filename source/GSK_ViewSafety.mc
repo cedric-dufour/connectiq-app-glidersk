@@ -493,20 +493,28 @@ class GSK_ViewSafety extends Ui.View {
     // ... variometer
     self.oRezValueBottomLeft.setColor(iColorText);
     if($.GSK_oProcessing.fVariometer != null) {
-      if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
-        if($.GSK_oProcessing.fVariometer > 0.0f) {
-          self.oRezValueBottomLeft.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_GREEN);
-        }
-        else if($.GSK_oProcessing.fVariometer < 0.0f) {
-          self.oRezValueBottomLeft.setColor(Gfx.COLOR_RED);
-        }
-      }
       fValue = $.GSK_oProcessing.fVariometer * $.GSK_oSettings.fUnitVerticalSpeedCoefficient;
       if($.GSK_oSettings.fUnitVerticalSpeedCoefficient < 100.0f) {
         sValue = fValue.format("%+.1f");
+        if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
+          if(fValue >= 0.05f) {
+            self.oRezValueBottomLeft.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_GREEN);
+          }
+          else if(fValue <= -0.05f) {
+            self.oRezValueBottomLeft.setColor(Gfx.COLOR_RED);
+          }
+        }
       }
       else {
         sValue = fValue.format("%+.0f");
+        if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
+          if(fValue >= 0.5f) {
+            self.oRezValueBottomLeft.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_GREEN);
+          }
+          else if(fValue <= -0.5f) {
+            self.oRezValueBottomLeft.setColor(Gfx.COLOR_RED);
+          }
+        }
       }
     }
     else {
@@ -519,16 +527,16 @@ class GSK_ViewSafety extends Ui.View {
     if((!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings and !$.GSK_oProcessing.bEstimation)
        or $.GSK_ViewSafety_iFieldBottomRight == 1) {  // ... speed-to(wards)-destination
       if($.GSK_oProcessing.fSpeedToDestination != null) {
+        fValue = $.GSK_oProcessing.fSpeedToDestination * $.GSK_oSettings.fUnitHorizontalSpeedCoefficient;
+        sValue = fValue.format("%+.0f");
         if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
-          if($.GSK_oProcessing.fSpeedToDestination > 0.0f) {
+          if(fValue >= 0.5f) {
             self.oRezValueBottomRight.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_GREEN);
           }
-          else if($.GSK_oProcessing.fSpeedToDestination < 0.0f) {
+          else if(fValue <= -0.5f) {
             self.oRezValueBottomRight.setColor(Gfx.COLOR_RED);
           }
         }
-        fValue = $.GSK_oProcessing.fSpeedToDestination * $.GSK_oSettings.fUnitHorizontalSpeedCoefficient;
-        sValue = fValue.format("%+.0f");
       }
       else {
         sValue = $.GSK_NOVALUE_LEN3;

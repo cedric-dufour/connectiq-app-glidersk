@@ -214,18 +214,24 @@ class GSK_ViewVariometer extends Ui.View {
 
     // ... variometer
     if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_oProcessing.fVariometer != null) {
-      if($.GSK_oProcessing.fVariometer > 0.0f) {
-        _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_GREEN, Gfx.COLOR_TRANSPARENT);
-      }
-      else if($.GSK_oProcessing.fVariometer < 0.0f) {
-        _oDC.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
-      }
       fValue = $.GSK_oProcessing.fVariometer * $.GSK_oSettings.fUnitVerticalSpeedCoefficient;
       if($.GSK_oSettings.fUnitVerticalSpeedCoefficient < 100.0f) {
         sValue = fValue.format("%+.1f");
+        if(fValue >= 0.05f) {
+          _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_GREEN, Gfx.COLOR_TRANSPARENT);
+        }
+        else if(fValue <= -0.05f) {
+          _oDC.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
+        }
       }
       else {
         sValue = fValue.format("%+.0f");
+        if(fValue >= 0.5f) {
+          _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_GREEN, Gfx.COLOR_TRANSPARENT);
+        }
+        else if(fValue <= -0.5f) {
+          _oDC.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
+        }
       }
     }
     else {
