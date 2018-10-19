@@ -119,6 +119,9 @@ module LangUtils {
       dLonD = dLonD > 0.0d ? dLonD - 6.28318530717958647692d : 6.28318530717958647692d + dLonD;
     }
     var dBearing = Math.atan2(dLonD, dPhiD);
+    if(dBearing < 0.0d) {
+      dBearing += 6.28318530717958647692d;
+    }
     return dBearing.toFloat();
   }
 
