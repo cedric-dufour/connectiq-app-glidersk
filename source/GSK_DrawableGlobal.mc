@@ -26,13 +26,13 @@ class GSK_DrawableGlobal extends Ui.Drawable {
   //
 
   // Resources
-  private var oRezContentBackground;
+  private var oRezFieldsBackground;
   private var oRezAlertLeft;
   private var oRezAlertCenter;
   private var oRezAlertRight;
 
   // Colors
-  private var iColorContentBackground;
+  private var iColorFieldsBackground;
   private var iColorAlertLeft;
   private var iColorAlertCenter;
   private var iColorAlertRight;
@@ -46,13 +46,13 @@ class GSK_DrawableGlobal extends Ui.Drawable {
     Drawable.initialize({ :identifier => "GSK_DrawableGlobal" });
 
     // Resources
-    self.oRezContentBackground = new Rez.Drawables.drawContentBackground();
+    self.oRezFieldsBackground = new Rez.Drawables.drawFieldsBackground();
     self.oRezAlertLeft = new Rez.Drawables.drawGlobalAlertLeft();
     self.oRezAlertCenter = new Rez.Drawables.drawGlobalAlertCenter();
     self.oRezAlertRight = new Rez.Drawables.drawGlobalAlertRight();
 
     // Colors
-    self.iColorContentBackground = Gfx.COLOR_TRANSPARENT;
+    self.iColorFieldsBackground = Gfx.COLOR_TRANSPARENT;
     self.iColorAlertLeft = Gfx.COLOR_TRANSPARENT;
     self.iColorAlertCenter = Gfx.COLOR_TRANSPARENT;
     self.iColorAlertRight = Gfx.COLOR_TRANSPARENT;
@@ -62,8 +62,8 @@ class GSK_DrawableGlobal extends Ui.Drawable {
     // Draw
 
     // ... fields
-    _oDC.setColor(self.iColorContentBackground, Gfx.COLOR_TRANSPARENT);
-    self.oRezContentBackground.draw(_oDC);
+    _oDC.setColor(self.iColorFieldsBackground, Gfx.COLOR_TRANSPARENT);
+    self.oRezFieldsBackground.draw(_oDC);
 
     // ... alerts
     if(self.iColorAlertLeft != Gfx.COLOR_TRANSPARENT) {
@@ -86,8 +86,8 @@ class GSK_DrawableGlobal extends Ui.Drawable {
   // FUNCTIONS: self
   //
 
-  function setColorContentBackground(_iColor) {
-    self.iColorContentBackground = _iColor;
+  function setColorFieldsBackground(_iColor) {
+    self.iColorFieldsBackground = _iColor;
   }
 
   function setColorAlertLeft(_iColor) {

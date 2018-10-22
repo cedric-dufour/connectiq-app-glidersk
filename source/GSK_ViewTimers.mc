@@ -236,11 +236,11 @@ class GSK_ViewTimers extends Ui.View {
     var iDuration_m;
     var iColorText;
     if($.GSK_oProcessing.iAccuracy == Pos.QUALITY_NOT_AVAILABLE or $.GSK_oProcessing.iAccuracy == Pos.QUALITY_LAST_KNOWN) {
-      self.oRezDrawableGlobal.setColorContentBackground(Gfx.COLOR_DK_RED);
+      self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_DK_RED);
       iColorText = Gfx.COLOR_LT_GRAY;
     }
     else {
-      self.oRezDrawableGlobal.setColorContentBackground(Gfx.COLOR_TRANSPARENT);
+      self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_TRANSPARENT);
       iColorText = $.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
     }
 

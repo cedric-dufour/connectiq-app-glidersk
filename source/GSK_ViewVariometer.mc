@@ -179,7 +179,7 @@ class GSK_ViewVariometer extends Ui.View {
 
     // ... activity
     if($.GSK_Activity_oSession == null) {  // ... stand-by
-      _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_DK_GRAY : Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
+      _oDC.setColor(Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
       sValue = self.sValueActivityStandby;
     }
     else if($.GSK_Activity_oSession.isRecording()) {  // ... recording

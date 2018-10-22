@@ -239,7 +239,7 @@ class GSK_ViewGlobal extends Ui.View {
     var fValue;
     var iColorText;
     if($.GSK_oProcessing.iAccuracy == Pos.QUALITY_NOT_AVAILABLE) {
-      self.oRezDrawableGlobal.setColorContentBackground(Gfx.COLOR_DK_RED);
+      self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_DK_RED);
       self.oRezValueTopLeft.setColor(Gfx.COLOR_LT_GRAY);
       self.oRezValueTopLeft.setText($.GSK_NOVALUE_LEN3);
       self.oRezValueTopRight.setColor(Gfx.COLOR_LT_GRAY);
@@ -257,11 +257,11 @@ class GSK_ViewGlobal extends Ui.View {
       return;
     }
     else if($.GSK_oProcessing.iAccuracy == Pos.QUALITY_LAST_KNOWN) {
-      self.oRezDrawableGlobal.setColorContentBackground(Gfx.COLOR_DK_RED);
+      self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_DK_RED);
       iColorText = Gfx.COLOR_LT_GRAY;
     }
     else {
-      self.oRezDrawableGlobal.setColorContentBackground(Gfx.COLOR_TRANSPARENT);
+      self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_TRANSPARENT);
       iColorText = $.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
     }
 

@@ -53,7 +53,7 @@ class GSK_DrawableHeader extends Ui.Drawable {
     self.oRezHeaderAccuracy4 = new Rez.Drawables.drawHeaderAccuracy4();
 
     // Background color
-    self.iColorBackground = Gfx.COLOR_WHITE;
+    self.iColorBackground = Gfx.COLOR_TRANSPARENT;
 
     // Position accuracy
     self.iPositionAccuracy = null;
@@ -113,7 +113,6 @@ class GSK_DrawableHeader extends Ui.Drawable {
         break;
       }
     }
-
   }
 
 

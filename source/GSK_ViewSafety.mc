@@ -55,8 +55,13 @@ class GSK_ViewSafety extends Ui.View {
   // ... fields
   private var oRezValueTopLeft;
   private var oRezValueTopRight;
+  private var oRezLabelLeft;
+  private var oRezUnitLeft;
   private var oRezValueLeft;
+  private var oRezLabelCenter;
   private var oRezValueCenter;
+  private var oRezLabelRight;
+  private var oRezUnitRight;
   private var oRezValueRight;
   private var oRezValueBottomLeft;
   private var oRezValueBottomRight;
@@ -110,8 +115,13 @@ class GSK_ViewSafety extends Ui.View {
     // ... fields
     self.oRezValueTopLeft = View.findDrawableById("valueTopLeft");
     self.oRezValueTopRight = View.findDrawableById("valueTopRight");
+    self.oRezLabelLeft = View.findDrawableById("labelLeft");
+    self.oRezUnitLeft = View.findDrawableById("unitLeft");
     self.oRezValueLeft = View.findDrawableById("valueLeft");
+    self.oRezLabelCenter = View.findDrawableById("labelCenter");
     self.oRezValueCenter = View.findDrawableById("valueCenter");
+    self.oRezLabelRight = View.findDrawableById("labelRight");
+    self.oRezUnitRight = View.findDrawableById("unitRight");
     self.oRezValueRight = View.findDrawableById("valueRight");
     self.oRezValueBottomLeft = View.findDrawableById("valueBottomLeft");
     self.oRezValueBottomRight = View.findDrawableById("valueBottomRight");
@@ -245,8 +255,6 @@ class GSK_ViewSafety extends Ui.View {
     //Sys.println("DEBUG: GSK_ViewSafety.adaptLayoutSafety()");
 
     // Set colors (value-independent), labels and units
-    // ... background
-    var iColorText = $.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
     // ... application name
     self.oRezLabelAppName.setColor(Gfx.COLOR_TRANSPARENT);
     // ... destination (name) / elevation at destination / bearing to destination
@@ -267,13 +275,13 @@ class GSK_ViewSafety extends Ui.View {
     View.findDrawableById("labelTopRight").setText(Ui.loadResource(Rez.Strings.labelDistanceToDestination));
     View.findDrawableById("unitTopRight").setText(self.sUnitDistance_layout);
     // ... altitude
-    View.findDrawableById("labelLeft").setText(Ui.loadResource(Rez.Strings.labelAltitude));
-    View.findDrawableById("unitLeft").setText(self.sUnitElevation_layout);
+    self.oRezLabelLeft.setText(Ui.loadResource(Rez.Strings.labelAltitude));
+    self.oRezUnitLeft.setText(self.sUnitElevation_layout);
     // ... finesse
-    View.findDrawableById("labelCenter").setText(Ui.loadResource(Rez.Strings.labelFinesse));
+    self.oRezLabelCenter.setText(Ui.loadResource(Rez.Strings.labelFinesse));
     // ... height at destination
-    View.findDrawableById("labelRight").setText(Ui.loadResource(Rez.Strings.labelHeightAtDestination));
-    View.findDrawableById("unitRight").setText(self.sUnitElevation_layout);
+    self.oRezLabelRight.setText(Ui.loadResource(Rez.Strings.labelHeightAtDestination));
+    self.oRezUnitRight.setText(self.sUnitElevation_layout);
     // ... vertical speed
     View.findDrawableById("labelBottomLeft").setText(Ui.loadResource(Rez.Strings.labelVerticalSpeed));
     View.findDrawableById("unitBottomLeft").setText(self.sUnitVerticalSpeed_layout);
@@ -340,18 +348,23 @@ class GSK_ViewSafety extends Ui.View {
     var fValue;
     var iColorText;
     if($.GSK_oProcessing.iAccuracy == Pos.QUALITY_NOT_AVAILABLE) {
-      self.oRezDrawableGlobal.setColorContentBackground(Gfx.COLOR_DK_RED);
+      self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_DK_RED);
       self.oRezValueTopLeft.setColor(Gfx.COLOR_LT_GRAY);
       self.oRezValueTopLeft.setText($.GSK_NOVALUE_LEN3);
       self.oRezValueTopRight.setColor(Gfx.COLOR_LT_GRAY);
       self.oRezValueTopRight.setText($.GSK_NOVALUE_LEN3);
       self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_DK_GRAY);
+      self.oRezLabelLeft.setColor(Gfx.COLOR_LT_GRAY);
+      self.oRezUnitLeft.setColor(Gfx.COLOR_LT_GRAY);
       self.oRezValueLeft.setColor(Gfx.COLOR_LT_GRAY);
       self.oRezValueLeft.setText($.GSK_NOVALUE_LEN3);
       self.oRezDrawableGlobal.setColorAlertCenter(Gfx.COLOR_DK_GRAY);
+      self.oRezLabelCenter.setColor(Gfx.COLOR_LT_GRAY);
       self.oRezValueCenter.setColor(Gfx.COLOR_LT_GRAY);
       self.oRezValueCenter.setText($.GSK_NOVALUE_LEN2);
       self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_DK_GRAY);
+      self.oRezLabelRight.setColor(Gfx.COLOR_LT_GRAY);
+      self.oRezUnitRight.setColor(Gfx.COLOR_LT_GRAY);
       self.oRezValueRight.setColor(Gfx.COLOR_LT_GRAY);
       self.oRezValueRight.setText($.GSK_NOVALUE_LEN3);
       self.oRezValueBottomLeft.setColor(Gfx.COLOR_LT_GRAY);
@@ -361,13 +374,18 @@ class GSK_ViewSafety extends Ui.View {
       return;
     }
     else if($.GSK_oProcessing.iAccuracy == Pos.QUALITY_LAST_KNOWN) {
-      self.oRezDrawableGlobal.setColorContentBackground(Gfx.COLOR_DK_RED);
+      self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_DK_RED);
       iColorText = Gfx.COLOR_LT_GRAY;
     }
     else {
-      self.oRezDrawableGlobal.setColorContentBackground(Gfx.COLOR_TRANSPARENT);
+      self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_TRANSPARENT);
       iColorText = $.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
     }
+    self.oRezLabelLeft.setColor(Gfx.COLOR_DK_GRAY);
+    self.oRezUnitLeft.setColor(Gfx.COLOR_DK_GRAY);
+    self.oRezLabelCenter.setColor(Gfx.COLOR_DK_GRAY);
+    self.oRezLabelRight.setColor(Gfx.COLOR_DK_GRAY);
+    self.oRezUnitRight.setColor(Gfx.COLOR_DK_GRAY);
 
     // ... destination (name) / elevation at destination / bearing to destination
     self.oRezValueTopLeft.setColor(Gfx.COLOR_PINK);
@@ -413,10 +431,14 @@ class GSK_ViewSafety extends Ui.View {
     self.oRezValueTopRight.setText(sValue);
 
     // ... altitude
+    self.oRezLabelLeft.setColor(Gfx.COLOR_DK_GRAY);
+    self.oRezUnitLeft.setColor(Gfx.COLOR_DK_GRAY);
     self.oRezValueLeft.setColor(iColorText);
     if($.GSK_oProcessing.fAltitude != null) {
       if(!$.GSK_oProcessing.bSafetyStateful) {
         self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_DK_GRAY);
+        self.oRezLabelLeft.setColor(Gfx.COLOR_LT_GRAY);
+        self.oRezUnitLeft.setColor(Gfx.COLOR_LT_GRAY);
       }
       else if($.GSK_oProcessing.bAltitudeCritical) {
         self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_RED);
@@ -432,19 +454,21 @@ class GSK_ViewSafety extends Ui.View {
     }
     else {
       self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_DK_GRAY);
+      self.oRezLabelLeft.setColor(Gfx.COLOR_LT_GRAY);
+      self.oRezUnitLeft.setColor(Gfx.COLOR_LT_GRAY);
       sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueLeft.setText(sValue);
 
     // ... finesse
+    self.oRezLabelCenter.setColor(Gfx.COLOR_DK_GRAY);
     self.oRezValueCenter.setColor(iColorText);
     if($.GSK_oProcessing.fFinesse != null) {
       if($.GSK_oProcessing.bAscent) {
+        self.oRezDrawableGlobal.setColorAlertCenter(Gfx.COLOR_GREEN);
         if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
           self.oRezValueCenter.setColor(Gfx.COLOR_DK_GRAY);
         }
-        self.oRezDrawableGlobal.setColorAlertCenter(Gfx.COLOR_GREEN);
-
       }
       else if($.GSK_oProcessing.fFinesse <= $.GSK_oSettings.iSafetyFinesse) {
         self.oRezDrawableGlobal.setColorAlertCenter(Gfx.COLOR_RED);
@@ -457,16 +481,16 @@ class GSK_ViewSafety extends Ui.View {
     }
     else {
       self.oRezDrawableGlobal.setColorAlertCenter(Gfx.COLOR_DK_GRAY);
+      self.oRezLabelCenter.setColor(Gfx.COLOR_LT_GRAY);
       sValue = $.GSK_NOVALUE_LEN2;
     }
     self.oRezValueCenter.setText(sValue);
 
     // ... height at destination
+    self.oRezLabelRight.setColor(Gfx.COLOR_DK_GRAY);
+    self.oRezUnitRight.setColor(Gfx.COLOR_DK_GRAY);
     self.oRezValueRight.setColor(iColorText);
     if($.GSK_oProcessing.fHeightAtDestination != null) {
-      if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN and $.GSK_oProcessing.bEstimation) {
-        self.oRezValueRight.setColor(Gfx.COLOR_DK_GRAY);
-      }
       if($.GSK_oProcessing.bAltitudeCritical) {
         self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_RED);
       }
@@ -475,6 +499,9 @@ class GSK_ViewSafety extends Ui.View {
       }
       else {
         self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_GREEN);
+      }
+      if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN and $.GSK_oProcessing.bEstimation) {
+        self.oRezValueRight.setColor(Gfx.COLOR_DK_GRAY);
       }
       if($.GSK_oProcessing.fHeightAtDestination <= 0.0f) {
         sValue = self.sValueHeightGround;
@@ -486,6 +513,8 @@ class GSK_ViewSafety extends Ui.View {
     }
     else {
       self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_DK_GRAY);
+      self.oRezLabelRight.setColor(Gfx.COLOR_LT_GRAY);
+      self.oRezUnitRight.setColor(Gfx.COLOR_LT_GRAY);
       sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueRight.setText(sValue);
@@ -585,14 +614,13 @@ class GSK_ViewSafety extends Ui.View {
     //Sys.println("DEBUG: GSK_ViewSafety.adaptLayoutSettings()");
 
     // Set colors (value-independent), labels and units
-    // ... background
     var iColorText = $.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
     // ... application name
     self.oRezLabelAppName.setColor(Gfx.COLOR_BLUE);
     // ... position accuracy
     self.oRezDrawableHeader.setPositionAccuracy(null);
     // ... fields background
-    self.oRezDrawableGlobal.setColorContentBackground(Gfx.COLOR_TRANSPARENT);
+    self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_TRANSPARENT);
     // ... destination (name)
     self.oRezValueTopLeft.setColor(Gfx.COLOR_PINK);
     View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelDestination));
@@ -603,18 +631,23 @@ class GSK_ViewSafety extends Ui.View {
     View.findDrawableById("unitTopRight").setText(self.sUnitElevation_layout);
     // ... critical height
     self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_RED);
+    self.oRezLabelLeft.setColor(Gfx.COLOR_DK_GRAY);
+    self.oRezLabelLeft.setText(Ui.loadResource(Rez.Strings.labelHeightCritical));
+    self.oRezUnitLeft.setColor(Gfx.COLOR_DK_GRAY);
+    self.oRezUnitLeft.setText(self.sUnitElevation_layout);
     self.oRezValueLeft.setColor(iColorText);
-    View.findDrawableById("labelLeft").setText(Ui.loadResource(Rez.Strings.labelHeightCritical));
-    View.findDrawableById("unitLeft").setText(self.sUnitElevation_layout);
     // ... reference finesse
     self.oRezDrawableGlobal.setColorAlertCenter(Gfx.COLOR_GREEN);
+    self.oRezLabelCenter.setColor(Gfx.COLOR_DK_GRAY);
+    self.oRezLabelCenter.setText(Ui.loadResource(Rez.Strings.labelFinesse));
     self.oRezValueCenter.setColor(iColorText);
-    View.findDrawableById("labelCenter").setText(Ui.loadResource(Rez.Strings.labelFinesse));
     // ... warning height
     self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_YELLOW);
+    self.oRezLabelRight.setColor(Gfx.COLOR_DK_GRAY);
+    self.oRezLabelRight.setText(Ui.loadResource(Rez.Strings.labelHeightWarning));
+    self.oRezUnitRight.setColor(Gfx.COLOR_DK_GRAY);
+    self.oRezUnitRight.setText(self.sUnitElevation_layout);
     self.oRezValueRight.setColor(iColorText);
-    View.findDrawableById("labelRight").setText(Ui.loadResource(Rez.Strings.labelHeightWarning));
-    View.findDrawableById("unitRight").setText(self.sUnitElevation_layout);
     // ... decision height
     self.oRezValueBottomLeft.setColor(iColorText);
     View.findDrawableById("labelBottomLeft").setText(Ui.loadResource(Rez.Strings.labelHeightDecision));
