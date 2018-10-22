@@ -1,3 +1,8 @@
+* 1.2.20181022a:
+  - FIX: Bearing values would sometimes be negative (W quadrant)
+  - FIX: Make Heading Bug more visible
+  - MOD: Switched borders, labels and units to gray coloring
+
 * 1.2.20181018a:
   - FIX: Do not colorize zero values
   - NEW: Bearing Bug in Safety view
