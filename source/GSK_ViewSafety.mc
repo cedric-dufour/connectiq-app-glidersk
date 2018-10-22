@@ -183,7 +183,7 @@ class GSK_ViewSafety extends Ui.View {
     // Draw heading bug
     if(!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings
        and ($.GSK_oSettings.iSafetyHeadingBug == 2 or ($.GSK_oSettings.iSafetyHeadingBug == 1 and !$.GSK_oProcessing.bEstimation))
-       and $.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN
+       and $.GSK_oProcessing.iAccuracy >= Pos.QUALITY_LAST_KNOWN
        and $.GSK_oProcessing.fBearingToDestination != null
        and $.GSK_oProcessing.fHeading != null) {
       self.drawHeadingBug(_oDC);
@@ -556,13 +556,28 @@ class GSK_ViewSafety extends Ui.View {
 
   (:layout_240x240)
   function drawHeadingBug(_oDC) {
-    // ... heading bug
+    // Heading
     var fBearingRelative = $.GSK_oProcessing.fBearingToDestination - $.GSK_oProcessing.fHeading;
-    _oDC.setColor(Gfx.COLOR_PURPLE, Gfx.COLOR_PURPLE);
+    // ... bug
+    var iColor = Gfx.COLOR_PURPLE;
     var aPoints =
       [[120.0f+119.0f*Math.sin(fBearingRelative), 120.0f-119.0f*Math.cos(fBearingRelative)],
        [120.0f+100.0f*Math.sin(fBearingRelative-0.125f), 120.0f-100.0f*Math.cos(fBearingRelative-0.125f)],
        [120.0f+100.0f*Math.sin(fBearingRelative+0.125f), 120.0f-100.0f*Math.cos(fBearingRelative+0.125f)]];
+    _oDC.setColor(iColor, iColor);
+    _oDC.fillPolygon(aPoints);
+    // ... status
+    if($.GSK_oProcessing.iAccuracy == Pos.QUALITY_LAST_KNOWN) {
+      iColor = Gfx.COLOR_LT_GRAY;
+    }
+    else {
+      iColor = $.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
+    }
+    aPoints =
+      [[120.0f+119.0f*Math.sin(fBearingRelative), 120.0f-119.0f*Math.cos(fBearingRelative)],
+       [120.0f+100.0f*Math.sin(fBearingRelative-0.025f), 120.0f-100.0f*Math.cos(fBearingRelative-0.025f)],
+       [120.0f+100.0f*Math.sin(fBearingRelative+0.025f), 120.0f-100.0f*Math.cos(fBearingRelative+0.025f)]];
+    _oDC.setColor(iColor, iColor);
     _oDC.fillPolygon(aPoints);
   }
 
