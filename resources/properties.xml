@@ -16,7 +16,7 @@
   <property id="userSafetyHeightDecision" type="float">500.0</property>
   <property id="userSafetyHeightWarning" type="float">400.0</property>
   <property id="userSafetyHeightCritical" type="float">300.0</property>
-  <property id="userSafetyBearingBug" type="number">2</property>
+  <property id="userSafetyHeadingBug" type="number">2</property>
   <!-- ... sounds -->
   <property id="userSoundsVariometerTones" type="boolean">true</property>
   <property id="userSoundsSafetyTones" type="boolean">true</property>

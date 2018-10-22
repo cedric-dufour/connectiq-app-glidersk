@@ -180,13 +180,13 @@ class GSK_ViewSafety extends Ui.View {
       self.oRezButtonKeyDown = null;
     }
 
-    // Draw bearing
+    // Draw heading bug
     if(!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings
-       and ($.GSK_oSettings.iSafetyBearingBug == 2 or ($.GSK_oSettings.iSafetyBearingBug == 1 and !$.GSK_oProcessing.bEstimation))
+       and ($.GSK_oSettings.iSafetyHeadingBug == 2 or ($.GSK_oSettings.iSafetyHeadingBug == 1 and !$.GSK_oProcessing.bEstimation))
        and $.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN
        and $.GSK_oProcessing.fBearingToDestination != null
        and $.GSK_oProcessing.fHeading != null) {
-      self.drawBearingBug(_oDC);
+      self.drawHeadingBug(_oDC);
     }
 
     // Done
@@ -555,7 +555,7 @@ class GSK_ViewSafety extends Ui.View {
   }
 
   (:layout_240x240)
-  function drawBearingBug(_oDC) {
+  function drawHeadingBug(_oDC) {
     // ... heading bug
     var fBearingRelative = $.GSK_oProcessing.fBearingToDestination - $.GSK_oProcessing.fHeading;
     _oDC.setColor(Gfx.COLOR_PURPLE, Gfx.COLOR_PURPLE);

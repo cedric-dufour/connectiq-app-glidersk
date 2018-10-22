@@ -33,7 +33,7 @@
   <string id="titleSafetyHeightDecision">Decision Height</string>
   <string id="titleSafetyHeightWarning">Warning Height</string>
   <string id="titleSafetyHeightCritical">Critical Height</string>
-  <string id="titleSafetyBearingBug">Bearing Bug</string>
+  <string id="titleSafetyHeadingBug">Heading Bug</string>
   <!-- Menu (settings:sounds) -->
   <string id="titleSettingsSounds">Sounds</string>
   <string id="titleSoundsVariometerTones">Variometer Tones</string>

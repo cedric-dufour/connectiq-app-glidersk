@@ -262,8 +262,8 @@ The application allows you to specify the following settings:
    the height (Above Ground Level) under which to issue warning alerts
  - Safety -> Critical Height:
    the height (Above Ground Level) under which to issue critical alerts
- - Safety -> Bearing Bug:
-   whether to always hide the bearing bug (off), always show it (on) or only in Pass 2 / Alert mode (auto)
+ - Safety -> Heading Bug:
+   whether to always hide the heading bug (off), always show it (on) or only in Pass 2 / Alert mode (auto)
  - Sounds -> Variometer Tones:
    whether to play variometer tones
  - Sounds -> Safety Tones:

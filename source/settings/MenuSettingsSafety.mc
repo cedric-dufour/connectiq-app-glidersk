@@ -32,7 +32,7 @@ class MenuSettingsSafety extends Ui.Menu {
     Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightDecision), :menuSafetyHeightDecision);
     Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightWarning), :menuSafetyHeightWarning);
     Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightCritical), :menuSafetyHeightCritical);
-    Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyBearingBug), :menuSafetyBearingBug);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeadingBug), :menuSafetyHeadingBug);
   }
 
 }
@@ -64,9 +64,9 @@ class MenuSettingsSafetyDelegate extends Ui.MenuInputDelegate {
       //Sys.println("DEBUG: MenuSettingsSafetyDelegate.onMenuItem(:menuSafetyHeightCritical)");
       Ui.pushView(new PickerSafetyHeightCritical(), new PickerSafetyHeightCriticalDelegate(), Ui.SLIDE_IMMEDIATE);
     }
-    else if (item == :menuSafetyBearingBug) {
-      //Sys.println("DEBUG: MenuSettingsSafetyDelegate.onMenuItem(:menuSafetyBearingBug)");
-      Ui.pushView(new PickerSafetyBearingBug(), new PickerSafetyBearingBugDelegate(), Ui.SLIDE_IMMEDIATE);
+    else if (item == :menuSafetyHeadingBug) {
+      //Sys.println("DEBUG: MenuSettingsSafetyDelegate.onMenuItem(:menuSafetyHeadingBug)");
+      Ui.pushView(new PickerSafetyHeadingBug(), new PickerSafetyHeadingBugDelegate(), Ui.SLIDE_IMMEDIATE);
     }
   }
 

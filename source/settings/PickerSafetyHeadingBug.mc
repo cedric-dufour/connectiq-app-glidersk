@@ -20,7 +20,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
-class PickerSafetyBearingBug extends Ui.Picker {
+class PickerSafetyHeadingBug extends Ui.Picker {
 
   //
   // FUNCTIONS: Ui.Picker (override/implement)
@@ -28,20 +28,20 @@ class PickerSafetyBearingBug extends Ui.Picker {
 
   function initialize() {
     // Get property
-    var iSafetyBearingBug = App.Properties.getValue("userSafetyBearingBug");
+    var iSafetyHeadingBug = App.Properties.getValue("userSafetyHeadingBug");
 
     // Initialize picker
     var oFactory = new PickerFactoryDictionary([0, 1 ,2], [Ui.loadResource(Rez.Strings.valueOff), Ui.loadResource(Rez.Strings.valueAuto), Ui.loadResource(Rez.Strings.valueOn)], null);
     Picker.initialize({
-      :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.titleSafetyBearingBug), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
+      :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.titleSafetyHeadingBug), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oFactory ],
-      :defaults => [ oFactory.indexOfKey(iSafetyBearingBug) ]
+      :defaults => [ oFactory.indexOfKey(iSafetyHeadingBug) ]
     });
   }
 
 }
 
-class PickerSafetyBearingBugDelegate extends Ui.PickerDelegate {
+class PickerSafetyHeadingBugDelegate extends Ui.PickerDelegate {
 
   //
   // FUNCTIONS: Ui.PickerDelegate (override/implement)
@@ -53,7 +53,7 @@ class PickerSafetyBearingBugDelegate extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     // Set property and exit
-    App.Properties.setValue("userSafetyBearingBug", _amValues[0]);
+    App.Properties.setValue("userSafetyHeadingBug", _amValues[0]);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

@@ -43,7 +43,7 @@ class GSK_Settings {
   public var fSafetyHeightDecision;
   public var fSafetyHeightWarning;
   public var fSafetyHeightCritical;
-  public var iSafetyBearingBug;
+  public var iSafetyHeadingBug;
   // ... sounds
   public var bSoundsVariometerTones;
   public var bSoundsSafetyTones;
@@ -102,7 +102,7 @@ class GSK_Settings {
     self.setSafetyHeightDecision(App.Properties.getValue("userSafetyHeightDecision"));
     self.setSafetyHeightWarning(App.Properties.getValue("userSafetyHeightWarning"));
     self.setSafetyHeightCritical(App.Properties.getValue("userSafetyHeightCritical"));
-    self.setSafetyBearingBug(App.Properties.getValue("userSafetyBearingBug"));
+    self.setSafetyHeadingBug(App.Properties.getValue("userSafetyHeadingBug"));
     // ... sounds
     self.setSoundsVariometerTones(App.Properties.getValue("userSoundsVariometerTones"));
     self.setSoundsSafetyTones(App.Properties.getValue("userSoundsSafetyTones"));
@@ -294,17 +294,17 @@ class GSK_Settings {
     self.fSafetyHeightCritical = _fSafetyHeightCritical;
   }
 
-  function setSafetyBearingBug(_iSafetyBearingBug) {
-    if(_iSafetyBearingBug == null) {
-      _iSafetyBearingBug = 2;
+  function setSafetyHeadingBug(_iSafetyHeadingBug) {
+    if(_iSafetyHeadingBug == null) {
+      _iSafetyHeadingBug = 2;
     }
-    else if(_iSafetyBearingBug > 2) {
-      _iSafetyBearingBug = 2;
+    else if(_iSafetyHeadingBug > 2) {
+      _iSafetyHeadingBug = 2;
     }
-    else if(_iSafetyBearingBug < 0) {
-      _iSafetyBearingBug = 0;
+    else if(_iSafetyHeadingBug < 0) {
+      _iSafetyHeadingBug = 0;
     }
-    self.iSafetyBearingBug = _iSafetyBearingBug;
+    self.iSafetyHeadingBug = _iSafetyHeadingBug;
   }
 
   function setSoundsVariometerTones(_bSoundsVariometerTones) {
