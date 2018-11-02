@@ -1,3 +1,7 @@
+* 1.2.20181102a:
+  - FIX: Elapsed times keep increasing after recording is stopped
+  - MOD: Show current safety settings before safety fields selection
+
 * 1.2.20181022a:
   - FIX: Bearing values would sometimes be negative (W quadrant)
   - FIX: Make Heading Bug more visible
