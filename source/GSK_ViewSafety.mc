@@ -723,8 +723,8 @@ class GSK_ViewSafetyDelegate extends Ui.BehaviorDelegate {
       Ui.pushView(new MenuDestination(), new MenuDestinationDelegate(), Ui.SLIDE_IMMEDIATE);
     }
     else {
-      $.GSK_ViewSafety_bShowSettings = false;
-      $.GSK_ViewSafety_bSelectFields = true;
+      $.GSK_ViewSafety_bShowSettings = true;
+      $.GSK_ViewSafety_bSelectFields = false;
       Ui.requestUpdate();
     }
     return true;
