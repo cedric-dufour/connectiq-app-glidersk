@@ -51,6 +51,7 @@ var GSK_Activity_oSession = null;
 var GSK_Activity_oTimeStart = null;
 var GSK_Activity_oTimeLap = null;
 var GSK_Activity_iCountLaps = null;
+var GSK_Activity_oTimeStop = null;
 var GSK_Fit_BarometricAltitude_oField = null;
 var GSK_Fit_BarometricAltitude_fUnitCoefficient = 1.0f;
 var GSK_Fit_VerticalSpeed_oField = null;
@@ -472,6 +473,7 @@ class GSK_App extends App.AppBase {
     }
     if(_bSave) {
       $.GSK_Activity_oSession.save();
+      $.GSK_Activity_oTimeStop = Time.now();
       if(Attn has :playTone) {
         Attn.playTone(Attn.TONE_STOP);
       }
@@ -491,6 +493,7 @@ class GSK_App extends App.AppBase {
       $.GSK_Activity_oTimeStart = null;
       $.GSK_Activity_oTimeLap = null;
       $.GSK_Activity_iCountLaps = null;
+      $.GSK_Activity_oTimeStop = null;
     }
     $.GSK_Fit_BarometricAltitude_oField = null;
     $.GSK_Fit_VerticalSpeed_oField = null;

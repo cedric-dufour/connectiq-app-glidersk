@@ -291,8 +291,13 @@ class GSK_ViewTimers extends Ui.View {
 
     // ... lap: elapsed
     self.oRezValueRight.setColor(bRecording ? iColorText : Gfx.COLOR_LT_GRAY);
-    if($.GSK_Activity_oTimeLap != null) {
-      iDuration = Math.floor(oTimeNow.subtract($.GSK_Activity_oTimeLap).value() / 60.0).toNumber();
+    if($.GSK_Activity_oTimeLap != null and (bRecording or $.GSK_Activity_oTimeStop != null)) {
+      if(bRecording) {
+        iDuration = Math.floor(oTimeNow.subtract($.GSK_Activity_oTimeLap).value() / 60.0).toNumber();
+      }
+      else {
+        iDuration = Math.floor($.GSK_Activity_oTimeStop.subtract($.GSK_Activity_oTimeLap).value() / 60.0).toNumber();
+      }
       iDuration_m = iDuration % 60;
       iDuration_h = (iDuration-iDuration_m) / 60;
       sValue = Lang.format("$1$:$2$", [iDuration_h.format("%d"), iDuration_m.format("%02d")]);
@@ -315,8 +320,13 @@ class GSK_ViewTimers extends Ui.View {
 
     // ... recording: elapsed
     self.oRezValueBottomRight.setColor(bRecording ? iColorText : Gfx.COLOR_LT_GRAY);
-    if($.GSK_Activity_oTimeStart != null) {
-      iDuration = Math.floor(oTimeNow.subtract($.GSK_Activity_oTimeStart).value() / 60.0).toNumber();
+    if($.GSK_Activity_oTimeStart != null and (bRecording or $.GSK_Activity_oTimeStop != null)) {
+      if(bRecording) {
+        iDuration = Math.floor(oTimeNow.subtract($.GSK_Activity_oTimeStart).value() / 60.0).toNumber();
+      }
+      else {
+        iDuration = Math.floor($.GSK_Activity_oTimeStop.subtract($.GSK_Activity_oTimeStart).value() / 60.0).toNumber();
+      }
       iDuration_m = iDuration % 60;
       iDuration_h = (iDuration-iDuration_m) / 60;
       sValue = Lang.format("$1$:$2$", [iDuration_h.format("%d"), iDuration_m.format("%02d")]);
