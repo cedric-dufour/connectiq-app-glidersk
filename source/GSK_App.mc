@@ -407,6 +407,8 @@ class GSK_App extends App.AppBase {
   }
 
   function initActivity() {
+    //Sys.println("DEBUG: GSK_App.initActivity()");
+
     // NOTE: "Flying" activity number is 20 (cf. https://www.thisisant.com/resources/fit -> Profiles.xlsx)
     $.GSK_Activity_oSession = AR.createSession({ :name=>"GliderSK", :sport=>20, :subSport=>AR.SUB_SPORT_GENERIC });
     $.GSK_Fit_BarometricAltitude_oField = $.GSK_Activity_oSession.createField("BarometricAltitude", GSK_App.FITFIELD_BAROMETRICALTITUDE, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_oSettings.sUnitElevation });
@@ -419,6 +421,8 @@ class GSK_App extends App.AppBase {
   }
 
   function startActivity() {
+    //Sys.println("DEBUG: GSK_App.startActivity()");
+
     if($.GSK_Activity_oSession != null) {
       return;
     }
@@ -433,6 +437,8 @@ class GSK_App extends App.AppBase {
   }
 
   function lapActivity() {
+    //Sys.println("DEBUG: GSK_App.lapActivity()");
+
     if($.GSK_Activity_oSession == null or !$.GSK_oSettings.bGeneralLapKey or !$.GSK_Activity_oSession.isRecording()) {
       return;
     }
@@ -445,6 +451,8 @@ class GSK_App extends App.AppBase {
   }
 
   function pauseActivity() {
+    //Sys.println("DEBUG: GSK_App.pauseActivity()");
+
     if($.GSK_Activity_oSession == null or !$.GSK_Activity_oSession.isRecording()) {
       return;
     }
@@ -455,6 +463,8 @@ class GSK_App extends App.AppBase {
   }
 
   function resumeActivity() {
+    //Sys.println("DEBUG: GSK_App.resumeActivity()");
+
     if($.GSK_Activity_oSession == null or $.GSK_Activity_oSession.isRecording()) {
       return;
     }
@@ -465,6 +475,8 @@ class GSK_App extends App.AppBase {
   }
 
   function stopActivity(_bSave) {
+    //Sys.println(Lang.format("DEBUG: GSK_App.stopActivity($1$)", [_bSave]));
+
     if($.GSK_Activity_oSession == null) {
       return;
     }
@@ -488,6 +500,8 @@ class GSK_App extends App.AppBase {
   }
 
   function resetActivity(_bClearTimers) {
+    //Sys.println(Lang.format("DEBUG: GSK_App.resetActivity($1$)", [_bClearTimers]));
+
     $.GSK_Activity_oSession = null;
     if(_bClearTimers) {
       $.GSK_Activity_oTimeStart = null;
