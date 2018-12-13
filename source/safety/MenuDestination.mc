@@ -32,6 +32,7 @@ class MenuDestination extends Ui.Menu {
     Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationEdit), :menuDestinationEdit);
     Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationSave), :menuDestinationSave);
     Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationDelete), :menuDestinationDelete);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsSafety), :menuSettingsSafety);
     Menu.addItem(Ui.loadResource(Rez.Strings.titleSettings), :menuSettings);
   }
 
@@ -64,6 +65,10 @@ class MenuDestinationDelegate extends Ui.MenuInputDelegate {
     else if (item == :menuDestinationDelete) {
       //Sys.println("DEBUG: MenuDestinationDelegate.onMenuItem(:menuDestinationDelete)");
       Ui.pushView(new PickerDestinationDelete(), new PickerDestinationDeleteDelegate(), Ui.SLIDE_IMMEDIATE);
+    }
+    else if (item == :menuSettingsSafety) {
+      //Sys.println("DEBUG: MenuSettingsDelegate.onMenuItem(:menuSettingsSafety)");
+      Ui.pushView(new MenuSettingsSafety(), new MenuSettingsSafetyDelegate(), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuSettings) {
       //Sys.println("DEBUG: MenuDestinationDelegate.onMenuItem(:menuSettings)");
