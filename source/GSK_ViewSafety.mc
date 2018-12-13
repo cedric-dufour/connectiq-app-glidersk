@@ -388,7 +388,7 @@ class GSK_ViewSafety extends Ui.View {
     self.oRezUnitRight.setColor(Gfx.COLOR_DK_GRAY);
 
     // ... destination (name) / elevation at destination / bearing to destination
-    self.oRezValueTopLeft.setColor(Gfx.COLOR_PINK);
+    self.oRezValueTopLeft.setColor(Gfx.COLOR_BLUE);
     if((!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings and !$.GSK_oProcessing.bEstimation)
        or $.GSK_ViewSafety_iFieldTopLeft == 2) {  // ... bearing to destination
       if($.GSK_oProcessing.fBearingToDestination != null) {
@@ -420,7 +420,7 @@ class GSK_ViewSafety extends Ui.View {
     self.oRezValueTopLeft.setText(sValue);
 
     // ... distance to destination
-    self.oRezValueTopRight.setColor(Gfx.COLOR_PINK);
+    self.oRezValueTopRight.setColor(Gfx.COLOR_BLUE);
     if($.GSK_oProcessing.fDistanceToDestination != null) {
       fValue = $.GSK_oProcessing.fDistanceToDestination * $.GSK_oSettings.fUnitDistanceCoefficient;
       sValue = fValue.format("%.1f");
@@ -588,7 +588,7 @@ class GSK_ViewSafety extends Ui.View {
     // Heading
     var fBearingRelative = $.GSK_oProcessing.fBearingToDestination - $.GSK_oProcessing.fHeading;
     // ... bug
-    var iColor = Gfx.COLOR_PURPLE;
+    var iColor = Gfx.COLOR_BLUE;
     var aPoints =
       [[120.0f+119.0f*Math.sin(fBearingRelative), 120.0f-119.0f*Math.cos(fBearingRelative)],
        [120.0f+100.0f*Math.sin(fBearingRelative-0.125f), 120.0f-100.0f*Math.cos(fBearingRelative-0.125f)],
@@ -604,8 +604,8 @@ class GSK_ViewSafety extends Ui.View {
     }
     aPoints =
       [[120.0f+119.0f*Math.sin(fBearingRelative), 120.0f-119.0f*Math.cos(fBearingRelative)],
-       [120.0f+100.0f*Math.sin(fBearingRelative-0.025f), 120.0f-100.0f*Math.cos(fBearingRelative-0.025f)],
-       [120.0f+100.0f*Math.sin(fBearingRelative+0.025f), 120.0f-100.0f*Math.cos(fBearingRelative+0.025f)]];
+       [120.0f+103.0f*Math.sin(fBearingRelative-0.035f), 120.0f-103.0f*Math.cos(fBearingRelative-0.035f)],
+       [120.0f+103.0f*Math.sin(fBearingRelative+0.035f), 120.0f-103.0f*Math.cos(fBearingRelative+0.035f)]];
     _oDC.setColor(iColor, iColor);
     _oDC.fillPolygon(aPoints);
   }
@@ -622,11 +622,11 @@ class GSK_ViewSafety extends Ui.View {
     // ... fields background
     self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_TRANSPARENT);
     // ... destination (name)
-    self.oRezValueTopLeft.setColor(Gfx.COLOR_PINK);
+    self.oRezValueTopLeft.setColor(Gfx.COLOR_BLUE);
     View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelDestination));
     View.findDrawableById("unitTopLeft").setText("");
     // ... elevation at destination
-    self.oRezValueTopRight.setColor(Gfx.COLOR_PINK);
+    self.oRezValueTopRight.setColor(Gfx.COLOR_BLUE);
     View.findDrawableById("labelTopRight").setText(Ui.loadResource(Rez.Strings.labelElevationAtDestination));
     View.findDrawableById("unitTopRight").setText(self.sUnitElevation_layout);
     // ... critical height
