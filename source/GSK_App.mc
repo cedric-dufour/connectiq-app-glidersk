@@ -39,6 +39,9 @@ var GSK_oSettings = null;
 var GSK_oPositionLocation = null;
 var GSK_oPositionAltitude = null;
 
+// Sensors filter
+var GSK_oFilter = null;
+
 // Internal altimeter
 var GSK_oAltimeter = null;
 
@@ -126,6 +129,9 @@ class GSK_App extends App.AppBase {
     // Application settings
     $.GSK_oSettings = new GSK_Settings();
 
+    // Sensors filter
+    $.GSK_oFilter = new GSK_Filter();
+
     // Internal altimeter
     $.GSK_oAltimeter = new GSK_Altimeter();
 
@@ -212,6 +218,7 @@ class GSK_App extends App.AppBase {
     $.GSK_oSettings.load();
 
     // Apply settings
+    $.GSK_oFilter.importSettings();
     $.GSK_oAltimeter.importSettings();
     $.GSK_oProcessing.importSettings();
 
@@ -311,6 +318,7 @@ class GSK_App extends App.AppBase {
     // Check sensor data age
     if($.GSK_oProcessing.iSensorEpoch != null and _iEpoch-$.GSK_oProcessing.iSensorEpoch > 10) {
       $.GSK_oProcessing.resetSensorData();
+      $.GSK_oAltimeter.reset();
     }
 
     // Check position data age
@@ -395,8 +403,9 @@ class GSK_App extends App.AppBase {
     //       depending on the ratio between the ascent speed and the variometer range.
     if(self.iTones & self.TONES_VARIOMETER)
     {
-      if($.GSK_oProcessing.fVariometer != null and $.GSK_oProcessing.fVariometer > 0.05f) {
-        if(self.iTonesTick-self.iTonesLastTick >= 20.0f-18.0f*$.GSK_oProcessing.fVariometer/$.GSK_oSettings.fVariometerRange) {
+      var fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 1 ? $.GSK_oProcessing.fVariometer_filtered : $.GSK_oProcessing.fVariometer;
+      if(fValue != null and fValue > 0.05f) {
+        if(self.iTonesTick-self.iTonesLastTick >= 20.0f-18.0f*fValue/$.GSK_oSettings.fVariometerRange) {
           //Sys.println(Lang.format("DEBUG: playTone: variometer @ $1$", [self.iTonesTick]));
           Attn.playTone(Attn.TONE_KEY);
           self.iTonesLastTick = self.iTonesTick;

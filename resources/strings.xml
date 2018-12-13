@@ -42,6 +42,8 @@
   <!-- Menu (settings:general) -->
   <string id="titleSettingsGeneral">General</string>
   <string id="titleGeneralTimeConstant">Time Constant</string>
+  <string id="titleGeneralDisplayFilter">Display Filter</string>
+  <string id="valueGeneralDisplayFilterTimeDerived">δt</string>
   <string id="titleGeneralBackgroundColor">Background Color</string>
   <string id="titleGeneralLapKey">Lap Key</string>
   <!-- Menu (settings:units) -->
@@ -88,6 +90,7 @@
   <string id="valueAuto">auto</string>
   <string id="valueOn">on</string>
   <string id="valueOff">off</string>
+  <string id="valueAll">all</string>
   <string id="valueColorWhite">white</string>
   <string id="valueColorBlack">black</string>
   <!-- Layouts -->

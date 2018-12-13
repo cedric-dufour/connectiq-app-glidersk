@@ -142,23 +142,25 @@ class GSK_ViewRateOfTurn extends Ui.View {
     _oDC.clear();
 
     // ... rate of turn
+    var fValue;
     _oDC.setColor(Gfx.COLOR_DK_GRAY, Gfx.COLOR_DK_GRAY);
     _oDC.drawArc(120, 120, 60, Gfx.ARC_COUNTER_CLOCKWISE, 285, 255);
     _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor, $.GSK_oSettings.iGeneralBackgroundColor);
     _oDC.drawArc(120, 120, 60, Gfx.ARC_CLOCKWISE, 285, 255);
-    if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_oProcessing.fRateOfTurn != null) {
-      if($.GSK_oProcessing.fRateOfTurn > 0.0f) {
-        //var iAngle = ($.GSK_oProcessing.fRateOfTurn * 900.0f/Math.PI).toNumber();  // ... range 6 rpm <-> 36 °/s
-        var iAngle = ($.GSK_oProcessing.fRateOfTurn * 286.4788975654f).toNumber();
+    fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 1 ? $.GSK_oProcessing.fRateOfTurn_filtered : $.GSK_oProcessing.fRateOfTurn;
+    if(fValue != null and $.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE) {
+      if(fValue > 0.0f) {
+        //var iAngle = (fValue * 900.0f/Math.PI).toNumber();  // ... range 6 rpm <-> 36 °/s
+        var iAngle = (fValue * 286.4788975654f).toNumber();
         if(iAngle != 0) {
           if(iAngle > 165) { iAngle = 165; }  // ... leave room for unit text
           _oDC.setColor(Gfx.COLOR_GREEN, Gfx.COLOR_GREEN);
           _oDC.drawArc(120, 120, 60, Gfx.ARC_CLOCKWISE, 90, 90-iAngle);
         }
       }
-      else if($.GSK_oProcessing.fRateOfTurn < 0.0f) {
-        //var iAngle = -($.GSK_oProcessing.fRateOfTurn * 900.0f/Math.PI).toNumber();  // ... range 6 rpm <-> 36 °/s
-        var iAngle = -($.GSK_oProcessing.fRateOfTurn * 286.4788975654f).toNumber();
+      else if(fValue < 0.0f) {
+        //var iAngle = -(fValue * 900.0f/Math.PI).toNumber();  // ... range 6 rpm <-> 36 °/s
+        var iAngle = -(fValue * 286.4788975654f).toNumber();
         if(iAngle != 0) {
           if(iAngle > 165) { iAngle = 165; }  // ... leave room for unit text
           _oDC.setColor(Gfx.COLOR_RED, Gfx.COLOR_RED);
@@ -202,12 +204,12 @@ class GSK_ViewRateOfTurn extends Ui.View {
     _oDC.drawText(120, 142, Gfx.FONT_MEDIUM, sValue, Gfx.TEXT_JUSTIFY_CENTER);
 
     // Draw position values
-    var fValue;
 
     // ... heading
-    if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_oProcessing.fHeading != null) {
-      //fValue = (($.GSK_oProcessing.fHeading * 180.0f/Math.PI).toNumber()) % 360;
-      fValue = (($.GSK_oProcessing.fHeading * 57.2957795131f).toNumber()) % 360;
+    fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 2 ? $.GSK_oProcessing.fHeading_filtered : $.GSK_oProcessing.fHeading;
+    if(fValue != null and $.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE) {
+      //fValue = ((fValue * 180.0f/Math.PI).toNumber()) % 360;
+      fValue = ((fValue * 57.2957795131f).toNumber()) % 360;
       sValue = fValue.format("%.0f");
     }
     else {
@@ -216,8 +218,9 @@ class GSK_ViewRateOfTurn extends Ui.View {
     _oDC.drawText(120, 22, Gfx.FONT_MEDIUM, Lang.format("$1$°", [sValue]), Gfx.TEXT_JUSTIFY_CENTER);
 
     // ... rate of turn
-    if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_oProcessing.fRateOfTurn != null) {
-      fValue = $.GSK_oProcessing.fRateOfTurn * $.GSK_oSettings.fUnitRateOfTurnCoefficient;
+    fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 1 ? $.GSK_oProcessing.fRateOfTurn_filtered : $.GSK_oProcessing.fRateOfTurn;
+    if(fValue != null and $.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE) {
+      fValue *= $.GSK_oSettings.fUnitRateOfTurnCoefficient;
       if($.GSK_oSettings.iUnitRateOfTurn == 1) {
         sValue = fValue.format("%+.1f");
         if(fValue >= 0.05f) {

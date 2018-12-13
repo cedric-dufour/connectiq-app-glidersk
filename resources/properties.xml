@@ -22,8 +22,9 @@
   <property id="userSoundsSafetyTones" type="boolean">true</property>
   <property id="userSoundsMuteDistance" type="float">2000.0</property>
   <!-- ... general -->
+  <property id="userGeneralTimeConstant" type="number">5</property>
+  <property id="userGeneralDisplayFilter" type="number">1</property>
   <property id="userGeneralBackgroundColor" type="number">0</property>
-  <property id="userGeneralTimeConstant" type="number">3</property>
   <property id="userGeneralLapKey" type="boolean">true</property>
   <!-- ... units -->
   <property id="userUnitDistance" type="number">-1</property>

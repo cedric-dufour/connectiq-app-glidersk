@@ -267,8 +267,8 @@ class GSK_ViewGlobal extends Ui.View {
 
     // ... acceleration
     self.oRezValueTopLeft.setColor(iColorText);
-    if($.GSK_oProcessing.fAcceleration != null) {
-      fValue = $.GSK_oProcessing.fAcceleration;
+    fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 2 ? $.GSK_oProcessing.fAcceleration_filtered : $.GSK_oProcessing.fAcceleration;
+    if(fValue != null) {
       sValue = fValue.format("%.1f");
     }
     else {
@@ -278,8 +278,9 @@ class GSK_ViewGlobal extends Ui.View {
 
     // ... rate of turn
     self.oRezValueTopRight.setColor(iColorText);
-    if($.GSK_oProcessing.fRateOfTurn != null) {
-      fValue = $.GSK_oProcessing.fRateOfTurn * $.GSK_oSettings.fUnitRateOfTurnCoefficient;
+    fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 1 ? $.GSK_oProcessing.fRateOfTurn_filtered : $.GSK_oProcessing.fRateOfTurn;
+    if(fValue != null) {
+      fValue *= $.GSK_oSettings.fUnitRateOfTurnCoefficient;
       if($.GSK_oSettings.iUnitRateOfTurn == 1) {
         sValue = fValue.format("%+.1f");
         if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
@@ -310,8 +311,9 @@ class GSK_ViewGlobal extends Ui.View {
 
     // ... altitude
     self.oRezValueLeft.setColor(iColorText);
-    if($.GSK_oProcessing.fAltitude != null) {
-      fValue = $.GSK_oProcessing.fAltitude * $.GSK_oSettings.fUnitElevationCoefficient;
+    fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 2 ? $.GSK_oProcessing.fAltitude_filtered : $.GSK_oProcessing.fAltitude;
+    if(fValue != null) {
+      fValue *= $.GSK_oSettings.fUnitElevationCoefficient;
       sValue = fValue.format("%.0f");
     }
     else {
@@ -332,9 +334,10 @@ class GSK_ViewGlobal extends Ui.View {
 
     // ... heading
     self.oRezValueRight.setColor(iColorText);
-    if($.GSK_oProcessing.fHeading != null) {
-      //fValue = (($.GSK_oProcessing.fHeading * 180.0f/Math.PI).toNumber()) % 360;
-      fValue = (($.GSK_oProcessing.fHeading * 57.2957795131f).toNumber()) % 360;
+    fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 2 ? $.GSK_oProcessing.fHeading_filtered : $.GSK_oProcessing.fHeading;
+    if(fValue != null) {
+      //fValue = ((fValue * 180.0f/Math.PI).toNumber()) % 360;
+      fValue = ((fValue * 57.2957795131f).toNumber()) % 360;
       sValue = fValue.format("%d");
     }
     else {
@@ -344,8 +347,9 @@ class GSK_ViewGlobal extends Ui.View {
 
     // ... variometer
     self.oRezValueBottomLeft.setColor(iColorText);
-    if($.GSK_oProcessing.fVariometer != null) {
-      fValue = $.GSK_oProcessing.fVariometer * $.GSK_oSettings.fUnitVerticalSpeedCoefficient;
+    fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 1 ? $.GSK_oProcessing.fVariometer_filtered : $.GSK_oProcessing.fVariometer;
+    if(fValue != null) {
+      fValue *= $.GSK_oSettings.fUnitVerticalSpeedCoefficient;
       if($.GSK_oSettings.fUnitVerticalSpeedCoefficient < 100.0f) {
         sValue = fValue.format("%+.1f");
         if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
@@ -376,8 +380,9 @@ class GSK_ViewGlobal extends Ui.View {
 
     // ... ground speed
     self.oRezValueBottomRight.setColor(iColorText);
-    if($.GSK_oProcessing.fGroundSpeed != null) {
-      fValue = $.GSK_oProcessing.fGroundSpeed * $.GSK_oSettings.fUnitHorizontalSpeedCoefficient;
+    fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 1 ? $.GSK_oProcessing.fGroundSpeed_filtered : $.GSK_oProcessing.fGroundSpeed;
+    if(fValue != null) {
+      fValue *= $.GSK_oSettings.fUnitHorizontalSpeedCoefficient;
       sValue = fValue.format("%.0f");
     }
     else {

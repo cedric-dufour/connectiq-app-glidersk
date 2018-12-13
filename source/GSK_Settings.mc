@@ -50,6 +50,7 @@ class GSK_Settings {
   public var fSoundsMuteDistance;
   // ... general
   public var iGeneralTimeConstant;
+  public var iGeneralDisplayFilter;
   public var iGeneralBackgroundColor;
   public var bGeneralLapKey;
   // ... units
@@ -109,6 +110,7 @@ class GSK_Settings {
     self.setSoundsMuteDistance(App.Properties.getValue("userSoundsMuteDistance"));
     // ... general
     self.setGeneralTimeConstant(App.Properties.getValue("userGeneralTimeConstant"));
+    self.setGeneralDisplayFilter(App.Properties.getValue("userGeneralDisplayFilter"));
     self.setGeneralBackgroundColor(App.Properties.getValue("userGeneralBackgroundColor"));
     self.setGeneralLapKey(App.Properties.getValue("userGeneralLapKey"));
     // ... units
@@ -336,15 +338,22 @@ class GSK_Settings {
 
   function setGeneralTimeConstant(_iGeneralTimeConstant) {  // [s]
     if(_iGeneralTimeConstant == null) {
-      _iGeneralTimeConstant = 3;
+      _iGeneralTimeConstant = 5;
     }
-    else if(_iGeneralTimeConstant > 10) {
-      _iGeneralTimeConstant = 10;
+    else if(_iGeneralTimeConstant > 60) {
+      _iGeneralTimeConstant = 60;
     }
     else if(_iGeneralTimeConstant < 0) {
       _iGeneralTimeConstant = 0;
     }
     self.iGeneralTimeConstant = _iGeneralTimeConstant;
+  }
+
+  function setGeneralDisplayFilter(_iGeneralDisplayFilter) {
+    if(_iGeneralDisplayFilter == null or _iGeneralDisplayFilter < 0 or _iGeneralDisplayFilter > 2) {
+      _iGeneralDisplayFilter = 1;
+    }
+    self.iGeneralDisplayFilter = _iGeneralDisplayFilter;
   }
 
   function setGeneralBackgroundColor(_iGeneralBackgroundColor) {

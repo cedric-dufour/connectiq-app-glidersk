@@ -142,21 +142,23 @@ class GSK_ViewVariometer extends Ui.View {
     _oDC.clear();
 
     // ... variometer
+    var fValue;
     _oDC.setColor(Gfx.COLOR_DK_GRAY, Gfx.COLOR_DK_GRAY);
     _oDC.drawArc(120, 120, 60, Gfx.ARC_COUNTER_CLOCKWISE, 15, 345);
     _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor, $.GSK_oSettings.iGeneralBackgroundColor);
     _oDC.drawArc(120, 120, 60, Gfx.ARC_CLOCKWISE, 15, 345);
-    if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_oProcessing.fVariometer != null) {
-      if($.GSK_oProcessing.fVariometer > 0.0f) {
-        var iAngle = (180.0f*$.GSK_oProcessing.fVariometer/$.GSK_oSettings.fVariometerRange).toNumber();
+    fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 1 ? $.GSK_oProcessing.fVariometer_filtered : $.GSK_oProcessing.fVariometer;
+    if(fValue != null and $.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE) {
+      if(fValue > 0.0f) {
+        var iAngle = (180.0f*fValue/$.GSK_oSettings.fVariometerRange).toNumber();
         if(iAngle != 0) {
           if(iAngle > 165) { iAngle = 165; }  // ... leave room for unit text
           _oDC.setColor(Gfx.COLOR_GREEN, Gfx.COLOR_GREEN);
           _oDC.drawArc(120, 120, 60, Gfx.ARC_CLOCKWISE, 180, 180-iAngle);
         }
       }
-      else if($.GSK_oProcessing.fVariometer < 0.0f) {
-        var iAngle = -(180.0f*$.GSK_oProcessing.fVariometer/$.GSK_oSettings.fVariometerRange).toNumber();
+      else if(fValue < 0.0f) {
+        var iAngle = -(180.0f*fValue/$.GSK_oSettings.fVariometerRange).toNumber();
         if(iAngle != 0) {
           if(iAngle > 165) { iAngle = 165; }  // ... leave room for unit text
           _oDC.setColor(Gfx.COLOR_RED, Gfx.COLOR_RED);
@@ -200,11 +202,11 @@ class GSK_ViewVariometer extends Ui.View {
     _oDC.drawText(100, 162, Gfx.FONT_MEDIUM, sValue, Gfx.TEXT_JUSTIFY_CENTER);
 
     // Draw position values
-    var fValue;
 
     // ... altitude
-    if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_oProcessing.fAltitude != null) {
-      fValue = $.GSK_oProcessing.fAltitude * $.GSK_oSettings.fUnitElevationCoefficient;
+    fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 2 ? $.GSK_oProcessing.fAltitude_filtered : $.GSK_oProcessing.fAltitude;
+    if(fValue != null and $.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE) {
+      fValue *= $.GSK_oSettings.fUnitElevationCoefficient;
       sValue = fValue.format("%.0f");
     }
     else {
@@ -213,8 +215,9 @@ class GSK_ViewVariometer extends Ui.View {
     _oDC.drawText(100, 42, Gfx.FONT_MEDIUM, Lang.format("$1$ $2$", [sValue, $.GSK_oSettings.sUnitElevation]), Gfx.TEXT_JUSTIFY_CENTER);
 
     // ... variometer
-    if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_oProcessing.fVariometer != null) {
-      fValue = $.GSK_oProcessing.fVariometer * $.GSK_oSettings.fUnitVerticalSpeedCoefficient;
+    fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 1 ? $.GSK_oProcessing.fVariometer_filtered : $.GSK_oProcessing.fVariometer;
+    if(fValue != null and $.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE) {
+      fValue *= $.GSK_oSettings.fUnitVerticalSpeedCoefficient;
       if($.GSK_oSettings.fUnitVerticalSpeedCoefficient < 100.0f) {
         sValue = fValue.format("%+.1f");
         if(fValue >= 0.05f) {

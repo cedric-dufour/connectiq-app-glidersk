@@ -17,32 +17,13 @@
 // License-Filename: LICENSE/GPL-3.0.txt
 
 using Toybox.Lang;
+using Toybox.Math;
 using Toybox.Position as Pos;
 using Toybox.System as Sys;
 
-// NOTE:
 //
-// We use Exponential Moving Average (EMA) to smoothen the sensor values over
-// the user-specified "time constant" or time period.
+// CLASS
 //
-// This approach is computationally elegant since it requires no memory buffer
-// and is achieved with a simple assignement:
-//   Y(t) = a*X(t) + (1-a)*Y(t-1)
-//
-// Sticking to the canonical definition of the "time constant" (T), the
-// coefficient (a) is calculated with the following formula:
-//   a = 1 - exp(-1/T)
-//
-// The amplitude (R) of the step response at the "time constant" (T) is:
-//   R = 1 - exp(T*ln(1-a))  <=>  a = 1 - exp(ln(1-R)/T)
-//
-// The normalized (very low-pass) cut-off (-3dB) frequency is:
-//   Fc = acos(1-a²/(2*(1-a)))/(2*pi)
-// For a >= sqrt(8)-2, this will fail with Fc > 0.5 (Nyquist frequency)
-//
-// REF:
-//   https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
-//   https://dsp.stackexchange.com/questions/40462/exponential-moving-average-cut-off-frequency
 
 class GSK_Processing {
 
@@ -70,9 +51,6 @@ class GSK_Processing {
   // ... we must calculate our own rate of turn
   private var iPreviousHeadingGpoch;
   private var fPreviousHeading;
-  // ... averaging (EMA) coefficient
-  private var fEmaCoefficient_present;
-  private var fEmaCoefficient_past;
 
   // Public objects
   // ... destination values
@@ -81,12 +59,14 @@ class GSK_Processing {
   public var fDestinationElevation;
   // ... sensor values (fed by Toybox.Sensor)
   public var iSensorEpoch;
-  //DEAD:public var fSensorAltitude;
   public var fAcceleration;
+  public var fAcceleration_filtered;
   // ... altimeter values (fed by Toybox.Activity, on Toybox.Sensor events)
   public var fAltitude;
+  public var fAltitude_filtered;
   // ... altimeter calculated values
   public var fVariometer;
+  public var fVariometer_filtered;
   // ... position values (fed by Toybox.Position)
   public var bPositionStateful;
   public var iPositionEpoch;
@@ -94,11 +74,14 @@ class GSK_Processing {
   public var iAccuracy;
   public var oLocation;
   public var fGroundSpeed;
+  public var fGroundSpeed_filtered;
   public var fHeading;
+  public var fHeading_filtered;
   // ... position calculated values
   public var fEnergyTotal;
   public var fEnergyCinetic;
   public var fRateOfTurn;
+  public var fRateOfTurn_filtered;
   // ... safety processing
   public var bSafetyStateful;
   // ... safety calculated values
@@ -128,9 +111,6 @@ class GSK_Processing {
   function initialize() {
     // Internal calculation objects
     self.fEnergyCineticLossFactor = 0.25f;
-    // ... averaging (EMA) coefficients
-    self.fEmaCoefficient_present = 1.0f;
-    self.fEmaCoefficient_past = 0.0f;
 
     // Public objects
     // ... destination values (depending on user choice)
@@ -161,14 +141,19 @@ class GSK_Processing {
     self.fPreviousAltitude = 0.0f;
     // ... sensor values
     self.iSensorEpoch = null;
-    //DEAD:self.fSensorAltitude = null;
     self.fAcceleration = null;
+    self.fAcceleration_filtered = null;
     // ... altimeter values
     self.fAltitude = null;
+    self.fAltitude_filtered = null;
     // ... altimeter calculated values
     if($.GSK_oSettings.iVariometerMode == 0) {
       self.fVariometer = null;
+      self.fVariometer_filtered = null;
+      $.GSK_oFilter.resetFilter(GSK_Filter.VARIOMETER);
     }
+    // ... filters
+    $.GSK_oFilter.resetFilter(GSK_Filter.ACCELERATION);
   }
 
   function resetPositionData() {
@@ -189,14 +174,19 @@ class GSK_Processing {
     self.iAccuracy = Pos.QUALITY_NOT_AVAILABLE;
     self.oLocation = null;
     self.fGroundSpeed = null;
+    self.fGroundSpeed_filtered = null;
     self.fHeading = null;
+    self.fHeading_filtered = null;
     // ... position calculated values
     if($.GSK_oSettings.iVariometerMode == 1) {
       self.fVariometer = null;
+      self.fVariometer_filtered = null;
+      $.GSK_oFilter.resetFilter(GSK_Filter.VARIOMETER);
     }
     self.fEnergyTotal = null;
     self.fEnergyCinetic = null;
     self.fRateOfTurn = null;
+    self.fRateOfTurn_filtered = null;
     // ... safety processing
     self.bSafetyStateful = false;
     // ... safety calculated values
@@ -211,19 +201,14 @@ class GSK_Processing {
     self.bEstimation = true;
     self.bAltitudeCritical = false;
     self.bAltitudeWarning = false;
+    // ... filters
+    $.GSK_oFilter.resetFilter(GSK_Filter.GROUNDSPEED);
+    $.GSK_oFilter.resetFilter(GSK_Filter.HEADING_X);
+    $.GSK_oFilter.resetFilter(GSK_Filter.HEADING_Y);
+    $.GSK_oFilter.resetFilter(GSK_Filter.RATEOFTURN);
   }
 
   function importSettings() {
-    // Time constant
-    if($.GSK_oSettings.iGeneralTimeConstant) {
-      self.fEmaCoefficient_past = Math.pow(Math.E, -1.0f/$.GSK_oSettings.iGeneralTimeConstant);
-    }
-    else {
-      self.fEmaCoefficient_past = 0.0f;
-    }
-    self.fEmaCoefficient_present = 1.0f - self.fEmaCoefficient_past;
-    //Sys.println(Lang.format("DEBUG: EMA coefficient = $1$", [self.fEmaCoefficient_present]));
-
     // Energy compensation
     self.fEnergyCineticLossFactor = 1.0f - $.GSK_oSettings.fVariometerEnergyEfficiency;
   }
@@ -238,32 +223,12 @@ class GSK_Processing {
     //Sys.println("DEBUG: GSK_Processing.processSensorInfo()");
 
     // Process sensor data
-    var fValue;
-
-    //DEAD:// ... altitude
-    //DEAD:if(_oInfo has :altitude and _oInfo.altitude != null) {
-    //DEAD:  if(self.fSensorAltitude == null) {
-    //DEAD:    self.fSensorAltitude = _oInfo.altitude;
-    //DEAD:  }
-    //DEAD:  else {
-    //DEAD:    self.fSensorAltitude = self.fEmaCoefficient_present * _oInfo.altitude + self.fEmaCoefficient_past * self.fSensorAltitude;
-    //DEAD:  }
-    //DEAD:  //Sys.println(Lang.format("DEBUG: (Sensor.Info) altitude = $1$", [self.fSensorAltitude]));
-    //DEAD:}
-    //DEAD://else {
-    //DEAD://  Sys.println("WARNING: Sensor data have no altitude information (:altitude)");
-    //DEAD://}
 
     // ... acceleration
     if(_oInfo has :accel and _oInfo.accel != null) {
-      fValue = Math.sqrt(_oInfo.accel[0]*_oInfo.accel[0]+_oInfo.accel[1]*_oInfo.accel[1]+_oInfo.accel[2]*_oInfo.accel[2])/1000.0f;
-      if(self.fAcceleration == null) {
-        self.fAcceleration = fValue;
-      }
-      else {
-        self.fAcceleration = self.fEmaCoefficient_present * fValue + self.fEmaCoefficient_past * self.fAcceleration;
-      }
-      //Sys.println(Lang.format("DEBUG: (Sensor.Info) acceleration = $1$", [self.fAcceleration]));
+      self.fAcceleration = Math.sqrt(_oInfo.accel[0]*_oInfo.accel[0]+_oInfo.accel[1]*_oInfo.accel[1]+_oInfo.accel[2]*_oInfo.accel[2])/1000.0f;
+      self.fAcceleration_filtered = $.GSK_oFilter.filterValue(GSK_Filter.ACCELERATION, self.fAcceleration);
+      //Sys.println(Lang.format("DEBUG: (Sensor.Info) acceleration = $1$ ~ $2$", [self.fAcceleration, self.fAcceleration_filtered]));
     }
     //else {
     //  Sys.println("WARNING: Sensor data have no acceleration information (:accel)");
@@ -272,6 +237,7 @@ class GSK_Processing {
     // ... altitude
     if($.GSK_oAltimeter.fAltitudeActual != null) {  // ... the closest to the device's raw barometric sensor value
       self.fAltitude = $.GSK_oAltimeter.fAltitudeActual;
+      self.fAltitude_filtered = $.GSK_oAltimeter.fAltitudeActual_filtered;
     }
     //else {
     //  Sys.println("WARNING: Internal altimeter has no altitude available");
@@ -281,7 +247,8 @@ class GSK_Processing {
     if($.GSK_oSettings.iVariometerMode == 0 and self.fAltitude != null) {  // ... altimetric variometer
       if(self.iPreviousAltitudeEpoch != null and self.iSensorEpoch-self.iPreviousAltitudeEpoch != 0) {
         self.fVariometer = (self.fAltitude-self.fPreviousAltitude) / (self.iSensorEpoch-self.iPreviousAltitudeEpoch);
-        //Sys.println(Lang.format("DEBUG: (Calculated) altimetric variometer = $1$", [self.fVariometer]));
+        self.fVariometer_filtered = $.GSK_oFilter.filterValue(GSK_Filter.VARIOMETER, self.fVariometer);
+        //Sys.println(Lang.format("DEBUG: (Calculated) altimetric variometer = $1$ ~ $2$", [self.fVariometer, self.fVariometer_filtered]));
       }
       self.iPreviousAltitudeEpoch = self.iSensorEpoch;
       self.fPreviousAltitude = self.fAltitude;
@@ -356,34 +323,15 @@ class GSK_Processing {
     }
 
     // ... altitude
-    //DEAD:else if(self.fSensorAltitude != null) {  // ... sometimes flats-out (for several seconds/minutes)
-    //DEAD:  self.fAltitude = self.fSensorAltitude;
-    //DEAD:}
-    //DEAD:else if(_oInfo has :altitude and _oInfo.altitude != null) {  // ... GPS altitude? sucks!
-    //DEAD:  if(self.fAltitude == null) {
-    //DEAD:    self.fAltitude = _oInfo.altitude;
-    //DEAD:  }
-    //DEAD:  else {
-    //DEAD:    self.fAltitude = self.fEmaCoefficient_present * _oInfo.altitude + self.fEmaCoefficient_past * self.fAltitude;
-    //DEAD:  }
-    //DEAD:  //Sys.println(Lang.format("DEBUG: (Position.Info) altitude = $1$", [self.fAltitude]));
-    //DEAD:}
-    //DEAD:else {
-    //DEAD:  Sys.println("WARNING: Position data have no altitude information (:altitude)");
-    //DEAD:}
     if(self.fAltitude == null) {  // ... derived by internal altimeter on sensor events
       bStateful = false;
     }
 
     // ... ground speed
     if(_oInfo has :speed and _oInfo.speed != null) {
-      if(self.fGroundSpeed == null) {
-        self.fGroundSpeed = _oInfo.speed;
-      }
-      else {
-        self.fGroundSpeed = self.fEmaCoefficient_present * _oInfo.speed + self.fEmaCoefficient_past * self.fGroundSpeed;
-      }
-      //Sys.println(Lang.format("DEBUG: (Position.Info) ground speed = $1$", [self.fGroundSpeed]));
+      self.fGroundSpeed = _oInfo.speed;
+      self.fGroundSpeed_filtered = $.GSK_oFilter.filterValue(GSK_Filter.GROUNDSPEED, self.fGroundSpeed);
+      //Sys.println(Lang.format("DEBUG: (Position.Info) ground speed = $1$ ~ $2$", [self.fGroundSpeed, self.fGroundSpeed_filtered]));
     }
     //else {
     //  Sys.println("WARNING: Position data have no speed information (:speed)");
@@ -399,7 +347,8 @@ class GSK_Processing {
       //Sys.println(Lang.format("DEBUG: (Calculated) total energy = $1$", [self.fEnergyTotal]));
       if(self.iPreviousEnergyGpoch != null and self.iPositionGpoch-self.iPreviousEnergyGpoch != 0) {
         self.fVariometer = (self.fEnergyTotal-self.fPreviousEnergyTotal-self.fEnergyCineticLossFactor*(self.fEnergyCinetic-self.fPreviousEnergyCinetic)) / (self.iPositionGpoch-self.iPreviousEnergyGpoch) * 0.1019716213f;  // ... 1.0f / 9.80665f = 1.019716213f
-        //Sys.println(Lang.format("DEBUG: (Calculated) energetic variometer = $1$", [self.fVariometer]));
+        self.fVariometer_filtered = $.GSK_oFilter.filterValue(GSK_Filter.VARIOMETER, self.fVariometer);
+        //Sys.println(Lang.format("DEBUG: (Calculated) energetic variometer = $1$ ~ $2$", [self.fVariometer, self.fVariometer_filtered]));
       }
       self.iPreviousEnergyGpoch = self.iPositionGpoch;
       self.fPreviousEnergyTotal = self.fEnergyTotal;
@@ -413,31 +362,28 @@ class GSK_Processing {
     // ... heading
     // NOTE: we consider heading meaningful only if ground speed is above 1.0 m/s
     if(self.fGroundSpeed != null and self.fGroundSpeed >= 1.0f and _oInfo has :heading and _oInfo.heading != null) {
-      // WARNING: _oInfo.heading (in radians) may return negative values (at least in the simulator)
-      var fHeading_normalized;
-      fHeading_normalized = _oInfo.heading;
-      if(fHeading_normalized < 0.0f) {
-        fHeading_normalized += 6.28318530718f;
+      fValue = _oInfo.heading;
+      if(fValue < 0.0f) {
+        fValue += 6.28318530718f;
       }
-      if(self.fHeading == null) {
-        self.fHeading = fHeading_normalized;
+      self.fHeading = fValue;
+      fValue = $.GSK_oFilter.filterValue(GSK_Filter.HEADING_X, Math.cos(self.fHeading));
+      fValue = Math.atan2($.GSK_oFilter.filterValue(GSK_Filter.HEADING_Y, Math.sin(self.fHeading)), fValue);
+      if(fValue == NaN) {
+        fValue = null;  // WARNING! The one case where the filtered value may be null while the instantaneous value is not!
       }
-      else if(self.fHeading > 4.71238898039f and fHeading_normalized < 1.5707963268f) {  // ... NW to NE discontinuity
-        self.fHeading = self.fEmaCoefficient_present * (fHeading_normalized + 6.28318530718f) + self.fEmaCoefficient_past * self.fHeading;
-        if(self.fHeading >= 6.28318530718f) {
-          self.fHeading -= 6.28318530718f;
-        }
+      else if(fValue < 0.0f) {
+        fValue += 6.28318530718f;
       }
-      else if(self.fHeading < 1.5707963268f and fHeading_normalized > 4.71238898039f) {  // ... NE to NW discontinuity
-        self.fHeading = self.fEmaCoefficient_present * (fHeading_normalized - 6.28318530718f) + self.fEmaCoefficient_past * self.fHeading;
-        if(self.fHeading < 0.0f) {
-          self.fHeading += 6.28318530718f;
-        }
-      }
-      else {
-        self.fHeading = self.fEmaCoefficient_present * fHeading_normalized + self.fEmaCoefficient_past * self.fHeading;
-      }
-      //Sys.println(Lang.format("DEBUG: (Position.Info) heading = $1$°", [self.fHeading * 57.2957795131f]));
+      self.fHeading_filtered = fValue;
+    }
+    else {
+      //Sys.println("WARNING: Position data have no (meaningful) heading information (:heading)");
+      self.fHeading = null;
+      self.fHeading_filtered = null;
+    }
+    if(self.fHeading != null) {
+      //Sys.println(Lang.format("DEBUG: (Position.Info) heading = $1$ ~ $2$", [self.fHeading, self.fHeading_filtered]));
       // ... rate of turn
       if(self.iPreviousHeadingGpoch != null and self.iPositionGpoch-self.iPreviousHeadingGpoch != 0) {
         fValue = (self.fHeading-self.fPreviousHeading) / (self.iPositionGpoch-self.iPreviousHeadingGpoch);
@@ -448,24 +394,25 @@ class GSK_Processing {
           fValue -= 6.28318530718f;
         }
         self.fRateOfTurn = fValue;
-        //Sys.println(Lang.format("DEBUG: (Calculated) rate of turn = $1$°", [self.fRateOfTurn * 57.2957795131f]));
+        self.fRateOfTurn_filtered = $.GSK_oFilter.filterValue(GSK_Filter.RATEOFTURN, self.fRateOfTurn);
+        //Sys.println(Lang.format("DEBUG: (Calculated) rate of turn = $1$ ~ $2$", [self.fRateOfTurn, self.fRateOfTurn_filtered]));
       }
       self.iPreviousHeadingGpoch = self.iPositionGpoch;
       self.fPreviousHeading = self.fHeading;
-      // ... speed-to(wards)-destination
-      if(self.fBearingToDestination != null) {
-        self.fSpeedToDestination = self.fGroundSpeed * Math.cos(self.fHeading-self.fBearingToDestination);
-        //Sys.println(Lang.format("DEBUG: (Calculated) speed-to(wards)-destination = $1$", [self.fSpeedToDestination]));
-      }
-      else {
-        self.fSpeedToDestination = null;
-      }
     }
     else {
-      //Sys.println("WARNING: Position data have no (meaningful) heading information (:heading)");
-      self.fHeading = null;
+      //Sys.println("WARNING: No heading available");
       self.iPreviousHeadingGpoch = null;
       self.fRateOfTurn = null;
+      self.fRateOfTurn_filtered = null;
+    }
+    if(self.fHeading_filtered != null and self.fBearingToDestination != null) {
+      // ... speed-to(wards)-destination
+      self.fSpeedToDestination = self.fGroundSpeed_filtered * Math.cos(self.fHeading_filtered-self.fBearingToDestination);
+      //Sys.println(Lang.format("DEBUG: (Calculated) speed-to(wards)-destination = $1$", [self.fSpeedToDestination]));
+    }
+    else {
+      //Sys.println("WARNING: No heading available");
       self.fSpeedToDestination = null;
     }
     // NOTE: heading and rate-of-turn data are not required for processing finalization
@@ -507,9 +454,13 @@ class GSK_Processing {
       return;
     }
 
+    // ALGO: We always use filtered (averaged) time-derived data to compute safety values,
+    //       to avoid readings jumping around
+
     // Ascent/finesse
+
     // ... ascending ?
-    if(self.fVariometer >= -0.005f * self.fGroundSpeed) {  // climbing (quite... finesse >= 200)
+    if(self.fVariometer_filtered >= -0.005f * self.fGroundSpeed_filtered) {  // climbing (quite... finesse >= 200)
       self.bAscent = true;
     }
     else {  // descending (really!)
@@ -523,9 +474,9 @@ class GSK_Processing {
       self.fFinesse = $.GSK_oSettings.iSafetyFinesse.toFloat();
     }
     else {
-      self.fFinesse = - self.fGroundSpeed / self.fVariometer;
+      self.fFinesse = - self.fGroundSpeed_filtered / self.fVariometer_filtered;
     }
-    //Sys.println(Lang.format("DEBUG: (Calculated) average finesse = $1$", [self.fFinesse]));
+    //Sys.println(Lang.format("DEBUG: (Calculated) average finesse ~ $1$", [self.fFinesse]));
 
     // Safety
     // ALGO: The trick here is to avoid alerts when our altitude is high enough, no matter what our descent rate (finesse) or heading are
@@ -546,7 +497,7 @@ class GSK_Processing {
       if(self.fHeightAtDestination <= $.GSK_oSettings.fSafetyHeightDecision) {
         self.bEstimation = false;
         if(self.fSpeedToDestination > 0.0f) {
-          self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / self.fFinesse * self.fGroundSpeed / self.fSpeedToDestination;
+          self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / self.fFinesse * self.fGroundSpeed_filtered / self.fSpeedToDestination;
           self.fHeightAtDestination = self.fAltitudeAtDestination-self.fDestinationElevation;
           // ALGO: Our finesse or speed-to(wards)-destination aren't good enough; we'll touch the ground before reaching our destination
           if(self.fHeightAtDestination <= 0.0f) {
@@ -570,7 +521,7 @@ class GSK_Processing {
       self.fAltitudeAtDestination = self.fDestinationElevation;
       self.fHeightAtDestination = 0.0f;
     }
-    //Sys.println(Lang.format("DEBUG: (Calculated) altitude/height at destination = $1$ / $2$", [self.fAltitudeAtDestination, self.fHeightAtDestination]));
+    //Sys.println(Lang.format("DEBUG: (Calculated) altitude/height at destination ~ $1$ / $2$", [self.fAltitudeAtDestination, self.fHeightAtDestination]));
 
     // ... status
     self.bAltitudeCritical = false;

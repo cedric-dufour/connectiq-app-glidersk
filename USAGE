@@ -273,7 +273,9 @@ The application allows you to specify the following settings:
    the distance (from destination) under which to mute all sounds
    (and let you concentrate on your take-off or landing)
  - General -> Time Constant:
-   time constants (in seconds) used for exponentially averaging (EMA) sensor values
+   time constant/window (in seconds) used for averaging (SMA) sensor values
+ - General -> Display Filter:
+   whether to display instantaneous or filtered data (see Data Filtering below)
  - General -> Background Color:
    the background color
  - General -> Lap Key:
@@ -286,6 +288,33 @@ The application allows you to specify the following settings:
    your preferred unit for displaying rate-of-turn values
  - Units -> Timezone:
    display Local Time (LT) or Universal Time Coordinates (UTC/Z)
+
+
+About Data Filtering
+--------------------
+
+GliderSK uses Simple Moving Average (SMA) to average data and filter out sensor
+- or piloting! - imprecisions, with a user-configurable Time Constant (see
+Settings above) ranging from 0 (no filtering) to 60 seconds.
+
+BEWARE! The more you increase the Time Constant, the longer the delay between
+GliderSK readings and actual values!
+
+GliderSK also allows to choose whether to display filtered (averaged) or instan-
+taneous data in the various views, according to the user-specified Display Filter
+(see Settings above):
+- off: no data are filtered (all data are instantaneous)
+-  dt: time-derived data - speed, variometer and rate-of-turn - are filtered;
+       other data - acceleration, altitude and heading - are instantaneous
+- all: all data are filtered
+(acceleration is not considered time-derived since measured directly by the watch
+ sensor and not as the time derivative of speed)
+
+However, the following exceptions apply:
+- the Safety View always uses and displays filtered time-derived data;
+  current altitude and Heading Bug are always instantaneous
+- the Varioplot View always displays instantaneous data
+- Activity Recorded (FIT) data are always instantaneous
 
 
 Calibrating the Device Sensor

@@ -20,7 +20,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
-class PickerGeneralTimeConstant extends Ui.Picker {
+class PickerGeneralDisplayFilter extends Ui.Picker {
 
   //
   // FUNCTIONS: Ui.Picker (override/implement)
@@ -28,24 +28,20 @@ class PickerGeneralTimeConstant extends Ui.Picker {
 
   function initialize() {
     // Get property
-    var iGeneralTimeConstant = App.Properties.getValue("userGeneralTimeConstant");
+    var iGeneralDisplayFilter = App.Properties.getValue("userGeneralDisplayFilter");
 
     // Initialize picker
-    var oFactory = new PickerFactoryDictionary([0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 45, 60], ["0", "1", "2", "3", "4", "5", "10", "15", "20", "25", "30", "45", "60"], null);
-    var iIndex = oFactory.indexOfKey(iGeneralTimeConstant);
-    if(iIndex < 0) {
-      iIndex = 5;
-    }
+    var oFactory = new PickerFactoryDictionary([0, 1, 2], [Ui.loadResource(Rez.Strings.valueOff), Ui.loadResource(Rez.Strings.valueGeneralDisplayFilterTimeDerived), Ui.loadResource(Rez.Strings.valueAll)], null);
     Picker.initialize({
-      :title => new Ui.Text({ :text => Lang.format("$1$ [s]", [Ui.loadResource(Rez.Strings.titleGeneralTimeConstant)]), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
+      :title => new Ui.Text({ :text => Lang.format("$1$", [Ui.loadResource(Rez.Strings.titleGeneralDisplayFilter)]), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
       :pattern => [ oFactory ],
-      :defaults => [ iIndex ]
+      :defaults => [ oFactory.indexOfKey(iGeneralDisplayFilter) ]
     });
   }
 
 }
 
-class PickerGeneralTimeConstantDelegate extends Ui.PickerDelegate {
+class PickerGeneralDisplayFilterDelegate extends Ui.PickerDelegate {
 
   //
   // FUNCTIONS: Ui.PickerDelegate (override/implement)
@@ -57,7 +53,7 @@ class PickerGeneralTimeConstantDelegate extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     // Set property and exit
-    App.Properties.setValue("userGeneralTimeConstant", _amValues[0]);
+    App.Properties.setValue("userGeneralDisplayFilter", _amValues[0]);
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }
 

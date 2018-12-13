@@ -521,8 +521,8 @@ class GSK_ViewSafety extends Ui.View {
 
     // ... variometer
     self.oRezValueBottomLeft.setColor(iColorText);
-    if($.GSK_oProcessing.fVariometer != null) {
-      fValue = $.GSK_oProcessing.fVariometer * $.GSK_oSettings.fUnitVerticalSpeedCoefficient;
+    if($.GSK_oProcessing.fVariometer_filtered != null) {
+      fValue = $.GSK_oProcessing.fVariometer_filtered * $.GSK_oSettings.fUnitVerticalSpeedCoefficient;
       if($.GSK_oSettings.fUnitVerticalSpeedCoefficient < 100.0f) {
         sValue = fValue.format("%+.1f");
         if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
@@ -572,8 +572,8 @@ class GSK_ViewSafety extends Ui.View {
       }
     }
     else {  // ... ground speed
-      if($.GSK_oProcessing.fGroundSpeed != null) {
-        fValue = $.GSK_oProcessing.fGroundSpeed * $.GSK_oSettings.fUnitHorizontalSpeedCoefficient;
+      if($.GSK_oProcessing.fGroundSpeed_filtered != null) {
+        fValue = $.GSK_oProcessing.fGroundSpeed_filtered * $.GSK_oSettings.fUnitHorizontalSpeedCoefficient;
         sValue = fValue.format("%.0f");
       }
       else {
