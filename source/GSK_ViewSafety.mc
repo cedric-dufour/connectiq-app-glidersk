@@ -236,10 +236,10 @@ class GSK_ViewSafety extends Ui.View {
     App.getApp().loadSettings();
 
     // Units beautifying
-    self.sUnitDistance_layout = "["+$.GSK_oSettings.sUnitDistance+"]";
-    self.sUnitHorizontalSpeed_layout = "["+$.GSK_oSettings.sUnitHorizontalSpeed+"]";
-    self.sUnitElevation_layout = "["+$.GSK_oSettings.sUnitElevation+"]";
-    self.sUnitVerticalSpeed_layout = "["+$.GSK_oSettings.sUnitVerticalSpeed+"]";
+    self.sUnitDistance_layout = Lang.format("[$1$]", [$.GSK_oSettings.sUnitDistance]);
+    self.sUnitHorizontalSpeed_layout = Lang.format("[$1$]", [$.GSK_oSettings.sUnitHorizontalSpeed]);
+    self.sUnitElevation_layout = Lang.format("[$1$]", [$.GSK_oSettings.sUnitElevation]);
+    self.sUnitVerticalSpeed_layout = Lang.format("[$1$]", [$.GSK_oSettings.sUnitVerticalSpeed]);
   }
 
   function updateUi() {

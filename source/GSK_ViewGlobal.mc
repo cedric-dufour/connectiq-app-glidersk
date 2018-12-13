@@ -188,10 +188,10 @@ class GSK_ViewGlobal extends Ui.View {
     App.getApp().loadSettings();
 
     // Units beautifying
-    self.sUnitHorizontalSpeed_layout = "["+$.GSK_oSettings.sUnitHorizontalSpeed+"]";
-    self.sUnitElevation_layout = "["+$.GSK_oSettings.sUnitElevation+"]";
-    self.sUnitVerticalSpeed_layout = "["+$.GSK_oSettings.sUnitVerticalSpeed+"]";
-    self.sUnitRateOfTurn_layout = "["+$.GSK_oSettings.sUnitRateOfTurn+"]";
+    self.sUnitHorizontalSpeed_layout = Lang.format("[$1$]", [$.GSK_oSettings.sUnitHorizontalSpeed]);
+    self.sUnitElevation_layout = Lang.format("[$1$]", [$.GSK_oSettings.sUnitElevation]);
+    self.sUnitVerticalSpeed_layout = Lang.format("[$1$]", [$.GSK_oSettings.sUnitVerticalSpeed]);
+    self.sUnitRateOfTurn_layout = Lang.format("[$1$]", [$.GSK_oSettings.sUnitRateOfTurn]);
   }
 
   function updateUi() {

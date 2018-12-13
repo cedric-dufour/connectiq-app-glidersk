@@ -33,7 +33,7 @@ class PickerDestinationDelete extends Ui.Picker {
     var iMemoryUsed = 0;
     for(var n=0; n<$.GSK_STORAGE_SLOTS; n++) {
       var s = n.format("%02d");
-      var dictDestination = App.Storage.getValue("storDest"+s);
+      var dictDestination = App.Storage.getValue(Lang.format("storDest$1$", [s]));
       if(dictDestination != null) {
         aiMemoryKeys[iMemoryUsed] = n;
         asMemoryValues[iMemoryUsed] = Lang.format("[$1$]\n$2$", [s, dictDestination["name"]]);
@@ -73,7 +73,7 @@ class PickerDestinationDeleteDelegate extends Ui.PickerDelegate {
     // Delete property (destination memory)
     if(_amValues[0] != null) {
       var s = _amValues[0].format("%02d");
-      App.Storage.deleteValue("storDest"+s);
+      App.Storage.deleteValue(Lang.format("storDest$1$", [s]));
     }
 
     // Exit

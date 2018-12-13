@@ -35,7 +35,7 @@ class PickerDestinationLoad extends Ui.Picker {
     var iMemoryUsed = 0;
     for(var n=0; n<$.GSK_STORAGE_SLOTS; n++) {
       var s = n.format("%02d");
-      var dictDestination = App.Storage.getValue("storDest"+s);
+      var dictDestination = App.Storage.getValue(Lang.format("storDest$1$", [s]));
       if(dictDestination != null) {
         aiMemoryKeys[iMemoryUsed] = n;
         if($.GSK_oPositionLocation != null) {  // ... we have a current position
@@ -107,7 +107,7 @@ class PickerDestinationLoadDelegate extends Ui.PickerDelegate {
     if(_amValues[0] != null) {
       // Get property (destination memory)
       var s = _amValues[0].format("%02d");
-      var dictDestination = App.Storage.getValue("storDest"+s);
+      var dictDestination = App.Storage.getValue(Lang.format("storDest$1$", [s]));
 
       // Set property
       // WARNING: We MUST store a new (different) dictionary instance (deep copy)!

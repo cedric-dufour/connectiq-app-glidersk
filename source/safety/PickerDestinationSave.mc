@@ -33,7 +33,7 @@ class PickerDestinationSave extends Ui.Picker {
     for(var n=0; n<$.GSK_STORAGE_SLOTS; n++) {
       aiMemoryKeys[n] = n;
       var s = n.format("%02d");
-      var dictDestination = App.Storage.getValue("storDest"+s);
+      var dictDestination = App.Storage.getValue(Lang.format("storDest$1$", [s]));
       if(dictDestination != null) {
         asMemoryValues[n] = Lang.format("[$1$]\n$2$", [s, dictDestination["name"]]);
       }
@@ -68,7 +68,7 @@ class PickerDestinationSaveDelegate extends Ui.PickerDelegate {
       // Set property (destination memory)
       // WARNING: We MUST store a new (different) dictionary instance (deep copy)!
       var s = _amValues[0].format("%02d");
-      App.Storage.setValue("storDest"+s, LangUtils.copy(dictDestination));
+      App.Storage.setValue(Lang.format("storDest$1$", [s]), LangUtils.copy(dictDestination));
     }
 
     // Exit
