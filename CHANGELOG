@@ -1,3 +1,11 @@
+* 1.2.20181214a:
+  - MOD: Pink and purple really aren't my color...
+  - MOD: Allow Safety settings to be accessed directly from Safety View
+  - NEW: Use Simple Moving Average (SMA) for data filtering, and
+         allow user to choose whether to display filtered (averaged)
+         or instantaneous data
+  - NEW: Allow storage data (destinations memory) to be imported from the web
+
 * 1.2.20181102a:
   - FIX: Elapsed times keep increasing after recording is stopped
   - MOD: Show current safety settings before safety fields selection
