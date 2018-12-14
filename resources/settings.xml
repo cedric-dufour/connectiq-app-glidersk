@@ -1,0 +1,8 @@
+<!-- -*- mode:xml; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab: -->
+<settings>
+  <!-- User preferences -->
+  <!-- ... storage -->
+  <setting propertyKey="@Properties.userStorageRepositoryURL" title="@Strings.titleStorageRepositoryURL">
+    <settingConfig type="url" />
+  </setting>
+</settings>

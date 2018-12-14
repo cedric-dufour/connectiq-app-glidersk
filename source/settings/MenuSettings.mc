@@ -34,6 +34,7 @@ class MenuSettings extends Ui.Menu {
     Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsSounds), :menuSettingsSounds);
     Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsGeneral), :menuSettingsGeneral);
     Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsUnits), :menuSettingsUnits);
+    Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsStorage), :menuSettingsStorage);
     Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsAbout), :menuSettingsAbout);
   }
 
@@ -73,6 +74,10 @@ class MenuSettingsDelegate extends Ui.MenuInputDelegate {
     else if (item == :menuSettingsUnits) {
       //Sys.println("DEBUG: MenuSettingsDelegate.onMenuItem(:menuSettingsUnits)");
       Ui.pushView(new MenuSettingsUnits(), new MenuSettingsUnitsDelegate(), Ui.SLIDE_IMMEDIATE);
+    }
+    else if (item == :menuSettingsStorage) {
+      //Sys.println("DEBUG: MenuSettingsDelegate.onMenuItem(:menuSettingsStorage)");
+      Ui.pushView(new MenuSettingsStorage(), new MenuSettingsStorageDelegate(), Ui.SLIDE_IMMEDIATE);
     }
     else if (item == :menuSettingsAbout) {
       //Sys.println("DEBUG: MenuSettingsDelegate.onMenuItem(:menuSettingsAbout)");

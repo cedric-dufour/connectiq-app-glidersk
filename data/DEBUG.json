@@ -1,0 +1,6 @@
+{
+  "destinations": {
+    "01": { "name": "KOJC", "latitude": 38.8476019, "longitude": -94.7375858, "elevation": 334.1 },
+    "02": { "name": "KIXD", "latitude": 38.8309167, "longitude": -94.8903056, "elevation": 331.4 }
+  }
+}

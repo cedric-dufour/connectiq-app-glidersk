@@ -288,6 +288,10 @@ The application allows you to specify the following settings:
    your preferred unit for displaying rate-of-turn values
  - Units -> Timezone:
    display Local Time (LT) or Universal Time Coordinates (UTC/Z)
+ - Storage -> Import Data:
+   import data from the specified (JSON) file (see Storage Data below)
+ - Storage -> Delete All:
+   delete all storage data (destinations memory)
 
 
 About Data Filtering
@@ -315,6 +319,41 @@ However, the following exceptions apply:
   current altitude and Heading Bug are always instantaneous
 - the Varioplot View always displays instantaneous data
 - Activity Recorded (FIT) data are always instantaneous
+
+
+About Storage Data (Import)
+---------------------------
+
+GliderSK allows you to import data into the application storage space - iow.
+destinations memory - from the web; to do so:
+
+1. connect your device to Garmin Connect Mobile (GCM) via Bluetooth
+
+2. [optional] use GCM to edit the Repository URL (GliderSK application) setting;
+   by default:
+
+     https://github.com/cedric-dufour/connectiq-app-glidersk/raw/master/data
+
+3. use the Import Data setting (see Setting above) to specify the JSON data file
+   name to download from the repository, without the .json suffix; example given
+   (for Switzerland airfields):
+
+     LSAS
+
+   WARNING! Make sure your GCM phone/tablet doesn't go to sleep while performing
+   this step or it won't allow GCM to relay the data to your watch.
+
+The destination slot(s) will then be updated (overwritten!) based on the data
+contained in the file.
+
+The format of a JSON destination data file is straight-forward; example given:
+
+     https://github.com/cedric-dufour/connectiq-app-glidersk/raw/master/data/LSAS.json
+
+Provided you have some web service where to store them, you can write your own data
+file(s). Just edit the Repository URL correspondingly (see point 2. above).
+WARNING: If using HTTPS (SSL), make sure the website's certificate is from a
+well-known Certification Authority (CA) or GCM will refuse to download the data.
 
 
 Calibrating the Device Sensor

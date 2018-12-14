@@ -64,6 +64,11 @@
   <string id="titleUnitTimeUTC">Timezone</string>
   <string id="valueUnitTimeLT">LT</string>
   <string id="valueUnitTimeUTC">UTC</string>
+  <!-- Menu (settings:storage) -->
+  <string id="titleSettingsStorage">Storage</string>
+  <string id="titleStorageRepositoryURL">Repository URL</string>
+  <string id="titleStorageImportData">Import Data</string>
+  <string id="titleStorageDeleteAll">Delete All</string>
   <!-- Menu (settings:about) -->
   <string id="titleSettingsAbout">About</string>
   <!-- Menu (destination) -->

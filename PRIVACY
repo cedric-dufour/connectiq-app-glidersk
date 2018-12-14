@@ -16,3 +16,6 @@ The permissions required by GliderSK are:
  - "FitContributor" permission:
    to add vertical speed, rate of turn and acceleration data in your
    recorder Activity (FIT file)
+ - "Communications" permission:
+   to import data from the web into your destinations memory
+   (see the Storage Data section in the USAGE file)

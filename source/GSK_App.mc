@@ -20,6 +20,7 @@ using Toybox.Activity;
 using Toybox.ActivityRecording as AR;
 using Toybox.Application as App;
 using Toybox.Attention as Attn;
+using Toybox.Communications as Comm;
 using Toybox.FitContributor as FC;
 using Toybox.Position as Pos;
 using Toybox.Sensor;
@@ -523,4 +524,63 @@ class GSK_App extends App.AppBase {
     $.GSK_Fit_RateOfTurn_oField = null;
     $.GSK_Fit_Acceleration_oField = null;
   }
+
+  function importStorageData(_sFile) {
+    //Sys.println(Lang.format("DEBUG: GSK_App.importStorageData($1$)", [_sFile]));
+
+    Comm.makeWebRequest(Lang.format("$1$/$2$.json", [App.Properties.getValue("userStorageRepositoryURL"), _sFile]),
+                        null,
+                        { :method => Comm.HTTP_REQUEST_METHOD_GET, :responseType => Comm.HTTP_RESPONSE_CONTENT_TYPE_JSON },
+                        method(:onStorageDataReceive));
+  }
+
+  function onStorageDataReceive(_iResponseCode, _dictData) {
+    //Sys.println(Lang.format("DEBUG: GSK_App.onStorageDataReceive($1$, ...)", [_iResponseCode]));
+
+    // Check response code
+    if(_iResponseCode != 200) {
+      if(Attn has :playTone) {
+        Attn.playTone(Attn.TONE_FAILURE);
+      }
+      return;
+    }
+
+    // Validate (!) and store data
+
+    // .. .destinations
+    if(_dictData.hasKey("destinations")) {
+      var dictDestinations = _dictData.get("destinations");
+      for(var n=0; n<$.GSK_STORAGE_SLOTS; n++) {
+        var s = n.format("%02d");
+        if(dictDestinations.hasKey(s)) {
+          var dictDestination = dictDestinations.get(s);
+          if(dictDestination.size() == 4 and
+             dictDestination.hasKey("name") and
+             dictDestination.hasKey("latitude") and
+             dictDestination.hasKey("longitude") and
+             dictDestination.hasKey("elevation")) {
+            App.Storage.setValue(Lang.format("storDest$1$", [s]), LangUtils.copy(dictDestination));
+          }
+        }
+      }
+    }
+
+    // Done
+    if(Attn has :playTone) {
+      Attn.playTone(Attn.TONE_SUCCESS);
+    }
+  }
+
+  function clearStorageData() {
+    //Sys.println("DEBUG: GSK_App.clearStorageData()");
+
+    // Delete all storage data
+
+    // .. .destinations
+    for(var n=0; n<$.GSK_STORAGE_SLOTS; n++) {
+      var s = n.format("%02d");
+      App.Storage.deleteValue(Lang.format("storDest$1$", [s]));
+    }
+  }
+
 }
