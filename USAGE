@@ -122,11 +122,7 @@ If a reasonable "last known" position is available, values will still be display
 (all grayed-out), otherwise no value will be displayed.
 
 By pressing the MENU button (long-pressing the UP button) a first time, the
-application will allow you to switch the Top-Left and Bottom-Right fields
-according to your preference.
-
-Then, by pressing the SELECT button, the application will toggle the display of
-the current safety-critical settings:
+application will display the current safety-critical settings:
  - Top-Left:
    the name of your current destination
  - Top-Right:
@@ -142,6 +138,11 @@ the current safety-critical settings:
  - Bottom-Right:
    your chosen time constant
 
+Then, by pressing the SELECT button, the application will toggle the display and
+choice if the Top-Left and Bottom-Right fields. Note than whenever the Safety
+View is in the Pass 2 / Alert mode, those fields will always show, respectively,
+the bearing and speed towards your current destination.
+
 By pressing the MENU button (long-pressing the UP button) a second time, you will
 enter the Safety destination selection menu (and access to the Settings menu):
  - Load Destination:
@@ -154,8 +155,10 @@ enter the Safety destination selection menu (and access to the Settings menu):
    save your current destination to the destination memory (100 slots available)
  - Delete Destination:
    delete a destination from the destination memory
+ - Safety:
+   safety-specific settings (see Settings below)
  - Settings:
-   (see further below)
+   all settings (see Settings below)
 
 
 Rate-of-Turn View
@@ -201,7 +204,7 @@ Pan/Zoom mode, where short pressing the following buttons will result in:
  - DOWN:   zoom out /OR/ pan down /OR/ pan right
 
 By pressing the MENU button (long-pressing the UP button) a second time, you
-will enter the Settings menu (see further below).
+will enter the Settings menu (see Settings below).
 
 
 Timers View
@@ -221,11 +224,12 @@ is achieved by pressing the SELECT button. When recording, the BACK key will act
 as Lap Key (unless configured not to do so; see Settings below).
 
 GliderSK adds custom fields to the recorded FIT file:
+ - Barometric Altitude
  - Vertical Speed
  - Rate-of-Turn
  - Acceleration
-(which will be plotted in Garmin Connect if your installed the application
-through the Garmin ConnectIQ store)
+(which will be plotted in Garmin Connect IF your installed the application
+ through the Garmin ConnectIQ store)
 
 
 Settings
@@ -235,63 +239,82 @@ Unless explicitely stated otherwise for a given view, you may enter the Settings
 menu by pressing the MENU button (long-pressing the UP button).
 
 The application allows you to specify the following settings:
- - Altimeter -> Calibration -> QNH:
-   calibrate the altimeter using the current known QNH
- - Altimeter -> Calibration -> Elevation:
-   calibrate the altimeter using the current known elevation
-   (QNH shall be adjusted accordingly)
- - Altimeter -> Correction -> Absolute:
-   set the absolute device's sensor error correction
- - Altimeter -> Correction -> Relative:
-   set the relative device's sensor error correction
- - Variometer -> Variometer Range:
-   the range used for the variometer display and tones (3.0, 6.0 or 9.0 m/s)
- - Variometer -> Variometer Mode:
-   whether the variometer tracks altitude variation only (dAlt) or compensates for cinetic energy (speed) variations (dE)
- - Variometer -> Energy Efficiency
-   percentage of the short-term cinetic energy (speed) variations that may be recovered as potential energy (altitude)
- - Variometer -> Plot Range:
+
+* Altimeter
+  > Calibration
+    - QNH:
+      calibrate the altimeter using the current known QNH
+    - Elevation:
+      calibrate the altimeter using the current known elevation
+      (QNH shall be adjusted accordingly)
+  > Correction
+    - Absolute:
+      set the absolute device's sensor error correction
+    - Relative:
+      set the relative device's sensor error correction
+
+* Variometer
+  - Range:
+    the range used for the variometer display and tones (3.0, 6.0 or 9.0 m/s)
+  - Mode:
+    whether the variometer tracks altitude variation only (dAlt) or compensates
+    for cinetic energy (speed) variations (dE)
+  - Energy Efficiency:
+    percentage of the short-term cinetic energy (speed) variations that may be
+    recovered as potential energy (altitude)
+  - Plot Range:
    the time range (in minutes) for plotting the variometer-vs-location history
- - Safety -> Finesse:
-   the finesse to apply for height estimation (when in ascent)
- - Safety -> Decision Height:
-   the height (Above Ground Level) under which to switch from height
-   estimation (using worst-case finesse and best-case heading) to
-   actual height calculation (using actual finesse and heading)
- - Safety -> Warning Height:
-   the height (Above Ground Level) under which to issue warning alerts
- - Safety -> Critical Height:
-   the height (Above Ground Level) under which to issue critical alerts
- - Safety -> Heading Bug:
-   whether to always hide the heading bug (off), always show it (on) or only in Pass 2 / Alert mode (auto)
- - Sounds -> Variometer Tones:
-   whether to play variometer tones
- - Sounds -> Safety Tones:
-   whether to play alert tones when below warning or critical height
-   (or GPS signal is lost)
- - Sounds -> Mute distance:
-   the distance (from destination) under which to mute all sounds
-   (and let you concentrate on your take-off or landing)
- - General -> Time Constant:
-   time constant/window (in seconds) used for averaging (SMA) sensor values
- - General -> Display Filter:
-   whether to display instantaneous or filtered data (see Data Filtering below)
- - General -> Background Color:
-   the background color
- - General -> Lap Key:
-   whether the BACK key adds a new lap to a recording activity
- - Units -> Distance Unit:
-   preferred units for displaying distance (and horizontal speed) values
- - Units -> Elevation Unit:
-   preferred units for displaying elevation (and vertical speed) values
- - Units -> Rate-of-Turn Unit:
-   your preferred unit for displaying rate-of-turn values
- - Units -> Timezone:
-   display Local Time (LT) or Universal Time Coordinates (UTC/Z)
- - Storage -> Import Data:
-   import data from the specified (JSON) file (see Storage Data below)
- - Storage -> Delete All:
-   delete all storage data (destinations memory)
+
+* Safety
+  - Finesse:
+    the finesse to apply for height estimation (when in ascent)
+  - Decision Height:
+    the height (Above Ground Level) under which to switch from height
+    estimation (using worst-case finesse and best-case heading) to
+    actual height calculation (using actual finesse and heading)
+  - Warning Height:
+    the height (Above Ground Level) under which to issue warning alerts
+  - Critical Height:
+    the height (Above Ground Level) under which to issue critical alerts
+  - Heading Bug:
+    whether to always hide the heading bug (off), always show it (on) or only
+    in Pass 2 / Alert mode (auto)
+
+* Sounds
+  - Variometer Tones:
+    whether to play variometer tones
+  - Safety Tones:
+    whether to play alert tones when below warning or critical height
+    (or GPS signal is lost)
+  - Mute distance:
+    the distance (from destination) under which to mute all sounds
+    (and let you concentrate on your take-off or landing)
+
+* General
+  - Time Constant:
+    time constant/window (in seconds) used for averaging (SMA) sensor values
+  - Display Filter:
+    whether to display instantaneous or filtered data (see Data Filtering below)
+  - Background Color:
+    the background color (black or white)
+  - Lap Key:
+    whether the BACK key adds a new lap to a recording activity
+
+* Units
+  - Distance Unit:
+    preferred units for displaying distance (and horizontal speed) values
+  - Elevation Unit:
+    preferred units for displaying elevation (and vertical speed) values
+  - Rate-of-Turn Unit:
+    your preferred unit for displaying rate-of-turn values
+  - Timezone:
+    display Local Time (LT) or Universal Time Coordinates (UTC/Z)
+
+* Storage
+  - Import Data:
+    import data from the specified (JSON) file (see Storage Data below)
+  - Delete All:
+    delete all storage data (destinations memory)
 
 
 About Data Filtering
@@ -321,8 +344,8 @@ However, the following exceptions apply:
 - Activity Recorded (FIT) data are always instantaneous
 
 
-About Storage Data (Import)
----------------------------
+Importing Storage Data
+----------------------
 
 GliderSK allows you to import data into the application storage space - iow.
 destinations memory - from the web; to do so:
@@ -350,8 +373,8 @@ The format of a JSON destination data file is straight-forward; example given:
 
      https://github.com/cedric-dufour/connectiq-app-glidersk/raw/master/data/LSAS.json
 
-Provided you have some web service where to store them, you can write your own data
-file(s). Just edit the Repository URL correspondingly (see point 2. above).
+Provided you have some web service where to store them, you can write your own
+data file(s). Just edit the Repository URL correspondingly (see point 2. above).
 WARNING: If using HTTPS (SSL), make sure the website's certificate is from a
 well-known Certification Authority (CA) or GCM will refuse to download the data.
 
