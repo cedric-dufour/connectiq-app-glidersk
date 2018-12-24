@@ -301,11 +301,11 @@ The application allows you to specify the following settings:
     whether the BACK key adds a new lap to a recording activity
 
 * Units
-  - Distance Unit:
+  - Distance:
     preferred units for displaying distance (and horizontal speed) values
-  - Elevation Unit:
+  - Elevation:
     preferred units for displaying elevation (and vertical speed) values
-  - Rate-of-Turn Unit:
+  - Rate-of-Turn:
     your preferred unit for displaying rate-of-turn values
   - Timezone:
     display Local Time (LT) or Universal Time Coordinates (UTC/Z)

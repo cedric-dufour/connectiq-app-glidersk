@@ -48,17 +48,17 @@
   <string id="titleGeneralLapKey">Lap Key</string>
   <!-- Menu (settings:units) -->
   <string id="titleSettingsUnits">Units</string>
-  <string id="titleUnitDistance">Distance Unit</string>
+  <string id="titleUnitDistance">Distance</string>
   <string id="valueUnitDistanceMetric">km</string>
   <string id="valueUnitDistanceStatute">sm</string>
   <string id="valueUnitDistanceNautical">nm</string>
-  <string id="titleUnitElevation">Elevation Unit</string>
+  <string id="titleUnitElevation">Elevation</string>
   <string id="valueUnitElevationMetric">m</string>
   <string id="valueUnitElevationStatute">ft</string>
-  <string id="titleUnitPressure">Pressure Unit</string>
+  <string id="titleUnitPressure">Pressure</string>
   <string id="valueUnitPressureMetric">mb</string>
   <string id="valueUnitPressureStatute">inHg</string>
-  <string id="titleUnitRateOfTurn">Rate-of-Turn Unit</string>
+  <string id="titleUnitRateOfTurn">Rate-of-Turn</string>
   <string id="valueUnitRateOfTurnDegree">°/s</string>
   <string id="valueUnitRateOfTurnRpm">rpm</string>
   <string id="titleUnitTimeUTC">Timezone</string>
