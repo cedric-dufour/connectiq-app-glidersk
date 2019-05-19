@@ -17,11 +17,9 @@
 // License-Filename: LICENSE/GPL-3.0.txt
 
 using Toybox.Activity;
-using Toybox.ActivityRecording as AR;
 using Toybox.Application as App;
 using Toybox.Attention as Attn;
 using Toybox.Communications as Comm;
-using Toybox.FitContributor as FC;
 using Toybox.Position as Pos;
 using Toybox.Sensor;
 using Toybox.System as Sys;
@@ -51,18 +49,11 @@ var GSK_oProcessing = null;
 var GSK_oTimeStart = null;
 
 // Activity session (recording)
-var GSK_Activity_oSession = null;
+var GSK_oActivity = null;
 var GSK_Activity_oTimeStart = null;
 var GSK_Activity_oTimeLap = null;
 var GSK_Activity_iCountLaps = null;
 var GSK_Activity_oTimeStop = null;
-var GSK_Fit_BarometricAltitude_oField = null;
-var GSK_Fit_BarometricAltitude_fUnitCoefficient = 1.0f;
-var GSK_Fit_VerticalSpeed_oField = null;
-var GSK_Fit_VerticalSpeed_fUnitCoefficient = 1.0f;
-var GSK_Fit_RateOfTurn_oField = null;
-var GSK_Fit_RateOfTurn_fUnitCoefficient = 1.0f;
-var GSK_Fit_Acceleration_oField = null;
 
 // Current view
 var GSK_oCurrentView = null;
@@ -252,14 +243,12 @@ class GSK_App extends App.AppBase {
     $.GSK_oProcessing.processSensorInfo(_oInfo, Time.now().value());
 
     // Save FIT fields
-    if($.GSK_Fit_BarometricAltitude_oField != null and $.GSK_oProcessing.fAltitude != null) {
-      $.GSK_Fit_BarometricAltitude_oField.setData($.GSK_oProcessing.fAltitude * $.GSK_Fit_BarometricAltitude_fUnitCoefficient);
-    }
-    if($.GSK_oSettings.iVariometerMode == 0 and $.GSK_Fit_VerticalSpeed_oField != null and $.GSK_oProcessing.fVariometer != null) {
-      $.GSK_Fit_VerticalSpeed_oField.setData($.GSK_oProcessing.fVariometer * $.GSK_Fit_VerticalSpeed_fUnitCoefficient);
-    }
-    if($.GSK_Fit_Acceleration_oField != null and $.GSK_oProcessing.fAcceleration != null) {
-      $.GSK_Fit_Acceleration_oField.setData($.GSK_oProcessing.fAcceleration);
+    if($.GSK_oActivity != null) {
+      $.GSK_oActivity.setBarometricAltitude($.GSK_oProcessing.fAltitude);
+      if($.GSK_oSettings.iVariometerMode == 0) {
+        $.GSK_oActivity.setVerticalSpeed($.GSK_oProcessing.fVariometer);
+      }
+      $.GSK_oActivity.setAcceleration($.GSK_oProcessing.fAcceleration);
     }
   }
 
@@ -284,11 +273,11 @@ class GSK_App extends App.AppBase {
     self.updateUi(iEpoch);
 
     // Save FIT fields
-    if($.GSK_oSettings.iVariometerMode == 1 and $.GSK_Fit_VerticalSpeed_oField != null and $.GSK_oProcessing.fVariometer != null) {
-      $.GSK_Fit_VerticalSpeed_oField.setData($.GSK_oProcessing.fVariometer * $.GSK_Fit_VerticalSpeed_fUnitCoefficient);
-    }
-    if($.GSK_Fit_RateOfTurn_oField != null and $.GSK_oProcessing.fRateOfTurn != null) {
-      $.GSK_Fit_RateOfTurn_oField.setData($.GSK_oProcessing.fRateOfTurn * $.GSK_Fit_RateOfTurn_fUnitCoefficient);
+    if($.GSK_oActivity != null) {
+      if($.GSK_oSettings.iVariometerMode == 1) {
+        $.GSK_oActivity.setVerticalSpeed($.GSK_oProcessing.fVariometer);
+      }
+      $.GSK_oActivity.setRateOfTurn($.GSK_oProcessing.fRateOfTurn);
     }
   }
 
@@ -414,115 +403,6 @@ class GSK_App extends App.AppBase {
         }
       }
     }
-  }
-
-  function initActivity() {
-    //Sys.println("DEBUG: GSK_App.initActivity()");
-
-    // NOTE: "Flying" activity number is 20 (cf. https://www.thisisant.com/resources/fit -> Profiles.xlsx)
-    $.GSK_Activity_oSession = AR.createSession({ :name=>"GliderSK", :sport=>20, :subSport=>AR.SUB_SPORT_GENERIC });
-    $.GSK_Fit_BarometricAltitude_oField = $.GSK_Activity_oSession.createField("BarometricAltitude", GSK_App.FITFIELD_BAROMETRICALTITUDE, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_oSettings.sUnitElevation });
-    $.GSK_Fit_BarometricAltitude_fUnitCoefficient = $.GSK_oSettings.fUnitElevationCoefficient;
-    $.GSK_Fit_VerticalSpeed_oField = $.GSK_Activity_oSession.createField("VerticalSpeed", GSK_App.FITFIELD_VERTICALSPEED, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_oSettings.sUnitVerticalSpeed });
-    $.GSK_Fit_VerticalSpeed_fUnitCoefficient = $.GSK_oSettings.fUnitVerticalSpeedCoefficient;
-    $.GSK_Fit_RateOfTurn_oField = $.GSK_Activity_oSession.createField("RateOfTurn", GSK_App.FITFIELD_RATEOFTURN, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_oSettings.sUnitRateOfTurn });
-    $.GSK_Fit_RateOfTurn_fUnitCoefficient = $.GSK_oSettings.fUnitRateOfTurnCoefficient;
-    $.GSK_Fit_Acceleration_oField = $.GSK_Activity_oSession.createField("Acceleration", GSK_App.FITFIELD_ACCELERATION, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>"g" });
-  }
-
-  function startActivity() {
-    //Sys.println("DEBUG: GSK_App.startActivity()");
-
-    if($.GSK_Activity_oSession != null) {
-      return;
-    }
-    self.initActivity();
-    $.GSK_Activity_oSession.start();
-    $.GSK_Activity_oTimeStart = Time.now();
-    $.GSK_Activity_oTimeLap = Time.now();
-    $.GSK_Activity_iCountLaps = 1;
-    if(Attn has :playTone) {
-      Attn.playTone(Attn.TONE_START);
-    }
-  }
-
-  function lapActivity() {
-    //Sys.println("DEBUG: GSK_App.lapActivity()");
-
-    if($.GSK_Activity_oSession == null or !$.GSK_oSettings.bGeneralLapKey or !$.GSK_Activity_oSession.isRecording()) {
-      return;
-    }
-    $.GSK_Activity_oSession.addLap();
-    $.GSK_Activity_oTimeLap = Time.now();
-    $.GSK_Activity_iCountLaps += 1;
-    if(Attn has :playTone) {
-      Attn.playTone(Attn.TONE_LAP);
-    }
-  }
-
-  function pauseActivity() {
-    //Sys.println("DEBUG: GSK_App.pauseActivity()");
-
-    if($.GSK_Activity_oSession == null or !$.GSK_Activity_oSession.isRecording()) {
-      return;
-    }
-    $.GSK_Activity_oSession.stop();
-    if(Attn has :playTone) {
-      Attn.playTone(Attn.TONE_STOP);
-    }
-  }
-
-  function resumeActivity() {
-    //Sys.println("DEBUG: GSK_App.resumeActivity()");
-
-    if($.GSK_Activity_oSession == null or $.GSK_Activity_oSession.isRecording()) {
-      return;
-    }
-    $.GSK_Activity_oSession.start();
-    if(Attn has :playTone) {
-      Attn.playTone(Attn.TONE_START);
-    }
-  }
-
-  function stopActivity(_bSave) {
-    //Sys.println(Lang.format("DEBUG: GSK_App.stopActivity($1$)", [_bSave]));
-
-    if($.GSK_Activity_oSession == null) {
-      return;
-    }
-    if($.GSK_Activity_oSession.isRecording()) {
-      $.GSK_Activity_oSession.stop();
-    }
-    if(_bSave) {
-      $.GSK_Activity_oSession.save();
-      $.GSK_Activity_oTimeStop = Time.now();
-      if(Attn has :playTone) {
-        Attn.playTone(Attn.TONE_STOP);
-      }
-    }
-    else {
-      $.GSK_Activity_oSession.discard();
-      if(Attn has :playTone) {
-        Attn.playTone(Attn.TONE_RESET);
-      }
-    }
-    self.resetActivity(!_bSave);
-  }
-
-  function resetActivity(_bClearTimers) {
-    //Sys.println(Lang.format("DEBUG: GSK_App.resetActivity($1$)", [_bClearTimers]));
-
-    $.GSK_Activity_oSession = null;
-    if(_bClearTimers) {
-      $.GSK_Activity_oTimeStart = null;
-      $.GSK_Activity_oTimeLap = null;
-      $.GSK_Activity_iCountLaps = null;
-      $.GSK_Activity_oTimeStop = null;
-    }
-    $.GSK_Fit_BarometricAltitude_oField = null;
-    $.GSK_Fit_VerticalSpeed_oField = null;
-    $.GSK_Fit_RateOfTurn_oField = null;
-    $.GSK_Fit_Acceleration_oField = null;
   }
 
   function importStorageData(_sFile) {
