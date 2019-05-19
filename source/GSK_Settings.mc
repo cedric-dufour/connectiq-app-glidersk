@@ -89,6 +89,7 @@ class GSK_Settings {
 
   function load() {
     // Settings
+    // ... altimeter
     self.setAltimeterCalibrationQNH(App.Properties.getValue("userAltimeterCalibrationQNH"));
     self.setAltimeterCorrectionAbsolute(App.Properties.getValue("userAltimeterCorrectionAbsolute"));
     self.setAltimeterCorrectionRelative(App.Properties.getValue("userAltimeterCorrectionRelative"));
@@ -448,10 +449,10 @@ class GSK_Settings {
     }
     self.iUnitPressure = _iUnitPressure;
     if(self.iUnitPressure < 0) {  // ... auto
-      // NOTE: assume distance units are a good indicator of preferred pressure units
+      // NOTE: assume weight units are a good indicator of preferred pressure units
       var oDeviceSettings = Sys.getDeviceSettings();
-      if(oDeviceSettings has :distanceUnits and oDeviceSettings.distanceUnits != null) {
-        _iUnitPressure = oDeviceSettings.distanceUnits;
+      if(oDeviceSettings has :weightUnits and oDeviceSettings.weightUnits != null) {
+        _iUnitPressure = oDeviceSettings.weightUnits;
       }
       else {
         _iUnitPressure = Sys.UNIT_METRIC;
