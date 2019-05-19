@@ -68,6 +68,7 @@ const GSK_STORAGE_SLOTS = 100;
 
 // No-value strings
 // NOTE: Those ought to be defined in the GSK_App class like other constants but code then fails with an "Invalid Value" error when called upon; BUG?
+const GSK_NOVALUE_BLANK = "";
 const GSK_NOVALUE_LEN2 = "--";
 const GSK_NOVALUE_LEN3 = "---";
 const GSK_NOVALUE_LEN4 = "----";
@@ -189,7 +190,7 @@ class GSK_App extends App.AppBase {
   function getInitialView() {
     //Sys.println("DEBUG: GSK_App.getInitialView()");
 
-    return [new GSK_ViewGlobal(), new GSK_ViewGlobalDelegate()];
+    return [new GSK_ViewGeneral(), new GSK_ViewGeneralDelegate()];
   }
 
   function onSettingsChanged() {

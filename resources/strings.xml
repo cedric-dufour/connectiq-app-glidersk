@@ -49,40 +49,30 @@
   <!-- Menu (settings:units) -->
   <string id="titleSettingsUnits">Units</string>
   <string id="titleUnitDistance">Distance</string>
-  <string id="valueUnitDistanceMetric">km</string>
-  <string id="valueUnitDistanceStatute">sm</string>
-  <string id="valueUnitDistanceNautical">nm</string>
   <string id="titleUnitElevation">Elevation</string>
-  <string id="valueUnitElevationMetric">m</string>
-  <string id="valueUnitElevationStatute">ft</string>
   <string id="titleUnitPressure">Pressure</string>
-  <string id="valueUnitPressureMetric">mb</string>
-  <string id="valueUnitPressureStatute">inHg</string>
   <string id="titleUnitRateOfTurn">Rate-of-Turn</string>
-  <string id="valueUnitRateOfTurnDegree">°/s</string>
-  <string id="valueUnitRateOfTurnRpm">rpm</string>
   <string id="titleUnitTimeUTC">Timezone</string>
   <string id="valueUnitTimeLT">LT</string>
   <string id="valueUnitTimeUTC">UTC</string>
-  <!-- Menu (settings:storage) -->
-  <string id="titleSettingsStorage">Storage</string>
+  <!-- Menu (storage) -->
+  <string id="titleStorage">Storage</string>
   <string id="titleStorageRepositoryURL">Repository URL</string>
   <string id="titleStorageImportData">Import Data</string>
-  <string id="titleStorageDeleteAll">Delete All</string>
-  <!-- Menu (settings:about) -->
-  <string id="titleSettingsAbout">About</string>
+  <string id="titleStorageEdit">Edit</string>
+  <string id="titleStorageLoad">Load</string>
+  <string id="titleStorageSave">Save</string>
+  <string id="titleStorageDelete">Delete</string>
+  <string id="titleStorageClear">Clear</string>
   <!-- Menu (destination) -->
   <string id="titleDestination">Destination</string>
-  <string id="titleDestinationLoad">Load</string>
-  <string id="titleDestinationEdit">Edit</string>
-  <string id="titleDestinationSave">Save</string>
-  <string id="titleDestinationDelete">Delete</string>
-  <!-- Menu (destination) -->
   <string id="titleDestinationName">Name</string>
   <string id="titleDestinationLatitude">Latitude</string>
   <string id="titleDestinationLongitude">Longitude</string>
   <string id="titleDestinationElevation">Elevation</string>
   <string id="titleDestinationFromCurrent">From Current</string>
+  <!-- Menu (about) -->
+  <string id="titleAbout">About</string>
   <!-- Menu (activity) -->
   <string id="titleActivity">Activity</string>
   <string id="titleActivityStart">Start</string>

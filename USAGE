@@ -29,10 +29,10 @@ altitude reading (the device's "native" altimeter/barometer settings are
 ignored).
 
 
-Global View
------------
+General View
+------------
 
-The GliderSK Global view displays all the flight data in a single view, without
+The GliderSK General view displays all the flight data in a single view, without
 any further bells or whistles:
  - Top-Left:
    your current acceleration (G-meter)

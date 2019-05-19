@@ -6,7 +6,6 @@
     <drawable id="drawContentBorders" />
     <drawable id="drawFieldsBorders" />
     <!-- Header -->
-    <label id="labelAppName" x="120" y="3" color="Gfx.COLOR_TRANSPARENT" justification="Gfx.TEXT_JUSTIFY_CENTER" font="Gfx.FONT_TINY" text="@Strings.AppName" />
     <label id="valueBatteryLevel" x="85" y="10" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" font="@Fonts.fontStatus" />
     <label id="valueActivityStatus" x="155" y="10" color="Gfx.COLOR_LT_GRAY" justification="Gfx.TEXT_JUSTIFY_CENTER" font="@Fonts.fontStatus" />
     <!-- Fields -->
@@ -31,6 +30,6 @@
     <label id="unitBottomRight" x="228" y="150" color="Gfx.COLOR_DK_GRAY" justification="Gfx.TEXT_JUSTIFY_RIGHT" font="@Fonts.fontUnit" />
     <label id="valueBottomRight" x="167" y="165" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" font="Gfx.FONT_LARGE" />
     <!-- Footer -->
-    <label id="valueTime" x="120" y="209" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" font="Gfx.FONT_TINY" />
+    <label id="valueFooter" x="120" y="209" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" font="Gfx.FONT_TINY" />
   </layout>
 </layouts>
