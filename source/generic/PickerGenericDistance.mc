@@ -30,7 +30,7 @@ class PickerGenericDistance extends Ui.Picker {
   function initialize(_sTitle, _fValue, _iUnit, _bAllowNegative) {
     // Input validation
     // ... unit
-    if(_iUnit == null or _iUnit < 0) {
+    if(_iUnit == null or _iUnit < 0 or _iUnit > 2) {
       var oDeviceSettings = Sys.getDeviceSettings();
       if(oDeviceSettings has :distanceUnits and oDeviceSettings.distanceUnits != null) {
         _iUnit = oDeviceSettings.distanceUnits;
@@ -44,13 +44,14 @@ class PickerGenericDistance extends Ui.Picker {
       _fValue = 0.0f;
     }
 
-    // Use user-specified distance unit (NB: metric units are always used internally)
+    // Use user-specified distance unit (NB: SI units are always used internally)
+    // PRECISION: 0.1 (* 10)
     var sUnit;
     var iMaxSignificant;
     if(_iUnit == 2) {
       sUnit = "nm";
       iMaxSignificant = 53;
-      _fValue /= 185.2f;  // ... from meters
+      _fValue /= 185.2f;  // m -> nm (* 10)
       if(_fValue > 539999.0f) {
         _fValue = 539999.0f;
       }
@@ -61,7 +62,7 @@ class PickerGenericDistance extends Ui.Picker {
     else if(_iUnit == Sys.UNIT_STATUTE) {
       sUnit = "sm";
       iMaxSignificant = 61;
-      _fValue /= 160.9344f;  // ... from meters
+      _fValue /= 160.9344f;  // m -> sm (* 10)
       if(_fValue > 619999.0f) {
         _fValue = 619999.0f;
       }
@@ -72,7 +73,7 @@ class PickerGenericDistance extends Ui.Picker {
     else {
       sUnit = "km";
       iMaxSignificant = 99;
-      _fValue /= 100.0f;  // ... from meters
+      _fValue /= 100.0f;  // m -> km (* 10)
       if(_fValue > 999999.0f) {
         _fValue = 999999.0f;
       }
@@ -119,7 +120,7 @@ class PickerGenericDistance extends Ui.Picker {
   function getValue(_amValues, _iUnit) {
     // Input validation
     // ... unit
-    if(_iUnit == null or _iUnit < 0) {
+    if(_iUnit == null or _iUnit < 0 or _iUnit > 2) {
       var oDeviceSettings = Sys.getDeviceSettings();
       if(oDeviceSettings has :distanceUnits and oDeviceSettings.distanceUnits != null) {
         _iUnit = oDeviceSettings.distanceUnits;
@@ -135,15 +136,15 @@ class PickerGenericDistance extends Ui.Picker {
       fValue *= _amValues[0];
     }
 
-    // Use user-specified distance unit (NB: metric units are always used internally)
+    // Use user-specified distance unit (NB: SI units are always used internally)
     if(_iUnit == 2) {
-      fValue *= 185.2f;  // ... to meters
+      fValue *= 185.2f;  // nm (* 10) -> m
     }
     else if(_iUnit == Sys.UNIT_STATUTE) {
-      fValue *= 160.9344f;  // ... to meters
+      fValue *= 160.9344f;  // sm (* 10) -> m
     }
     else {
-      fValue *= 100.0f;  // ... to meters
+      fValue *= 100.0f;  // km (* 10) -> m
     }
 
     // Return value

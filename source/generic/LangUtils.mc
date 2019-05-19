@@ -125,4 +125,15 @@ module LangUtils {
     return dBearing.toFloat();
   }
 
+  // Estimate the distance (in meters) between two geographical coordinates, using the equirectangular rhumb-line estimation
+  // INPUT: Position.Location.toRadians() array
+  function distanceEstimate(_adLoc1, _adLoc2) {
+    // Formula shamelessly copied from http://www.movable-type.co.uk/scripts/latlong.html
+    var x = (_adLoc2[1] - _adLoc1[1]) * Math.cos((_adLoc2[0] + _adLoc1[0]) / 2.0d);
+    var y = (_adLoc2[0] - _adLoc1[0]);
+    // Let's use Earth mean radius (https://en.wikipedia.org/wiki/Earth_radius#Mean_radius)
+    var dDistance = Math.sqrt(x*x + y*y) * 6371007.2d;
+    return dDistance.toFloat();
+  }
+
 }

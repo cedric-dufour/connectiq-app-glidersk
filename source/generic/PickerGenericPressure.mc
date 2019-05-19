@@ -30,7 +30,7 @@ class PickerGenericPressure extends Ui.Picker {
   function initialize(_sTitle, _fValue, _iUnit, _bAllowNegative) {
     // Input validation
     // ... unit
-    if(_iUnit == null or _iUnit < 0) {
+    if(_iUnit == null or _iUnit < 0 or _iUnit > 1) {
       var oDeviceSettings = Sys.getDeviceSettings();
       if(oDeviceSettings has :distanceUnits and oDeviceSettings.distanceUnits != null) {
         _iUnit = oDeviceSettings.distanceUnits;
@@ -44,13 +44,14 @@ class PickerGenericPressure extends Ui.Picker {
       _fValue = 0.0f;
     }
 
-    // Use user-specified pressure unit (NB: metric units are always used internally)
+    // Use user-specified pressure unit (NB: SI units are always used internally)
+    // PRECISION: metric 0.1 (* 10) / statute 0.001 (* 1000)
     var sUnit;
     var iMaxSignificant;
     if(_iUnit == Sys.UNIT_STATUTE) {
       sUnit = "inHg";
       iMaxSignificant = 31;
-      _fValue *= 0.2953f;  // ... from pascals
+      _fValue *= 0.2953f;  // Pa -> inHg (* 1000)
       if(_fValue > 31999.0f) {
         _fValue = 31999.0f;
       }
@@ -61,7 +62,7 @@ class PickerGenericPressure extends Ui.Picker {
     else {
       sUnit = "mb";
       iMaxSignificant = 10;
-      _fValue *= 0.1f;  // ... from pascals
+      _fValue *= 0.1f;  // Pa -> mb (* 10)
       if(_fValue > 10999.0f) {
         _fValue = 10999.0f;
       }
@@ -105,7 +106,7 @@ class PickerGenericPressure extends Ui.Picker {
   function getValue(_amValues, _iUnit) {
     // Input validation
     // ... unit
-    if(_iUnit == null or _iUnit < 0) {
+    if(_iUnit == null or _iUnit < 0 or _iUnit > 1) {
       var oDeviceSettings = Sys.getDeviceSettings();
       if(oDeviceSettings has :distanceUnits and oDeviceSettings.distanceUnits != null) {
         _iUnit = oDeviceSettings.distanceUnits;
@@ -121,12 +122,12 @@ class PickerGenericPressure extends Ui.Picker {
       fValue *= _amValues[0];
     }
 
-    // Use user-specified pressure unit (NB: metric units are always used internally)
+    // Use user-specified pressure unit (NB: SI units are always used internally)
     if(_iUnit == Sys.UNIT_STATUTE) {
-      fValue /= 0.2953f;  // ... to pascals
+      fValue /= 0.2953f;  // inHg (* 1000) -> Pa
     }
     else {
-      fValue *= 10.0f;  // ... to pascals
+      fValue *= 10.0f;  // mb (* 10) -> Pa
     }
 
     // Return value

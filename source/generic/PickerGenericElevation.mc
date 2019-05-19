@@ -30,7 +30,7 @@ class PickerGenericElevation extends Ui.Picker {
   function initialize(_sTitle, _fValue, _iUnit, _bAllowNegative) {
     // Input validation
     // ... unit
-    if(_iUnit == null or _iUnit < 0) {
+    if(_iUnit == null or _iUnit < 0 or _iUnit > 1) {
       var oDeviceSettings = Sys.getDeviceSettings();
       if(oDeviceSettings has :elevationUnits and oDeviceSettings.elevationUnits != null) {
         _iUnit = oDeviceSettings.elevationUnits;
@@ -44,13 +44,14 @@ class PickerGenericElevation extends Ui.Picker {
       _fValue = 0.0f;
     }
 
-    // Use user-specified elevation unit (NB: metric units are always used internally)
+    // Use user-specified elevation unit (NB: SI units are always used internally)
+    // PRECISION: 1.0
     var sUnit;
     var iMaxSignificant;
     if(_iUnit == Sys.UNIT_STATUTE) {
       sUnit = "ft";
       iMaxSignificant = 31;
-      _fValue /= 0.3048f;  // ... from meters
+      _fValue /= 0.3048f;  // m -> ft
       if(_fValue > 31999.0f) {
         _fValue = 31999.0f;
       }
@@ -104,7 +105,7 @@ class PickerGenericElevation extends Ui.Picker {
   function getValue(_amValues, _iUnit) {
     // Input validation
     // ... unit
-    if(_iUnit == null or _iUnit < 0) {
+    if(_iUnit == null or _iUnit < 0 or _iUnit > 1) {
       var oDeviceSettings = Sys.getDeviceSettings();
       if(oDeviceSettings has :elevationUnits and oDeviceSettings.elevationUnits != null) {
         _iUnit = oDeviceSettings.elevationUnits;
@@ -120,9 +121,9 @@ class PickerGenericElevation extends Ui.Picker {
       fValue *= _amValues[0];
     }
 
-    // Use user-specified elevation unit (NB: metric units are always used internally)
+    // Use user-specified elevation unit (NB: SI units are always used internally)
     if(_iUnit == Sys.UNIT_STATUTE) {
-      fValue *= 0.3048f;  // ... to meters
+      fValue *= 0.3048f;  // ft -> m
     }
 
     // Return value
