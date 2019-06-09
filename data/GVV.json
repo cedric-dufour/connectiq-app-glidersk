@@ -1,0 +1,16 @@
+{
+  "destinations": {
+    "71": { "name": "C.Crx", "latitude": 46.324889, "longitude": 7.126806, "elevation": 1776.0, "comment": "Col de la Croix" },
+    "72": { "name": "C.Pil", "latitude": 46.353417, "longitude": 7.204583, "elevation": 1546.0, "comment": "Col du Pillon" },
+    "73": { "name": "C.Mos", "latitude": 46.398972, "longitude": 7.102739, "elevation": 1445.0, "comment": "Col des Mosses" },
+    "74": { "name": "C.Che", "latitude": 46.287389, "longitude": 7.191278, "elevation": 2037.0, "comment": "Pas de Cheville" },
+    "75": { "name": "C.San", "latitude": 46.331472, "longitude": 7.286250, "elevation": 2253.0, "comment": "Col du Sanetsch" },
+    "76": { "name": "C.Raw", "latitude": 46.383306, "longitude": 7.442167, "elevation": 2428.0, "comment": "Col du Rawil" },
+    "91": { "name": "VsDor", "latitude": 46.163111, "longitude": 7.039000, "elevation": 450.0, "comment": "Champ: Dorénaz (VS)" },
+    "92": { "name": "VsVer", "latitude": 46.124361, "longitude": 7.050389, "elevation": 455.0, "comment": "Champ: Vernayaz (VS)" },
+    "93": { "name": "VsMty", "latitude": 46.118583, "longitude": 7.104056, "elevation": 460.0, "comment": "Champ: Martigny (VS)" },
+    "94": { "name": "VsCha", "latitude": 46.117722, "longitude": 7.124222, "elevation": 460.0, "comment": "Champ: Charrat (VS)" },
+    "95": { "name": "VsCLg", "latitude": 46.264528, "longitude": 7.484278, "elevation": 510.0, "comment": "Champ: Crêtelongue/Granges (VS)" },
+    "96": { "name": "VsFng", "latitude": 46.304111, "longitude": 7.600583, "elevation": 565.0, "comment": "Champ: Bois de Finges (VS)" }
+  }
+}
