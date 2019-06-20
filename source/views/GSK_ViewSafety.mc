@@ -355,9 +355,6 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
       else {
         self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_DK_GREEN);
       }
-      if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN and $.GSK_oProcessing.bEstimation) {
-        self.oRezValueRight.setColor(Gfx.COLOR_DK_GRAY);
-      }
       if($.GSK_oProcessing.fHeightAtDestination <= 0.0f) {
         sValue = self.sValueHeightGround;
       }
