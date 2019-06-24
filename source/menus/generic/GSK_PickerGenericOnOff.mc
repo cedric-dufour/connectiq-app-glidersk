@@ -33,6 +33,9 @@ class GSK_PickerGenericOnOff extends PickerGenericOnOff {
       else if(_item == :itemSoundsSafetyTones) {
         PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleSoundsSafetyTones), App.Properties.getValue("userSoundsSafetyTones"));
       }
+      else if(_item == :itemGeneralAutoActivity) {
+        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleGeneralAutoActivity), App.Properties.getValue("userGeneralAutoActivity"));
+      }
       else if(_item == :itemGeneralLapKey) {
         PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleGeneralLapKey), App.Properties.getValue("userGeneralLapKey"));
       }
@@ -69,6 +72,9 @@ class GSK_PickerGenericOnOffDelegate extends Ui.PickerDelegate {
       }
       else if(self.item == :itemSoundsSafetyTones) {
         App.Properties.setValue("userSoundsSafetyTones", bValue);
+      }
+      else if(self.item == :itemGeneralAutoActivity) {
+        App.Properties.setValue("userGeneralAutoActivity", bValue);
       }
       else if(self.item == :itemGeneralLapKey) {
         App.Properties.setValue("userGeneralLapKey", bValue);

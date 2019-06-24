@@ -270,6 +270,25 @@ class GSK_App extends App.AppBase {
     // Process position data
     $.GSK_oProcessing.processPositionInfo(_oInfo, iEpoch);
 
+    // Automatic Activity recording
+    if($.GSK_oSettings.bGeneralAutoActivity and $.GSK_oProcessing.fGroundSpeed != null) {
+      if($.GSK_oActivity == null) {
+        if($.GSK_oProcessing.fGroundSpeed > 10.0f) {  // 10 m/s = 36km/h
+          $.GSK_oActivity = new GSK_Activity();
+          $.GSK_oActivity.start();
+        }
+      }
+      else {
+        if($.GSK_oProcessing.fGroundSpeed < 5.0f) {  // 5 m/s = 18km/h
+          $.GSK_oActivity.pause();
+        }
+        else if(!$.GSK_oActivity.isRecording() and $.GSK_oProcessing.fGroundSpeed > 10.0f) {  // 10 m/s = 36km/h
+          $.GSK_oActivity.addLap();
+          $.GSK_oActivity.resume();
+        }
+      }
+    }
+
     // UI update
     self.updateUi(iEpoch);
 

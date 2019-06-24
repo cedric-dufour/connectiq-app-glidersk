@@ -86,6 +86,7 @@ class GSK_MenuGeneric extends Ui.Menu {
       Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralTimeConstant), :menuGeneralTimeConstant);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralDisplayFilter), :menuGeneralDisplayFilter);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralBackgroundColor), :menuGeneralBackgroundColor);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralAutoActivity), :menuGeneralAutoActivity);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralLapKey), :menuGeneralLapKey);
     }
 
@@ -275,6 +276,9 @@ class GSK_MenuGenericDelegate extends Ui.MenuInputDelegate {
       }
       else if(_item == :menuGeneralBackgroundColor) {
         Ui.pushView(new GSK_PickerGenericSettings(:contextGeneral, :itemBackgroundColor), new GSK_PickerGenericSettingsDelegate(:contextGeneral, :itemBackgroundColor), Ui.SLIDE_IMMEDIATE);
+      }
+      else if(_item == :menuGeneralAutoActivity) {
+        Ui.pushView(new GSK_PickerGenericOnOff(:contextSettings, :itemGeneralAutoActivity), new GSK_PickerGenericOnOffDelegate(:contextSettings, :itemGeneralAutoActivity), Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuGeneralLapKey) {
         Ui.pushView(new GSK_PickerGenericOnOff(:contextSettings, :itemGeneralLapKey), new GSK_PickerGenericOnOffDelegate(:contextSettings, :itemGeneralLapKey), Ui.SLIDE_IMMEDIATE);

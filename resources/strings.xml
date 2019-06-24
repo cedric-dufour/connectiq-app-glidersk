@@ -45,6 +45,7 @@
   <string id="titleGeneralDisplayFilter">Display Filter</string>
   <string id="valueGeneralDisplayFilterTimeDerived">δt</string>
   <string id="titleGeneralBackgroundColor">Background Color</string>
+  <string id="titleGeneralAutoActivity">Auto Activity</string>
   <string id="titleGeneralLapKey">Lap Key</string>
   <!-- Menu (settings:units) -->
   <string id="titleSettingsUnits">Units</string>

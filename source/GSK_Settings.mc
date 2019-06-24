@@ -52,6 +52,7 @@ class GSK_Settings {
   public var iGeneralTimeConstant;
   public var iGeneralDisplayFilter;
   public var iGeneralBackgroundColor;
+  public var bGeneralAutoActivity;
   public var bGeneralLapKey;
   // ... units
   public var iUnitDistance;
@@ -113,6 +114,7 @@ class GSK_Settings {
     self.setGeneralTimeConstant(App.Properties.getValue("userGeneralTimeConstant"));
     self.setGeneralDisplayFilter(App.Properties.getValue("userGeneralDisplayFilter"));
     self.setGeneralBackgroundColor(App.Properties.getValue("userGeneralBackgroundColor"));
+    self.setGeneralAutoActivity(App.Properties.getValue("userGeneralAutoActivity"));
     self.setGeneralLapKey(App.Properties.getValue("userGeneralLapKey"));
     // ... units
     self.setUnitDistance(App.Properties.getValue("userUnitDistance"));
@@ -362,6 +364,13 @@ class GSK_Settings {
       _iGeneralBackgroundColor = Gfx.COLOR_WHITE;
     }
     self.iGeneralBackgroundColor = _iGeneralBackgroundColor;
+  }
+
+  function setGeneralAutoActivity(_bGeneralAutoActivity) {
+    if(_bGeneralAutoActivity == null) {
+      _bGeneralAutoActivity = false;
+    }
+    self.bGeneralAutoActivity = _bGeneralAutoActivity;
   }
 
   function setGeneralLapKey(_bGeneralLapKey) {
