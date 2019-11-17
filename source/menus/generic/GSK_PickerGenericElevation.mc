@@ -39,6 +39,9 @@ class GSK_PickerGenericElevation extends PickerGenericElevation {
       else if(_item == :itemSafetyHeightCritical) {
         PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightCritical), App.Properties.getValue("userSafetyHeightCritical"), $.GSK_oSettings.iUnitElevation, false);
       }
+      else if(_item == :itemSafetyHeightReference) {
+        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightReference), App.Properties.getValue("userSafetyHeightReference"), $.GSK_oSettings.iUnitElevation, false);
+      }
     }
     else if(_context == :contextDestination) {
       if(_item == :itemPosition) {
@@ -85,6 +88,9 @@ class GSK_PickerGenericElevationDelegate extends Ui.PickerDelegate {
       }
       else if(self.item == :itemSafetyHeightCritical) {
         App.Properties.setValue("userSafetyHeightCritical", fValue);
+      }
+      else if(self.item == :itemSafetyHeightReference) {
+        App.Properties.setValue("userSafetyHeightReference", fValue);
       }
     }
     else if(self.context == :contextDestination) {

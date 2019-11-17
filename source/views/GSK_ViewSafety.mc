@@ -359,7 +359,7 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
         sValue = self.sValueHeightGround;
       }
       else {
-        fValue = $.GSK_oProcessing.fHeightAtDestination * $.GSK_oSettings.fUnitElevationCoefficient;
+        fValue = ($.GSK_oProcessing.fHeightAtDestination - $.GSK_oSettings.fSafetyHeightReference) * $.GSK_oSettings.fUnitElevationCoefficient;
         sValue = fValue.format("%+.0f");
       }
     }
@@ -474,10 +474,10 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
     self.oRezValueTopRight.setColor(Gfx.COLOR_BLUE);
     View.findDrawableById("labelTopRight").setText(Ui.loadResource(Rez.Strings.labelElevationAtDestination));
     View.findDrawableById("unitTopRight").setText(Lang.format("[$1$]", [$.GSK_oSettings.sUnitElevation]));
-    // ... critical height
-    self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_RED);
+    // ... warning height
+    self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_ORANGE);
     self.oRezLabelLeft.setColor(self.iColorText);
-    self.oRezLabelLeft.setText(Ui.loadResource(Rez.Strings.labelHeightCritical));
+    self.oRezLabelLeft.setText(Ui.loadResource(Rez.Strings.labelHeightWarning));
     self.oRezUnitLeft.setColor(self.iColorText);
     self.oRezUnitLeft.setText(Lang.format("[$1$]", [$.GSK_oSettings.sUnitElevation]));
     self.oRezValueLeft.setColor(self.iColorText);
@@ -486,10 +486,10 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
     self.oRezLabelCenter.setColor(self.iColorText);
     self.oRezLabelCenter.setText(Ui.loadResource(Rez.Strings.labelFinesse));
     self.oRezValueCenter.setColor(self.iColorText);
-    // ... warning height
-    self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_ORANGE);
+    // ... critical height
+    self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_RED);
     self.oRezLabelRight.setColor(self.iColorText);
-    self.oRezLabelRight.setText(Ui.loadResource(Rez.Strings.labelHeightWarning));
+    self.oRezLabelRight.setText(Ui.loadResource(Rez.Strings.labelHeightCritical));
     self.oRezUnitRight.setColor(self.iColorText);
     self.oRezUnitRight.setText(Lang.format("[$1$]", [$.GSK_oSettings.sUnitElevation]));
     self.oRezValueRight.setColor(self.iColorText);
@@ -497,10 +497,10 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
     self.oRezValueBottomLeft.setColor(self.iColorText);
     View.findDrawableById("labelBottomLeft").setText(Ui.loadResource(Rez.Strings.labelHeightDecision));
     View.findDrawableById("unitBottomLeft").setText(Lang.format("[$1$]", [$.GSK_oSettings.sUnitElevation]));
-    // ... time constant
+    // ... reference height
     self.oRezValueBottomRight.setColor(self.iColorText);
-    View.findDrawableById("labelBottomRight").setText(Ui.loadResource(Rez.Strings.labelTimeConstant));
-    View.findDrawableById("unitBottomRight").setText("[s]");
+    View.findDrawableById("labelBottomRight").setText(Ui.loadResource(Rez.Strings.labelHeightReference));
+    View.findDrawableById("unitBottomRight").setText(Lang.format("[$1$]", [$.GSK_oSettings.sUnitElevation]));
     // ... application name
     self.oRezValueFooter.setColor(Gfx.COLOR_DK_GRAY);
   }
@@ -532,19 +532,20 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
     else {
       self.oRezValueTopRight.setText($.GSK_NOVALUE_LEN3);
     }
-    // ... critical height
-    fValue = $.GSK_oSettings.fSafetyHeightCritical * $.GSK_oSettings.fUnitElevationCoefficient;
+    // ... warning height
+    fValue = $.GSK_oSettings.fSafetyHeightWarning * $.GSK_oSettings.fUnitElevationCoefficient;
     self.oRezValueLeft.setText(fValue.format("%.0f"));
     // ... reference finesse
     oRezValueCenter.setText($.GSK_oSettings.iSafetyFinesse.format("%d"));
-    // ... warning height
-    fValue = $.GSK_oSettings.fSafetyHeightWarning * $.GSK_oSettings.fUnitElevationCoefficient;
+    // ... critical height
+    fValue = $.GSK_oSettings.fSafetyHeightCritical * $.GSK_oSettings.fUnitElevationCoefficient;
     self.oRezValueRight.setText(fValue.format("%.0f"));
     // ... decision height
     fValue = $.GSK_oSettings.fSafetyHeightDecision * $.GSK_oSettings.fUnitElevationCoefficient;
     self.oRezValueBottomLeft.setText(fValue.format("%.0f"));
-    // ... time constant
-    self.oRezValueBottomRight.setText($.GSK_oSettings.iGeneralTimeConstant.format("%d"));
+    // ... reference height
+    fValue = $.GSK_oSettings.fSafetyHeightReference * $.GSK_oSettings.fUnitElevationCoefficient;
+    self.oRezValueBottomRight.setText(fValue.format("%.0f"));
     // ... application name
     self.oRezValueFooter.setText(self.sTitle);
   }

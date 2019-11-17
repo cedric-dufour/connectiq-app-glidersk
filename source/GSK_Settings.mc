@@ -43,6 +43,7 @@ class GSK_Settings {
   public var fSafetyHeightDecision;
   public var fSafetyHeightWarning;
   public var fSafetyHeightCritical;
+  public var fSafetyHeightReference;
   public var iSafetyHeadingBug;
   // ... sounds
   public var bSoundsVariometerTones;
@@ -105,6 +106,7 @@ class GSK_Settings {
     self.setSafetyHeightDecision(App.Properties.getValue("userSafetyHeightDecision"));
     self.setSafetyHeightWarning(App.Properties.getValue("userSafetyHeightWarning"));
     self.setSafetyHeightCritical(App.Properties.getValue("userSafetyHeightCritical"));
+    self.setSafetyHeightReference(App.Properties.getValue("userSafetyHeightReference"));
     self.setSafetyHeadingBug(App.Properties.getValue("userSafetyHeadingBug"));
     // ... sounds
     self.setSoundsVariometerTones(App.Properties.getValue("userSoundsVariometerTones"));
@@ -297,6 +299,19 @@ class GSK_Settings {
       _fSafetyHeightCritical = 0.0f;
     }
     self.fSafetyHeightCritical = _fSafetyHeightCritical;
+  }
+
+  function setSafetyHeightReference(_fSafetyHeightReference) {  // [m]
+    if(_fSafetyHeightReference == null) {
+      _fSafetyHeightReference = 300.0f;
+    }
+    else if(_fSafetyHeightReference > 9999.0f) {
+      _fSafetyHeightReference = 9999.0f;
+    }
+    else if(_fSafetyHeightReference < 0.0f) {
+      _fSafetyHeightReference = 0.0f;
+    }
+    self.fSafetyHeightReference = _fSafetyHeightReference;
   }
 
   function setSafetyHeadingBug(_iSafetyHeadingBug) {

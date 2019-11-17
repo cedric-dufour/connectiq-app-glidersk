@@ -97,9 +97,10 @@ single view, using visually appealing alert colors:
    / OR (if in ascent) /
    your reference finesse (grayed-out)
  - Right:
-   the actual height when reaching your current destination
+   the actual height (above reference) when reaching your current destination
    / OR (if the corresponding height is above your decision height) /
-   the estimated height when reaching your current destination (grayed-out)
+   the estimated height (above reference) when reaching your current destination
+   (grayed-out)
  - Bottom-Left:
    your current vertical speed
  - Bottom-Right:
@@ -128,15 +129,15 @@ application will display the current safety-critical settings:
  - Top-Right:
    the elevation of your current destination
  - Left:
-   your chosen critical height
+   your chosen warning height
  - Center
    your chosen reference finesse
  - Right:
-   your chosen warning height
+   your chosen critical height
  - Bottom-Left:
    your chosen decision height
  - Bottom-Right:
-   your chosen time constant
+   your chosen reference height
 
 Then, by pressing the SELECT button, the application will toggle the display and
 choice if the Top-Left and Bottom-Right fields. Note than whenever the Safety
@@ -276,6 +277,9 @@ The application allows you to specify the following settings:
     the height (Above Ground Level) under which to issue warning alerts
   - Critical Height:
     the height (Above Ground Level) under which to issue critical alerts
+  - Reference Height:
+    the height (Above Ground Level) to use as reference when displaying
+    the actual/estimated safety height in the Safety view
   - Heading Bug:
     whether to always hide the heading bug (off), always show it (on) or only
     in Pass 2 / Alert mode (auto)
