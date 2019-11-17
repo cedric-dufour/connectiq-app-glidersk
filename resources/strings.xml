@@ -91,6 +91,8 @@
   <string id="valueColorWhite">white</string>
   <string id="valueColorBlack">black</string>
   <!-- Layouts -->
+  <string id="titleViewSafety">Safety</string>
+  <string id="titleViewLog">Log</string>
   <string id="labelDestination">Destination</string>
   <string id="labelElevationAtDestination">Elevation</string>
   <string id="labelBearingToDestination">Bearing</string>
@@ -111,9 +113,14 @@
   <string id="labelActivity">Activity</string>
   <string id="labelRecording">Recording</string>
   <string id="labelLap">Lap</string>
-  <string id="unitStart">start</string>
-  <string id="unitElapsed">elapsed</string>
-  <string id="unitCount">count</string>
+  <string id="labelCount">Count</string>
+  <string id="labelStart">Start</string>
+  <string id="labelStop">Stop</string>
+  <string id="labelElapsed">Elapsed</string>
+  <string id="labelDistance">Distance</string>
+  <string id="labelAscent">Ascent</string>
+  <string id="labelAltitudeMin">Min.Alt.</string>
+  <string id="labelAltitudeMax">Max.Alt.</string>
   <!-- Values -->
   <string id="valueActivityStandby">SBY</string>
   <string id="valueActivityRecording">REC</string>
@@ -128,4 +135,10 @@
   <string id="unitAcceleration">g</string>
   <string id="titleAltitude">(Barometric) Altitude</string>
   <string id="unitAltitude">m|ft</string>
+  <string id="titleDistance">Distance (~FAI)</string>
+  <string id="unitDistance">km|sm|nm</string>
+  <string id="titleAscent">Ascent (cumulative)</string>
+  <string id="titleAltitudeMin">Mininum Altitude</string>
+  <string id="titleAltitudeMax">Maxinum Altitude</string>
+  <string id="unitTime">hh:mm:ss</string>
 </strings>

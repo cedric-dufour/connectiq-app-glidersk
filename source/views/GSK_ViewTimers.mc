@@ -20,11 +20,29 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.Position as Pos;
 using Toybox.Time;
-using Toybox.Time.Gregorian;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
 class GSK_ViewTimers extends GSK_ViewGlobal {
+
+  //
+  // VARIABLES
+  //
+
+  // Resources (cache)
+  // ... fields (units)
+  private var oRezUnitRight;
+  private var oRezUnitBottomRight;
+  // ... strings
+  private var sUnitElapsed;
+  private var sUnitDistance_fmt;
+  private var sUnitAscent_fmt;
+
+  // Internals
+  // ... fields
+  private var iFieldIndex;
+  private var iFieldEpoch;
+
 
   //
   // FUNCTIONS: GSK_ViewGlobal (override/implement)
@@ -32,30 +50,44 @@ class GSK_ViewTimers extends GSK_ViewGlobal {
 
   function initialize() {
     GSK_ViewGlobal.initialize();
+
+    // Internals
+    // ... fields
+    self.iFieldIndex = 0;
+    self.iFieldEpoch = Time.now().value();
   }
 
   function prepare() {
     //Sys.println("DEBUG: GSK_ViewGlobal.prepare()");
     GSK_ViewGlobal.prepare();
 
+    // Load resources
+    // ... fields (units)
+    self.oRezUnitRight = View.findDrawableById("unitRight");
+    self.oRezUnitBottomRight = View.findDrawableById("unitBottomRight");
+    // ... strings
+    self.sUnitElapsed = Ui.loadResource(Rez.Strings.labelElapsed).toLower();
+    self.sUnitDistance_fmt = Lang.format("$1$ [$2$]", [Ui.loadResource(Rez.Strings.labelDistance).toLower(), $.GSK_oSettings.sUnitDistance]);
+    self.sUnitAscent_fmt = Lang.format("$1$ [$2$]", [Ui.loadResource(Rez.Strings.labelAscent).toLower(), $.GSK_oSettings.sUnitElevation]);
+
     // Set colors (value-independent), labels and units
     // ... activity: start
     View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelActivity));
-    View.findDrawableById("unitTopLeft").setText(Ui.loadResource(Rez.Strings.unitStart));
+    View.findDrawableById("unitTopLeft").setText(Ui.loadResource(Rez.Strings.labelStart).toLower());
     // ... activity: elapsed
-    View.findDrawableById("unitTopRight").setText(Ui.loadResource(Rez.Strings.unitElapsed));
+    View.findDrawableById("unitTopRight").setText(self.sUnitElapsed);
     // ... lap: start
     View.findDrawableById("labelLeft").setText(Ui.loadResource(Rez.Strings.labelLap));
-    View.findDrawableById("unitLeft").setText(Ui.loadResource(Rez.Strings.unitStart));
+    View.findDrawableById("unitLeft").setText(Ui.loadResource(Rez.Strings.labelStart).toLower());
     // ... lap: count
-    View.findDrawableById("labelCenter").setText(Ui.loadResource(Rez.Strings.unitCount));
-    // ... lap: elapsed
-    View.findDrawableById("unitRight").setText(Ui.loadResource(Rez.Strings.unitElapsed));
+    View.findDrawableById("labelCenter").setText(Ui.loadResource(Rez.Strings.labelCount).toLower());
+    // ... lap: elapsed/distance/ascent (dynamic)
+    self.oRezUnitRight.setText(self.sUnitElapsed);
     // ... recording: start
     View.findDrawableById("labelBottomLeft").setText(Ui.loadResource(Rez.Strings.labelRecording));
-    View.findDrawableById("unitBottomLeft").setText(Ui.loadResource(Rez.Strings.unitStart));
-    // ... recording: elapsed
-    View.findDrawableById("unitBottomRight").setText(Ui.loadResource(Rez.Strings.unitElapsed));
+    View.findDrawableById("unitBottomLeft").setText(Ui.loadResource(Rez.Strings.labelStart).toLower());
+    // ... recording: elapsed/distance/ascent (dynamic)
+    self.oRezUnitBottomRight.setText(self.sUnitElapsed);
 
     // Unmute tones
     App.getApp().unmuteTones(GSK_App.TONES_SAFETY);
@@ -64,6 +96,13 @@ class GSK_ViewTimers extends GSK_ViewGlobal {
   function updateLayout() {
     //Sys.println("DEBUG: GSK_ViewGlobal.updateLayout()");
     GSK_ViewGlobal.updateLayout(true);
+
+    // Fields
+    var iEpochNow = Time.now().value();
+    if(iEpochNow - self.iFieldEpoch >= 2) {
+      self.iFieldIndex = (self.iFieldIndex + 1) % 3;
+      self.iFieldEpoch = iEpochNow;
+    }
 
     // Colors
     if($.GSK_oProcessing.iAccuracy == Pos.QUALITY_NOT_AVAILABLE or $.GSK_oProcessing.iAccuracy == Pos.QUALITY_LAST_KNOWN) {
@@ -77,16 +116,13 @@ class GSK_ViewTimers extends GSK_ViewGlobal {
     // Set values
     var oTimeNow = Time.now();
     var bRecording = ($.GSK_oActivity != null);
-    var iDuration;
-    var iDuration_h;
-    var iDuration_m;
+    var fValue;
     var sValue;
 
     // ... activity: start
     self.oRezValueTopLeft.setColor(self.iColorText);
     if($.GSK_oTimeStart != null) {
-      var oTimeInfo = $.GSK_oSettings.bUnitTimeUTC ? Gregorian.utcInfo($.GSK_oTimeStart, Time.FORMAT_SHORT) : Gregorian.info($.GSK_oTimeStart, Time.FORMAT_SHORT);
-      sValue = Lang.format("$1$:$2$", [oTimeInfo.hour.format("%02d"), oTimeInfo.min.format("%02d")]);
+      sValue = LangUtils.formatTime($.GSK_oTimeStart, $.GSK_oSettings.bUnitTimeUTC, false);
     }
     else {
       sValue = $.GSK_NOVALUE_LEN3;
@@ -96,10 +132,7 @@ class GSK_ViewTimers extends GSK_ViewGlobal {
     // ... activity: elapsed
     self.oRezValueTopRight.setColor(self.iColorText);
     if($.GSK_oTimeStart != null) {
-      iDuration = Math.floor(oTimeNow.subtract($.GSK_oTimeStart).value() / 60.0).toNumber();
-      iDuration_m = iDuration % 60;
-      iDuration_h = (iDuration-iDuration_m) / 60;
-      sValue = Lang.format("$1$:$2$", [iDuration_h.format("%d"), iDuration_m.format("%02d")]);
+      sValue = LangUtils.formatElapsedTime($.GSK_oTimeStart, oTimeNow, false);
     }
     else {
       sValue = $.GSK_NOVALUE_LEN3;
@@ -108,9 +141,8 @@ class GSK_ViewTimers extends GSK_ViewGlobal {
 
     // ... lap: start
     self.oRezValueLeft.setColor(bRecording ? self.iColorText : Gfx.COLOR_LT_GRAY);
-    if($.GSK_Activity_oTimeLap != null) {
-      var oTimeInfo = $.GSK_oSettings.bUnitTimeUTC ? Gregorian.utcInfo($.GSK_Activity_oTimeLap, Time.FORMAT_SHORT) : Gregorian.info($.GSK_Activity_oTimeLap, Time.FORMAT_SHORT);
-      sValue = Lang.format("$1$:$2$", [oTimeInfo.hour.format("%02d"), oTimeInfo.min.format("%02d")]);
+    if($.GSK_oActivity != null) {
+      sValue = LangUtils.formatTime($.GSK_oActivity.oTimeLap, $.GSK_oSettings.bUnitTimeUTC, false);
     }
     else {
       sValue = $.GSK_NOVALUE_LEN3;
@@ -119,8 +151,8 @@ class GSK_ViewTimers extends GSK_ViewGlobal {
 
     // ... lap: count
     self.oRezValueCenter.setColor(bRecording ? self.iColorText : Gfx.COLOR_LT_GRAY);
-    if($.GSK_Activity_iCountLaps) {
-      sValue = $.GSK_Activity_iCountLaps.format("%d");
+    if($.GSK_oActivity != null and $.GSK_oActivity.iCountLaps) {
+      sValue = $.GSK_oActivity.iCountLaps.format("%d");
     }
     else {
       sValue = $.GSK_NOVALUE_LEN2;
@@ -129,27 +161,37 @@ class GSK_ViewTimers extends GSK_ViewGlobal {
 
     // ... lap: elapsed
     self.oRezValueRight.setColor(bRecording ? self.iColorText : Gfx.COLOR_LT_GRAY);
-    if($.GSK_Activity_oTimeLap != null and (bRecording or $.GSK_Activity_oTimeStop != null)) {
-      if(bRecording) {
-        iDuration = Math.floor(oTimeNow.subtract($.GSK_Activity_oTimeLap).value() / 60.0).toNumber();
+    if($.GSK_oActivity != null) {
+      if(self.iFieldIndex == 0) {  // ... elapsed
+        self.oRezUnitRight.setText(self.sUnitElapsed);
+        if(bRecording) {
+          sValue = LangUtils.formatElapsedTime($.GSK_oActivity.oTimeLap, oTimeNow, false);
+        }
+        else {
+          sValue = LangUtils.formatElapsedTime($.GSK_oActivity.oTimeLap, $.GSK_oActivity.oTimeStop, false);
+        }
       }
-      else {
-        iDuration = Math.floor($.GSK_Activity_oTimeStop.subtract($.GSK_Activity_oTimeLap).value() / 60.0).toNumber();
+      else if(self.iFieldIndex == 1) {  // ... distance
+        self.oRezUnitRight.setText(self.sUnitDistance_fmt);
+        fValue = $.GSK_oActivity.fDistance * $.GSK_oSettings.fUnitDistanceCoefficient;
+        sValue = fValue.format("%.0f");
       }
-      iDuration_m = iDuration % 60;
-      iDuration_h = (iDuration-iDuration_m) / 60;
-      sValue = Lang.format("$1$:$2$", [iDuration_h.format("%d"), iDuration_m.format("%02d")]);
+      else {  // ... ascent
+        self.oRezUnitRight.setText(self.sUnitAscent_fmt);
+        fValue = $.GSK_oActivity.fAscent * $.GSK_oSettings.fUnitElevationCoefficient;
+        sValue = fValue.format("%.0f");
+      }
     }
     else {
+      self.oRezUnitBottomRight.setText(self.sUnitElapsed);
       sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueRight.setText(sValue);
 
     // ... recording: start
     self.oRezValueBottomLeft.setColor(bRecording ? self.iColorText : Gfx.COLOR_LT_GRAY);
-    if($.GSK_Activity_oTimeStart != null) {
-      var oTimeInfo = $.GSK_oSettings.bUnitTimeUTC ? Gregorian.utcInfo($.GSK_Activity_oTimeStart, Time.FORMAT_SHORT) : Gregorian.info($.GSK_Activity_oTimeStart, Time.FORMAT_SHORT);
-      sValue = Lang.format("$1$:$2$", [oTimeInfo.hour.format("%02d"), oTimeInfo.min.format("%02d")]);
+    if($.GSK_oActivity != null) {
+      sValue = LangUtils.formatTime($.GSK_oActivity.oTimeStart, $.GSK_oSettings.bUnitTimeUTC, false);
     }
     else {
       sValue = $.GSK_NOVALUE_LEN3;
@@ -158,18 +200,29 @@ class GSK_ViewTimers extends GSK_ViewGlobal {
 
     // ... recording: elapsed
     self.oRezValueBottomRight.setColor(bRecording ? self.iColorText : Gfx.COLOR_LT_GRAY);
-    if($.GSK_Activity_oTimeStart != null and (bRecording or $.GSK_Activity_oTimeStop != null)) {
-      if(bRecording) {
-        iDuration = Math.floor(oTimeNow.subtract($.GSK_Activity_oTimeStart).value() / 60.0).toNumber();
+    if($.GSK_oActivity != null) {
+      if(self.iFieldIndex == 0) {  // ... elapsed
+        self.oRezUnitBottomRight.setText(self.sUnitElapsed);
+        if(bRecording) {
+          sValue = LangUtils.formatElapsedTime($.GSK_oActivity.oTimeStart, oTimeNow, false);
+        }
+        else {
+          sValue = LangUtils.formatElapsedTime($.GSK_oActivity.oTimeStart, $.GSK_oActivity.oTimeStop, false);
+        }
       }
-      else {
-        iDuration = Math.floor($.GSK_Activity_oTimeStop.subtract($.GSK_Activity_oTimeStart).value() / 60.0).toNumber();
+      else if(self.iFieldIndex == 1) {  // ... distance
+        self.oRezUnitBottomRight.setText(self.sUnitDistance_fmt);
+        fValue = $.GSK_oActivity.fGlobalDistance * $.GSK_oSettings.fUnitDistanceCoefficient;
+        sValue = fValue.format("%.0f");
       }
-      iDuration_m = iDuration % 60;
-      iDuration_h = (iDuration-iDuration_m) / 60;
-      sValue = Lang.format("$1$:$2$", [iDuration_h.format("%d"), iDuration_m.format("%02d")]);
+      else {  // ... ascent
+        self.oRezUnitBottomRight.setText(self.sUnitAscent_fmt);
+        fValue = $.GSK_oActivity.fGlobalAscent * $.GSK_oSettings.fUnitElevationCoefficient;
+        sValue = fValue.format("%.0f");
+      }
     }
     else {
+      self.oRezUnitBottomRight.setText(self.sUnitElapsed);
       sValue = $.GSK_NOVALUE_LEN3;
     }
     self.oRezValueBottomRight.setText(sValue);
@@ -192,13 +245,13 @@ class GSK_ViewTimersDelegate extends GSK_ViewGlobalDelegate {
   }
 
   function onPreviousPage() {
-    //Sys.println("DEBUG: GSK_ViewRateOfTurnDelegate.onPreviousPage()");
-    Ui.switchToView(new GSK_ViewVarioplot(), new GSK_ViewVarioplotDelegate(), Ui.SLIDE_IMMEDIATE);
+    //Sys.println("DEBUG: GSK_ViewTimersDelegate.onPreviousPage()");
+    Ui.switchToView(new GSK_ViewLog(), new GSK_ViewLogDelegate(), Ui.SLIDE_IMMEDIATE);
     return true;
   }
 
   function onNextPage() {
-    //Sys.println("DEBUG: GSK_ViewRateOfTurnDelegate.onNextPage()");
+    //Sys.println("DEBUG: GSK_ViewTimersDelegate.onNextPage()");
     Ui.switchToView(new GSK_ViewGeneral(), new GSK_ViewGeneralDelegate(), Ui.SLIDE_IMMEDIATE);
     return true;
   }

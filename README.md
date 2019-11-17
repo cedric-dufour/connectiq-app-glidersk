@@ -21,6 +21,7 @@ that features:
    along your flight path
  - a Timers view, allowing to keep track of time since the activity, its
    recording and the last lap were started
+ - a Log view, allowing to keep track of your last activities
 
 
 Build, Installation and Usage

@@ -97,7 +97,7 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
 
     // Load resources
     // ... strings
-    self.sTitle = Ui.loadResource(Rez.Strings.titleSettingsSafety);
+    self.sTitle = Ui.loadResource(Rez.Strings.titleViewSafety);
     self.sValueHeightGround = Ui.loadResource(Rez.Strings.valueHeightGround);
 
     // Unmute tones

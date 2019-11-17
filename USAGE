@@ -211,10 +211,20 @@ will enter the Settings menu (see Settings below).
 Timers View
 -----------
 
-The GliderSK Timers view displays the start and elapsed times since:
- - the activity (application) was started
- - the (last) recording was started (see Activity Recording below)
- - the last recording lap
+The GliderSK Timers view displays the start and elapsed times (or distance/ascent)
+since:
+ - the application was started
+ - the (last) activity (recording) was started (see Activity Recording below)
+ - the last activity (recording) lap
+
+
+Log View
+--------
+
+GliderSK Log view keeps track of your last recorded activities (global session
+details; see Activity Recording below).
+
+Use the SELECT and BACK buttons to browse through the last 100 saved entries.
 
 
 Activity Recording
@@ -231,6 +241,13 @@ GliderSK adds custom fields to the recorded FIT file:
  - Acceleration
 (which will be plotted in Garmin Connect IF your installed the application
  through the Garmin ConnectIQ store)
+
+For each lap and globally for the entire recording session, Garmin Connect will
+also show the following details:
+ - Distance: non-thermalling distance
+ - Ascent: cumulative altitude gain and elapsed time spent ascending
+ - Minimum Altitude: value and time
+ - Maximum Altitude: value and time
 
 
 Settings

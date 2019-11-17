@@ -48,12 +48,11 @@ var GSK_oAltimeter = null;
 var GSK_oProcessing = null;
 var GSK_oTimeStart = null;
 
+// Log
+var GSK_iLogIndex = null;
+
 // Activity session (recording)
 var GSK_oActivity = null;
-var GSK_Activity_oTimeStart = null;
-var GSK_Activity_oTimeLap = null;
-var GSK_Activity_iCountLaps = null;
-var GSK_Activity_oTimeStop = null;
 
 // Current view
 var GSK_oCurrentView = null;
@@ -130,6 +129,21 @@ class GSK_App extends App.AppBase {
 
     // Processing logic
     $.GSK_oProcessing = new GSK_Processing();
+
+    // Log
+    var iLogEpoch = 0;
+    for(var n=0; n<$.GSK_STORAGE_SLOTS; n++) {
+      var s = n.format("%02d");
+      var dictLog = App.Storage.getValue(Lang.format("storLog$1$", [s]));
+      if(dictLog == null) {
+        break;
+      }
+      var i = dictLog.get("timeStart");
+      if(i != null and i > iLogEpoch) {
+        $.GSK_iLogIndex = n;
+        iLogEpoch = i;
+      }
+    }
 
     // Timers
     $.GSK_oTimeStart = Time.now();
@@ -255,7 +269,8 @@ class GSK_App extends App.AppBase {
 
   function onLocationEvent(_oInfo) {
     //Sys.println("DEBUG: GSK_App.onLocationEvent()");
-    var iEpoch = Time.now().value();
+    var oTimeNow = Time.now();
+    var iEpoch = oTimeNow.value();
 
     // Save location
     if(_oInfo has :position) {
@@ -269,6 +284,9 @@ class GSK_App extends App.AppBase {
 
     // Process position data
     $.GSK_oProcessing.processPositionInfo(_oInfo, iEpoch);
+    if($.GSK_oActivity != null) {
+      $.GSK_oActivity.processPositionInfo(_oInfo, iEpoch, oTimeNow);
+    }
 
     // Automatic Activity recording
     if($.GSK_oSettings.bGeneralAutoActivity and $.GSK_oProcessing.fGroundSpeed != null) {

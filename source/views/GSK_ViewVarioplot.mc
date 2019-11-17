@@ -411,7 +411,7 @@ class GSK_ViewVarioplotDelegate extends Ui.BehaviorDelegate {
   function onNextPage() {
     //Sys.println("DEBUG: GSK_ViewVarioplotDelegate.onNextPage()");
     if($.GSK_ViewVarioplot_iPanZoom == 0) {
-      Ui.switchToView(new GSK_ViewTimers(), new GSK_ViewTimersDelegate(), Ui.SLIDE_IMMEDIATE);
+      Ui.switchToView(new GSK_ViewLog(), new GSK_ViewLogDelegate(), Ui.SLIDE_IMMEDIATE);
     }
     else if($.GSK_ViewVarioplot_iPanZoom == 1) {  // ... zoom out
       var fPlotZoom_previous = $.GSK_oSettings.fVariometerPlotZoom;
