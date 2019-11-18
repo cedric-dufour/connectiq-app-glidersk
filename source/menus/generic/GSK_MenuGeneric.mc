@@ -144,6 +144,9 @@ class GSK_MenuGeneric extends Ui.Menu {
         }
         Menu.addItem(Ui.loadResource(Rez.Strings.titleActivitySave), :menuActivitySave);
         Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityDiscard), :menuActivityDiscard);
+        if(!$.GSK_oSettings.bGeneralLapKey) {
+          Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityLap), :menuActivityLap);
+        }
       }
     }
 
@@ -374,6 +377,9 @@ class GSK_MenuGenericDelegate extends Ui.MenuInputDelegate {
       }
       else if(_item == :menuActivityDiscard) {
         Ui.pushView(new GSK_MenuGenericConfirm(:contextActivity, :actionDiscard), new GSK_MenuGenericConfirmDelegate(:contextActivity, :actionDiscard, true), Ui.SLIDE_IMMEDIATE);
+      }
+      else if(_item == :menuActivityLap) {
+        Ui.pushView(new GSK_MenuGenericConfirm(:contextActivity, :actionLap), new GSK_MenuGenericConfirmDelegate(:contextActivity, :actionLap, true), Ui.SLIDE_IMMEDIATE);
       }
     }
 

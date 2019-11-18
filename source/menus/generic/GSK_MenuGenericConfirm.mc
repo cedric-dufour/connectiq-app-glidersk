@@ -40,6 +40,9 @@ class GSK_MenuGenericConfirm extends Ui.Menu {
       else if(_action == :actionDiscard) {
         Menu.addItem(Lang.format("$1$ ?", [Ui.loadResource(Rez.Strings.titleActivityDiscard)]), 0);
       }
+      else if(_action == :actionLap) {
+        Menu.addItem(Lang.format("$1$ ?", [Ui.loadResource(Rez.Strings.titleActivityLap)]), 0);
+      }
     }
     else if(_context == :contextDestination) {
       if(_action == :actionFromCurrent) {
@@ -95,6 +98,11 @@ class GSK_MenuGenericConfirmDelegate extends Ui.MenuInputDelegate {
         if($.GSK_oActivity != null) {
           $.GSK_oActivity.stop(false);
           $.GSK_oActivity = null;
+        }
+      }
+      else if(self.action == :actionLap) {
+        if($.GSK_oActivity != null) {
+          $.GSK_oActivity.addLap();
         }
       }
     }
