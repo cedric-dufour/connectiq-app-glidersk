@@ -1,3 +1,8 @@
+* 1.3.20191120a
+  - MOD: display height about user-configurable reference height
+  - NEW: Activity details in custom lap/session FIT fields and Log view/history
+  - NEW: Add Lap action on SELECT button (when disabled on BACK one)
+
 * 1.2.20190624a
   - NEW: Automatic Activity recording (start/pause/resume)
 
