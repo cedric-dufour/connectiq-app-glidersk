@@ -1,3 +1,6 @@
+* 1.3.20200328a
+  - NEW: Support for fenix6 (pro) serie
+
 * 1.3.20191120a
   - MOD: display height about user-configurable reference height
   - NEW: Activity details in custom lap/session FIT fields and Log view/history
