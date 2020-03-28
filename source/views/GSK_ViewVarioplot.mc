@@ -45,12 +45,59 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
   // ... fonts
   private var oRezFontPlot;
 
-  // Screen center coordinates
-  private var iCenterX;
-  private var iCenterY;
+  // Layout-specific
+  private var iLayoutCenter;
+  private var iLayoutClipY;
+  private var iLayoutClipW;
+  private var iLayoutClipH;
+  private var iLayoutValueXleft;
+  private var iLayoutValueXright;
+  private var iLayoutValueYtop;
+  private var iLayoutValueYbottom;
 
   // Color scale
   private var aiScale;
+
+
+  //
+  // FUNCTIONS: Layout-specific
+  //
+
+  (:layout_240x240)
+  function initLayout() {
+    self.iLayoutCenter = 120;
+    self.iLayoutClipY = 31;
+    self.iLayoutClipW = 240;
+    self.iLayoutClipH = 178;
+    self.iLayoutValueXleft = 40;
+    self.iLayoutValueXright = 200;
+    self.iLayoutValueYtop = 30;
+    self.iLayoutValueYbottom = 193;
+  }
+
+  (:layout_260x260)
+  function initLayout() {
+    self.iLayoutCenter = 130;
+    self.iLayoutClipY = 34;
+    self.iLayoutClipW = 260;
+    self.iLayoutClipH = 192;
+    self.iLayoutValueXleft = 43;
+    self.iLayoutValueXright = 217;
+    self.iLayoutValueYtop = 33;
+    self.iLayoutValueYbottom = 209;
+  }
+
+  (:layout_280x280)
+  function initLayout() {
+    self.iLayoutCenter = 140;
+    self.iLayoutClipY = 36;
+    self.iLayoutClipW = 280;
+    self.iLayoutClipH = 208;
+    self.iLayoutValueXleft = 47;
+    self.iLayoutValueXright = 233;
+    self.iLayoutValueYtop = 35;
+    self.iLayoutValueYbottom = 225;
+  }
 
 
   //
@@ -59,6 +106,9 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
 
   function initialize() {
     GSK_ViewHeader.initialize();
+
+    // Layout-specific initialization
+    self.initLayout();
 
     // Display mode
     // ... internal
@@ -70,10 +120,6 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
     if(!GSK_ViewHeader.onLayout(_oDC)) {
       return false;
     }
-
-    // Screen center coordinates
-    self.iCenterX = (_oDC.getWidth()/2).toNumber();
-    self.iCenterY = (_oDC.getHeight()/2).toNumber();
 
     // Done
     return true;
@@ -144,11 +190,6 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
     return true;
   }
 
-  (:layout_240x240)
-  function clipPlot(_oDC) {
-    _oDC.setClip(0, 31, 240, 178);
-  }
-
   function drawPlot(_oDC) {
     //Sys.println("DEBUG: GSK_ViewVarioplot.drawPlot()");
     var iNowEpoch = Time.now().value();
@@ -176,7 +217,7 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
     var iStartEpoch = iNowEpoch-iVariometerPlotRange;
 
     // ... plot
-    self.clipPlot(_oDC);
+    _oDC.setClip(0, self.iLayoutClipY, self.iLayoutClipW, self.iLayoutClipH);
     var iCurrentIndex = (iEndIndex-iVariometerPlotRange+1+GSK_Processing.PLOTBUFFER_SIZE) % GSK_Processing.PLOTBUFFER_SIZE;
     var fZoomX = $.GSK_oSettings.fVariometerPlotZoom * Math.cos(iEndLatitude / 495035534.9930312523f);
     var fZoomY = $.GSK_oSettings.fVariometerPlotZoom;
@@ -190,8 +231,8 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
       var iCurrentEpoch = $.GSK_oProcessing.aiPlotEpoch[iCurrentIndex];
       if(iCurrentEpoch != null and iCurrentEpoch >= iStartEpoch) {
         if(iCurrentEpoch-iLastEpoch <= iMaxDeltaEpoch) {
-          var iCurrentX = self.iCenterX+$.GSK_ViewVarioplot_iOffsetX+(($.GSK_oProcessing.aiPlotLongitude[iCurrentIndex]-iEndLongitude)*fZoomX).toNumber();
-          var iCurrentY = self.iCenterY+$.GSK_ViewVarioplot_iOffsetY-(($.GSK_oProcessing.aiPlotLatitude[iCurrentIndex]-iEndLatitude)*fZoomY).toNumber();
+          var iCurrentX = self.iLayoutCenter+$.GSK_ViewVarioplot_iOffsetX+(($.GSK_oProcessing.aiPlotLongitude[iCurrentIndex]-iEndLongitude)*fZoomX).toNumber();
+          var iCurrentY = self.iLayoutCenter+$.GSK_ViewVarioplot_iOffsetY-(($.GSK_oProcessing.aiPlotLatitude[iCurrentIndex]-iEndLatitude)*fZoomY).toNumber();
           var iCurrentVariometer = $.GSK_oProcessing.aiPlotVariometer[iCurrentIndex];
           if(bDraw) {
             var iCurrentColor;
@@ -248,18 +289,13 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
     _oDC.clearClip();
   }
 
-  (:layout_240x240)
   function drawValues(_oDC) {
-    self.drawValues_positioned(_oDC, 40, 200, 30, 193);
-  }
-
-  function drawValues_positioned(_oDC, _iXleft, _iXright, _iYtop, _iYbottom) {
     //Sys.println("DEBUG: GSK_ViewVarioplot.drawValues()");
 
-    // Draw position values
+    // Draw values
     var fValue;
     var sValue;
-    _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);  // DUMMY
+    _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
 
     // ... altitude
     if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_oProcessing.fAltitude != null) {
@@ -269,7 +305,7 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
     else {
       sValue = $.GSK_NOVALUE_LEN3;
     }
-    _oDC.drawText(_iXleft, _iYtop, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.GSK_oSettings.sUnitElevation]), Gfx.TEXT_JUSTIFY_LEFT);
+    _oDC.drawText(self.iLayoutValueXleft, self.iLayoutValueYtop, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.GSK_oSettings.sUnitElevation]), Gfx.TEXT_JUSTIFY_LEFT);
 
     // ... variometer
     if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_oProcessing.fVariometer != null) {
@@ -284,7 +320,7 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
     else {
       sValue = $.GSK_NOVALUE_LEN3;
     }
-    _oDC.drawText(_iXright, _iYtop, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.GSK_oSettings.sUnitVerticalSpeed]), Gfx.TEXT_JUSTIFY_RIGHT);
+    _oDC.drawText(self.iLayoutValueXright, self.iLayoutValueYtop, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.GSK_oSettings.sUnitVerticalSpeed]), Gfx.TEXT_JUSTIFY_RIGHT);
 
     // ... ground speed
     if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_oProcessing.fGroundSpeed != null) {
@@ -294,7 +330,7 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
     else {
       sValue = $.GSK_NOVALUE_LEN3;
     }
-    _oDC.drawText(_iXleft, _iYbottom, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.GSK_oSettings.sUnitHorizontalSpeed]), Gfx.TEXT_JUSTIFY_LEFT);
+    _oDC.drawText(self.iLayoutValueXleft, self.iLayoutValueYbottom, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.GSK_oSettings.sUnitHorizontalSpeed]), Gfx.TEXT_JUSTIFY_LEFT);
 
     // ... finesse
     if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and !$.GSK_oProcessing.bAscent and $.GSK_oProcessing.fFinesse != null) {
@@ -304,7 +340,7 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
     else {
       sValue = $.GSK_NOVALUE_LEN2;
     }
-    _oDC.drawText(_iXright, _iYbottom, self.oRezFontPlot, sValue, Gfx.TEXT_JUSTIFY_RIGHT);
+    _oDC.drawText(self.iLayoutValueXright, self.iLayoutValueYbottom, self.oRezFontPlot, sValue, Gfx.TEXT_JUSTIFY_RIGHT);
   }
 
   function onHide() {

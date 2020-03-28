@@ -42,6 +42,69 @@ class GSK_ViewVariometer extends Ui.View {
   private var sValueActivityRecording;
   private var sValueActivityPaused;
 
+  // Layout-specific
+  private var iLayoutCenter;
+  private var iLayoutValueR;
+  private var iLayoutCacheX;
+  private var iLayoutCacheR;
+  private var iLayoutBatteryY;
+  private var iLayoutActivityY;
+  private var iLayoutTimeY;
+  private var iLayoutAltitudeY;
+  private var iLayoutValueY;
+  private var iLayoutUnitX;
+  private var iLayoutUnitY;
+
+
+  //
+  // FUNCTIONS: Layout-specific
+  //
+
+  (:layout_240x240)
+  function initLayout() {
+    self.iLayoutCenter = 120;
+    self.iLayoutValueR = 60;
+    self.iLayoutCacheX = 100;
+    self.iLayoutCacheR = 90;
+    self.iLayoutBatteryY = 148;
+    self.iLayoutActivityY = 75;
+    self.iLayoutTimeY = 162;
+    self.iLayoutAltitudeY = 42;
+    self.iLayoutValueY = 83;
+    self.iLayoutUnitX = 212;
+    self.iLayoutUnitY = 105;
+  }
+
+  (:layout_260x260)
+  function initLayout() {
+    self.iLayoutCenter = 130;
+    self.iLayoutValueR = 65;
+    self.iLayoutCacheX = 108;
+    self.iLayoutCacheR = 98;
+    self.iLayoutBatteryY = 160;
+    self.iLayoutActivityY = 81;
+    self.iLayoutTimeY = 176;
+    self.iLayoutAltitudeY = 46;
+    self.iLayoutValueY = 90;
+    self.iLayoutUnitX = 230;
+    self.iLayoutUnitY = 114;
+  }
+
+  (:layout_280x280)
+  function initLayout() {
+    self.iLayoutCenter = 140;
+    self.iLayoutValueR = 70;
+    self.iLayoutCacheX = 120;
+    self.iLayoutCacheR = 105;
+    self.iLayoutBatteryY = 173;
+    self.iLayoutActivityY = 88;
+    self.iLayoutTimeY = 189;
+    self.iLayoutAltitudeY = 49;
+    self.iLayoutValueY = 97;
+    self.iLayoutUnitX = 247;
+    self.iLayoutUnitY = 123;
+  }
+
 
   //
   // FUNCTIONS: Ui.View (override/implement)
@@ -49,6 +112,9 @@ class GSK_ViewVariometer extends Ui.View {
 
   function initialize() {
     View.initialize();
+
+    // Layout-specific initialization
+    self.initLayout();
 
     // Display mode
     // ... internal
@@ -106,7 +172,7 @@ class GSK_ViewVariometer extends Ui.View {
 
 
   //
-  // FUNCTIONS: self
+  // FUNCTIONS: self (cont'd)
   //
 
   function updateUi() {
@@ -118,15 +184,9 @@ class GSK_ViewVariometer extends Ui.View {
     }
   }
 
-
-  //
-  // FUNCTIONS: self (cont'd) - layout-specific
-  //
-
-  (:layout_240x240)
   function drawLayout(_oDC) {
     // Draw background
-    _oDC.setPenWidth(120);
+    _oDC.setPenWidth(self.iLayoutCenter);
 
     // ... background
     _oDC.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
@@ -136,9 +196,9 @@ class GSK_ViewVariometer extends Ui.View {
     var fValue;
     var iColor = $.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
     _oDC.setColor(Gfx.COLOR_DK_GRAY, Gfx.COLOR_DK_GRAY);
-    _oDC.drawArc(120, 120, 60, Gfx.ARC_COUNTER_CLOCKWISE, 15, 345);
+    _oDC.drawArc(self.iLayoutCenter, self.iLayoutCenter, self.iLayoutValueR, Gfx.ARC_COUNTER_CLOCKWISE, 15, 345);
     _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor, $.GSK_oSettings.iGeneralBackgroundColor);
-    _oDC.drawArc(120, 120, 60, Gfx.ARC_CLOCKWISE, 15, 345);
+    _oDC.drawArc(self.iLayoutCenter, self.iLayoutCenter, self.iLayoutValueR, Gfx.ARC_CLOCKWISE, 15, 345);
     fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 1 ? $.GSK_oProcessing.fVariometer_filtered : $.GSK_oProcessing.fVariometer;
     if(fValue != null and $.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE) {
       if(fValue > 0.0f) {
@@ -147,7 +207,7 @@ class GSK_ViewVariometer extends Ui.View {
         if(iAngle != 0) {
           if(iAngle > 165) { iAngle = 165; }  // ... leave room for unit text
           _oDC.setColor(iColor, iColor);
-          _oDC.drawArc(120, 120, 60, Gfx.ARC_CLOCKWISE, 180, 180-iAngle);
+          _oDC.drawArc(self.iLayoutCenter, self.iLayoutCenter, self.iLayoutValueR, Gfx.ARC_CLOCKWISE, 180, 180-iAngle);
         }
       }
       else if(fValue < 0.0f) {
@@ -156,14 +216,14 @@ class GSK_ViewVariometer extends Ui.View {
         if(iAngle != 0) {
           if(iAngle > 165) { iAngle = 165; }  // ... leave room for unit text
           _oDC.setColor(iColor, iColor);
-          _oDC.drawArc(120, 120, 60, Gfx.ARC_COUNTER_CLOCKWISE, 180, 180+iAngle);
+          _oDC.drawArc(self.iLayoutCenter, self.iLayoutCenter, self.iLayoutValueR, Gfx.ARC_COUNTER_CLOCKWISE, 180, 180+iAngle);
         }
       }
     }
 
-    // ... text
+    // ... cache
     _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor, $.GSK_oSettings.iGeneralBackgroundColor);
-    _oDC.fillCircle(100, 120, 90);
+    _oDC.fillCircle(self.iLayoutCacheX, self.iLayoutCenter, self.iLayoutCacheR);
 
     // Draw non-position values
     var sValue;
@@ -171,7 +231,7 @@ class GSK_ViewVariometer extends Ui.View {
     // ... battery
     _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_DK_GRAY : Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
     sValue = Lang.format("$1$%", [Sys.getSystemStats().battery.format("%.0f")]);
-    _oDC.drawText(100, 148, self.oRezFontStatus, sValue, Gfx.TEXT_JUSTIFY_CENTER);
+    _oDC.drawText(self.iLayoutCacheX, self.iLayoutBatteryY, self.oRezFontStatus, sValue, Gfx.TEXT_JUSTIFY_CENTER);
 
     // ... activity
     if($.GSK_oActivity == null) {  // ... stand-by
@@ -186,14 +246,14 @@ class GSK_ViewVariometer extends Ui.View {
       _oDC.setColor(Gfx.COLOR_YELLOW, Gfx.COLOR_TRANSPARENT);
       sValue = self.sValueActivityPaused;
     }
-    _oDC.drawText(100, 75, self.oRezFontStatus, sValue, Gfx.TEXT_JUSTIFY_CENTER);
+    _oDC.drawText(self.iLayoutCacheX, self.iLayoutActivityY, self.oRezFontStatus, sValue, Gfx.TEXT_JUSTIFY_CENTER);
 
     // ... time
     var oTimeNow = Time.now();
     var oTimeInfo = $.GSK_oSettings.bUnitTimeUTC ? Gregorian.utcInfo(oTimeNow, Time.FORMAT_SHORT) : Gregorian.info(oTimeNow, Time.FORMAT_SHORT);
     sValue = Lang.format("$1$$2$$3$ $4$", [oTimeInfo.hour.format("%02d"), oTimeNow.value() % 2 ? "." : ":", oTimeInfo.min.format("%02d"), $.GSK_oSettings.sUnitTime]);
     _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-    _oDC.drawText(100, 162, Gfx.FONT_MEDIUM, sValue, Gfx.TEXT_JUSTIFY_CENTER);
+    _oDC.drawText(self.iLayoutCacheX, self.iLayoutTimeY, Gfx.FONT_MEDIUM, sValue, Gfx.TEXT_JUSTIFY_CENTER);
 
     // Draw position values
 
@@ -206,7 +266,7 @@ class GSK_ViewVariometer extends Ui.View {
     else {
       sValue = $.GSK_NOVALUE_LEN3;
     }
-    _oDC.drawText(100, 42, Gfx.FONT_MEDIUM, Lang.format("$1$ $2$", [sValue, $.GSK_oSettings.sUnitElevation]), Gfx.TEXT_JUSTIFY_CENTER);
+    _oDC.drawText(self.iLayoutCacheX, self.iLayoutAltitudeY, Gfx.FONT_MEDIUM, Lang.format("$1$ $2$", [sValue, $.GSK_oSettings.sUnitElevation]), Gfx.TEXT_JUSTIFY_CENTER);
 
     // ... variometer
     fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 1 ? $.GSK_oProcessing.fVariometer_filtered : $.GSK_oProcessing.fVariometer;
@@ -228,9 +288,9 @@ class GSK_ViewVariometer extends Ui.View {
     else {
       sValue = $.GSK_NOVALUE_LEN3;
     }
-    _oDC.drawText(100, 83, self.oRezFontMeter, sValue, Gfx.TEXT_JUSTIFY_CENTER);
+    _oDC.drawText(self.iLayoutCacheX, self.iLayoutValueY, self.oRezFontMeter, sValue, Gfx.TEXT_JUSTIFY_CENTER);
     _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-    _oDC.drawText(212, 105, Gfx.FONT_TINY, $.GSK_oSettings.sUnitVerticalSpeed, Gfx.TEXT_JUSTIFY_CENTER);
+    _oDC.drawText(self.iLayoutUnitX, self.iLayoutUnitY, Gfx.FONT_TINY, $.GSK_oSettings.sUnitVerticalSpeed, Gfx.TEXT_JUSTIFY_CENTER);
   }
 }
 

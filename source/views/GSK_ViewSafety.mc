@@ -56,6 +56,41 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
   private var sTitle;
   private var sValueHeightGround;
 
+  // Layout-specific
+  private var fLayoutCenter;
+  private var fLayoutBugR1;
+  private var fLayoutBugR2;
+  private var fLayoutBugR3;
+
+
+  //
+  // FUNCTIONS: Layout-specific
+  //
+
+  (:layout_240x240)
+  function initLayout() {
+    self.fLayoutCenter = 120.0f;
+    self.fLayoutBugR1 = 119.0f;
+    self.fLayoutBugR2 = 100.0f;
+    self.fLayoutBugR3 = 103.0f;
+  }
+
+  (:layout_260x260)
+  function initLayout() {
+    self.fLayoutCenter = 130.0f;
+    self.fLayoutBugR1 = 129.0f;
+    self.fLayoutBugR2 = 108.0f;
+    self.fLayoutBugR3 = 112.0f;
+  }
+
+  (:layout_280x280)
+  function initLayout() {
+    self.fLayoutCenter = 140.0f;
+    self.fLayoutBugR1 = 139.0f;
+    self.fLayoutBugR2 = 117.0f;
+    self.fLayoutBugR3 = 120.0f;
+  }
+
 
   //
   // FUNCTIONS: GSK_ViewGlobal (override/implement)
@@ -63,6 +98,9 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
 
   function initialize() {
     GSK_ViewGlobal.initialize();
+
+    // Layout-specific initialization
+    self.initLayout();
 
     // Display mode
     // ... internal
@@ -433,16 +471,15 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
     self.oRezValueBottomRight.setText(sValue);
   }
 
-  (:layout_240x240)
   function drawHeadingBug(_oDC) {
     // Heading
     var fBearingRelative = $.GSK_oProcessing.fBearingToDestination - $.GSK_oProcessing.fHeading;
     // ... bug
     var iColor = Gfx.COLOR_BLUE;
     var aPoints =
-      [[120.0f+119.0f*Math.sin(fBearingRelative), 120.0f-119.0f*Math.cos(fBearingRelative)],
-       [120.0f+100.0f*Math.sin(fBearingRelative-0.125f), 120.0f-100.0f*Math.cos(fBearingRelative-0.125f)],
-       [120.0f+100.0f*Math.sin(fBearingRelative+0.125f), 120.0f-100.0f*Math.cos(fBearingRelative+0.125f)]];
+      [[self.fLayoutCenter+self.fLayoutBugR1*Math.sin(fBearingRelative), self.fLayoutCenter-self.fLayoutBugR1*Math.cos(fBearingRelative)],
+       [self.fLayoutCenter+self.fLayoutBugR2*Math.sin(fBearingRelative-0.125f), self.fLayoutCenter-self.fLayoutBugR2*Math.cos(fBearingRelative-0.125f)],
+       [self.fLayoutCenter+self.fLayoutBugR2*Math.sin(fBearingRelative+0.125f), self.fLayoutCenter-self.fLayoutBugR2*Math.cos(fBearingRelative+0.125f)]];
     _oDC.setColor(iColor, iColor);
     _oDC.fillPolygon(aPoints);
     // ... status
@@ -453,9 +490,9 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
       iColor = $.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
     }
     aPoints =
-      [[120.0f+119.0f*Math.sin(fBearingRelative), 120.0f-119.0f*Math.cos(fBearingRelative)],
-       [120.0f+103.0f*Math.sin(fBearingRelative-0.035f), 120.0f-103.0f*Math.cos(fBearingRelative-0.035f)],
-       [120.0f+103.0f*Math.sin(fBearingRelative+0.035f), 120.0f-103.0f*Math.cos(fBearingRelative+0.035f)]];
+      [[self.fLayoutCenter+self.fLayoutBugR1*Math.sin(fBearingRelative), self.fLayoutCenter-self.fLayoutBugR1*Math.cos(fBearingRelative)],
+       [self.fLayoutCenter+self.fLayoutBugR3*Math.sin(fBearingRelative-0.035f), self.fLayoutCenter-self.fLayoutBugR3*Math.cos(fBearingRelative-0.035f)],
+       [self.fLayoutCenter+self.fLayoutBugR3*Math.sin(fBearingRelative+0.035f), self.fLayoutCenter-self.fLayoutBugR3*Math.cos(fBearingRelative+0.035f)]];
     _oDC.setColor(iColor, iColor);
     _oDC.fillPolygon(aPoints);
   }
