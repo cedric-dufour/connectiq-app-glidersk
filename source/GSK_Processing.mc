@@ -442,7 +442,7 @@ class GSK_Processing {
   function processSafety() {
     //Sys.println("DEBUG: GSK_Processing.processSafety()");
     self.bSafetyStateful = false;
-    if(!self.bPositionStateful or self.fDestinationElevation == null or self.fDistanceToDestination == null or self.fSpeedToDestination == null) {
+    if(!self.bPositionStateful or self.fDestinationElevation == null or self.fDistanceToDestination == null) {
       //Sys.println("ERROR: Incomplete data; cannot proceed");
       self.bAscent = false;
       self.fFinesse = null;
@@ -451,6 +451,27 @@ class GSK_Processing {
       self.fHeightAtDestination = null;
       self.bAltitudeCritical = false;
       self.bAltitudeWarning = false;
+      return;
+    }
+
+    // ALGO: We're not moving; use reference finesse along distance to destination (regardless of bearing)
+    //       This allows to have a safety height reading at stop and verify the reference height setting
+    if(self.fSpeedToDestination == null) {
+      //Sys.println("WARNING: No speed/bearing data");
+      self.bAscent = false;
+      self.fFinesse = $.GSK_oSettings.iSafetyFinesse.toFloat();
+      self.bEstimation = true;
+      self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / self.fFinesse;
+      self.fHeightAtDestination = self.fAltitudeAtDestination - self.fDestinationElevation;
+      self.bAltitudeCritical = false;
+      self.bAltitudeWarning = false;
+      if(self.fHeightAtDestination <= $.GSK_oSettings.fSafetyHeightCritical) {
+        self.bAltitudeCritical = true;
+      }
+      else if(self.fHeightAtDestination <= $.GSK_oSettings.fSafetyHeightWarning) {
+        self.bAltitudeWarning = true;
+      }
+      self.bSafetyStateful = true;
       return;
     }
 
@@ -470,10 +491,11 @@ class GSK_Processing {
 
     // ... finesse
     if(self.bAscent) {
-      // ALGO: let's use the user-specified reference finesse to estimate where we'd stand if we were to descend and head straight back home
+      // ALGO: Let's use the user-specified reference finesse to estimate where we'd stand if we were to descend and head straight back home
       self.fFinesse = $.GSK_oSettings.iSafetyFinesse.toFloat();
     }
     else {
+      // ALGO: The "descending (really!)" test above guarantees a negative, non-zero variometer
       self.fFinesse = - self.fGroundSpeed_filtered / self.fVariometer_filtered;
     }
     //Sys.println(Lang.format("DEBUG: (Calculated) average finesse ~ $1$", [self.fFinesse]));
@@ -498,17 +520,17 @@ class GSK_Processing {
         self.bEstimation = false;
         if(self.fSpeedToDestination > 0.0f) {
           self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / self.fFinesse * self.fGroundSpeed_filtered / self.fSpeedToDestination;
-          self.fHeightAtDestination = self.fAltitudeAtDestination-self.fDestinationElevation;
+          self.fHeightAtDestination = self.fAltitudeAtDestination - self.fDestinationElevation;
           // ALGO: Our finesse or speed-to(wards)-destination aren't good enough; we'll touch the ground before reaching our destination
-          if(self.fHeightAtDestination <= 0.0f) {
-            self.fAltitudeAtDestination = self.fDestinationElevation;
-            self.fHeightAtDestination = 0.0f;
-          }
+          //if(self.fHeightAtDestination <= 0.0f) {
+          //  self.fAltitudeAtDestination = self.fDestinationElevation;
+          //  self.fHeightAtDestination = 0.0f;
+          //}
         }
         else {
-          // ALGO: We're moving away from our destination; we'll touch the ground before ever reaching our destination
-          self.fAltitudeAtDestination = self.fDestinationElevation;
-          self.fHeightAtDestination = 0.0f;
+          // ALGO: We're moving away from our destination; we'll never reach it
+          self.fAltitudeAtDestination = -999999.9f;
+          self.fHeightAtDestination = -999999.9f;
         }
       }
       else {
@@ -516,10 +538,10 @@ class GSK_Processing {
       }
     }
     else {
-      // ALGO: We're not moving; we'll touch the ground before reaching our destination
+      // ALGO: We should never get here
       self.bEstimation = false;
-      self.fAltitudeAtDestination = self.fDestinationElevation;
-      self.fHeightAtDestination = 0.0f;
+      self.fAltitudeAtDestination = -999999.9f;
+      self.fHeightAtDestination = -999999.9f;
     }
     //Sys.println(Lang.format("DEBUG: (Calculated) altitude/height at destination ~ $1$ / $2$", [self.fAltitudeAtDestination, self.fHeightAtDestination]));
 

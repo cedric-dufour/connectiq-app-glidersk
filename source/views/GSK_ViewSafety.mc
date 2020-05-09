@@ -393,7 +393,7 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
       else {
         self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_DK_GREEN);
       }
-      if($.GSK_oProcessing.fHeightAtDestination <= 0.0f) {
+      if($.GSK_oProcessing.fHeightAtDestination <= -10000.0f) {
         sValue = self.sValueHeightGround;
       }
       else {
