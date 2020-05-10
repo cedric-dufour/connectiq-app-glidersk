@@ -1,8 +1,11 @@
+* 1.3.20200510a
+  - CHG: Improve safety height reading (negative values at stop or below glide)
+
 * 1.3.20200328a
   - NEW: Support for fenix6 (pro) serie
 
 * 1.3.20191120a
-  - MOD: display height about user-configurable reference height
+  - CHG: Display height about user-configurable reference height
   - NEW: Activity details in custom lap/session FIT fields and Log view/history
   - NEW: Add Lap action on SELECT button (when disabled on BACK one)
 
@@ -10,15 +13,15 @@
   - NEW: Automatic Activity recording (start/pause/resume)
 
 * 1.2.20190620a
-  - MOD: Use standard height color even in ascent (enhance contrast)
+  - CHG: Use standard height color even in ascent (enhance contrast)
 
 * 1.2.20190520a:
-  - MOD: Update color scheme for enhanced contrast
+  - CHG: Update color scheme for enhanced contrast
   - NEW: Support for MARQ serie and Forerunner 945
 
 * 1.2.20181214a:
-  - MOD: Pink and purple really aren't my color...
-  - MOD: Allow Safety settings to be accessed directly from Safety View
+  - CHG: Pink and purple really aren't my color...
+  - CHG: Allow Safety settings to be accessed directly from Safety View
   - NEW: Use Simple Moving Average (SMA) for data filtering, and
          allow user to choose whether to display filtered (averaged)
          or instantaneous data
@@ -26,28 +29,28 @@
 
 * 1.2.20181102a:
   - FIX: Elapsed times keep increasing after recording is stopped
-  - MOD: Show current safety settings before safety fields selection
+  - CHG: Show current safety settings before safety fields selection
 
 * 1.2.20181022a:
   - FIX: Bearing values would sometimes be negative (W quadrant)
   - FIX: Make Heading Bug more visible
-  - MOD: Switched borders, labels and units to gray coloring
+  - CHG: Switched borders, labels and units to gray coloring
 
 * 1.2.20181018a:
   - FIX: Do not colorize zero values
   - NEW: Bearing Bug in Safety view
 
 * 1.2.20180922a:
-  - Keep processing barometric altitude (and variometer) when GPS signal is lost
+  - FIX: Keep processing barometric altitude (and variometer) when GPS signal is lost
 
 * 1.2.20180920a:
-  - FIX: altimeter relative correction settings not appearing when altitude is not yet known
-  - Differentiate acceleration and (barometric) altitude FIT fields color
+  - FIX: Altimeter relative correction settings not appearing when altitude is not yet known
+  - CHG: Differentiate acceleration and (barometric) altitude FIT fields color
 
 * 1.2.20180919a:
-  - USE RAW BAROMETRIC PRESSURE AND INTERNAL ALTITUDE DERIVATION
-    (using ICAO/ISA official formulas, ICAO Doc 9837)
-  - Keep displaying (grayd-out) timers values after Activity Save
+  - NEW: USE RAW BAROMETRIC PRESSURE AND INTERNAL ALTITUDE DERIVATION
+         (using ICAO/ISA official formulas, ICAO Doc 9837)
+  - CHG: Keep displaying (grayd-out) timers values after Activity Save
 
 * 1.1.20180831a:
   - FIX: Erroneous variable used in distance calculation function
