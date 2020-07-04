@@ -1,3 +1,7 @@
+* 1.3.20200704a
+  - FIX: Prevent height-at-destination bouncing around in Alert mode
+  - CHG: display "XXX" for non-sensical height-at-destination
+
 * 1.3.20200510a
   - CHG: Improve safety height reading (negative values at stop or below glide)
 
