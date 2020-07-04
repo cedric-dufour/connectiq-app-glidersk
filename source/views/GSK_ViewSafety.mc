@@ -54,7 +54,7 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
   private var oRezButtonKeyDown;
   // ... strings
   private var sTitle;
-  private var sValueHeightGround;
+  private var sValueHeightInvalid;
 
   // Layout-specific
   private var fLayoutCenter;
@@ -136,7 +136,7 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
     // Load resources
     // ... strings
     self.sTitle = Ui.loadResource(Rez.Strings.titleViewSafety);
-    self.sValueHeightGround = Ui.loadResource(Rez.Strings.valueHeightGround);
+    self.sValueHeightInvalid = Ui.loadResource(Rez.Strings.valueHeightInvalid);
 
     // Unmute tones
     App.getApp().unmuteTones(GSK_App.TONES_SAFETY);
@@ -394,7 +394,7 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
         self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_DK_GREEN);
       }
       if($.GSK_oProcessing.fHeightAtDestination <= -10000.0f) {
-        sValue = self.sValueHeightGround;
+        sValue = self.sValueHeightInvalid;
       }
       else {
         fValue = ($.GSK_oProcessing.fHeightAtDestination - $.GSK_oSettings.fSafetyHeightReference) * $.GSK_oSettings.fUnitElevationCoefficient;

@@ -126,7 +126,7 @@
   <string id="valueActivityStandby">SBY</string>
   <string id="valueActivityRecording">REC</string>
   <string id="valueActivityPaused">PSD</string>
-  <string id="valueHeightGround">GND</string>
+  <string id="valueHeightInvalid">XXX</string>
   <!-- FIT -->
   <string id="titleVerticalSpeed">Vertical Speed</string>
   <string id="unitVerticalSpeed">m/s|ft/m</string>
