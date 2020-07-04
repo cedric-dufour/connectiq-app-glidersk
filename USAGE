@@ -63,13 +63,12 @@ algorithm:
    user-specified reference finesse (or the actual finesse if is lower
    than that).
 
- - Pass 2 / Alert: actual (or worst-case) finesse and heading
+ - Pass 2 / Alert: worst-case finesse and heading
    IF the resulting height (Above Ground Level) is below or equal to
    the user-specified decision height, the height at destination is
-   calculated again, using the *actual* finesse (unless you're ascending,
-   in which case the user-specified reference finesse is used) and
-   the *actual* speed-towards-destination (which accounts for heading
-   vs bearing discrepancies).
+   calculated again, using the user-specified reference finesse (or the
+   actual finesse if is lower than that) and the *actual* speed-towards-
+   destination (which accounts for heading vs bearing discrepancies).
 
 Once the estimated or actual height at destination have been computed, alerts
 will be issued according to the corresponding height:

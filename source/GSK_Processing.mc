@@ -506,20 +506,20 @@ class GSK_Processing {
     //       BUT, if the altitude becomes to low (height at destination below or equal to our decision height), then we must trigger
     //       meaningful alerts.
     if(self.fFinesse > 0.0f) {
-      // ALGO: Let's start by estimating our altitude at destination assuming we're heading straight to it - i.e. speed-to(wards)-destination
-      //       is equal to ground speed - and using the lowest between our reference finesse and actual finesse.
+      // ALGO: We always use the *worst* between the *actual* and the user-specified *reference* finesse
+      var fFinesse_safety = (self.fFinesse < $.GSK_oSettings.iSafetyFinesse) ? self.fFinesse : $.GSK_oSettings.iSafetyFinesse;
+      // ALGO: Let's start by estimating our altitude at destination assuming we're *heading straight to it*, i.e. speed-to(wards)-destination
+      //       is equal to ground speed.
       //       This is the worst-case scenario as far as finesse is concerned BUT the best-case scenario as far as our heading
       //       (vs. bearing to destination) is concerned.
-      self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / (self.fFinesse < $.GSK_oSettings.iSafetyFinesse ? self.fFinesse : $.GSK_oSettings.iSafetyFinesse);
+      self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / fFinesse_safety;
       self.fHeightAtDestination = self.fAltitudeAtDestination-self.fDestinationElevation;
       // ALGO: Then, if the corresponding height at destination is below our decision height, let's re-calculate our altitude at
-      //       destination by using our *actual* finesse (unless we're ascending) and our *actual* speed-to(wards)-destination
-      //       (which accounts for our heading vs bearing to destination).
-      //       No more worst-case/best-case scenario now; we're using only *actual*, meaningful values!
+      //       destination by using our *actual* speed-to(wards)-destination (which accounts for our *heading vs bearing to destination*).
       if(self.fHeightAtDestination <= $.GSK_oSettings.fSafetyHeightDecision) {
         self.bEstimation = false;
         if(self.fSpeedToDestination > 0.0f) {
-          self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / self.fFinesse * self.fGroundSpeed_filtered / self.fSpeedToDestination;
+          self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / fFinesse_safety * self.fGroundSpeed_filtered / self.fSpeedToDestination;
           self.fHeightAtDestination = self.fAltitudeAtDestination - self.fDestinationElevation;
           // ALGO: Our finesse or speed-to(wards)-destination aren't good enough; we'll touch the ground before reaching our destination
           //if(self.fHeightAtDestination <= 0.0f) {
