@@ -45,6 +45,7 @@ class GSK_Settings {
   public var fSafetyHeightCritical;
   public var fSafetyHeightReference;
   public var iSafetyHeadingBug;
+  public var iSafetyGraceDuration;
   // ... sounds
   public var bSoundsVariometerTones;
   public var bSoundsSafetyTones;
@@ -108,6 +109,7 @@ class GSK_Settings {
     self.setSafetyHeightCritical(App.Properties.getValue("userSafetyHeightCritical"));
     self.setSafetyHeightReference(App.Properties.getValue("userSafetyHeightReference"));
     self.setSafetyHeadingBug(App.Properties.getValue("userSafetyHeadingBug"));
+    self.setSafetyGraceDuration(App.Properties.getValue("userSafetyGraceDuration"));
     // ... sounds
     self.setSoundsVariometerTones(App.Properties.getValue("userSoundsVariometerTones"));
     self.setSoundsSafetyTones(App.Properties.getValue("userSoundsSafetyTones"));
@@ -325,6 +327,19 @@ class GSK_Settings {
       _iSafetyHeadingBug = 0;
     }
     self.iSafetyHeadingBug = _iSafetyHeadingBug;
+  }
+
+  function setSafetyGraceDuration(_iSafetyGraceDuration) {  // [s]
+    if(_iSafetyGraceDuration == null) {
+      _iSafetyGraceDuration = 0;
+    }
+    else if(_iSafetyGraceDuration > 3600) {
+      _iSafetyGraceDuration = 3600;
+    }
+    else if(_iSafetyGraceDuration < 0) {
+      _iSafetyGraceDuration = 0;
+    }
+    self.iSafetyGraceDuration = _iSafetyGraceDuration;
   }
 
   function setSoundsVariometerTones(_bSoundsVariometerTones) {

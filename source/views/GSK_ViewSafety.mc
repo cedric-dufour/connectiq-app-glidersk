@@ -620,6 +620,7 @@ class GSK_ViewSafetyDelegate extends Ui.BehaviorDelegate {
       Ui.pushView(new GSK_MenuGeneric(:menuDestination), new GSK_MenuGenericDelegate(:menuDestination), Ui.SLIDE_IMMEDIATE);
     }
     else {
+      $.GSK_oProcessing.bGrace = false;  // disable the grace period
       $.GSK_ViewSafety_bShowSettings = true;
       $.GSK_ViewSafety_bSelectFields = false;
       Ui.requestUpdate();

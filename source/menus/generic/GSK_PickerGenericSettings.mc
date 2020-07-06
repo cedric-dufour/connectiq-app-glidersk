@@ -90,6 +90,19 @@ class GSK_PickerGenericSettings extends Ui.Picker {
           :defaults => [ oFactory.indexOfKey(iSafetyHeadingBug) ]
         });
       }
+      else if(_item == :itemGraceDuration) {
+        var iSafetyGraceDuration = App.Properties.getValue("userSafetyGraceDuration");
+        var oFactory = new PickerFactoryDictionary([0, 300, 600, 900, 1200, 1500, 1800, 2700, 3600], ["0", "5", "10", "15", "20", "25", "30", "45", "60"], null);
+        var iIndex = oFactory.indexOfKey(iSafetyGraceDuration);
+        if(iIndex < 0) {
+          iIndex = 0;
+        }
+        Picker.initialize({
+          :title => new Ui.Text({ :text => Lang.format("$1$ [min]", [Ui.loadResource(Rez.Strings.titleSafetyGraceDuration)]), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
+          :pattern => [ oFactory ],
+          :defaults => [ iIndex ]
+        });
+      }
     }
     else if(_context == :contextGeneral) {
       if(_item == :itemTimeConstant) {
@@ -216,6 +229,13 @@ class GSK_PickerGenericSettingsDelegate extends Ui.PickerDelegate {
       }
       else if(self.item == :itemHeadingBug) {
         App.Properties.setValue("userSafetyHeadingBug", _amValues[0]);
+      }
+      else if(self.item == :itemGraceDuration) {
+        App.Properties.setValue("userSafetyGraceDuration", _amValues[0]);
+        // Reset the grace period
+        $.GSK_oSettings.load();
+        $.GSK_oProcessing.bGrace = false;
+        $.GSK_oProcessing.iGraceEpoch = null;
       }
     }
     else if(self.context == :contextGeneral) {

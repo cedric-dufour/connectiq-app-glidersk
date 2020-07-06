@@ -35,6 +35,7 @@
   <string id="titleSafetyHeightCritical">Critical Height</string>
   <string id="titleSafetyHeightReference">Reference Height</string>
   <string id="titleSafetyHeadingBug">Heading Bug</string>
+  <string id="titleSafetyGraceDuration">Grace Period</string>
   <!-- Menu (settings:sounds) -->
   <string id="titleSettingsSounds">Sounds</string>
   <string id="titleSoundsVariometerTones">Variometer Tones</string>

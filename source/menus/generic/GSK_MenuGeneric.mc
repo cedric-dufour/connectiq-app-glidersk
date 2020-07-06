@@ -73,6 +73,7 @@ class GSK_MenuGeneric extends Ui.Menu {
       Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightCritical), :menuSafetyHeightCritical);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightReference), :menuSafetyHeightReference);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeadingBug), :menuSafetyHeadingBug);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyGraceDuration), :menuSafetyGraceDuration);
     }
 
     else if(_menu == :menuSettingsSounds) {
@@ -259,6 +260,9 @@ class GSK_MenuGenericDelegate extends Ui.MenuInputDelegate {
       }
       else if(_item == :menuSafetyHeadingBug) {
         Ui.pushView(new GSK_PickerGenericSettings(:contextSafety, :itemHeadingBug), new GSK_PickerGenericSettingsDelegate(:contextSafety, :itemHeadingBug), Ui.SLIDE_IMMEDIATE);
+      }
+      else if(_item == :menuSafetyGraceDuration) {
+        Ui.pushView(new GSK_PickerGenericSettings(:contextSafety, :itemGraceDuration), new GSK_PickerGenericSettingsDelegate(:contextSafety, :itemGraceDuration), Ui.SLIDE_IMMEDIATE);
       }
     }
 

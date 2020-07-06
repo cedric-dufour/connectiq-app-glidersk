@@ -20,6 +20,7 @@ using Toybox.Lang;
 using Toybox.Math;
 using Toybox.Position as Pos;
 using Toybox.System as Sys;
+using Toybox.Time;
 
 //
 // CLASS
@@ -92,6 +93,8 @@ class GSK_Processing {
   public var fAltitudeAtDestination;
   public var fHeightAtDestination;
   // ... safety status
+  public var bGrace;
+  public var iGraceEpoch;
   public var bAscent;
   public var bEstimation;
   public var bAltitudeCritical;
@@ -197,6 +200,8 @@ class GSK_Processing {
     self.fAltitudeAtDestination = null;
     self.fHeightAtDestination = null;
     // ... safety status
+    self.bGrace = false;
+    self.iGraceEpoch = null;
     self.bAscent = true;
     self.bEstimation = true;
     self.bAltitudeCritical = false;
@@ -478,6 +483,23 @@ class GSK_Processing {
     // ALGO: We always use filtered (averaged) time-derived data to compute safety values,
     //       to avoid readings jumping around
 
+    // Grace period
+    if(self.iGraceEpoch == null) {
+      if($.GSK_oSettings.iSafetyGraceDuration > 0) {
+        //Sys.println("DEBUG: Grace period automatically enabled");
+        self.iGraceEpoch = Time.now().value() + $.GSK_oSettings.iSafetyGraceDuration;
+        self.bGrace = true;
+      }
+      else {
+        self.iGraceEpoch = 0;
+        self.bGrace = false;
+      }
+    }
+    if(self.bGrace and self.iPositionEpoch != null and self.iPositionEpoch > self.iGraceEpoch) {
+      //Sys.println("DEBUG: Grace period automatically disabled");
+      self.bGrace = false;
+    }
+
     // Ascent/finesse
 
     // ... ascending ?
@@ -515,8 +537,9 @@ class GSK_Processing {
       self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / fFinesse_safety;
       self.fHeightAtDestination = self.fAltitudeAtDestination-self.fDestinationElevation;
       // ALGO: Then, if the corresponding height at destination is below our decision height, let's re-calculate our altitude at
-      //       destination by using our *actual* speed-to(wards)-destination (which accounts for our *heading vs bearing to destination*).
-      if(self.fHeightAtDestination <= $.GSK_oSettings.fSafetyHeightDecision) {
+      //       destination by using our *actual* speed-to(wards)-destination (which accounts for our *heading vs bearing to destination*)
+      //       UNLESS we are within the grace period.
+      if(self.fHeightAtDestination <= $.GSK_oSettings.fSafetyHeightDecision and !self.bGrace) {
         self.bEstimation = false;
         if(self.fSpeedToDestination > 0.0f) {
           self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / fFinesse_safety * self.fGroundSpeed_filtered / self.fSpeedToDestination;
@@ -527,17 +550,17 @@ class GSK_Processing {
           //  self.fHeightAtDestination = 0.0f;
           //}
         }
-        else {
+        else {  // NOT(self.fSpeedToDestination > 0.0f)
           // ALGO: We're moving away from our destination; we'll never reach it
           self.fAltitudeAtDestination = -999999.9f;
           self.fHeightAtDestination = -999999.9f;
         }
       }
-      else {
+      else {  // NOT(self.fHeightAtDestination <= $.GSK_oSettings.fSafetyHeightDecision)
         self.bEstimation = true;
       }
     }
-    else {
+    else {  // NOT(self.fFinesse > 0.0f)
       // ALGO: We should never get here
       self.bEstimation = false;
       self.fAltitudeAtDestination = -999999.9f;

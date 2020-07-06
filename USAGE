@@ -137,6 +137,7 @@ application will display the current safety-critical settings:
    your chosen decision height
  - Bottom-Right:
    your chosen reference height
+NOTE: this also cancels the Grace Period (if enabled; see Settings below)
 
 Then, by pressing the SELECT button, the application will toggle the display and
 choice if the Top-Left and Bottom-Right fields. Note than whenever the Safety
@@ -299,6 +300,13 @@ The application allows you to specify the following settings:
   - Heading Bug:
     whether to always hide the heading bug (off), always show it (on) or only
     in Pass 2 / Alert mode (auto)
+  - Grace Period:
+    the initial period (in minutes) - starting when a valid GPS lock and speed
+    are first acquired - when the safety algorithm will stick to height estimation
+    (worst-case finesse and best-case heading), regardless of the Decision Height
+    (which is useful during the initial climb behind the tow plane)
+    NOTE: entering and confirming this setting allows to restart the Grace Period,
+    following its expiration or manual cancellation (see Safety View above)
 
 * Sounds
   - Variometer Tones:

@@ -18,6 +18,7 @@
   <property id="userSafetyHeightCritical" type="float">300.0</property>
   <property id="userSafetyHeightReference" type="float">300.0</property>
   <property id="userSafetyHeadingBug" type="number">2</property>
+  <property id="userSafetyGraceDuration" type="number">0</property>
   <!-- ... sounds -->
   <property id="userSoundsVariometerTones" type="boolean">true</property>
   <property id="userSoundsSafetyTones" type="boolean">true</property>
