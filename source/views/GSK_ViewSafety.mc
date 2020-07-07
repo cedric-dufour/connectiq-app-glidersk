@@ -39,7 +39,7 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
   private var bSelectFields;
   private var iFieldTopLeft;
   private var iFieldBottomRight;
-  private var bProcessingEstimation;
+  private var bProcessingDecision;
 
   // Resources
   // ... fields (labels)
@@ -108,7 +108,7 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
     self.bSelectFields = false;
     self.iFieldTopLeft = 0;
     self.iFieldBottomRight = 0;
-    self.bProcessingEstimation = true;
+    self.bProcessingDecision = false;
   }
 
   function onLayout(_oDC) {
@@ -173,7 +173,7 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
 
     // Draw heading bug
     if(!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings
-       and ($.GSK_oSettings.iSafetyHeadingBug == 2 or ($.GSK_oSettings.iSafetyHeadingBug == 1 and !$.GSK_oProcessing.bEstimation))
+       and ($.GSK_oSettings.iSafetyHeadingBug == 2 or ($.GSK_oSettings.iSafetyHeadingBug == 1 and $.GSK_oProcessing.bDecision))
        and $.GSK_oProcessing.iAccuracy >= Pos.QUALITY_LAST_KNOWN
        and $.GSK_oProcessing.fBearingToDestination != null
        and $.GSK_oProcessing.fHeading != null) {
@@ -189,7 +189,7 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
 
     // Set colors (value-independent), labels and units
     // ... destination (name) / elevation at destination / bearing to destination
-    if((!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings and !$.GSK_oProcessing.bEstimation)
+    if((!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings and $.GSK_oProcessing.bDecision)
        or $.GSK_ViewSafety_iFieldTopLeft == 2) {  // ... bearing to destination
       View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelBearingToDestination));
       View.findDrawableById("unitTopLeft").setText("[°]");
@@ -217,7 +217,7 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
     View.findDrawableById("labelBottomLeft").setText(Ui.loadResource(Rez.Strings.labelVerticalSpeed));
     View.findDrawableById("unitBottomLeft").setText(Lang.format("[$1$]", [$.GSK_oSettings.sUnitVerticalSpeed]));
     // ... ground speed / speed-to(wards)-destination
-    if((!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings and !$.GSK_oProcessing.bEstimation)
+    if((!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings and $.GSK_oProcessing.bDecision)
        or $.GSK_ViewSafety_iFieldBottomRight == 1) {  // ... speed-to(wards)-destination
       View.findDrawableById("labelBottomRight").setText(Ui.loadResource(Rez.Strings.labelSpeedToDestination));
     }
@@ -236,14 +236,14 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
        or self.bSelectFields != $.GSK_ViewSafety_bSelectFields
        or self.iFieldTopLeft != $.GSK_ViewSafety_iFieldTopLeft
        or self.iFieldBottomRight != $.GSK_ViewSafety_iFieldBottomRight
-       or self.bProcessingEstimation != $.GSK_oProcessing.bEstimation
+       or self.bProcessingDecision != $.GSK_oProcessing.bDecision
        ) {
       self.adaptLayoutSafety();
       self.bShowSettings = $.GSK_ViewSafety_bShowSettings;
       self.bSelectFields = $.GSK_ViewSafety_bSelectFields;
       self.iFieldTopLeft = $.GSK_ViewSafety_iFieldTopLeft;
       self.iFieldBottomRight = $.GSK_ViewSafety_iFieldBottomRight;
-      self.bProcessingEstimation = $.GSK_oProcessing.bEstimation;
+      self.bProcessingDecision = $.GSK_oProcessing.bDecision;
     }
 
     // Colors
@@ -287,7 +287,7 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
 
     // ... destination (name) / elevation at destination / bearing to destination
     self.oRezValueTopLeft.setColor(Gfx.COLOR_BLUE);
-    if((!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings and !$.GSK_oProcessing.bEstimation)
+    if((!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings and $.GSK_oProcessing.bDecision)
        or $.GSK_ViewSafety_iFieldTopLeft == 2) {  // ... bearing to destination
       if($.GSK_oProcessing.fBearingToDestination != null) {
         //fValue = (($.GSK_oProcessing.fBearingToDestination * 180.0f/Math.PI).toNumber()) % 360;
@@ -441,7 +441,7 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
 
     // ... ground speed / speed-to(wards)-destination
     self.oRezValueBottomRight.setColor(self.iColorText);
-    if((!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings and !$.GSK_oProcessing.bEstimation)
+    if((!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings and $.GSK_oProcessing.bDecision)
        or $.GSK_ViewSafety_iFieldBottomRight == 1) {  // ... speed-to(wards)-destination
       if($.GSK_oProcessing.fSpeedToDestination != null) {
         fValue = $.GSK_oProcessing.fSpeedToDestination * $.GSK_oSettings.fUnitHorizontalSpeedCoefficient;

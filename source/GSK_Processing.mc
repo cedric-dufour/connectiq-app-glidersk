@@ -96,7 +96,7 @@ class GSK_Processing {
   public var bGrace;
   public var iGraceEpoch;
   public var bAscent;
-  public var bEstimation;
+  public var bDecision;
   public var bAltitudeCritical;
   public var bAltitudeWarning;
   // ... plot buffer (using integer-only operations!)
@@ -203,7 +203,7 @@ class GSK_Processing {
     self.bGrace = false;
     self.iGraceEpoch = null;
     self.bAscent = true;
-    self.bEstimation = true;
+    self.bDecision = false;
     self.bAltitudeCritical = false;
     self.bAltitudeWarning = false;
     // ... filters
@@ -451,7 +451,7 @@ class GSK_Processing {
       //Sys.println("ERROR: Incomplete data; cannot proceed");
       self.bAscent = false;
       self.fFinesse = null;
-      self.bEstimation = true;
+      self.bDecision = false;
       self.fAltitudeAtDestination = null;
       self.fHeightAtDestination = null;
       self.bAltitudeCritical = false;
@@ -465,7 +465,7 @@ class GSK_Processing {
       //Sys.println("WARNING: No speed/bearing data");
       self.bAscent = false;
       self.fFinesse = $.GSK_oSettings.iSafetyFinesse.toFloat();
-      self.bEstimation = true;
+      self.bDecision = false;
       self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / self.fFinesse;
       self.fHeightAtDestination = self.fAltitudeAtDestination - self.fDestinationElevation;
       self.bAltitudeCritical = false;
@@ -539,8 +539,8 @@ class GSK_Processing {
       // ALGO: Then, if the corresponding height at destination is below our decision height, let's re-calculate our altitude at
       //       destination by using our *actual* speed-to(wards)-destination (which accounts for our *heading vs bearing to destination*)
       //       UNLESS we are within the grace period.
-      if(self.fHeightAtDestination <= $.GSK_oSettings.fSafetyHeightDecision and !self.bGrace) {
-        self.bEstimation = false;
+      self.bDecision = (self.fHeightAtDestination <= $.GSK_oSettings.fSafetyHeightDecision);
+      if(self.bDecision and !self.bGrace) {
         if(self.fSpeedToDestination > 0.0f) {
           self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / fFinesse_safety * self.fGroundSpeed_filtered / self.fSpeedToDestination;
           self.fHeightAtDestination = self.fAltitudeAtDestination - self.fDestinationElevation;
@@ -556,13 +556,10 @@ class GSK_Processing {
           self.fHeightAtDestination = -999999.9f;
         }
       }
-      else {  // NOT(self.fHeightAtDestination <= $.GSK_oSettings.fSafetyHeightDecision)
-        self.bEstimation = true;
-      }
     }
     else {  // NOT(self.fFinesse > 0.0f)
       // ALGO: We should never get here
-      self.bEstimation = false;
+      self.bDecision = true;
       self.fAltitudeAtDestination = -999999.9f;
       self.fHeightAtDestination = -999999.9f;
     }

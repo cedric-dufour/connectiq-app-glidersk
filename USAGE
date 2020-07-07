@@ -63,7 +63,7 @@ algorithm:
    user-specified reference finesse (or the actual finesse if is lower
    than that).
 
- - Pass 2 / Alert: worst-case finesse and heading
+ - Pass 2 / Decision: worst-case finesse and heading
    IF the resulting height (Above Ground Level) is below or equal to
    the user-specified decision height, the height at destination is
    calculated again, using the user-specified reference finesse (or the
@@ -141,7 +141,7 @@ NOTE: this also cancels the Grace Period (if enabled; see Settings below)
 
 Then, by pressing the SELECT button, the application will toggle the display and
 choice if the Top-Left and Bottom-Right fields. Note than whenever the Safety
-View is in the Pass 2 / Alert mode, those fields will always show, respectively,
+View is in the Pass 2 / Decision mode, those fields will always show, respectively,
 the bearing and speed towards your current destination.
 
 By pressing the MENU button (long-pressing the UP button) a second time, you will
@@ -299,10 +299,10 @@ The application allows you to specify the following settings:
     the actual/estimated safety height in the Safety view
   - Heading Bug:
     whether to always hide the heading bug (off), always show it (on) or only
-    in Pass 2 / Alert mode (auto)
+    in Pass 2 / Decision mode (auto)
   - Grace Period:
-    the initial period (in minutes) - starting when a valid GPS lock and speed
-    are first acquired - when the safety algorithm will stick to height estimation
+    the initial period (in minutes) - starting when a valid GPS lock and speed are
+    first acquired - when the safety algorithm will stick to Pass 1 / Estimation mode
     (worst-case finesse and best-case heading), regardless of the Decision Height
     (which is useful during the initial climb behind the tow plane)
     NOTE: entering and confirming this setting allows to restart the Grace Period,
