@@ -289,6 +289,9 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
     self.oRezValueTopLeft.setColor(Gfx.COLOR_BLUE);
     if((!$.GSK_ViewSafety_bSelectFields and !$.GSK_ViewSafety_bShowSettings and $.GSK_oProcessing.bDecision)
        or $.GSK_ViewSafety_iFieldTopLeft == 2) {  // ... bearing to destination
+      if($.GSK_oProcessing.bDecision and $.GSK_oProcessing.bGrace) {
+        self.oRezValueTopLeft.setColor(Gfx.COLOR_PURPLE);
+      }
       if($.GSK_oProcessing.fBearingToDestination != null) {
         //fValue = (($.GSK_oProcessing.fBearingToDestination * 180.0f/Math.PI).toNumber()) % 360;
         fValue = (($.GSK_oProcessing.fBearingToDestination * 57.2957795131f).toNumber()) % 360;
@@ -475,7 +478,7 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
     // Heading
     var fBearingRelative = $.GSK_oProcessing.fBearingToDestination - $.GSK_oProcessing.fHeading;
     // ... bug
-    var iColor = Gfx.COLOR_BLUE;
+    var iColor = ($.GSK_oProcessing.bDecision and $.GSK_oProcessing.bGrace) ? Gfx.COLOR_PURPLE : Gfx.COLOR_BLUE;
     var aPoints =
       [[self.fLayoutCenter+self.fLayoutBugR1*Math.sin(fBearingRelative), self.fLayoutCenter-self.fLayoutBugR1*Math.cos(fBearingRelative)],
        [self.fLayoutCenter+self.fLayoutBugR2*Math.sin(fBearingRelative-0.125f), self.fLayoutCenter-self.fLayoutBugR2*Math.cos(fBearingRelative-0.125f)],

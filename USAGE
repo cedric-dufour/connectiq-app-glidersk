@@ -307,6 +307,9 @@ The application allows you to specify the following settings:
     (which is useful during the initial climb behind the tow plane)
     NOTE: entering and confirming this setting allows to restart the Grace Period,
     following its expiration or manual cancellation (see Safety View above)
+    when the Grace Period is active, the Bearing reading and the Heading Bug will
+    be colored PURPLE (if Pass 2 / Decision mode would be enabled instead of sticking
+    to Pass 1 / Estimation)
 
 * Sounds
   - Variometer Tones:
