@@ -302,14 +302,14 @@ The application allows you to specify the following settings:
     in Pass 2 / Decision mode (auto)
   - Grace Period:
     the initial period (in minutes) - starting when a valid GPS lock and speed are
-    first acquired - when the safety algorithm will stick to Pass 1 / Estimation mode
-    (worst-case finesse and best-case heading), regardless of the Decision Height
-    (which is useful during the initial climb behind the tow plane)
+    first acquired - when:
+    - the safety algorithm will stick to Pass 1 / Estimation mode, regardless of
+      the Decision Height (see above)
+    - height-related Safety Tones (see below) will be muted
+    - the Bearing reading and the Heading Bug will be colored PURPLE
+      (if Pass 2 / Decision mode would have been triggered)
     NOTE: entering and confirming this setting allows to restart the Grace Period,
     following its expiration or manual cancellation (see Safety View above)
-    when the Grace Period is active, the Bearing reading and the Heading Bug will
-    be colored PURPLE (if Pass 2 / Decision mode would be enabled instead of sticking
-    to Pass 1 / Estimation)
 
 * Sounds
   - Variometer Tones:

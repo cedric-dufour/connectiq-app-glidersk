@@ -405,17 +405,19 @@ class GSK_App extends App.AppBase {
     // Alert tones (priority over variometer)
     if(self.iTones & self.TONES_SAFETY) {
       if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {  // position accuracy is good enough
-        if($.GSK_oProcessing.bAltitudeCritical and self.iTonesTick-self.iTonesLastTick >= (self.iTones & self.TONES_VARIOMETER ? 10 : 1)) {
-          //Sys.println(Lang.format("DEBUG: playTone = altitude critical @ $1$", [self.iTonesTick]));
-          Attn.playTone(Attn.TONE_LOUD_BEEP);
-          self.iTonesLastTick = self.iTonesTick;
-          return;
-        }
-        else if($.GSK_oProcessing.bAltitudeWarning and self.iTonesTick-self.iTonesLastTick >= (self.iTones & self.TONES_VARIOMETER ? 30 : 3)) {
-          //Sys.println(Lang.format("DEBUG: playTone: altitude warning @ $1$", [self.iTonesTick]));
-          Attn.playTone(Attn.TONE_LOUD_BEEP);
-          self.iTonesLastTick = self.iTonesTick;
-          return;
+        if($.GSK_oProcessing.bDecision and !$.GSK_oProcessing.bGrace) {
+          if($.GSK_oProcessing.bAltitudeCritical and self.iTonesTick-self.iTonesLastTick >= (self.iTones & self.TONES_VARIOMETER ? 10 : 1)) {
+            //Sys.println(Lang.format("DEBUG: playTone = altitude critical @ $1$", [self.iTonesTick]));
+            Attn.playTone(Attn.TONE_LOUD_BEEP);
+            self.iTonesLastTick = self.iTonesTick;
+            return;
+          }
+          else if($.GSK_oProcessing.bAltitudeWarning and self.iTonesTick-self.iTonesLastTick >= (self.iTones & self.TONES_VARIOMETER ? 30 : 3)) {
+            //Sys.println(Lang.format("DEBUG: playTone: altitude warning @ $1$", [self.iTonesTick]));
+            Attn.playTone(Attn.TONE_LOUD_BEEP);
+            self.iTonesLastTick = self.iTonesTick;
+            return;
+          }
         }
       }
       else if(self.iTonesTick-self.iTonesLastTick >= (self.iTones & self.TONES_VARIOMETER ? 20 : 2)) {
