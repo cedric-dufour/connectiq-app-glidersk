@@ -101,6 +101,20 @@ class GSK_ViewRateOfTurn extends Ui.View {
     self.iLayoutUnitY = 233;
   }
 
+  (:layout_390x390)
+  function initLayout() {
+    self.iLayoutCenter = 195;
+    self.iLayoutValueR = 98;
+    self.iLayoutCacheY = 170;
+    self.iLayoutCacheR = 155;
+    self.iLayoutBatteryY = 199;
+    self.iLayoutActivityY = 114;
+    self.iLayoutTimeY = 226;
+    self.iLayoutHeadingY = 56;
+    self.iLayoutValueY = 124;
+    self.iLayoutUnitY = 333;
+  }
+
 
   //
   // FUNCTIONS: Ui.View (override/implement)

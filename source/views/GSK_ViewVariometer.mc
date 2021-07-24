@@ -105,6 +105,21 @@ class GSK_ViewVariometer extends Ui.View {
     self.iLayoutUnitY = 123;
   }
 
+  (:layout_390x390)
+  function initLayout() {
+    self.iLayoutCenter = 195;
+    self.iLayoutValueR = 98;
+    self.iLayoutCacheX = 175;
+    self.iLayoutCacheR = 155;
+    self.iLayoutBatteryY = 223;
+    self.iLayoutActivityY = 138;
+    self.iLayoutTimeY = 259;
+    self.iLayoutAltitudeY = 79;
+    self.iLayoutValueY = 147;
+    self.iLayoutUnitX = 347;
+    self.iLayoutUnitY = 173;
+  }
+
 
   //
   // FUNCTIONS: Ui.View (override/implement)

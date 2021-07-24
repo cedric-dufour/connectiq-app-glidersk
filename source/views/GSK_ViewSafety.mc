@@ -91,6 +91,14 @@ class GSK_ViewSafety extends GSK_ViewGlobal {
     self.fLayoutBugR3 = 120.0f;
   }
 
+  (:layout_390x390)
+  function initLayout() {
+    self.fLayoutCenter = 195.0f;
+    self.fLayoutBugR1 = 194.0f;
+    self.fLayoutBugR2 = 175.0f;
+    self.fLayoutBugR3 = 178.0f;
+  }
+
 
   //
   // FUNCTIONS: GSK_ViewGlobal (override/implement)
