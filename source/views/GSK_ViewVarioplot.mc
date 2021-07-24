@@ -99,6 +99,18 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
     self.iLayoutValueYbottom = 225;
   }
 
+  (:layout_390x390)
+  function initLayout() {
+    self.iLayoutCenter = 195;
+    self.iLayoutClipY = 36;
+    self.iLayoutClipW = 390;
+    self.iLayoutClipH = 320;
+    self.iLayoutValueXleft = 87;
+    self.iLayoutValueXright = 300;
+    self.iLayoutValueYtop = 45;
+    self.iLayoutValueYbottom = 300;
+  }
+
 
   //
   // FUNCTIONS: GSK_ViewHeader (override/implement)
