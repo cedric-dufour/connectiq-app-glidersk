@@ -29,7 +29,7 @@ using Toybox.System as Sys;
 // CLASS
 //
 
-class GSK_Activity {
+class MyActivity {
 
   //
   // CONSTANTS
@@ -128,7 +128,7 @@ class GSK_Activity {
   //
 
   function initialize() {
-    //Sys.println("DEBUG: GSK_Activity.initialize()");
+    //Sys.println("DEBUG: MyActivity.initialize()");
 
     // Session (recording)
     // NOTE: "Flying" activity number is 20 (cf. https://www.thisisant.com/resources/fit -> Profiles.xlsx)
@@ -137,36 +137,36 @@ class GSK_Activity {
     // FIT fields
 
     // ... (unit conversion) coefficients
-    self.bUnitCoefficient_TimeUTC = $.GSK_oSettings.bUnitTimeUTC;
-    self.fUnitCoefficient_Distance = $.GSK_oSettings.fUnitDistanceCoefficient;
-    self.fUnitCoefficient_Altitude = $.GSK_oSettings.fUnitElevationCoefficient;
-    self.fUnitCoefficient_VerticalSpeed = $.GSK_oSettings.fUnitVerticalSpeedCoefficient;
-    self.fUnitCoefficient_RateOfTurn = $.GSK_oSettings.fUnitRateOfTurnCoefficient;
+    self.bUnitCoefficient_TimeUTC = $.oMySettings.bUnitTimeUTC;
+    self.fUnitCoefficient_Distance = $.oMySettings.fUnitDistanceCoefficient;
+    self.fUnitCoefficient_Altitude = $.oMySettings.fUnitElevationCoefficient;
+    self.fUnitCoefficient_VerticalSpeed = $.oMySettings.fUnitVerticalSpeedCoefficient;
+    self.fUnitCoefficient_RateOfTurn = $.oMySettings.fUnitRateOfTurnCoefficient;
 
     // ... record
-    self.oFitField_BarometricAltitude = self.oSession.createField("BarometricAltitude", GSK_Activity.FITFIELD_BAROMETRICALTITUDE, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_oSettings.sUnitElevation });
-    self.oFitField_VerticalSpeed = self.oSession.createField("VerticalSpeed", GSK_Activity.FITFIELD_VERTICALSPEED, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_oSettings.sUnitVerticalSpeed });
-    self.oFitField_RateOfTurn = self.oSession.createField("RateOfTurn", GSK_App.FITFIELD_RATEOFTURN, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.GSK_oSettings.sUnitRateOfTurn });
-    self.oFitField_Acceleration = self.oSession.createField("Acceleration", GSK_App.FITFIELD_ACCELERATION, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>"g" });
+    self.oFitField_BarometricAltitude = self.oSession.createField("BarometricAltitude", MyActivity.FITFIELD_BAROMETRICALTITUDE, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.oMySettings.sUnitElevation });
+    self.oFitField_VerticalSpeed = self.oSession.createField("VerticalSpeed", MyActivity.FITFIELD_VERTICALSPEED, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.oMySettings.sUnitVerticalSpeed });
+    self.oFitField_RateOfTurn = self.oSession.createField("RateOfTurn", MyApp.FITFIELD_RATEOFTURN, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.oMySettings.sUnitRateOfTurn });
+    self.oFitField_Acceleration = self.oSession.createField("Acceleration", MyApp.FITFIELD_ACCELERATION, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>"g" });
 
     // ... lap
-    self.oFitField_Distance = self.oSession.createField("Distance", GSK_Activity.FITFIELD_DISTANCE, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_LAP, :units=>$.GSK_oSettings.sUnitDistance });
-    self.oFitField_Ascent = self.oSession.createField("Ascent", GSK_Activity.FITFIELD_ASCENT, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_LAP, :units=>$.GSK_oSettings.sUnitElevation });
-    self.oFitField_ElapsedAscent = self.oSession.createField("ElapsedAscent", GSK_Activity.FITFIELD_ELAPSEDASCENT, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_LAP, :count=>9 });
-    self.oFitField_AltitudeMin = self.oSession.createField("AltitudeMin", GSK_Activity.FITFIELD_ALTITUDEMIN, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_LAP, :units=>$.GSK_oSettings.sUnitElevation });
-    self.oFitField_TimeAltitudeMin = self.oSession.createField("TimeAltitudeMin", GSK_Activity.FITFIELD_TIMEALTITUDEMIN, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_LAP, :count=>9, :units=>$.GSK_oSettings.sUnitTime });
-    self.oFitField_AltitudeMax = self.oSession.createField("AltitudeMax", GSK_Activity.FITFIELD_ALTITUDEMAX, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_LAP, :units=>$.GSK_oSettings.sUnitElevation });
-    self.oFitField_TimeAltitudeMax = self.oSession.createField("TimeAltitudeMax", GSK_Activity.FITFIELD_TIMEALTITUDEMAX, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_LAP, :count=>9, :units=>$.GSK_oSettings.sUnitTime });
+    self.oFitField_Distance = self.oSession.createField("Distance", MyActivity.FITFIELD_DISTANCE, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_LAP, :units=>$.oMySettings.sUnitDistance });
+    self.oFitField_Ascent = self.oSession.createField("Ascent", MyActivity.FITFIELD_ASCENT, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_LAP, :units=>$.oMySettings.sUnitElevation });
+    self.oFitField_ElapsedAscent = self.oSession.createField("ElapsedAscent", MyActivity.FITFIELD_ELAPSEDASCENT, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_LAP, :count=>9 });
+    self.oFitField_AltitudeMin = self.oSession.createField("AltitudeMin", MyActivity.FITFIELD_ALTITUDEMIN, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_LAP, :units=>$.oMySettings.sUnitElevation });
+    self.oFitField_TimeAltitudeMin = self.oSession.createField("TimeAltitudeMin", MyActivity.FITFIELD_TIMEALTITUDEMIN, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_LAP, :count=>9, :units=>$.oMySettings.sUnitTime });
+    self.oFitField_AltitudeMax = self.oSession.createField("AltitudeMax", MyActivity.FITFIELD_ALTITUDEMAX, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_LAP, :units=>$.oMySettings.sUnitElevation });
+    self.oFitField_TimeAltitudeMax = self.oSession.createField("TimeAltitudeMax", MyActivity.FITFIELD_TIMEALTITUDEMAX, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_LAP, :count=>9, :units=>$.oMySettings.sUnitTime });
     self.resetLapFields();
 
     // ... session
-    self.oFitField_GlobalDistance = self.oSession.createField("Distance", GSK_Activity.FITFIELD_GLOBALDISTANCE, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_SESSION, :units=>$.GSK_oSettings.sUnitDistance });
-    self.oFitField_GlobalAscent = self.oSession.createField("Ascent", GSK_Activity.FITFIELD_GLOBALASCENT, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_SESSION, :units=>$.GSK_oSettings.sUnitElevation });
-    self.oFitField_GlobalElapsedAscent = self.oSession.createField("ElapsedAscent", GSK_Activity.FITFIELD_GLOBALELAPSEDASCENT, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_SESSION, :count=>9 });
-    self.oFitField_GlobalAltitudeMin = self.oSession.createField("AltitudeMin", GSK_Activity.FITFIELD_GLOBALALTITUDEMIN, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_SESSION, :units=>$.GSK_oSettings.sUnitElevation });
-    self.oFitField_GlobalTimeAltitudeMin = self.oSession.createField("TimeAltitudeMin", GSK_Activity.FITFIELD_GLOBALTIMEALTITUDEMIN, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_SESSION, :count=>9, :units=>$.GSK_oSettings.sUnitTime });
-    self.oFitField_GlobalAltitudeMax = self.oSession.createField("AltitudeMax", GSK_Activity.FITFIELD_GLOBALALTITUDEMAX, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_SESSION, :units=>$.GSK_oSettings.sUnitElevation });
-    self.oFitField_GlobalTimeAltitudeMax = self.oSession.createField("TimeAltitudeMax", GSK_Activity.FITFIELD_GLOBALTIMEALTITUDEMAX, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_SESSION, :count=>9, :units=>$.GSK_oSettings.sUnitTime });
+    self.oFitField_GlobalDistance = self.oSession.createField("Distance", MyActivity.FITFIELD_GLOBALDISTANCE, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_SESSION, :units=>$.oMySettings.sUnitDistance });
+    self.oFitField_GlobalAscent = self.oSession.createField("Ascent", MyActivity.FITFIELD_GLOBALASCENT, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_SESSION, :units=>$.oMySettings.sUnitElevation });
+    self.oFitField_GlobalElapsedAscent = self.oSession.createField("ElapsedAscent", MyActivity.FITFIELD_GLOBALELAPSEDASCENT, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_SESSION, :count=>9 });
+    self.oFitField_GlobalAltitudeMin = self.oSession.createField("AltitudeMin", MyActivity.FITFIELD_GLOBALALTITUDEMIN, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_SESSION, :units=>$.oMySettings.sUnitElevation });
+    self.oFitField_GlobalTimeAltitudeMin = self.oSession.createField("TimeAltitudeMin", MyActivity.FITFIELD_GLOBALTIMEALTITUDEMIN, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_SESSION, :count=>9, :units=>$.oMySettings.sUnitTime });
+    self.oFitField_GlobalAltitudeMax = self.oSession.createField("AltitudeMax", MyActivity.FITFIELD_GLOBALALTITUDEMAX, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_SESSION, :units=>$.oMySettings.sUnitElevation });
+    self.oFitField_GlobalTimeAltitudeMax = self.oSession.createField("TimeAltitudeMax", MyActivity.FITFIELD_GLOBALTIMEALTITUDEMAX, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_SESSION, :count=>9, :units=>$.oMySettings.sUnitTime });
 
   }
 
@@ -176,7 +176,7 @@ class GSK_Activity {
   //
 
   function start() {
-    //Sys.println("DEBUG: GSK_Activity.start()");
+    //Sys.println("DEBUG: MyActivity.start()");
 
     self.resetLog(true);
     self.oSession.start();
@@ -189,13 +189,13 @@ class GSK_Activity {
   }
 
   function isRecording() {
-    //Sys.println("DEBUG: GSK_Activity.isRecording()");
+    //Sys.println("DEBUG: MyActivity.isRecording()");
 
     return self.oSession.isRecording();
   }
 
   function addLap() {
-    //Sys.println("DEBUG: GSK_Activity.lap()");
+    //Sys.println("DEBUG: MyActivity.lap()");
 
     self.saveLog(false);
     self.oSession.addLap();
@@ -209,7 +209,7 @@ class GSK_Activity {
   }
 
   function pause() {
-    //Sys.println("DEBUG: GSK_Activity.pause()");
+    //Sys.println("DEBUG: MyActivity.pause()");
 
     if(!self.oSession.isRecording()) {
       return;
@@ -221,7 +221,7 @@ class GSK_Activity {
   }
 
   function resume() {
-    //Sys.println("DEBUG: GSK_Activity.resume()");
+    //Sys.println("DEBUG: MyActivity.resume()");
 
     if(self.oSession.isRecording()) {
       return;
@@ -233,7 +233,7 @@ class GSK_Activity {
   }
 
   function stop(_bSave) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.stop($1$)", [_bSave]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.stop($1$)", [_bSave]));
 
     if(self.oSession.isRecording()) {
       self.oSession.stop();
@@ -288,13 +288,13 @@ class GSK_Activity {
   }
 
   function processPositionInfo(_oInfo, _iEpoch, _oTimeNow) {
-    //Sys.println("DEBUG: GSK_Activity.processPositionInfo()");
+    //Sys.println("DEBUG: MyActivity.processPositionInfo()");
 
     if(!self.oSession.isRecording()
        or !(_oInfo has :accuracy) or _oInfo.accuracy < Pos.QUALITY_GOOD
        or !(_oInfo has :position) or _oInfo.position == null
        or !(_oInfo has :altitude) or _oInfo.altitude == null
-       or (self.iEpochLast != null and (_iEpoch - self.iEpochLast) < $.GSK_oSettings.iGeneralTimeConstant)) {
+       or (self.iEpochLast != null and (_iEpoch - self.iEpochLast) < $.oMySettings.iGeneralTimeConstant)) {
       return;
     }
 
@@ -383,13 +383,13 @@ class GSK_Activity {
         "altitudeMax" => self.fGlobalAltitudeMax,
         "timeAltitudeMax" => self.oGlobalTimeAltitudeMax != null ? self.oGlobalTimeAltitudeMax.value() : null,
       };
-      if($.GSK_iLogIndex == null) {
-        $.GSK_iLogIndex = 0;
+      if($.iMyLogIndex == null) {
+        $.iMyLogIndex = 0;
       }
       else {
-        $.GSK_iLogIndex = ($.GSK_iLogIndex + 1) % $.GSK_STORAGE_SLOTS;
+        $.iMyLogIndex = ($.iMyLogIndex + 1) % $.MY_STORAGE_SLOTS;
       }
-      var s = $.GSK_iLogIndex.format("%02d");
+      var s = $.iMyLogIndex.format("%02d");
       App.Storage.setValue(Lang.format("storLog$1$", [s]), dictLog);
     }
   }
@@ -402,28 +402,28 @@ class GSK_Activity {
   // Record
 
   function setBarometricAltitude(_fValue) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setBarometricAltitude($1$)", [_fValue]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setBarometricAltitude($1$)", [_fValue]));
     if(_fValue != null) {
       self.oFitField_BarometricAltitude.setData(_fValue * self.fUnitCoefficient_Altitude);
     }
   }
 
   function setVerticalSpeed(_fValue) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setVerticalSpeed($1$)", [_fValue]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setVerticalSpeed($1$)", [_fValue]));
     if(_fValue != null) {
       self.oFitField_VerticalSpeed.setData(_fValue * self.fUnitCoefficient_VerticalSpeed);
     }
   }
 
   function setRateOfTurn(_fValue) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setRateOfTurn($1$)", [_fValue]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setRateOfTurn($1$)", [_fValue]));
     if(_fValue != null) {
       self.oFitField_RateOfTurn.setData(_fValue * self.fUnitCoefficient_RateOfTurn);
     }
   }
 
   function setAcceleration(_fValue) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setAcceleration($1$)", [_fValue]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setAcceleration($1$)", [_fValue]));
     if(_fValue != null) {
       self.oFitField_Acceleration.setData(_fValue);
     }
@@ -442,90 +442,90 @@ class GSK_Activity {
   }
 
   function setDistance(_fValue) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setDistance($1$)", [_fValue]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setDistance($1$)", [_fValue]));
     if(_fValue != null) {
       self.oFitField_Distance.setData(_fValue * self.fUnitCoefficient_Distance);
     }
   }
 
   function setAscent(_fValue) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setAscent($1$)", [_fValue]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setAscent($1$)", [_fValue]));
     if(_fValue != null) {
       self.oFitField_Ascent.setData(_fValue * self.fUnitCoefficient_Altitude);
     }
   }
 
   function setElapsedAscent(_iElapsed) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setElapsedAscent($1$)", [_iElapsed]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setElapsedAscent($1$)", [_iElapsed]));
     self.oFitField_ElapsedAscent.setData(LangUtils.formatElapsed(_iElapsed, true));
   }
 
   function setAltitudeMin(_fValue) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setAltitudeMin($1$)", [_fValue]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setAltitudeMin($1$)", [_fValue]));
     if(_fValue != null) {
       self.oFitField_AltitudeMin.setData(_fValue * self.fUnitCoefficient_Altitude);
     }
   }
 
   function setTimeAltitudeMin(_oTime) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setTimeAltitudeMin($1$)", [_oTime.value()]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setTimeAltitudeMin($1$)", [_oTime.value()]));
     self.oFitField_TimeAltitudeMin.setData(LangUtils.formatTime(_oTime, self.bUnitCoefficient_TimeUTC, true));
   }
 
   function setAltitudeMax(_fValue) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setAltitudeMax($1$)", [_fValue]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setAltitudeMax($1$)", [_fValue]));
     if(_fValue != null) {
       self.oFitField_AltitudeMax.setData(_fValue * self.fUnitCoefficient_Altitude);
     }
   }
 
   function setTimeAltitudeMax(_oTime) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setTimeAltitudeMax($1$)", [_oTime.value()]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setTimeAltitudeMax($1$)", [_oTime.value()]));
     self.oFitField_TimeAltitudeMax.setData(LangUtils.formatTime(_oTime, self.bUnitCoefficient_TimeUTC, true));
   }
 
   // Session
 
   function setGlobalDistance(_fValue) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setGlobalDistance($1$)", [_fValue]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setGlobalDistance($1$)", [_fValue]));
     if(_fValue != null) {
       self.oFitField_GlobalDistance.setData(_fValue * self.fUnitCoefficient_Distance);
     }
   }
 
   function setGlobalAscent(_fValue) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setGlobalAscent($1$)", [_fValue]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setGlobalAscent($1$)", [_fValue]));
     if(_fValue != null) {
       self.oFitField_GlobalAscent.setData(_fValue * self.fUnitCoefficient_Altitude);
     }
   }
 
   function setGlobalElapsedAscent(_iElapsed) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setGlobalElapsedAscent($1$)", [_iElapsed]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setGlobalElapsedAscent($1$)", [_iElapsed]));
     self.oFitField_GlobalElapsedAscent.setData(LangUtils.formatElapsed(_iElapsed, true));
   }
 
   function setGlobalAltitudeMin(_fValue) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setGlobalAltitudeMin($1$)", [_fValue]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setGlobalAltitudeMin($1$)", [_fValue]));
     if(_fValue != null) {
       self.oFitField_GlobalAltitudeMin.setData(_fValue * self.fUnitCoefficient_Altitude);
     }
   }
 
   function setGlobalTimeAltitudeMin(_oTime) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setGlobalTimeAltitudeMin($1$)", [_oTime.value()]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setGlobalTimeAltitudeMin($1$)", [_oTime.value()]));
     self.oFitField_GlobalTimeAltitudeMin.setData(LangUtils.formatTime(_oTime, self.bUnitCoefficient_TimeUTC, true));
   }
 
   function setGlobalAltitudeMax(_fValue) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setGlobalAltitudeMax($1$)", [_fValue]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setGlobalAltitudeMax($1$)", [_fValue]));
     if(_fValue != null) {
       self.oFitField_GlobalAltitudeMax.setData(_fValue * self.fUnitCoefficient_Altitude);
     }
   }
 
   function setGlobalTimeAltitudeMax(_oTime) {
-    //Sys.println(Lang.format("DEBUG: GSK_Activity.setGlobalTimeAltitudeMax($1$)", [_oTime.value()]));
+    //Sys.println(Lang.format("DEBUG: MyActivity.setGlobalTimeAltitudeMax($1$)", [_oTime.value()]));
     self.oFitField_GlobalTimeAltitudeMax.setData(LangUtils.formatTime(_oTime, self.bUnitCoefficient_TimeUTC, true));
   }
 

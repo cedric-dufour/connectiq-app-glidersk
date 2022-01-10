@@ -28,7 +28,7 @@ using Toybox.System as Sys;
 // CLASS
 //
 
-class GSK_Altimeter {
+class MyAltimeter {
 
   //
   // CONSTANTS
@@ -81,12 +81,12 @@ class GSK_Altimeter {
     self.fAltitudeActual_filtered = null;
 
     // Filter
-    $.GSK_oFilter.resetFilter(GSK_Filter.ALTIMETER);
+    $.oMyFilter.resetFilter(MyFilter.ALTIMETER);
   }
 
   function importSettings() {
     // QNH
-    self.fQNH = $.GSK_oSettings.fAltimeterCalibrationQNH;
+    self.fQNH = $.oMySettings.fAltimeterCalibrationQNH;
   }
 
   function setQFE(_fQFE) {  // [Pa]
@@ -95,7 +95,7 @@ class GSK_Altimeter {
     //Sys.println(Lang.format("DEBUG: QFE (raw) = $1$", [self.fQFE_raw]));
 
     // Calibrated value
-    self.fQFE = self.fQFE_raw * $.GSK_oSettings.fAltimeterCorrectionRelative + $.GSK_oSettings.fAltimeterCorrectionAbsolute;
+    self.fQFE = self.fQFE_raw * $.oMySettings.fAltimeterCorrectionRelative + $.oMySettings.fAltimeterCorrectionAbsolute;
     //Sys.println(Lang.format("DEBUG: QFE (calibrated) = $1$", [self.fQFE]));
 
     // Derive altitudes (ICAO formula)
@@ -104,7 +104,7 @@ class GSK_Altimeter {
     //Sys.println(Lang.format("DEBUG: Altitude (ISA) = $1$", [self.fAltitudeISA]));
     // ... actual
     self.fAltitudeActual = self.fAltitudeISA - (Math.pow(self.fQNH/self.ISA_PRESSURE_MSL, self.ICAO_ALTITUDE_EXP) - 1.0f)*self.ISA_TEMPERATURE_MSL/self.ISA_TEMPERATURE_LRATE;
-    self.fAltitudeActual_filtered = $.GSK_oFilter.filterValue(GSK_Filter.ALTIMETER, self.fAltitudeActual);
+    self.fAltitudeActual_filtered = $.oMyFilter.filterValue(MyFilter.ALTIMETER, self.fAltitudeActual);
     //Sys.println(Lang.format("DEBUG: Altitude (actual) = $1$ ~ $2$", [self.fAltitudeActual, self.fAltitudeActual_filtered]));
   }
 
@@ -114,7 +114,7 @@ class GSK_Altimeter {
       return;
     }
     self.fQNH = _fQNH;
-    $.GSK_oFilter.resetFilter(GSK_Filter.ALTIMETER);
+    $.oMyFilter.resetFilter(MyFilter.ALTIMETER);
 
     // ISA altitude (<-> QFE) available ?
     if(self.fAltitudeISA == null) {
@@ -124,7 +124,7 @@ class GSK_Altimeter {
     // Derive altitude (ICAO formula)
     // ... actual
     self.fAltitudeActual = self.fAltitudeISA - (Math.pow(self.fQNH/self.ISA_PRESSURE_MSL, self.ICAO_ALTITUDE_EXP) - 1.0f)*self.ISA_TEMPERATURE_MSL/self.ISA_TEMPERATURE_LRATE;
-    self.fAltitudeActual_filtered = $.GSK_oFilter.filterValue(GSK_Filter.ALTIMETER, self.fAltitudeActual);
+    self.fAltitudeActual_filtered = $.oMyFilter.filterValue(MyFilter.ALTIMETER, self.fAltitudeActual);
     //Sys.println(Lang.format("DEBUG: Altitude (actual) = $1$ ~ $2$", [self.fAltitudeActual, self.fAltitudeActual_filtered]));
   }
 

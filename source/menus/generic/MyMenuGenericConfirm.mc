@@ -21,7 +21,7 @@ using Toybox.WatchUi as Ui;
 
 // NOTE: Since Ui.Confirmation does not allow to pre-select "Yes" as an answer,
 //       let's us our own "confirmation" menu and save one key press
-class GSK_MenuGenericConfirm extends Ui.Menu {
+class MyMenuGenericConfirm extends Ui.Menu {
 
   //
   // FUNCTIONS: Ui.Menu (override/implement)
@@ -58,7 +58,7 @@ class GSK_MenuGenericConfirm extends Ui.Menu {
 
 }
 
-class GSK_MenuGenericConfirmDelegate extends Ui.MenuInputDelegate {
+class MyMenuGenericConfirmDelegate extends Ui.MenuInputDelegate {
 
   //
   // VARIABLES
@@ -83,37 +83,37 @@ class GSK_MenuGenericConfirmDelegate extends Ui.MenuInputDelegate {
   function onMenuItem(item) {
     if(self.context == :contextActivity) {
       if(self.action == :actionStart) {
-        if($.GSK_oActivity == null) {
-          $.GSK_oActivity = new GSK_Activity();
-          $.GSK_oActivity.start();
+        if($.oMyActivity == null) {
+          $.oMyActivity = new MyActivity();
+          $.oMyActivity.start();
         }
       }
       else if(self.action == :actionSave) {
-        if($.GSK_oActivity != null) {
-          $.GSK_oActivity.stop(true);
-          $.GSK_oActivity = null;
+        if($.oMyActivity != null) {
+          $.oMyActivity.stop(true);
+          $.oMyActivity = null;
         }
       }
       else if(self.action == :actionDiscard) {
-        if($.GSK_oActivity != null) {
-          $.GSK_oActivity.stop(false);
-          $.GSK_oActivity = null;
+        if($.oMyActivity != null) {
+          $.oMyActivity.stop(false);
+          $.oMyActivity = null;
         }
       }
       else if(self.action == :actionLap) {
-        if($.GSK_oActivity != null) {
-          $.GSK_oActivity.addLap();
+        if($.oMyActivity != null) {
+          $.oMyActivity.addLap();
         }
       }
     }
     else if(self.context == :contextDestination) {
       if(self.action == :actionFromCurrent) {
-        if ($.GSK_oPositionLocation != null and $.GSK_oPositionAltitude != null) {
+        if ($.oMyPositionLocation != null and $.oMyPositionAltitude != null) {
           var d = {
             "name" => "????",
-            "latitude" => $.GSK_oPositionLocation.toDegrees()[0],
-            "longitude" => $.GSK_oPositionLocation.toDegrees()[1],
-            "elevation" => $.GSK_oPositionAltitude
+            "latitude" => $.oMyPositionLocation.toDegrees()[0],
+            "longitude" => $.oMyPositionLocation.toDegrees()[1],
+            "elevation" => $.oMyPositionAltitude
           };
           App.Storage.setValue("storDestInUse", d);
         }

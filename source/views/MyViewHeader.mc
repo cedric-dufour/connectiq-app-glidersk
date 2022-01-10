@@ -23,7 +23,7 @@ using Toybox.Time.Gregorian;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
-class GSK_ViewHeader extends Ui.View {
+class MyViewHeader extends Ui.View {
 
   //
   // VARIABLES
@@ -68,7 +68,7 @@ class GSK_ViewHeader extends Ui.View {
 
     // Load resources
     // ... drawable
-    self.oRezDrawableHeader = View.findDrawableById("GSK_DrawableHeader");
+    self.oRezDrawableHeader = View.findDrawableById("MyDrawableHeader");
     // ... header
     self.oRezValueBatteryLevel = View.findDrawableById("valueBatteryLevel");
     self.oRezValueActivityStatus = View.findDrawableById("valueActivityStatus");
@@ -80,19 +80,19 @@ class GSK_ViewHeader extends Ui.View {
   }
 
   function onShow() {
-    //Sys.println("DEBUG: GSK_ViewHeader.onShow()");
+    //Sys.println("DEBUG: MyViewHeader.onShow()");
 
     // Prepare view
     self.prepare();
 
     // Done
     self.bShow = true;
-    $.GSK_oCurrentView = self;
+    $.oMyView = self;
     return true;
   }
 
   function onUpdate(_oDC) {
-    //Sys.println("DEBUG: GSK_ViewHeader.onUpdate()");
+    //Sys.println("DEBUG: MyViewHeader.onUpdate()");
 
     // Update layout
     self.updateLayout();
@@ -103,8 +103,8 @@ class GSK_ViewHeader extends Ui.View {
   }
 
   function onHide() {
-    //Sys.println("DEBUG: GSK_ViewHeader.onHide()");
-    $.GSK_oCurrentView = null;
+    //Sys.println("DEBUG: MyViewHeader.onHide()");
+    $.oMyView = null;
     self.bShow = false;
   }
 
@@ -114,7 +114,7 @@ class GSK_ViewHeader extends Ui.View {
   //
 
   function prepare() {
-    //Sys.println("DEBUG: GSK_ViewHeader.prepare()");
+    //Sys.println("DEBUG: MyViewHeader.prepare()");
 
     // Load resources
     // ... strings
@@ -125,11 +125,11 @@ class GSK_ViewHeader extends Ui.View {
     // (Re)load settings
     App.getApp().loadSettings();
     // ... colors
-    self.iColorText = $.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
+    self.iColorText = $.oMySettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
   }
 
   function updateUi() {
-    //Sys.println("DEBUG: GSK_ViewHeader.updateUi()");
+    //Sys.println("DEBUG: MyViewHeader.updateUi()");
 
     // Request UI update
     if(self.bShow) {
@@ -138,29 +138,29 @@ class GSK_ViewHeader extends Ui.View {
   }
 
   function updateLayout(_bUpdateTime) {
-    //Sys.println("DEBUG: GSK_ViewHeader.updateLayout()");
+    //Sys.println("DEBUG: MyViewHeader.updateLayout()");
 
     // Set colors
-    self.iColorText = $.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
+    self.iColorText = $.oMySettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
     // ... background
-    self.oRezDrawableHeader.setColorBackground($.GSK_oSettings.iGeneralBackgroundColor);
+    self.oRezDrawableHeader.setColorBackground($.oMySettings.iGeneralBackgroundColor);
 
     // Set header/footer values
     var sValue;
 
     // ... position accuracy
-    self.oRezDrawableHeader.setPositionAccuracy($.GSK_oProcessing.iAccuracy);
+    self.oRezDrawableHeader.setPositionAccuracy($.oMyProcessing.iAccuracy);
 
     // ... battery level
     self.oRezValueBatteryLevel.setColor(self.iColorText);
     self.oRezValueBatteryLevel.setText(Lang.format("$1$%", [Sys.getSystemStats().battery.format("%.0f")]));
 
     // ... activity status
-    if($.GSK_oActivity == null) {  // ... stand-by
+    if($.oMyActivity == null) {  // ... stand-by
       self.oRezValueActivityStatus.setColor(Gfx.COLOR_LT_GRAY);
       sValue = self.sValueActivityStandby;
     }
-    else if($.GSK_oActivity.isRecording()) {  // ... recording
+    else if($.oMyActivity.isRecording()) {  // ... recording
       self.oRezValueActivityStatus.setColor(Gfx.COLOR_RED);
       sValue = self.sValueActivityRecording;
     }
@@ -173,9 +173,9 @@ class GSK_ViewHeader extends Ui.View {
     // ... time
     if(_bUpdateTime) {
       var oTimeNow = Time.now();
-      var oTimeInfo = $.GSK_oSettings.bUnitTimeUTC ? Gregorian.utcInfo(oTimeNow, Time.FORMAT_SHORT) : Gregorian.info(oTimeNow, Time.FORMAT_SHORT);
+      var oTimeInfo = $.oMySettings.bUnitTimeUTC ? Gregorian.utcInfo(oTimeNow, Time.FORMAT_SHORT) : Gregorian.info(oTimeNow, Time.FORMAT_SHORT);
       self.oRezValueFooter.setColor(self.iColorText);
-      self.oRezValueFooter.setText(Lang.format("$1$$2$$3$ $4$", [oTimeInfo.hour.format("%02d"), oTimeNow.value() % 2 ? "." : ":", oTimeInfo.min.format("%02d"), $.GSK_oSettings.sUnitTime]));
+      self.oRezValueFooter.setText(Lang.format("$1$$2$$3$ $4$", [oTimeInfo.hour.format("%02d"), oTimeNow.value() % 2 ? "." : ":", oTimeInfo.min.format("%02d"), $.oMySettings.sUnitTime]));
     }
   }
 

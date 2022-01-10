@@ -1,8 +1,8 @@
 <!-- -*- mode:xml; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab: -->
 <layouts>
   <layout id="layoutGlobal">
-    <drawable class="GSK_DrawableHeader" />
-    <drawable class="GSK_DrawableGlobal" />
+    <drawable class="MyDrawableHeader" />
+    <drawable class="MyDrawableGlobal" />
     <drawable id="drawContentBorders" />
     <drawable id="drawFieldsBorders" />
     <!-- Header -->

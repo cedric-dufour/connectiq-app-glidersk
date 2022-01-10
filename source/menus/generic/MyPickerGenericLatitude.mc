@@ -19,23 +19,25 @@
 using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
-class GSK_PickerGenericDistance extends PickerGenericDistance {
+class MyPickerGenericLatitude extends PickerGenericLatitude {
 
   //
-  // FUNCTIONS: PickerGenericDistance (override/implement)
+  // FUNCTIONS: PickerGenericLatitude (override/implement)
   //
 
   function initialize(_context, _item) {
-    if(_context == :contextSettings) {
-      if(_item == :itemSoundsMuteDistance) {
-        PickerGenericDistance.initialize(Ui.loadResource(Rez.Strings.titleSoundsMuteDistance), App.Properties.getValue("userSoundsMuteDistance"), $.GSK_oSettings.iUnitDistance, false);
+    if(_context == :contextDestination) {
+      if(_item == :itemPosition) {
+        var d = App.Storage.getValue("storDestInUse");
+        PickerGenericLatitude.initialize(Ui.loadResource(Rez.Strings.titleDestinationLatitude),
+                                         d != null ? d["latitude"] : 0.0f);
       }
     }
   }
 
 }
 
-class GSK_PickerGenericDistanceDelegate extends Ui.PickerDelegate {
+class MyPickerGenericLatitudeDelegate extends Ui.PickerDelegate {
 
   //
   // VARIABLES
@@ -56,11 +58,16 @@ class GSK_PickerGenericDistanceDelegate extends Ui.PickerDelegate {
   }
 
   function onAccept(_amValues) {
-    var fValue = PickerGenericDistance.getValue(_amValues, $.GSK_oSettings.iUnitDistance);
-    if(self.context == :contextSettings) {
-      if(self.item == :itemSoundsMuteDistance) {
-        App.Properties.setValue("userSoundsMuteDistance", fValue);
+    var fValue = PickerGenericLatitude.getValue(_amValues);
+    if(self.context == :contextDestination) {
+      var d = App.Storage.getValue("storDestInUse");
+      if(d == null) {
+        d = {"name" => "----", "latitude" => 0.0f, "longitude" => 0.0f, "elevation" => 0.0f};
       }
+      if(self.item == :itemPosition) {
+        d["latitude"] = fValue;
+      }
+      App.Storage.setValue("storDestInUse", d);
     }
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }

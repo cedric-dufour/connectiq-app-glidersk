@@ -20,7 +20,7 @@ using Toybox.Position as Pos;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
-class GSK_DrawableHeader extends Ui.Drawable {
+class MyDrawableHeader extends Ui.Drawable {
 
   //
   // VARIABLES
@@ -44,7 +44,7 @@ class GSK_DrawableHeader extends Ui.Drawable {
   //
 
   function initialize() {
-    Drawable.initialize({ :identifier => "GSK_DrawableHeader" });
+    Drawable.initialize({ :identifier => "MyDrawableHeader" });
 
     // Resources
     self.oRezHeaderAccuracy1 = new Rez.Drawables.drawHeaderAccuracy1();

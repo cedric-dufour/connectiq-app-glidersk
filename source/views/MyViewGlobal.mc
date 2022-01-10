@@ -19,7 +19,7 @@
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
-class GSK_ViewGlobal extends GSK_ViewHeader {
+class MyViewGlobal extends MyViewHeader {
 
   //
   // VARIABLES
@@ -39,11 +39,11 @@ class GSK_ViewGlobal extends GSK_ViewHeader {
 
 
   //
-  // FUNCTIONS: GSK_ViewHeader (override/implement)
+  // FUNCTIONS: MyViewHeader (override/implement)
   //
 
   function initialize() {
-    GSK_ViewHeader.initialize();
+    MyViewHeader.initialize();
 
     // Display mode
     // ... internal
@@ -51,13 +51,13 @@ class GSK_ViewGlobal extends GSK_ViewHeader {
   }
 
   function onLayout(_oDC) {
-    if(!GSK_ViewHeader.onLayout(_oDC)) {
+    if(!MyViewHeader.onLayout(_oDC)) {
       return false;
     }
 
     // Load resources
     // ... drawable
-    self.oRezDrawableGlobal = View.findDrawableById("GSK_DrawableGlobal");
+    self.oRezDrawableGlobal = View.findDrawableById("MyDrawableGlobal");
     // ... fields
     self.oRezValueTopLeft = View.findDrawableById("valueTopLeft");
     self.oRezValueTopRight = View.findDrawableById("valueTopRight");
@@ -73,34 +73,40 @@ class GSK_ViewGlobal extends GSK_ViewHeader {
 
 }
 
-class GSK_ViewGlobalDelegate extends Ui.BehaviorDelegate {
+class MyViewGlobalDelegate extends Ui.BehaviorDelegate {
 
   function initialize() {
     BehaviorDelegate.initialize();
   }
 
   function onMenu() {
-    //Sys.println("DEBUG: GSK_ViewHeaderDelegate.onMenu()");
-    Ui.pushView(new GSK_MenuGeneric(:menuSettings), new GSK_MenuGenericDelegate(:menuSettings), Ui.SLIDE_IMMEDIATE);
+    //Sys.println("DEBUG: MyViewHeaderDelegate.onMenu()");
+    Ui.pushView(new MyMenuGeneric(:menuSettings),
+                new MyMenuGenericDelegate(:menuSettings),
+                Ui.SLIDE_IMMEDIATE);
     return true;
   }
 
   function onSelect() {
-    //Sys.println("DEBUG: GSK_ViewHeaderDelegate.onSelect()");
-    if($.GSK_oActivity == null) {
-      Ui.pushView(new GSK_MenuGenericConfirm(:contextActivity, :actionStart), new GSK_MenuGenericConfirmDelegate(:contextActivity, :actionStart, false), Ui.SLIDE_IMMEDIATE);
+    //Sys.println("DEBUG: MyViewHeaderDelegate.onSelect()");
+    if($.oMyActivity == null) {
+      Ui.pushView(new MyMenuGenericConfirm(:contextActivity, :actionStart),
+                  new MyMenuGenericConfirmDelegate(:contextActivity, :actionStart, false),
+                  Ui.SLIDE_IMMEDIATE);
     }
     else {
-      Ui.pushView(new GSK_MenuGeneric(:menuActivity), new GSK_MenuGenericDelegate(:menuActivity), Ui.SLIDE_IMMEDIATE);
+      Ui.pushView(new MyMenuGeneric(:menuActivity),
+                  new MyMenuGenericDelegate(:menuActivity),
+                  Ui.SLIDE_IMMEDIATE);
     }
     return true;
   }
 
   function onBack() {
-    //Sys.println("DEBUG: GSK_ViewHeaderDelegate.onBack()");
-    if($.GSK_oActivity != null) {
-      if($.GSK_oSettings.bGeneralLapKey) {
-        $.GSK_oActivity.addLap();
+    //Sys.println("DEBUG: MyViewHeaderDelegate.onBack()");
+    if($.oMyActivity != null) {
+      if($.oMySettings.bGeneralLapKey) {
+        $.oMyActivity.addLap();
       }
       return true;
     }

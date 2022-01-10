@@ -19,24 +19,29 @@
 using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
-class GSK_PickerGenericLongitude extends PickerGenericLongitude {
+class MyPickerGenericText extends Ui.TextPicker {
 
   //
-  // FUNCTIONS: PickerGenericLongitude (override/implement)
+  // FUNCTIONS: Ui.TextPicker (override/implement)
   //
 
   function initialize(_context, _item) {
     if(_context == :contextDestination) {
-      if(_item == :itemPosition) {
-        var d = App.Storage.getValue("storDestInUse");
-        PickerGenericLongitude.initialize(Ui.loadResource(Rez.Strings.titleDestinationLongitude), d != null ? d["longitude"] : 0.0f);
+      var d = App.Storage.getValue("storDestInUse");
+      if(_item == :itemName) {
+        TextPicker.initialize(d != null ? d["name"] : "");
+      }
+    }
+    else if(_context == :contextStorage) {
+      if(_item == :itemImportData) {
+        TextPicker.initialize("");
       }
     }
   }
 
 }
 
-class GSK_PickerGenericLongitudeDelegate extends Ui.PickerDelegate {
+class MyPickerGenericTextDelegate extends Ui.TextPickerDelegate {
 
   //
   // VARIABLES
@@ -47,33 +52,31 @@ class GSK_PickerGenericLongitudeDelegate extends Ui.PickerDelegate {
 
 
   //
-  // FUNCTIONS: Ui.PickerDelegate (override/implement)
+  // FUNCTIONS: Ui.TextPickerDelegate (override/implement)
   //
 
   function initialize(_context, _item) {
-    PickerDelegate.initialize();
+    TextPickerDelegate.initialize();
     self.context = _context;
     self.item = _item;
   }
 
-  function onAccept(_amValues) {
-    var fValue = PickerGenericLongitude.getValue(_amValues);
+  function onTextEntered(_sText, _bChanged) {
     if(self.context == :contextDestination) {
       var d = App.Storage.getValue("storDestInUse");
       if(d == null) {
-        d = { "name" => "----", "latitude" => 0.0f, "longitude" => 0.0f, "elevation" => 0.0f };
+        d = {"name" => "----", "latitude" => 0.0f, "longitude" => 0.0f, "elevation" => 0.0f};
       }
-      if(self.item == :itemPosition) {
-        d["longitude"] = fValue;
+      if(self.item == :itemName) {
+        d["name"] = _sText;
       }
       App.Storage.setValue("storDestInUse", d);
     }
-    Ui.popView(Ui.SLIDE_IMMEDIATE);
-  }
-
-  function onCancel() {
-    // Exit
-    Ui.popView(Ui.SLIDE_IMMEDIATE);
+    else if(self.context == :contextStorage) {
+      if(self.item == :itemImportData) {
+        App.getApp().importStorageData(_sText);
+      }
+    }
   }
 
 }

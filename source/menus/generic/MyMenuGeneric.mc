@@ -18,7 +18,7 @@
 
 using Toybox.WatchUi as Ui;
 
-class GSK_MenuGeneric extends Ui.Menu {
+class MyMenuGeneric extends Ui.Menu {
 
   //
   // FUNCTIONS: Ui.Menu (override/implement)
@@ -47,7 +47,7 @@ class GSK_MenuGeneric extends Ui.Menu {
     else if(_menu == :menuAltimeterCalibration) {
       Menu.setTitle(Ui.loadResource(Rez.Strings.titleAltimeterCalibration));
       Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCalibrationQNH), :menuAltimeterCalibrationQNH);
-      if($.GSK_oAltimeter.fAltitudeActual != null) {
+      if($.oMyAltimeter.fAltitudeActual != null) {
         Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCalibrationElevation), :menuAltimeterCalibrationElevation);
       }
     }
@@ -122,7 +122,7 @@ class GSK_MenuGeneric extends Ui.Menu {
       Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationLatitude), :menuDestinationLatitude);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationLongitude), :menuDestinationLongitude);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationElevation), :menuDestinationElevation);
-      if($.GSK_oPositionLocation != null and $.GSK_oPositionAltitude != null) {
+      if($.oMyPositionLocation != null and $.oMyPositionAltitude != null) {
         Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationFromCurrent), :menuDestinationFromCurrent);
       }
     }
@@ -136,8 +136,8 @@ class GSK_MenuGeneric extends Ui.Menu {
 
     else if(_menu == :menuActivity) {
       Menu.setTitle(Ui.loadResource(Rez.Strings.titleActivity));
-      if($.GSK_oActivity != null) {
-        if($.GSK_oActivity.isRecording()) {
+      if($.oMyActivity != null) {
+        if($.oMyActivity.isRecording()) {
           Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityPause), :menuActivityPause);
         }
         else {
@@ -145,7 +145,7 @@ class GSK_MenuGeneric extends Ui.Menu {
         }
         Menu.addItem(Ui.loadResource(Rez.Strings.titleActivitySave), :menuActivitySave);
         Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityDiscard), :menuActivityDiscard);
-        if(!$.GSK_oSettings.bGeneralLapKey) {
+        if(!$.oMySettings.bGeneralLapKey) {
           Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityLap), :menuActivityLap);
         }
       }
@@ -155,7 +155,7 @@ class GSK_MenuGeneric extends Ui.Menu {
 
 }
 
-class GSK_MenuGenericDelegate extends Ui.MenuInputDelegate {
+class MyMenuGenericDelegate extends Ui.MenuInputDelegate {
 
   //
   // VARIABLES
@@ -177,187 +177,289 @@ class GSK_MenuGenericDelegate extends Ui.MenuInputDelegate {
 
     if(self.menu == :menuSettings) {
       if(_item == :menuSettingsAltimeter) {
-        Ui.pushView(new GSK_MenuGeneric(:menuSettingsAltimeter), new GSK_MenuGenericDelegate(:menuSettingsAltimeter), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGeneric(:menuSettingsAltimeter),
+                    new MyMenuGenericDelegate(:menuSettingsAltimeter),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSettingsVariometer) {
-        Ui.pushView(new GSK_MenuGeneric(:menuSettingsVariometer), new GSK_MenuGenericDelegate(:menuSettingsVariometer), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGeneric(:menuSettingsVariometer),
+                    new MyMenuGenericDelegate(:menuSettingsVariometer),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSettingsSafety) {
-        Ui.pushView(new GSK_MenuGeneric(:menuSettingsSafety), new GSK_MenuGenericDelegate(:menuSettingsSafety), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGeneric(:menuSettingsSafety),
+                    new MyMenuGenericDelegate(:menuSettingsSafety),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSettingsSounds) {
-        Ui.pushView(new GSK_MenuGeneric(:menuSettingsSounds), new GSK_MenuGenericDelegate(:menuSettingsSounds), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGeneric(:menuSettingsSounds),
+                    new MyMenuGenericDelegate(:menuSettingsSounds),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSettingsGeneral) {
-        Ui.pushView(new GSK_MenuGeneric(:menuSettingsGeneral), new GSK_MenuGenericDelegate(:menuSettingsGeneral), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGeneric(:menuSettingsGeneral),
+                    new MyMenuGenericDelegate(:menuSettingsGeneral),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSettingsUnits) {
-        Ui.pushView(new GSK_MenuGeneric(:menuSettingsUnits), new GSK_MenuGenericDelegate(:menuSettingsUnits), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGeneric(:menuSettingsUnits),
+                    new MyMenuGenericDelegate(:menuSettingsUnits),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuStorage) {
-        Ui.pushView(new GSK_MenuGeneric(:menuStorage), new GSK_MenuGenericDelegate(:menuStorage), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGeneric(:menuStorage),
+                    new MyMenuGenericDelegate(:menuStorage),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuAbout) {
-        Ui.pushView(new GSK_MenuGeneric(:menuAbout), new GSK_MenuGenericDelegate(:menuAbout), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGeneric(:menuAbout),
+                    new MyMenuGenericDelegate(:menuAbout),
+                    Ui.SLIDE_IMMEDIATE);
       }
     }
 
     else if(self.menu == :menuSettingsAltimeter) {
       if(_item == :menuAltimeterCalibration) {
-        Ui.pushView(new GSK_MenuGeneric(:menuAltimeterCalibration), new GSK_MenuGenericDelegate(:menuAltimeterCalibration), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGeneric(:menuAltimeterCalibration),
+                    new MyMenuGenericDelegate(:menuAltimeterCalibration),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuAltimeterCorrection) {
-        Ui.pushView(new GSK_MenuGeneric(:menuAltimeterCorrection), new GSK_MenuGenericDelegate(:menuAltimeterCorrection), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGeneric(:menuAltimeterCorrection),
+                    new MyMenuGenericDelegate(:menuAltimeterCorrection),
+                    Ui.SLIDE_IMMEDIATE);
       }
     }
     else if(self.menu == :menuAltimeterCalibration) {
       if(_item == :menuAltimeterCalibrationQNH) {
-        Ui.pushView(new GSK_PickerGenericPressure(:contextSettings, :itemAltimeterCalibration), new GSK_PickerGenericPressureDelegate(:contextSettings, :itemAltimeterCalibration), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericPressure(:contextSettings, :itemAltimeterCalibration),
+                    new MyPickerGenericPressureDelegate(:contextSettings, :itemAltimeterCalibration),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuAltimeterCalibrationElevation) {
-        Ui.pushView(new GSK_PickerGenericElevation(:contextSettings, :itemAltimeterCalibration), new GSK_PickerGenericElevationDelegate(:contextSettings, :itemAltimeterCalibration), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericElevation(:contextSettings, :itemAltimeterCalibration),
+                    new MyPickerGenericElevationDelegate(:contextSettings, :itemAltimeterCalibration),
+                    Ui.SLIDE_IMMEDIATE);
       }
     }
     else if(self.menu == :menuAltimeterCorrection) {
       if(_item == :menuAltimeterCorrectionAbsolute) {
-        Ui.pushView(new GSK_PickerGenericPressure(:contextSettings, :itemAltimeterCorrection), new GSK_PickerGenericPressureDelegate(:contextSettings, :itemAltimeterCorrection), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericPressure(:contextSettings, :itemAltimeterCorrection),
+                    new MyPickerGenericPressureDelegate(:contextSettings, :itemAltimeterCorrection),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuAltimeterCorrectionRelative) {
-        Ui.pushView(new GSK_PickerAltimeterCorrectionRelative(), new GSK_PickerAltimeterCorrectionRelativeDelegate(), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerAltimeterCorrectionRelative(),
+                    new MyPickerAltimeterCorrectionRelativeDelegate(),
+                    Ui.SLIDE_IMMEDIATE);
       }
     }
 
     else if(self.menu == :menuSettingsVariometer) {
       if(_item == :menuVariometerRange) {
-        Ui.pushView(new GSK_PickerGenericSettings(:contextVariometer, :itemRange), new GSK_PickerGenericSettingsDelegate(:contextVariometer, :itemRange), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericSettings(:contextVariometer, :itemRange),
+                    new MyPickerGenericSettingsDelegate(:contextVariometer, :itemRange),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuVariometerMode) {
-        Ui.pushView(new GSK_PickerGenericSettings(:contextVariometer, :itemMode), new GSK_PickerGenericSettingsDelegate(:contextVariometer, :itemMode), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericSettings(:contextVariometer, :itemMode),
+                    new MyPickerGenericSettingsDelegate(:contextVariometer, :itemMode),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuVariometerEnergyEfficiency) {
-        Ui.pushView(new GSK_PickerGenericSettings(:contextVariometer, :itemEnergyEfficiency), new GSK_PickerGenericSettingsDelegate(:contextVariometer, :itemEnergyEfficiency), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericSettings(:contextVariometer, :itemEnergyEfficiency),
+                    new MyPickerGenericSettingsDelegate(:contextVariometer, :itemEnergyEfficiency),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuVariometerPlotRange) {
-        Ui.pushView(new GSK_PickerGenericSettings(:contextVariometer, :itemPlotRange), new GSK_PickerGenericSettingsDelegate(:contextVariometer, :itemPlotRange), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericSettings(:contextVariometer, :itemPlotRange),
+                    new MyPickerGenericSettingsDelegate(:contextVariometer, :itemPlotRange),
+                    Ui.SLIDE_IMMEDIATE);
       }
     }
 
     else if(self.menu == :menuSettingsSafety) {
       if(_item == :menuSafetyFinesse) {
-        Ui.pushView(new GSK_PickerGenericSettings(:contextSafety, :itemFinesse), new GSK_PickerGenericSettingsDelegate(:contextSafety, :itemFinesse), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericSettings(:contextSafety, :itemFinesse),
+                    new MyPickerGenericSettingsDelegate(:contextSafety, :itemFinesse),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSafetyHeightDecision) {
-        Ui.pushView(new GSK_PickerGenericElevation(:contextSettings, :itemSafetyHeightDecision), new GSK_PickerGenericElevationDelegate(:contextSettings, :itemSafetyHeightDecision), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericElevation(:contextSettings, :itemSafetyHeightDecision),
+                    new MyPickerGenericElevationDelegate(:contextSettings, :itemSafetyHeightDecision),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSafetyHeightWarning) {
-        Ui.pushView(new GSK_PickerGenericElevation(:contextSettings, :itemSafetyHeightWarning), new GSK_PickerGenericElevationDelegate(:contextSettings, :itemSafetyHeightWarning), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericElevation(:contextSettings, :itemSafetyHeightWarning),
+                    new MyPickerGenericElevationDelegate(:contextSettings, :itemSafetyHeightWarning),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSafetyHeightCritical) {
-        Ui.pushView(new GSK_PickerGenericElevation(:contextSettings, :itemSafetyHeightCritical), new GSK_PickerGenericElevationDelegate(:contextSettings, :itemSafetyHeightCritical), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericElevation(:contextSettings, :itemSafetyHeightCritical),
+                    new MyPickerGenericElevationDelegate(:contextSettings, :itemSafetyHeightCritical),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSafetyHeightReference) {
-        Ui.pushView(new GSK_PickerGenericElevation(:contextSettings, :itemSafetyHeightReference), new GSK_PickerGenericElevationDelegate(:contextSettings, :itemSafetyHeightReference), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericElevation(:contextSettings, :itemSafetyHeightReference),
+                    new MyPickerGenericElevationDelegate(:contextSettings, :itemSafetyHeightReference),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSafetyHeadingBug) {
-        Ui.pushView(new GSK_PickerGenericSettings(:contextSafety, :itemHeadingBug), new GSK_PickerGenericSettingsDelegate(:contextSafety, :itemHeadingBug), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericSettings(:contextSafety, :itemHeadingBug),
+                    new MyPickerGenericSettingsDelegate(:contextSafety, :itemHeadingBug),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSafetyGraceDuration) {
-        Ui.pushView(new GSK_PickerGenericSettings(:contextSafety, :itemGraceDuration), new GSK_PickerGenericSettingsDelegate(:contextSafety, :itemGraceDuration), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericSettings(:contextSafety, :itemGraceDuration),
+                    new MyPickerGenericSettingsDelegate(:contextSafety, :itemGraceDuration),
+                    Ui.SLIDE_IMMEDIATE);
       }
     }
 
     else if(self.menu == :menuSettingsSounds) {
       if(_item == :menuSoundsVariometerTones) {
-        Ui.pushView(new GSK_PickerGenericOnOff(:contextSettings, :itemSoundsVariometerTones), new GSK_PickerGenericOnOffDelegate(:contextSettings, :itemSoundsVariometerTones), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericOnOff(:contextSettings, :itemSoundsVariometerTones),
+                    new MyPickerGenericOnOffDelegate(:contextSettings, :itemSoundsVariometerTones),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSoundsSafetyTones) {
-        Ui.pushView(new GSK_PickerGenericOnOff(:contextSettings, :itemSoundsSafetyTones), new GSK_PickerGenericOnOffDelegate(:contextSettings, :itemSoundsSafetyTones), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericOnOff(:contextSettings, :itemSoundsSafetyTones),
+                    new MyPickerGenericOnOffDelegate(:contextSettings, :itemSoundsSafetyTones),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSoundsMuteDistance) {
-        Ui.pushView(new GSK_PickerGenericDistance(:contextSettings, :itemSoundsMuteDistance), new GSK_PickerGenericDistanceDelegate(:contextSettings, :itemSoundsMuteDistance), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericDistance(:contextSettings, :itemSoundsMuteDistance),
+                    new MyPickerGenericDistanceDelegate(:contextSettings, :itemSoundsMuteDistance),
+                    Ui.SLIDE_IMMEDIATE);
       }
     }
 
     else if(self.menu == :menuSettingsGeneral) {
       if(_item == :menuGeneralTimeConstant) {
-        Ui.pushView(new GSK_PickerGenericSettings(:contextGeneral, :itemTimeConstant), new GSK_PickerGenericSettingsDelegate(:contextGeneral, :itemTimeConstant), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericSettings(:contextGeneral, :itemTimeConstant),
+                    new MyPickerGenericSettingsDelegate(:contextGeneral, :itemTimeConstant),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuGeneralDisplayFilter) {
-        Ui.pushView(new GSK_PickerGenericSettings(:contextGeneral, :itemDisplayFilter), new GSK_PickerGenericSettingsDelegate(:contextGeneral, :itemDisplayFilter), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericSettings(:contextGeneral, :itemDisplayFilter),
+                    new MyPickerGenericSettingsDelegate(:contextGeneral, :itemDisplayFilter),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuGeneralBackgroundColor) {
-        Ui.pushView(new GSK_PickerGenericSettings(:contextGeneral, :itemBackgroundColor), new GSK_PickerGenericSettingsDelegate(:contextGeneral, :itemBackgroundColor), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericSettings(:contextGeneral, :itemBackgroundColor),
+                    new MyPickerGenericSettingsDelegate(:contextGeneral, :itemBackgroundColor),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuGeneralAutoActivity) {
-        Ui.pushView(new GSK_PickerGenericOnOff(:contextSettings, :itemGeneralAutoActivity), new GSK_PickerGenericOnOffDelegate(:contextSettings, :itemGeneralAutoActivity), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericOnOff(:contextSettings, :itemGeneralAutoActivity),
+                    new MyPickerGenericOnOffDelegate(:contextSettings, :itemGeneralAutoActivity),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuGeneralLapKey) {
-        Ui.pushView(new GSK_PickerGenericOnOff(:contextSettings, :itemGeneralLapKey), new GSK_PickerGenericOnOffDelegate(:contextSettings, :itemGeneralLapKey), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericOnOff(:contextSettings, :itemGeneralLapKey),
+                    new MyPickerGenericOnOffDelegate(:contextSettings, :itemGeneralLapKey),
+                    Ui.SLIDE_IMMEDIATE);
       }
     }
 
     else if(self.menu == :menuSettingsUnits) {
       if(_item == :menuUnitDistance) {
-        Ui.pushView(new GSK_PickerGenericSettings(:contextUnit, :itemDistance), new GSK_PickerGenericSettingsDelegate(:contextUnit, :itemDistance), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericSettings(:contextUnit, :itemDistance),
+                    new MyPickerGenericSettingsDelegate(:contextUnit, :itemDistance),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuUnitElevation) {
-        Ui.pushView(new GSK_PickerGenericSettings(:contextUnit, :itemElevation), new GSK_PickerGenericSettingsDelegate(:contextUnit, :itemElevation), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericSettings(:contextUnit, :itemElevation),
+                    new MyPickerGenericSettingsDelegate(:contextUnit, :itemElevation),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuUnitPressure) {
-        Ui.pushView(new GSK_PickerGenericSettings(:contextUnit, :itemPressure), new GSK_PickerGenericSettingsDelegate(:contextUnit, :itemPressure), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericSettings(:contextUnit, :itemPressure),
+                    new MyPickerGenericSettingsDelegate(:contextUnit, :itemPressure),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuUnitRateOfTurn) {
-        Ui.pushView(new GSK_PickerGenericSettings(:contextUnit, :itemRateOfTurn), new GSK_PickerGenericSettingsDelegate(:contextUnit, :itemRateOfTurn), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericSettings(:contextUnit, :itemRateOfTurn),
+                    new MyPickerGenericSettingsDelegate(:contextUnit, :itemRateOfTurn),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuUnitTimeUTC) {
-        Ui.pushView(new GSK_PickerGenericSettings(:contextUnit, :itemTimeUTC), new GSK_PickerGenericSettingsDelegate(:contextUnit, :itemTimeUTC), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericSettings(:contextUnit, :itemTimeUTC),
+                    new MyPickerGenericSettingsDelegate(:contextUnit, :itemTimeUTC),
+                    Ui.SLIDE_IMMEDIATE);
       }
     }
 
     else if(self.menu == :menuStorage) {
       if(_item == :menuStorageImportData) {
-        Ui.pushView(new GSK_PickerGenericText(:contextStorage, :itemImportData), new GSK_PickerGenericTextDelegate(:contextStorage, :itemImportData), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericText(:contextStorage, :itemImportData),
+                    new MyPickerGenericTextDelegate(:contextStorage, :itemImportData),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuStorageClear) {
-        Ui.pushView(new GSK_MenuGenericConfirm(:contextStorage, :actionClear), new GSK_MenuGenericConfirmDelegate(:contextStorage, :actionClear, true), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGenericConfirm(:contextStorage, :actionClear),
+                    new MyMenuGenericConfirmDelegate(:contextStorage, :actionClear, true),
+                    Ui.SLIDE_IMMEDIATE);
       }
     }
 
     else if(self.menu == :menuDestination) {
       if(_item == :menuDestinationLoad) {
-        Ui.pushView(new GSK_PickerGenericStorage(:storageDestination, :actionLoad), new GSK_PickerGenericStorageDelegate(:storageDestination, :actionLoad), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericStorage(:storageDestination, :actionLoad),
+                    new MyPickerGenericStorageDelegate(:storageDestination, :actionLoad),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuDestinationEdit) {
-        Ui.pushView(new GSK_MenuGeneric(:menuDestinationEdit), new GSK_MenuGenericDelegate(:menuDestinationEdit), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGeneric(:menuDestinationEdit),
+                    new MyMenuGenericDelegate(:menuDestinationEdit),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuDestinationSave) {
-        Ui.pushView(new GSK_PickerGenericStorage(:storageDestination, :actionSave), new GSK_PickerGenericStorageDelegate(:storageDestination, :actionSave), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericStorage(:storageDestination, :actionSave),
+                    new MyPickerGenericStorageDelegate(:storageDestination, :actionSave),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuDestinationDelete) {
-        Ui.pushView(new GSK_PickerGenericStorage(:storageDestination, :actionDelete), new GSK_PickerGenericStorageDelegate(:storageDestination, :actionDelete), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericStorage(:storageDestination, :actionDelete),
+                    new MyPickerGenericStorageDelegate(:storageDestination, :actionDelete),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSettingsSafety) {
-        Ui.pushView(new GSK_MenuGeneric(:menuSettingsSafety), new GSK_MenuGenericDelegate(:menuSettingsSafety), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGeneric(:menuSettingsSafety),
+                    new MyMenuGenericDelegate(:menuSettingsSafety),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSettings) {
-        Ui.pushView(new GSK_MenuGeneric(:menuSettings), new GSK_MenuGenericDelegate(:menuSettings), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGeneric(:menuSettings),
+                    new MyMenuGenericDelegate(:menuSettings),
+                    Ui.SLIDE_IMMEDIATE);
       }
     }
     else if(self.menu == :menuDestinationEdit) {
       if(_item == :menuDestinationName) {
-        Ui.pushView(new GSK_PickerGenericText(:contextDestination, :itemName), new GSK_PickerGenericTextDelegate(:contextDestination, :itemName), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericText(:contextDestination, :itemName),
+                    new MyPickerGenericTextDelegate(:contextDestination, :itemName),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuDestinationLatitude) {
-        Ui.pushView(new GSK_PickerGenericLatitude(:contextDestination, :itemPosition), new GSK_PickerGenericLatitudeDelegate(:contextDestination, :itemPosition), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericLatitude(:contextDestination, :itemPosition),
+                    new MyPickerGenericLatitudeDelegate(:contextDestination, :itemPosition),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuDestinationLongitude) {
-        Ui.pushView(new GSK_PickerGenericLongitude(:contextDestination, :itemPosition), new GSK_PickerGenericLongitudeDelegate(:contextDestination, :itemPosition), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericLongitude(:contextDestination, :itemPosition),
+                    new MyPickerGenericLongitudeDelegate(:contextDestination, :itemPosition),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuDestinationElevation) {
-        Ui.pushView(new GSK_PickerGenericElevation(:contextDestination, :itemPosition), new GSK_PickerGenericElevationDelegate(:contextDestination, :itemPosition), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyPickerGenericElevation(:contextDestination, :itemPosition),
+                    new MyPickerGenericElevationDelegate(:contextDestination, :itemPosition),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuDestinationFromCurrent) {
-        Ui.pushView(new GSK_MenuGenericConfirm(:contextDestination, :actionFromCurrent), new GSK_MenuGenericConfirmDelegate(:contextDestination, :actionFromCurrent, false), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGenericConfirm(:contextDestination, :actionFromCurrent),
+                    new MyMenuGenericConfirmDelegate(:contextDestination, :actionFromCurrent, false),
+                    Ui.SLIDE_IMMEDIATE);
       }
     }
 
@@ -367,23 +469,29 @@ class GSK_MenuGenericDelegate extends Ui.MenuInputDelegate {
 
     else if(self.menu == :menuActivity) {
       if(_item == :menuActivityResume) {
-        if($.GSK_oActivity != null) {
-          $.GSK_oActivity.resume();
+        if($.oMyActivity != null) {
+          $.oMyActivity.resume();
         }
       }
       else if(_item == :menuActivityPause) {
-        if($.GSK_oActivity != null) {
-          $.GSK_oActivity.pause();
+        if($.oMyActivity != null) {
+          $.oMyActivity.pause();
         }
       }
       else if(_item == :menuActivitySave) {
-        Ui.pushView(new GSK_MenuGenericConfirm(:contextActivity, :actionSave), new GSK_MenuGenericConfirmDelegate(:contextActivity, :actionSave, true), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGenericConfirm(:contextActivity, :actionSave),
+                    new MyMenuGenericConfirmDelegate(:contextActivity, :actionSave, true),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuActivityDiscard) {
-        Ui.pushView(new GSK_MenuGenericConfirm(:contextActivity, :actionDiscard), new GSK_MenuGenericConfirmDelegate(:contextActivity, :actionDiscard, true), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGenericConfirm(:contextActivity, :actionDiscard),
+                    new MyMenuGenericConfirmDelegate(:contextActivity, :actionDiscard, true),
+                    Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuActivityLap) {
-        Ui.pushView(new GSK_MenuGenericConfirm(:contextActivity, :actionLap), new GSK_MenuGenericConfirmDelegate(:contextActivity, :actionLap, true), Ui.SLIDE_IMMEDIATE);
+        Ui.pushView(new MyMenuGenericConfirm(:contextActivity, :actionLap),
+                    new MyMenuGenericConfirmDelegate(:contextActivity, :actionLap, true),
+                    Ui.SLIDE_IMMEDIATE);
       }
     }
 

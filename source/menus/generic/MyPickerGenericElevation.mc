@@ -19,7 +19,7 @@
 using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
-class GSK_PickerGenericElevation extends PickerGenericElevation {
+class MyPickerGenericElevation extends PickerGenericElevation {
 
   //
   // FUNCTIONS: PickerGenericElevation (override/implement)
@@ -28,32 +28,50 @@ class GSK_PickerGenericElevation extends PickerGenericElevation {
   function initialize(_context, _item) {
     if(_context == :contextSettings) {
       if(_item == :itemAltimeterCalibration) {
-        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleAltimeterCalibrationElevation), $.GSK_oAltimeter.fAltitudeActual, $.GSK_oSettings.iUnitElevation, false);
+        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleAltimeterCalibrationElevation),
+                                          $.oMyAltimeter.fAltitudeActual,
+                                          $.oMySettings.iUnitElevation,
+                                          false);
       }
       else if(_item == :itemSafetyHeightDecision) {
-        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightDecision), App.Properties.getValue("userSafetyHeightDecision"), $.GSK_oSettings.iUnitElevation, false);
+        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightDecision),
+                                          App.Properties.getValue("userSafetyHeightDecision"),
+                                          $.oMySettings.iUnitElevation,
+                                          false);
       }
       else if(_item == :itemSafetyHeightWarning) {
-        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightWarning), App.Properties.getValue("userSafetyHeightWarning"), $.GSK_oSettings.iUnitElevation, false);
+        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightWarning),
+                                          App.Properties.getValue("userSafetyHeightWarning"),
+                                          $.oMySettings.iUnitElevation,
+                                          false);
       }
       else if(_item == :itemSafetyHeightCritical) {
-        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightCritical), App.Properties.getValue("userSafetyHeightCritical"), $.GSK_oSettings.iUnitElevation, false);
+        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightCritical),
+                                          App.Properties.getValue("userSafetyHeightCritical"),
+                                          $.oMySettings.iUnitElevation,
+                                          false);
       }
       else if(_item == :itemSafetyHeightReference) {
-        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightReference), App.Properties.getValue("userSafetyHeightReference"), $.GSK_oSettings.iUnitElevation, false);
+        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightReference),
+                                          App.Properties.getValue("userSafetyHeightReference"),
+                                          $.oMySettings.iUnitElevation,
+                                          false);
       }
     }
     else if(_context == :contextDestination) {
       if(_item == :itemPosition) {
         var d = App.Storage.getValue("storDestInUse");
-        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleDestinationElevation), d != null ? d["elevation"] : 0.0f, $.GSK_oSettings.iUnitElevation, false);
+        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleDestinationElevation),
+                                          d != null ? d["elevation"] : 0.0f,
+                                          $.oMySettings.iUnitElevation,
+                                          false);
       }
     }
   }
 
 }
 
-class GSK_PickerGenericElevationDelegate extends Ui.PickerDelegate {
+class MyPickerGenericElevationDelegate extends Ui.PickerDelegate {
 
   //
   // VARIABLES
@@ -74,11 +92,11 @@ class GSK_PickerGenericElevationDelegate extends Ui.PickerDelegate {
   }
 
   function onAccept(_amValues) {
-    var fValue = PickerGenericElevation.getValue(_amValues, $.GSK_oSettings.iUnitElevation);
+    var fValue = PickerGenericElevation.getValue(_amValues, $.oMySettings.iUnitElevation);
     if(self.context == :contextSettings) {
       if(self.item == :itemAltimeterCalibration) {
-        $.GSK_oAltimeter.setAltitudeActual(fValue);
-        App.Properties.setValue("userAltimeterCalibrationQNH", $.GSK_oAltimeter.fQNH);
+        $.oMyAltimeter.setAltitudeActual(fValue);
+        App.Properties.setValue("userAltimeterCalibrationQNH", $.oMyAltimeter.fQNH);
       }
       else if(self.item == :itemSafetyHeightDecision) {
         App.Properties.setValue("userSafetyHeightDecision", fValue);
@@ -96,7 +114,7 @@ class GSK_PickerGenericElevationDelegate extends Ui.PickerDelegate {
     else if(self.context == :contextDestination) {
       var d = App.Storage.getValue("storDestInUse");
       if(d == null) {
-        d = { "name" => "----", "latitude" => 0.0f, "longitude" => 0.0f, "elevation" => 0.0f };
+        d = {"name" => "----", "latitude" => 0.0f, "longitude" => 0.0f, "elevation" => 0.0f};
       }
       if(self.item == :itemPosition) {
         d["elevation"] = fValue;

@@ -24,7 +24,7 @@ using Toybox.Time.Gregorian;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
-class GSK_ViewRateOfTurn extends Ui.View {
+class MyViewRateOfTurn extends Ui.View {
 
   //
   // VARIABLES
@@ -118,7 +118,7 @@ class GSK_ViewRateOfTurn extends Ui.View {
   }
 
   function onLayout(_oDC) {
-    //Sys.println("DEBUG: GSK_ViewRateOfTurn.onLayout()");
+    //Sys.println("DEBUG: MyViewRateOfTurn.onLayout()");
     // No layout; see drawLayout() below
 
     // Load resources
@@ -132,22 +132,22 @@ class GSK_ViewRateOfTurn extends Ui.View {
   }
 
   function onShow() {
-    //Sys.println("DEBUG: GSK_ViewRateOfTurn.onShow()");
+    //Sys.println("DEBUG: MyViewRateOfTurn.onShow()");
 
     // Reload settings (which may have been changed by user)
     App.getApp().loadSettings();
 
     // Unmute tones
-    App.getApp().unmuteTones(GSK_App.TONES_SAFETY);
+    App.getApp().unmuteTones(MyApp.TONES_SAFETY);
 
     // Done
     self.bShow = true;
-    $.GSK_oCurrentView = self;
+    $.oMyView = self;
     return true;
   }
 
   function onUpdate(_oDC) {
-    //Sys.println("DEBUG: GSK_ViewRateOfTurn.onUpdate()");
+    //Sys.println("DEBUG: MyViewRateOfTurn.onUpdate()");
 
     // Update layout
     View.onUpdate(_oDC);
@@ -158,8 +158,8 @@ class GSK_ViewRateOfTurn extends Ui.View {
   }
 
   function onHide() {
-    //Sys.println("DEBUG: GSK_ViewRateOfTurn.onHide()");
-    $.GSK_oCurrentView = null;
+    //Sys.println("DEBUG: MyViewRateOfTurn.onHide()");
+    $.oMyView = null;
     self.bShow = false;
 
     // Mute tones
@@ -172,7 +172,7 @@ class GSK_ViewRateOfTurn extends Ui.View {
   //
 
   function updateUi() {
-    //Sys.println("DEBUG: GSK_ViewRateOfTurn.updateUi()");
+    //Sys.println("DEBUG: MyViewRateOfTurn.updateUi()");
 
     // Request UI update
     if(self.bShow) {
@@ -190,13 +190,13 @@ class GSK_ViewRateOfTurn extends Ui.View {
 
     // ... rate of turn
     var fValue;
-    var iColor = $.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
+    var iColor = $.oMySettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
     _oDC.setColor(Gfx.COLOR_DK_GRAY, Gfx.COLOR_DK_GRAY);
     _oDC.drawArc(self.iLayoutCenter, self.iLayoutCenter, self.iLayoutValueR, Gfx.ARC_COUNTER_CLOCKWISE, 285, 255);
-    _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor, $.GSK_oSettings.iGeneralBackgroundColor);
+    _oDC.setColor($.oMySettings.iGeneralBackgroundColor, $.oMySettings.iGeneralBackgroundColor);
     _oDC.drawArc(self.iLayoutCenter, self.iLayoutCenter, self.iLayoutValueR, Gfx.ARC_CLOCKWISE, 285, 255);
-    fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 1 ? $.GSK_oProcessing.fRateOfTurn_filtered : $.GSK_oProcessing.fRateOfTurn;
-    if(fValue != null and $.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE) {
+    fValue = $.oMySettings.iGeneralDisplayFilter >= 1 ? $.oMyProcessing.fRateOfTurn_filtered : $.oMyProcessing.fRateOfTurn;
+    if(fValue != null and $.oMyProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE) {
       if(fValue > 0.0f) {
         iColor = Gfx.COLOR_DK_GREEN;
         //var iAngle = (fValue * 900.0f/Math.PI).toNumber();  // ... range 6 rpm <-> 36 °/s
@@ -220,23 +220,23 @@ class GSK_ViewRateOfTurn extends Ui.View {
     }
 
     // ... cache
-    _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor, $.GSK_oSettings.iGeneralBackgroundColor);
+    _oDC.setColor($.oMySettings.iGeneralBackgroundColor, $.oMySettings.iGeneralBackgroundColor);
     _oDC.fillCircle(self.iLayoutCenter, self.iLayoutCacheY, self.iLayoutCacheR);
 
     // Draw non-position values
     var sValue;
 
     // ... battery
-    _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_DK_GRAY : Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
+    _oDC.setColor($.oMySettings.iGeneralBackgroundColor ? Gfx.COLOR_DK_GRAY : Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
     sValue = Lang.format("$1$%", [Sys.getSystemStats().battery.format("%.0f")]);
     _oDC.drawText(self.iLayoutCenter, self.iLayoutBatteryY, self.oRezFontStatus, sValue, Gfx.TEXT_JUSTIFY_CENTER);
 
     // ... activity
-    if($.GSK_oActivity == null) {  // ... stand-by
+    if($.oMyActivity == null) {  // ... stand-by
       _oDC.setColor(Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT);
       sValue = self.sValueActivityStandby;
     }
-    else if($.GSK_oActivity.isRecording()) {  // ... recording
+    else if($.oMyActivity.isRecording()) {  // ... recording
       _oDC.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
       sValue = self.sValueActivityRecording;
     }
@@ -248,30 +248,30 @@ class GSK_ViewRateOfTurn extends Ui.View {
 
     // ... time
     var oTimeNow = Time.now();
-    var oTimeInfo = $.GSK_oSettings.bUnitTimeUTC ? Gregorian.utcInfo(oTimeNow, Time.FORMAT_SHORT) : Gregorian.info(oTimeNow, Time.FORMAT_SHORT);
-    sValue = Lang.format("$1$$2$$3$ $4$", [oTimeInfo.hour.format("%02d"), oTimeNow.value() % 2 ? "." : ":", oTimeInfo.min.format("%02d"), $.GSK_oSettings.sUnitTime]);
-    _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+    var oTimeInfo = $.oMySettings.bUnitTimeUTC ? Gregorian.utcInfo(oTimeNow, Time.FORMAT_SHORT) : Gregorian.info(oTimeNow, Time.FORMAT_SHORT);
+    sValue = Lang.format("$1$$2$$3$ $4$", [oTimeInfo.hour.format("%02d"), oTimeNow.value() % 2 ? "." : ":", oTimeInfo.min.format("%02d"), $.oMySettings.sUnitTime]);
+    _oDC.setColor($.oMySettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
     _oDC.drawText(self.iLayoutCenter, self.iLayoutTimeY, Gfx.FONT_MEDIUM, sValue, Gfx.TEXT_JUSTIFY_CENTER);
 
     // Draw position values
 
     // ... heading
-    fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 2 ? $.GSK_oProcessing.fHeading_filtered : $.GSK_oProcessing.fHeading;
-    if(fValue != null and $.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE) {
+    fValue = $.oMySettings.iGeneralDisplayFilter >= 2 ? $.oMyProcessing.fHeading_filtered : $.oMyProcessing.fHeading;
+    if(fValue != null and $.oMyProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE) {
       //fValue = ((fValue * 180.0f/Math.PI).toNumber()) % 360;
       fValue = ((fValue * 57.2957795131f).toNumber()) % 360;
       sValue = fValue.format("%.0f");
     }
     else {
-      sValue = $.GSK_NOVALUE_LEN3;
+      sValue = $.MY_NOVALUE_LEN3;
     }
     _oDC.drawText(self.iLayoutCenter, self.iLayoutHeadingY, Gfx.FONT_MEDIUM, Lang.format("$1$°", [sValue]), Gfx.TEXT_JUSTIFY_CENTER);
 
     // ... rate of turn
-    fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 1 ? $.GSK_oProcessing.fRateOfTurn_filtered : $.GSK_oProcessing.fRateOfTurn;
-    if(fValue != null and $.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE) {
-      fValue *= $.GSK_oSettings.fUnitRateOfTurnCoefficient;
-      if($.GSK_oSettings.iUnitRateOfTurn == 1) {
+    fValue = $.oMySettings.iGeneralDisplayFilter >= 1 ? $.oMyProcessing.fRateOfTurn_filtered : $.oMyProcessing.fRateOfTurn;
+    if(fValue != null and $.oMyProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE) {
+      fValue *= $.oMySettings.fUnitRateOfTurnCoefficient;
+      if($.oMySettings.iUnitRateOfTurn == 1) {
         sValue = fValue.format("%+.1f");
         if(fValue <= -0.05f or fValue >= 0.05f) {
           _oDC.setColor(iColor, Gfx.COLOR_TRANSPARENT);
@@ -285,29 +285,33 @@ class GSK_ViewRateOfTurn extends Ui.View {
       }
     }
     else {
-      sValue = $.GSK_NOVALUE_LEN3;
+      sValue = $.MY_NOVALUE_LEN3;
     }
     _oDC.drawText(self.iLayoutCenter, self.iLayoutValueY, self.oRezFontMeter, sValue, Gfx.TEXT_JUSTIFY_CENTER);
-    _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-    _oDC.drawText(self.iLayoutCenter, self.iLayoutUnitY, Gfx.FONT_TINY, $.GSK_oSettings.sUnitRateOfTurn, Gfx.TEXT_JUSTIFY_CENTER);
+    _oDC.setColor($.oMySettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+    _oDC.drawText(self.iLayoutCenter, self.iLayoutUnitY, Gfx.FONT_TINY, $.oMySettings.sUnitRateOfTurn, Gfx.TEXT_JUSTIFY_CENTER);
   }
 }
 
-class GSK_ViewRateOfTurnDelegate extends GSK_ViewGlobalDelegate {
+class MyViewRateOfTurnDelegate extends MyViewGlobalDelegate {
 
   function initialize() {
-    GSK_ViewGlobalDelegate.initialize();
+    MyViewGlobalDelegate.initialize();
   }
 
   function onPreviousPage() {
-    //Sys.println("DEBUG: GSK_ViewRateOfTurnDelegate.onPreviousPage()");
-    Ui.switchToView(new GSK_ViewSafety(), new GSK_ViewSafetyDelegate(), Ui.SLIDE_IMMEDIATE);
+    //Sys.println("DEBUG: MyViewRateOfTurnDelegate.onPreviousPage()");
+    Ui.switchToView(new MyViewSafety(),
+                    new MyViewSafetyDelegate(),
+                    Ui.SLIDE_IMMEDIATE);
     return true;
   }
 
   function onNextPage() {
-    //Sys.println("DEBUG: GSK_ViewRateOfTurnDelegate.onNextPage()");
-    Ui.switchToView(new GSK_ViewVariometer(), new GSK_ViewVariometerDelegate(), Ui.SLIDE_IMMEDIATE);
+    //Sys.println("DEBUG: MyViewRateOfTurnDelegate.onNextPage()");
+    Ui.switchToView(new MyViewVariometer(),
+                    new MyViewVariometerDelegate(),
+                    Ui.SLIDE_IMMEDIATE);
     return true;
   }
 

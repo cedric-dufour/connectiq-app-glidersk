@@ -21,7 +21,7 @@ using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
-class GSK_Settings {
+class MySettings {
 
   //
   // VARIABLES

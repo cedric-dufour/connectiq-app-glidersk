@@ -27,7 +27,7 @@ using Toybox.System as Sys;
 // We use Simple Moving Average (SMA) to smoothen the sensor values over
 // the user-specified "time constant" or time period.
 
-class GSK_Filter {
+class MyFilter {
 
   //
   // CONSTANTS
@@ -83,7 +83,7 @@ class GSK_Filter {
 
   function importSettings() {
     // Retrieve the new filter length (user-defined time constant + 1)
-    var iFilterLength_new = $.GSK_oSettings.iGeneralTimeConstant+1;
+    var iFilterLength_new = $.oMySettings.iGeneralTimeConstant+1;
 
     // Loop through each filter
     for(var F=0; F<self.FILTERS; F++) {
@@ -98,7 +98,7 @@ class GSK_Filter {
   }
 
   function resetFilter(_F) {
-    //Sys.println(Lang.format("DEBUG: GSK_Filter.resetFilter($1$)", [_F]));
+    //Sys.println(Lang.format("DEBUG: MyFilter.resetFilter($1$)", [_F]));
 
     // Reset the current value index
     self.aoFilters[_F][2] = 0;
@@ -113,7 +113,7 @@ class GSK_Filter {
   }
 
   function filterValue(_F, _mValue) {
-    //Sys.println(Lang.format("DEBUG: GSK_Filter.filterValue($1$, $2$)", [_F, _mValue]));
+    //Sys.println(Lang.format("DEBUG: MyFilter.filterValue($1$, $2$)", [_F, _mValue]));
 
     // Check the refresh counter
     if(self.aoFilters[_F][0] == 0) {

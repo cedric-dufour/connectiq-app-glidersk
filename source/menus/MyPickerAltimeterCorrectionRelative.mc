@@ -20,7 +20,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
-class GSK_PickerAltimeterCorrectionRelative extends Ui.Picker {
+class MyPickerAltimeterCorrectionRelative extends Ui.Picker {
 
   //
   // FUNCTIONS: Ui.Picker (override/implement)
@@ -45,19 +45,23 @@ class GSK_PickerAltimeterCorrectionRelative extends Ui.Picker {
 
     // Initialize picker
     Picker.initialize({
-      :title => new Ui.Text({ :text => Ui.loadResource(Rez.Strings.titleAltimeterCorrectionRelative), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
-      :pattern => [ new PickerFactoryNumber(0, 1, { :langFormat => "$1$." }),
-                    new PickerFactoryNumber(0, 9, null),
-                    new PickerFactoryNumber(0, 9, null),
-                    new PickerFactoryNumber(0, 9, null),
-                    new PickerFactoryNumber(0, 9, null) ],
-      :defaults => amValues
-    });
+        :title => new Ui.Text({
+            :text => Ui.loadResource(Rez.Strings.titleAltimeterCorrectionRelative),
+            :font => Gfx.FONT_TINY,
+            :locX=>Ui.LAYOUT_HALIGN_CENTER,
+            :locY=>Ui.LAYOUT_VALIGN_BOTTOM,
+            :color => Gfx.COLOR_BLUE}),
+        :pattern => [new PickerFactoryNumber(0, 1, {:langFormat => "$1$."}),
+                     new PickerFactoryNumber(0, 9, null),
+                     new PickerFactoryNumber(0, 9, null),
+                     new PickerFactoryNumber(0, 9, null),
+                     new PickerFactoryNumber(0, 9, null)],
+        :defaults => amValues});
   }
 
 }
 
-class GSK_PickerAltimeterCorrectionRelativeDelegate extends Ui.PickerDelegate {
+class MyPickerAltimeterCorrectionRelativeDelegate extends Ui.PickerDelegate {
 
   //
   // FUNCTIONS: Ui.PickerDelegate (override/implement)

@@ -28,14 +28,14 @@ using Toybox.WatchUi as Ui;
 //
 
 // Current view/log index
-var GSK_iViewLogIndex = null;
+var iMyViewLogIndex = null;
 
 
 //
 // CLASS
 //
 
-class GSK_ViewLog extends GSK_ViewGlobal {
+class MyViewLog extends MyViewGlobal {
 
   //
   // VARIABLES
@@ -61,14 +61,14 @@ class GSK_ViewLog extends GSK_ViewGlobal {
 
 
   //
-  // FUNCTIONS: GSK_ViewGlobal (override/implement)
+  // FUNCTIONS: MyViewGlobal (override/implement)
   //
 
   function initialize() {
-    GSK_ViewGlobal.initialize();
+    MyViewGlobal.initialize();
 
     // Current view/log index
-    $.GSK_iViewLogIndex = $.GSK_iLogIndex;
+    $.iMyViewLogIndex = $.iMyLogIndex;
 
     // Internals
     // ... fields
@@ -78,20 +78,20 @@ class GSK_ViewLog extends GSK_ViewGlobal {
   }
 
   function onUpdate(_oDC) {
-    //Sys.println("DEBUG: GSK_ViewLog.onUpdate()");
+    //Sys.println("DEBUG: MyViewLog.onUpdate()");
 
     // Load log
-    if(self.iLogIndex != $.GSK_iViewLogIndex) {
+    if(self.iLogIndex != $.iMyViewLogIndex) {
       self.loadLog();
     }
 
     // Done
-    return GSK_ViewGlobal.onUpdate(_oDC);
+    return MyViewGlobal.onUpdate(_oDC);
   }
 
   function prepare() {
-    //Sys.println("DEBUG: GSK_ViewLog.prepare()");
-    GSK_ViewGlobal.prepare();
+    //Sys.println("DEBUG: MyViewLog.prepare()");
+    MyViewGlobal.prepare();
 
     // Load resources
     // ... fields (units)
@@ -100,16 +100,16 @@ class GSK_ViewLog extends GSK_ViewGlobal {
     self.oRezUnitBottomRight = View.findDrawableById("unitBottomRight");
     // ... strings
     self.sTitle = Ui.loadResource(Rez.Strings.titleViewLog);
-    self.sUnitElevation_fmt = Lang.format("[$1$]", [$.GSK_oSettings.sUnitElevation]);
+    self.sUnitElevation_fmt = Lang.format("[$1$]", [$.oMySettings.sUnitElevation]);
 
     // Set labels, units and colors
     // ... start time
     View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelStart));
-    View.findDrawableById("unitTopLeft").setText($.GSK_NOVALUE_BLANK);
+    View.findDrawableById("unitTopLeft").setText($.MY_NOVALUE_BLANK);
     self.oRezValueTopLeft.setColor(self.iColorText);
     // ... stop time
     View.findDrawableById("labelTopRight").setText(Ui.loadResource(Rez.Strings.labelStop));
-    View.findDrawableById("unitTopRight").setText($.GSK_NOVALUE_BLANK);
+    View.findDrawableById("unitTopRight").setText($.MY_NOVALUE_BLANK);
     self.oRezValueTopRight.setColor(self.iColorText);
     // ... minimum altitude / time (dynamic label)
     View.findDrawableById("labelLeft").setText(Ui.loadResource(Rez.Strings.labelAltitudeMin));
@@ -122,7 +122,7 @@ class GSK_ViewLog extends GSK_ViewGlobal {
     self.oRezValueRight.setColor(self.iColorText);
     // ... elapsed time
     View.findDrawableById("labelBottomLeft").setText(Ui.loadResource(Rez.Strings.labelElapsed));
-    View.findDrawableById("unitBottomLeft").setText($.GSK_NOVALUE_BLANK);
+    View.findDrawableById("unitBottomLeft").setText($.MY_NOVALUE_BLANK);
     self.oRezValueBottomLeft.setColor(self.iColorText);
     // ... ascent / elapsed (dynamic label)
     View.findDrawableById("labelBottomRight").setText(Ui.loadResource(Rez.Strings.labelAscent));
@@ -137,8 +137,8 @@ class GSK_ViewLog extends GSK_ViewGlobal {
   }
 
   function updateLayout() {
-    //Sys.println("DEBUG: GSK_ViewLog.updateLayout()");
-    GSK_ViewGlobal.updateLayout(false);
+    //Sys.println("DEBUG: MyViewLog.updateLayout()");
+    MyViewGlobal.updateLayout(false);
 
     // Fields
     var iEpochNow = Time.now().value();
@@ -150,13 +150,13 @@ class GSK_ViewLog extends GSK_ViewGlobal {
 
     // No log ?
     if(self.dictLog == null) {
-      self.oRezValueTopLeft.setText($.GSK_NOVALUE_LEN3);
-      self.oRezValueTopRight.setText($.GSK_NOVALUE_LEN3);
-      self.oRezValueLeft.setText($.GSK_NOVALUE_LEN3);
-      self.oRezValueCenter.setText($.GSK_NOVALUE_LEN2);
-      self.oRezValueRight.setText($.GSK_NOVALUE_LEN3);
-      self.oRezValueBottomLeft.setText($.GSK_NOVALUE_LEN3);
-      self.oRezValueBottomRight.setText($.GSK_NOVALUE_LEN3);
+      self.oRezValueTopLeft.setText($.MY_NOVALUE_LEN3);
+      self.oRezValueTopRight.setText($.MY_NOVALUE_LEN3);
+      self.oRezValueLeft.setText($.MY_NOVALUE_LEN3);
+      self.oRezValueCenter.setText($.MY_NOVALUE_LEN2);
+      self.oRezValueRight.setText($.MY_NOVALUE_LEN3);
+      self.oRezValueBottomLeft.setText($.MY_NOVALUE_LEN3);
+      self.oRezValueBottomRight.setText($.MY_NOVALUE_LEN3);
       self.oRezValueFooter.setColor(Gfx.COLOR_DK_GRAY);
       self.oRezValueFooter.setText(self.sTitle);
       return;
@@ -173,7 +173,7 @@ class GSK_ViewLog extends GSK_ViewGlobal {
       self.oRezValueLeft.setText(self.dictLog["altitudeMin"]);
     }
     else {  // ... time
-      self.oRezUnitLeft.setText($.GSK_NOVALUE_BLANK);
+      self.oRezUnitLeft.setText($.MY_NOVALUE_BLANK);
       self.oRezValueLeft.setText(self.dictLog["timeAltitudeMin"]);
     }
     // ... distance
@@ -184,7 +184,7 @@ class GSK_ViewLog extends GSK_ViewGlobal {
       self.oRezValueRight.setText(self.dictLog["altitudeMax"]);
     }
     else {  // ... time
-      self.oRezUnitRight.setText($.GSK_NOVALUE_BLANK);
+      self.oRezUnitRight.setText($.MY_NOVALUE_BLANK);
       self.oRezValueRight.setText(self.dictLog["timeAltitudeMax"]);
     }
     // ... elapsed
@@ -195,7 +195,7 @@ class GSK_ViewLog extends GSK_ViewGlobal {
       self.oRezValueBottomRight.setText(self.dictLog["ascent"]);
     }
     else {  // ... elapsed
-      self.oRezUnitBottomRight.setText($.GSK_NOVALUE_BLANK);
+      self.oRezUnitBottomRight.setText($.MY_NOVALUE_BLANK);
       self.oRezValueBottomRight.setText(self.dictLog["elapsedAscent"]);
     }
     // ... footer
@@ -211,17 +211,17 @@ class GSK_ViewLog extends GSK_ViewGlobal {
   //
 
   function loadLog() {
-    //Sys.println("DEBUG: GSK_ViewLog.loadLog()");
+    //Sys.println("DEBUG: MyViewLog.loadLog()");
 
     // Check index
-    if($.GSK_iViewLogIndex == null) {
+    if($.iMyViewLogIndex == null) {
       self.iLogIndex = null;
       self.dictLog = null;
       return;
     }
 
     // Load log entry
-    self.iLogIndex = $.GSK_iViewLogIndex;
+    self.iLogIndex = $.iMyViewLogIndex;
     var s = self.iLogIndex.format("%02d");
     var d = App.Storage.getValue(Lang.format("storLog$1$", [s]));
     if(d == null) {
@@ -236,69 +236,69 @@ class GSK_ViewLog extends GSK_ViewGlobal {
     // ... time: start (and date)
     if(d.get("timeStart") != null) {
       oTimeStart = new Time.Moment(d["timeStart"]);
-      var oTimeInfo = $.GSK_oSettings.bUnitTimeUTC ? Gregorian.utcInfo(oTimeStart, Time.FORMAT_MEDIUM) : Gregorian.info(oTimeStart, Time.FORMAT_MEDIUM);
+      var oTimeInfo = $.oMySettings.bUnitTimeUTC ? Gregorian.utcInfo(oTimeStart, Time.FORMAT_MEDIUM) : Gregorian.info(oTimeStart, Time.FORMAT_MEDIUM);
       d["timeStart"] = Lang.format("$1$:$2$", [oTimeInfo.hour.format("%02d"), oTimeInfo.min.format("%02d")]);
       d["date"] = Lang.format("$1$ $2$", [oTimeInfo.month, oTimeInfo.day.format("%01d")]);
     } else {
-      d["timeStart"] = $.GSK_NOVALUE_LEN3;
-      d["date"] = $.GSK_NOVALUE_LEN4;
+      d["timeStart"] = $.MY_NOVALUE_LEN3;
+      d["date"] = $.MY_NOVALUE_LEN4;
     }
     // ... time: stop
     if(d.get("timeStop") != null) {
       oTimeStop = new Time.Moment(d["timeStop"]);
-      d["timeStop"] = LangUtils.formatTime(oTimeStop, $.GSK_oSettings.bUnitTimeUTC, false);
+      d["timeStop"] = LangUtils.formatTime(oTimeStop, $.oMySettings.bUnitTimeUTC, false);
     } else {
-      d["timeStop"] = $.GSK_NOVALUE_LEN3;
+      d["timeStop"] = $.MY_NOVALUE_LEN3;
     }
     // ... elapsed
     if(oTimeStart != null and oTimeStop != null) {
       d["elapsed"] = LangUtils.formatElapsedTime(oTimeStart, oTimeStop, false);
     }
     else {
-      d["elapsed"] = $.GSK_NOVALUE_LEN3;
+      d["elapsed"] = $.MY_NOVALUE_LEN3;
     }
     // ... distance
     if(d.get("distance") != null) {
-      fValue = d["distance"] * $.GSK_oSettings.fUnitDistanceCoefficient;
+      fValue = d["distance"] * $.oMySettings.fUnitDistanceCoefficient;
       d["distance"] = fValue.format("%.0f");
     } else {
-      d["distance"] = $.GSK_NOVALUE_LEN2;
+      d["distance"] = $.MY_NOVALUE_LEN2;
     }
     // ... ascent (and elasped)
     if(d.get("ascent") != null) {
-      fValue = d["ascent"] * $.GSK_oSettings.fUnitElevationCoefficient;
+      fValue = d["ascent"] * $.oMySettings.fUnitElevationCoefficient;
       d["ascent"] = d["ascent"].format("%.0f");
     } else {
-      d["ascent"] = $.GSK_NOVALUE_LEN3;
+      d["ascent"] = $.MY_NOVALUE_LEN3;
     }
     if(d.get("elapsedAscent") != null) {
       d["elapsedAscent"] = LangUtils.formatElapsed(d["elapsedAscent"], false);
     } else {
-      d["elapsedAscent"] = $.GSK_NOVALUE_LEN3;
+      d["elapsedAscent"] = $.MY_NOVALUE_LEN3;
     }
     // ... altitude: minimum (and time)
     if(d.get("altitudeMin") != null) {
-      fValue = d["altitudeMin"] * $.GSK_oSettings.fUnitElevationCoefficient;
+      fValue = d["altitudeMin"] * $.oMySettings.fUnitElevationCoefficient;
       d["altitudeMin"] = fValue.format("%.0f");
     } else {
-      d["altitudeMin"] = $.GSK_NOVALUE_LEN3;
+      d["altitudeMin"] = $.MY_NOVALUE_LEN3;
     }
     if(d.get("timeAltitudeMin") != null) {
-      d["timeAltitudeMin"] = LangUtils.formatTime(new Time.Moment(d["timeAltitudeMin"]), $.GSK_oSettings.bUnitTimeUTC, false);
+      d["timeAltitudeMin"] = LangUtils.formatTime(new Time.Moment(d["timeAltitudeMin"]), $.oMySettings.bUnitTimeUTC, false);
     } else {
-      d["timeAltitudeMin"] = $.GSK_NOVALUE_LEN3;
+      d["timeAltitudeMin"] = $.MY_NOVALUE_LEN3;
     }
     // ... altitude: maximum (and time)
     if(d.get("altitudeMax") != null) {
-      fValue = d["altitudeMax"] * $.GSK_oSettings.fUnitElevationCoefficient;
+      fValue = d["altitudeMax"] * $.oMySettings.fUnitElevationCoefficient;
       d["altitudeMax"] = fValue.format("%.0f");
     } else {
-      d["altitudeMax"] = $.GSK_NOVALUE_LEN3;
+      d["altitudeMax"] = $.MY_NOVALUE_LEN3;
     }
     if(d.get("timeAltitudeMax") != null) {
-      d["timeAltitudeMax"] = LangUtils.formatTime(new Time.Moment(d["timeAltitudeMax"]), $.GSK_oSettings.bUnitTimeUTC, false);
+      d["timeAltitudeMax"] = LangUtils.formatTime(new Time.Moment(d["timeAltitudeMax"]), $.oMySettings.bUnitTimeUTC, false);
     } else {
-      d["timeAltitudeMax"] = $.GSK_NOVALUE_LEN3;
+      d["timeAltitudeMax"] = $.MY_NOVALUE_LEN3;
     }
 
     // Done
@@ -307,45 +307,49 @@ class GSK_ViewLog extends GSK_ViewGlobal {
 
 }
 
-class GSK_ViewLogDelegate extends GSK_ViewGlobalDelegate {
+class MyViewLogDelegate extends MyViewGlobalDelegate {
 
   function initialize() {
-    GSK_ViewGlobalDelegate.initialize();
+    MyViewGlobalDelegate.initialize();
   }
 
   function onSelect() {
-    //Sys.println("DEBUG: GSK_ViewLogDelegate.onSelect()");
-    if($.GSK_iViewLogIndex == null) {
-      $.GSK_iViewLogIndex = $.GSK_iLogIndex;
+    //Sys.println("DEBUG: MyViewLogDelegate.onSelect()");
+    if($.iMyViewLogIndex == null) {
+      $.iMyViewLogIndex = $.iMyLogIndex;
     }
     else {
-      $.GSK_iViewLogIndex = ($.GSK_iViewLogIndex + 1) % $.GSK_STORAGE_SLOTS;
+      $.iMyViewLogIndex = ($.iMyViewLogIndex + 1) % $.MY_STORAGE_SLOTS;
     }
     Ui.requestUpdate();
     return true;
   }
 
   function onBack() {
-    //Sys.println("DEBUG: GSK_ViewLogDelegate.onBack()");
-    if($.GSK_iViewLogIndex == null) {
-      $.GSK_iViewLogIndex = $.GSK_iLogIndex;
+    //Sys.println("DEBUG: MyViewLogDelegate.onBack()");
+    if($.iMyViewLogIndex == null) {
+      $.iMyViewLogIndex = $.iMyLogIndex;
     }
     else {
-      $.GSK_iViewLogIndex = ($.GSK_iViewLogIndex - 1 + $.GSK_STORAGE_SLOTS) % $.GSK_STORAGE_SLOTS;
+      $.iMyViewLogIndex = ($.iMyViewLogIndex - 1 + $.MY_STORAGE_SLOTS) % $.MY_STORAGE_SLOTS;
     }
     Ui.requestUpdate();
     return true;
   }
 
   function onPreviousPage() {
-    //Sys.println("DEBUG: GSK_ViewLogDelegate.onPreviousPage()");
-    Ui.switchToView(new GSK_ViewVarioplot(), new GSK_ViewVarioplotDelegate(), Ui.SLIDE_IMMEDIATE);
+    //Sys.println("DEBUG: MyViewLogDelegate.onPreviousPage()");
+    Ui.switchToView(new MyViewVarioplot(),
+                    new MyViewVarioplotDelegate(),
+                    Ui.SLIDE_IMMEDIATE);
     return true;
   }
 
   function onNextPage() {
-    //Sys.println("DEBUG: GSK_ViewLogDelegate.onNextPage()");
-    Ui.switchToView(new GSK_ViewTimers(), new GSK_ViewTimersDelegate(), Ui.SLIDE_IMMEDIATE);
+    //Sys.println("DEBUG: MyViewLogDelegate.onNextPage()");
+    Ui.switchToView(new MyViewTimers(),
+                    new MyViewTimersDelegate(),
+                    Ui.SLIDE_IMMEDIATE);
     return true;
   }
 

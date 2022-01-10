@@ -24,11 +24,11 @@ using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
 // Display mode (intent)
-var GSK_ViewVarioplot_iPanZoom = 0;
-var GSK_ViewVarioplot_iOffsetX = 0;
-var GSK_ViewVarioplot_iOffsetY = 0;
+var iMyViewVarioplotPanZoom = 0;
+var iMyViewVarioplotOffsetX = 0;
+var iMyViewVarioplotOffsetY = 0;
 
-class GSK_ViewVarioplot extends GSK_ViewHeader {
+class MyViewVarioplot extends MyViewHeader {
 
   //
   // VARIABLES
@@ -101,11 +101,11 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
 
 
   //
-  // FUNCTIONS: GSK_ViewHeader (override/implement)
+  // FUNCTIONS: MyViewHeader (override/implement)
   //
 
   function initialize() {
-    GSK_ViewHeader.initialize();
+    MyViewHeader.initialize();
 
     // Layout-specific initialization
     self.initLayout();
@@ -116,8 +116,8 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
   }
 
   function onLayout(_oDC) {
-    //Sys.println("DEBUG: GSK_ViewVarioplot.onLayout()");
-    if(!GSK_ViewHeader.onLayout(_oDC)) {
+    //Sys.println("DEBUG: MyViewVarioplot.onLayout()");
+    if(!MyViewHeader.onLayout(_oDC)) {
       return false;
     }
 
@@ -126,15 +126,15 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
   }
 
   function prepare() {
-    //Sys.println("DEBUG: GSK_ViewVarioplot.prepare()");
-    GSK_ViewHeader.prepare();
+    //Sys.println("DEBUG: MyViewVarioplot.prepare()");
+    MyViewHeader.prepare();
 
     // Load resources
     // ... fonts
     self.oRezFontPlot = Ui.loadResource(Rez.Fonts.fontPlot);
 
     // Color scale
-    switch($.GSK_oSettings.iVariometerRange) {
+    switch($.oMySettings.iVariometerRange) {
     default:
     case 0:
       self.aiScale = [-3000, -2000, -1000, -50, 50, 1000, 2000, 3000];
@@ -148,35 +148,35 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
     }
 
     // Unmute tones
-    App.getApp().unmuteTones(GSK_App.TONES_SAFETY | GSK_App.TONES_VARIOMETER);
+    App.getApp().unmuteTones(MyApp.TONES_SAFETY | MyApp.TONES_VARIOMETER);
   }
 
   function onUpdate(_oDC) {
-    //Sys.println("DEBUG: GSK_ViewVarioplot.onUpdate()");
+    //Sys.println("DEBUG: MyViewVarioplot.onUpdate()");
 
     // Update layout
-    GSK_ViewHeader.updateLayout(true);
+    MyViewHeader.updateLayout(true);
     View.onUpdate(_oDC);
     self.drawPlot(_oDC);
     self.drawValues(_oDC);
 
     // Draw buttons
-    if($.GSK_ViewVarioplot_iPanZoom) {
+    if($.iMyViewVarioplotPanZoom) {
       if(self.oRezButtonKeyUp == null or self.oRezButtonKeyDown == null
-         or self.iPanZoom != $.GSK_ViewVarioplot_iPanZoom) {
-        if($.GSK_ViewVarioplot_iPanZoom == 1) {  // ... zoom in/out
+         or self.iPanZoom != $.iMyViewVarioplotPanZoom) {
+        if($.iMyViewVarioplotPanZoom == 1) {  // ... zoom in/out
           self.oRezButtonKeyUp = new Rez.Drawables.drawButtonPlus();
           self.oRezButtonKeyDown = new Rez.Drawables.drawButtonMinus();
         }
-        else if($.GSK_ViewVarioplot_iPanZoom == 2) {  // ... pan up/down
+        else if($.iMyViewVarioplotPanZoom == 2) {  // ... pan up/down
           self.oRezButtonKeyUp = new Rez.Drawables.drawButtonUp();
           self.oRezButtonKeyDown = new Rez.Drawables.drawButtonDown();
         }
-        else if($.GSK_ViewVarioplot_iPanZoom == 3) {  // ... pan left/right
+        else if($.iMyViewVarioplotPanZoom == 3) {  // ... pan left/right
           self.oRezButtonKeyUp = new Rez.Drawables.drawButtonLeft();
           self.oRezButtonKeyDown = new Rez.Drawables.drawButtonRight();
         }
-        self.iPanZoom = $.GSK_ViewVarioplot_iPanZoom;
+        self.iPanZoom = $.iMyViewVarioplotPanZoom;
       }
       self.oRezButtonKeyUp.draw(_oDC);
       self.oRezButtonKeyDown.draw(_oDC);
@@ -191,13 +191,13 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
   }
 
   function drawPlot(_oDC) {
-    //Sys.println("DEBUG: GSK_ViewVarioplot.drawPlot()");
+    //Sys.println("DEBUG: MyViewVarioplot.drawPlot()");
     var iNowEpoch = Time.now().value();
 
     // Draw plot
     _oDC.setPenWidth(3);
-    var iPlotIndex = $.GSK_oProcessing.iPlotIndex;
-    var iVariometerPlotRange = $.GSK_oSettings.iVariometerPlotRange * 60;
+    var iPlotIndex = $.oMyProcessing.iPlotIndex;
+    var iVariometerPlotRange = $.oMySettings.iVariometerPlotRange * 60;
     if(iPlotIndex < 0) {
       // No data
       return;
@@ -205,35 +205,35 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
 
     // ... end (center) location
     var iEndIndex = iPlotIndex;
-    var iEndEpoch = $.GSK_oProcessing.aiPlotEpoch[iEndIndex];
+    var iEndEpoch = $.oMyProcessing.aiPlotEpoch[iEndIndex];
     if(iEndEpoch == null or iNowEpoch-iEndEpoch > iVariometerPlotRange) {
       // No data or data too old
       return;
     }
-    var iEndLatitude = $.GSK_oProcessing.aiPlotLatitude[iEndIndex];
-    var iEndLongitude = $.GSK_oProcessing.aiPlotLongitude[iEndIndex];
+    var iEndLatitude = $.oMyProcessing.aiPlotLatitude[iEndIndex];
+    var iEndLongitude = $.oMyProcessing.aiPlotLongitude[iEndIndex];
 
     // ... start location
     var iStartEpoch = iNowEpoch-iVariometerPlotRange;
 
     // ... plot
     _oDC.setClip(0, self.iLayoutClipY, self.iLayoutClipW, self.iLayoutClipH);
-    var iCurrentIndex = (iEndIndex-iVariometerPlotRange+1+GSK_Processing.PLOTBUFFER_SIZE) % GSK_Processing.PLOTBUFFER_SIZE;
-    var fZoomX = $.GSK_oSettings.fVariometerPlotZoom * Math.cos(iEndLatitude / 495035534.9930312523f);
-    var fZoomY = $.GSK_oSettings.fVariometerPlotZoom;
-    var iMaxDeltaEpoch = $.GSK_oSettings.iGeneralTimeConstant+1;
+    var iCurrentIndex = (iEndIndex-iVariometerPlotRange+1+MyProcessing.PLOTBUFFER_SIZE) % MyProcessing.PLOTBUFFER_SIZE;
+    var fZoomX = $.oMySettings.fVariometerPlotZoom * Math.cos(iEndLatitude / 495035534.9930312523f);
+    var fZoomY = $.oMySettings.fVariometerPlotZoom;
+    var iMaxDeltaEpoch = $.oMySettings.iGeneralTimeConstant+1;
     var iLastEpoch = iEndEpoch;  //
     var iLastX = 0;
     var iLastY = 0;
     var iLastColor = 0;
     var bDraw = false;
     for(var i=iVariometerPlotRange; i>0; i--) {
-      var iCurrentEpoch = $.GSK_oProcessing.aiPlotEpoch[iCurrentIndex];
+      var iCurrentEpoch = $.oMyProcessing.aiPlotEpoch[iCurrentIndex];
       if(iCurrentEpoch != null and iCurrentEpoch >= iStartEpoch) {
         if(iCurrentEpoch-iLastEpoch <= iMaxDeltaEpoch) {
-          var iCurrentX = self.iLayoutCenter+$.GSK_ViewVarioplot_iOffsetX+(($.GSK_oProcessing.aiPlotLongitude[iCurrentIndex]-iEndLongitude)*fZoomX).toNumber();
-          var iCurrentY = self.iLayoutCenter+$.GSK_ViewVarioplot_iOffsetY-(($.GSK_oProcessing.aiPlotLatitude[iCurrentIndex]-iEndLatitude)*fZoomY).toNumber();
-          var iCurrentVariometer = $.GSK_oProcessing.aiPlotVariometer[iCurrentIndex];
+          var iCurrentX = self.iLayoutCenter+$.iMyViewVarioplotOffsetX+(($.oMyProcessing.aiPlotLongitude[iCurrentIndex]-iEndLongitude)*fZoomX).toNumber();
+          var iCurrentY = self.iLayoutCenter+$.iMyViewVarioplotOffsetY-(($.oMyProcessing.aiPlotLatitude[iCurrentIndex]-iEndLatitude)*fZoomY).toNumber();
+          var iCurrentVariometer = $.oMyProcessing.aiPlotVariometer[iCurrentIndex];
           if(bDraw) {
             var iCurrentColor;
             if(iCurrentVariometer > self.aiScale[7]) {
@@ -284,33 +284,33 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
       else {
         bDraw = false;
       }
-      iCurrentIndex = (iCurrentIndex+1) % GSK_Processing.PLOTBUFFER_SIZE;
+      iCurrentIndex = (iCurrentIndex+1) % MyProcessing.PLOTBUFFER_SIZE;
     }
     _oDC.clearClip();
   }
 
   function drawValues(_oDC) {
-    //Sys.println("DEBUG: GSK_ViewVarioplot.drawValues()");
+    //Sys.println("DEBUG: MyViewVarioplot.drawValues()");
 
     // Draw values
     var fValue;
     var sValue;
-    _oDC.setColor($.GSK_oSettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+    _oDC.setColor($.oMySettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
 
     // ... altitude
-    if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_oProcessing.fAltitude != null) {
-      fValue = $.GSK_oProcessing.fAltitude * $.GSK_oSettings.fUnitElevationCoefficient;
+    if($.oMyProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.oMyProcessing.fAltitude != null) {
+      fValue = $.oMyProcessing.fAltitude * $.oMySettings.fUnitElevationCoefficient;
       sValue = fValue.format("%.0f");
     }
     else {
-      sValue = $.GSK_NOVALUE_LEN3;
+      sValue = $.MY_NOVALUE_LEN3;
     }
-    _oDC.drawText(self.iLayoutValueXleft, self.iLayoutValueYtop, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.GSK_oSettings.sUnitElevation]), Gfx.TEXT_JUSTIFY_LEFT);
+    _oDC.drawText(self.iLayoutValueXleft, self.iLayoutValueYtop, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.oMySettings.sUnitElevation]), Gfx.TEXT_JUSTIFY_LEFT);
 
     // ... variometer
-    if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_oProcessing.fVariometer != null) {
-      fValue = $.GSK_oProcessing.fVariometer * $.GSK_oSettings.fUnitVerticalSpeedCoefficient;
-      if($.GSK_oSettings.fUnitVerticalSpeedCoefficient < 100.0f) {
+    if($.oMyProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.oMyProcessing.fVariometer != null) {
+      fValue = $.oMyProcessing.fVariometer * $.oMySettings.fUnitVerticalSpeedCoefficient;
+      if($.oMySettings.fUnitVerticalSpeedCoefficient < 100.0f) {
         sValue = fValue.format("%+.1f");
       }
       else {
@@ -318,38 +318,38 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
       }
     }
     else {
-      sValue = $.GSK_NOVALUE_LEN3;
+      sValue = $.MY_NOVALUE_LEN3;
     }
-    _oDC.drawText(self.iLayoutValueXright, self.iLayoutValueYtop, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.GSK_oSettings.sUnitVerticalSpeed]), Gfx.TEXT_JUSTIFY_RIGHT);
+    _oDC.drawText(self.iLayoutValueXright, self.iLayoutValueYtop, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.oMySettings.sUnitVerticalSpeed]), Gfx.TEXT_JUSTIFY_RIGHT);
 
     // ... ground speed
-    if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.GSK_oProcessing.fGroundSpeed != null) {
-      fValue = $.GSK_oProcessing.fGroundSpeed * $.GSK_oSettings.fUnitHorizontalSpeedCoefficient;
+    if($.oMyProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.oMyProcessing.fGroundSpeed != null) {
+      fValue = $.oMyProcessing.fGroundSpeed * $.oMySettings.fUnitHorizontalSpeedCoefficient;
       sValue = fValue.format("%.0f");
     }
     else {
-      sValue = $.GSK_NOVALUE_LEN3;
+      sValue = $.MY_NOVALUE_LEN3;
     }
-    _oDC.drawText(self.iLayoutValueXleft, self.iLayoutValueYbottom, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.GSK_oSettings.sUnitHorizontalSpeed]), Gfx.TEXT_JUSTIFY_LEFT);
+    _oDC.drawText(self.iLayoutValueXleft, self.iLayoutValueYbottom, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.oMySettings.sUnitHorizontalSpeed]), Gfx.TEXT_JUSTIFY_LEFT);
 
     // ... finesse
-    if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and !$.GSK_oProcessing.bAscent and $.GSK_oProcessing.fFinesse != null) {
-      fValue = $.GSK_oProcessing.fFinesse;
+    if($.oMyProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and !$.oMyProcessing.bAscent and $.oMyProcessing.fFinesse != null) {
+      fValue = $.oMyProcessing.fFinesse;
       sValue = fValue.format("%.0f");
     }
     else {
-      sValue = $.GSK_NOVALUE_LEN2;
+      sValue = $.MY_NOVALUE_LEN2;
     }
     _oDC.drawText(self.iLayoutValueXright, self.iLayoutValueYbottom, self.oRezFontPlot, sValue, Gfx.TEXT_JUSTIFY_RIGHT);
   }
 
   function onHide() {
-    GSK_ViewHeader.onHide();
+    MyViewHeader.onHide();
 
-    //Sys.println("DEBUG: GSK_ViewVarioplot.onHide()");
-    $.GSK_ViewVarioplot_iPanZoom = 0;
-    $.GSK_ViewVarioplot_iOffsetX = 0;
-    $.GSK_ViewVarioplot_iOffsetY = 0;
+    //Sys.println("DEBUG: MyViewVarioplot.onHide()");
+    $.iMyViewVarioplotPanZoom = 0;
+    $.iMyViewVarioplotOffsetX = 0;
+    $.iMyViewVarioplotOffsetY = 0;
 
     // Mute tones
     App.getApp().muteTones();
@@ -362,57 +362,63 @@ class GSK_ViewVarioplot extends GSK_ViewHeader {
 
 }
 
-class GSK_ViewVarioplotDelegate extends Ui.BehaviorDelegate {
+class MyViewVarioplotDelegate extends Ui.BehaviorDelegate {
 
   function initialize() {
     BehaviorDelegate.initialize();
   }
 
   function onMenu() {
-    //Sys.println("DEBUG: GSK_ViewVarioplotDelegate.onMenu()");
-    if($.GSK_ViewVarioplot_iPanZoom) {
-      $.GSK_ViewVarioplot_iPanZoom = 0;  // ... cancel pan/zoom
-      $.GSK_ViewVarioplot_iOffsetX = 0;
-      $.GSK_ViewVarioplot_iOffsetY = 0;
-      Ui.pushView(new GSK_MenuGeneric(:menuSettings), new GSK_MenuGenericDelegate(:menuSettings), Ui.SLIDE_IMMEDIATE);
+    //Sys.println("DEBUG: MyViewVarioplotDelegate.onMenu()");
+    if($.iMyViewVarioplotPanZoom) {
+      $.iMyViewVarioplotPanZoom = 0;  // ... cancel pan/zoom
+      $.iMyViewVarioplotOffsetX = 0;
+      $.iMyViewVarioplotOffsetY = 0;
+      Ui.pushView(new MyMenuGeneric(:menuSettings),
+                  new MyMenuGenericDelegate(:menuSettings),
+                  Ui.SLIDE_IMMEDIATE);
     }
     else {
-      $.GSK_ViewVarioplot_iPanZoom = 1;  // ... enter pan/zoom
+      $.iMyViewVarioplotPanZoom = 1;  // ... enter pan/zoom
       Ui.requestUpdate();
     }
     return true;
   }
 
   function onSelect() {
-    //Sys.println("DEBUG: GSK_ViewVarioplotDelegate.onSelect()");
-    if($.GSK_ViewVarioplot_iPanZoom) {
-      $.GSK_ViewVarioplot_iPanZoom = ($.GSK_ViewVarioplot_iPanZoom+1) % 4;
-      if($.GSK_ViewVarioplot_iPanZoom == 0) {
-        $.GSK_ViewVarioplot_iPanZoom = 1;
+    //Sys.println("DEBUG: MyViewVarioplotDelegate.onSelect()");
+    if($.iMyViewVarioplotPanZoom) {
+      $.iMyViewVarioplotPanZoom = ($.iMyViewVarioplotPanZoom+1) % 4;
+      if($.iMyViewVarioplotPanZoom == 0) {
+        $.iMyViewVarioplotPanZoom = 1;
       }
       Ui.requestUpdate();
     }
-    else if($.GSK_oActivity == null) {
-      Ui.pushView(new GSK_MenuGenericConfirm(:contextActivity, :actionStart), new GSK_MenuGenericConfirmDelegate(:contextActivity, :actionStart, false), Ui.SLIDE_IMMEDIATE);
+    else if($.oMyActivity == null) {
+      Ui.pushView(new MyMenuGenericConfirm(:contextActivity, :actionStart),
+                  new MyMenuGenericConfirmDelegate(:contextActivity, :actionStart, false),
+                  Ui.SLIDE_IMMEDIATE);
     }
     else {
-      Ui.pushView(new GSK_MenuGeneric(:menuActivity), new GSK_MenuGenericDelegate(:menuActivity), Ui.SLIDE_IMMEDIATE);
+      Ui.pushView(new MyMenuGeneric(:menuActivity),
+                  new MyMenuGenericDelegate(:menuActivity),
+                  Ui.SLIDE_IMMEDIATE);
     }
     return true;
   }
 
   function onBack() {
-    //Sys.println("DEBUG: GSK_ViewVarioplotDelegate.onBack()");
-    if($.GSK_ViewVarioplot_iPanZoom) {
-      $.GSK_ViewVarioplot_iPanZoom = 0;  // ... cancel pan/zoom
-      $.GSK_ViewVarioplot_iOffsetX = 0;
-      $.GSK_ViewVarioplot_iOffsetY = 0;
+    //Sys.println("DEBUG: MyViewVarioplotDelegate.onBack()");
+    if($.iMyViewVarioplotPanZoom) {
+      $.iMyViewVarioplotPanZoom = 0;  // ... cancel pan/zoom
+      $.iMyViewVarioplotOffsetX = 0;
+      $.iMyViewVarioplotOffsetY = 0;
       Ui.requestUpdate();
       return true;
     }
-    else if($.GSK_oActivity != null) {
-      if($.GSK_oSettings.bGeneralLapKey) {
-        $.GSK_oActivity.addLap();
+    else if($.oMyActivity != null) {
+      if($.oMySettings.bGeneralLapKey) {
+        $.oMyActivity.addLap();
       }
       return true;
     }
@@ -420,50 +426,54 @@ class GSK_ViewVarioplotDelegate extends Ui.BehaviorDelegate {
   }
 
   function onPreviousPage() {
-    //Sys.println("DEBUG: GSK_ViewVarioplotDelegate.onPreviousPage()");
-    if($.GSK_ViewVarioplot_iPanZoom == 0) {
-      Ui.switchToView(new GSK_ViewVariometer(), new GSK_ViewVariometerDelegate(), Ui.SLIDE_IMMEDIATE);
+    //Sys.println("DEBUG: MyViewVarioplotDelegate.onPreviousPage()");
+    if($.iMyViewVarioplotPanZoom == 0) {
+      Ui.switchToView(new MyViewVariometer(),
+                      new MyViewVariometerDelegate(),
+                      Ui.SLIDE_IMMEDIATE);
     }
-    else if($.GSK_ViewVarioplot_iPanZoom == 1) {  // ... zoom in
-      var fPlotZoom_previous = $.GSK_oSettings.fVariometerPlotZoom;
-      $.GSK_oSettings.setVariometerPlotZoom($.GSK_oSettings.iVariometerPlotZoom+1);
-      var fPlotZoom_ratio = $.GSK_oSettings.fVariometerPlotZoom/fPlotZoom_previous;
-      $.GSK_ViewVarioplot_iOffsetY = ($.GSK_ViewVarioplot_iOffsetY*fPlotZoom_ratio).toNumber();
-      $.GSK_ViewVarioplot_iOffsetX = ($.GSK_ViewVarioplot_iOffsetX*fPlotZoom_ratio).toNumber();
-      App.Properties.setValue("userVariometerPlotZoom", $.GSK_oSettings.iVariometerPlotZoom);
+    else if($.iMyViewVarioplotPanZoom == 1) {  // ... zoom in
+      var fPlotZoom_previous = $.oMySettings.fVariometerPlotZoom;
+      $.oMySettings.setVariometerPlotZoom($.oMySettings.iVariometerPlotZoom+1);
+      var fPlotZoom_ratio = $.oMySettings.fVariometerPlotZoom/fPlotZoom_previous;
+      $.iMyViewVarioplotOffsetY = ($.iMyViewVarioplotOffsetY*fPlotZoom_ratio).toNumber();
+      $.iMyViewVarioplotOffsetX = ($.iMyViewVarioplotOffsetX*fPlotZoom_ratio).toNumber();
+      App.Properties.setValue("userVariometerPlotZoom", $.oMySettings.iVariometerPlotZoom);
       Ui.requestUpdate();
     }
-    else if($.GSK_ViewVarioplot_iPanZoom == 2) {  // ... pan up
-      $.GSK_ViewVarioplot_iOffsetY += 10;
+    else if($.iMyViewVarioplotPanZoom == 2) {  // ... pan up
+      $.iMyViewVarioplotOffsetY += 10;
       Ui.requestUpdate();
     }
-    else if($.GSK_ViewVarioplot_iPanZoom == 3) {  // ... pan left
-      $.GSK_ViewVarioplot_iOffsetX += 10;
+    else if($.iMyViewVarioplotPanZoom == 3) {  // ... pan left
+      $.iMyViewVarioplotOffsetX += 10;
       Ui.requestUpdate();
     }
     return true;
   }
 
   function onNextPage() {
-    //Sys.println("DEBUG: GSK_ViewVarioplotDelegate.onNextPage()");
-    if($.GSK_ViewVarioplot_iPanZoom == 0) {
-      Ui.switchToView(new GSK_ViewLog(), new GSK_ViewLogDelegate(), Ui.SLIDE_IMMEDIATE);
+    //Sys.println("DEBUG: MyViewVarioplotDelegate.onNextPage()");
+    if($.iMyViewVarioplotPanZoom == 0) {
+      Ui.switchToView(new MyViewLog(),
+                      new MyViewLogDelegate(),
+                      Ui.SLIDE_IMMEDIATE);
     }
-    else if($.GSK_ViewVarioplot_iPanZoom == 1) {  // ... zoom out
-      var fPlotZoom_previous = $.GSK_oSettings.fVariometerPlotZoom;
-      $.GSK_oSettings.setVariometerPlotZoom($.GSK_oSettings.iVariometerPlotZoom-1);
-      var fPlotZoom_ratio = $.GSK_oSettings.fVariometerPlotZoom/fPlotZoom_previous;
-      $.GSK_ViewVarioplot_iOffsetY = ($.GSK_ViewVarioplot_iOffsetY*fPlotZoom_ratio).toNumber();
-      $.GSK_ViewVarioplot_iOffsetX = ($.GSK_ViewVarioplot_iOffsetX*fPlotZoom_ratio).toNumber();
-      App.Properties.setValue("userVariometerPlotZoom", $.GSK_oSettings.iVariometerPlotZoom);
+    else if($.iMyViewVarioplotPanZoom == 1) {  // ... zoom out
+      var fPlotZoom_previous = $.oMySettings.fVariometerPlotZoom;
+      $.oMySettings.setVariometerPlotZoom($.oMySettings.iVariometerPlotZoom-1);
+      var fPlotZoom_ratio = $.oMySettings.fVariometerPlotZoom/fPlotZoom_previous;
+      $.iMyViewVarioplotOffsetY = ($.iMyViewVarioplotOffsetY*fPlotZoom_ratio).toNumber();
+      $.iMyViewVarioplotOffsetX = ($.iMyViewVarioplotOffsetX*fPlotZoom_ratio).toNumber();
+      App.Properties.setValue("userVariometerPlotZoom", $.oMySettings.iVariometerPlotZoom);
       Ui.requestUpdate();
     }
-    else if($.GSK_ViewVarioplot_iPanZoom == 2) {  // ... pan down
-      $.GSK_ViewVarioplot_iOffsetY -= 10;
+    else if($.iMyViewVarioplotPanZoom == 2) {  // ... pan down
+      $.iMyViewVarioplotOffsetY -= 10;
       Ui.requestUpdate();
     }
-    else if($.GSK_ViewVarioplot_iPanZoom == 3) {  // ... pan right
-      $.GSK_ViewVarioplot_iOffsetX -= 10;
+    else if($.iMyViewVarioplotPanZoom == 3) {  // ... pan right
+      $.iMyViewVarioplotOffsetX -= 10;
       Ui.requestUpdate();
     }
     return true;

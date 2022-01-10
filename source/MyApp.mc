@@ -32,30 +32,30 @@ using Toybox.WatchUi as Ui;
 //
 
 // Application settings
-var GSK_oSettings = null;
+var oMySettings = null;
 
 // (Last) position location/altitude
-var GSK_oPositionLocation = null;
-var GSK_oPositionAltitude = null;
+var oMyPositionLocation = null;
+var oMyPositionAltitude = null;
 
 // Sensors filter
-var GSK_oFilter = null;
+var oMyFilter = null;
 
 // Internal altimeter
-var GSK_oAltimeter = null;
+var oMyAltimeter = null;
 
 // Processing logic
-var GSK_oProcessing = null;
-var GSK_oTimeStart = null;
+var oMyProcessing = null;
+var oMyTimeStart = null;
 
 // Log
-var GSK_iLogIndex = null;
+var iMyLogIndex = null;
 
 // Activity session (recording)
-var GSK_oActivity = null;
+var oMyActivity = null;
 
 // Current view
-var GSK_oCurrentView = null;
+var oMyView = null;
 
 
 //
@@ -63,21 +63,21 @@ var GSK_oCurrentView = null;
 //
 
 // Storage slots
-const GSK_STORAGE_SLOTS = 100;
+const MY_STORAGE_SLOTS = 100;
 
 // No-value strings
-// NOTE: Those ought to be defined in the GSK_App class like other constants but code then fails with an "Invalid Value" error when called upon; BUG?
-const GSK_NOVALUE_BLANK = "";
-const GSK_NOVALUE_LEN2 = "--";
-const GSK_NOVALUE_LEN3 = "---";
-const GSK_NOVALUE_LEN4 = "----";
+// NOTE: Those ought to be defined in the MyApp class like other constants but code then fails with an "Invalid Value" error when called upon; BUG?
+const MY_NOVALUE_BLANK = "";
+const MY_NOVALUE_LEN2 = "--";
+const MY_NOVALUE_LEN3 = "---";
+const MY_NOVALUE_LEN4 = "----";
 
 
 //
 // CLASS
 //
 
-class GSK_App extends App.AppBase {
+class MyApp extends App.AppBase {
 
   //
   // CONSTANTS
@@ -119,20 +119,20 @@ class GSK_App extends App.AppBase {
     AppBase.initialize();
 
     // Application settings
-    $.GSK_oSettings = new GSK_Settings();
+    $.oMySettings = new MySettings();
 
     // Sensors filter
-    $.GSK_oFilter = new GSK_Filter();
+    $.oMyFilter = new MyFilter();
 
     // Internal altimeter
-    $.GSK_oAltimeter = new GSK_Altimeter();
+    $.oMyAltimeter = new MyAltimeter();
 
     // Processing logic
-    $.GSK_oProcessing = new GSK_Processing();
+    $.oMyProcessing = new MyProcessing();
 
     // Log
     var iLogEpoch = 0;
-    for(var n=0; n<$.GSK_STORAGE_SLOTS; n++) {
+    for(var n=0; n<$.MY_STORAGE_SLOTS; n++) {
       var s = n.format("%02d");
       var dictLog = App.Storage.getValue(Lang.format("storLog$1$", [s]));
       if(dictLog == null) {
@@ -140,13 +140,13 @@ class GSK_App extends App.AppBase {
       }
       var i = dictLog.get("timeStart");
       if(i != null and i > iLogEpoch) {
-        $.GSK_iLogIndex = n;
+        $.iMyLogIndex = n;
         iLogEpoch = i;
       }
     }
 
     // Timers
-    $.GSK_oTimeStart = Time.now();
+    $.oMyTimeStart = Time.now();
     // ... UI update
     self.oUpdateTimer = null;
     self.iUpdateLastEpoch = 0;
@@ -155,7 +155,7 @@ class GSK_App extends App.AppBase {
   }
 
   function onStart(state) {
-    //Sys.println("DEBUG: GSK_App.onStart()");
+    //Sys.println("DEBUG: MyApp.onStart()");
 
     // Load settings
     self.loadSettings();
@@ -180,7 +180,7 @@ class GSK_App extends App.AppBase {
   }
 
   function onStop(state) {
-    //Sys.println("DEBUG: GSK_App.onStop()");
+    //Sys.println("DEBUG: MyApp.onStop()");
 
     // Stop timers
     // ... UI update
@@ -202,13 +202,13 @@ class GSK_App extends App.AppBase {
   }
 
   function getInitialView() {
-    //Sys.println("DEBUG: GSK_App.getInitialView()");
+    //Sys.println("DEBUG: MyApp.getInitialView()");
 
-    return [new GSK_ViewGeneral(), new GSK_ViewGeneralDelegate()];
+    return [new MyViewGeneral(), new MyViewGeneralDelegate()];
   }
 
   function onSettingsChanged() {
-    //Sys.println("DEBUG: GSK_App.onSettingsChanged()");
+    //Sys.println("DEBUG: MyApp.onSettingsChanged()");
     self.loadSettings();
     self.updateUi(Time.now().value());
   }
@@ -219,15 +219,15 @@ class GSK_App extends App.AppBase {
   //
 
   function loadSettings() {
-    //Sys.println("DEBUG: GSK_App.loadSettings()");
+    //Sys.println("DEBUG: MyApp.loadSettings()");
 
     // Load settings
-    $.GSK_oSettings.load();
+    $.oMySettings.load();
 
     // Apply settings
-    $.GSK_oFilter.importSettings();
-    $.GSK_oAltimeter.importSettings();
-    $.GSK_oProcessing.importSettings();
+    $.oMyFilter.importSettings();
+    $.oMyAltimeter.importSettings();
+    $.oMyProcessing.importSettings();
 
     // ... safety destination
     var dictDestination = App.Storage.getValue("storDestInUse");
@@ -239,70 +239,70 @@ class GSK_App extends App.AppBase {
       //dictDestination = { "name" => "KIXD", "latitude" => 38.8309167f, "longitude" => -94.8903056f, "elevation" => 331.4f };
       App.Storage.setValue("storDestInUse", dictDestination);
     }
-    $.GSK_oProcessing.setDestination(dictDestination["name"], new Pos.Location({ :latitude => dictDestination["latitude"], :longitude => dictDestination["longitude"], :format => :degrees}), dictDestination["elevation"]);
+    $.oMyProcessing.setDestination(dictDestination["name"], new Pos.Location({ :latitude => dictDestination["latitude"], :longitude => dictDestination["longitude"], :format => :degrees}), dictDestination["elevation"]);
 
     // ... tones
     self.muteTones();
   }
 
   function onSensorEvent(_oInfo) {
-    //Sys.println("DEBUG: GSK_App.onSensorEvent());
+    //Sys.println("DEBUG: MyApp.onSensorEvent());
 
     // Process altimeter data
     var oActivityInfo = Activity.getActivityInfo();  // ... we need *raw ambient* pressure
     if(oActivityInfo has :rawAmbientPressure and oActivityInfo.rawAmbientPressure != null) {
-      $.GSK_oAltimeter.setQFE(oActivityInfo.rawAmbientPressure);
+      $.oMyAltimeter.setQFE(oActivityInfo.rawAmbientPressure);
     }
 
     // Process sensor data
-    $.GSK_oProcessing.processSensorInfo(_oInfo, Time.now().value());
+    $.oMyProcessing.processSensorInfo(_oInfo, Time.now().value());
 
     // Save FIT fields
-    if($.GSK_oActivity != null) {
-      $.GSK_oActivity.setBarometricAltitude($.GSK_oProcessing.fAltitude);
-      if($.GSK_oSettings.iVariometerMode == 0) {
-        $.GSK_oActivity.setVerticalSpeed($.GSK_oProcessing.fVariometer);
+    if($.oMyActivity != null) {
+      $.oMyActivity.setBarometricAltitude($.oMyProcessing.fAltitude);
+      if($.oMySettings.iVariometerMode == 0) {
+        $.oMyActivity.setVerticalSpeed($.oMyProcessing.fVariometer);
       }
-      $.GSK_oActivity.setAcceleration($.GSK_oProcessing.fAcceleration);
+      $.oMyActivity.setAcceleration($.oMyProcessing.fAcceleration);
     }
   }
 
   function onLocationEvent(_oInfo) {
-    //Sys.println("DEBUG: GSK_App.onLocationEvent()");
+    //Sys.println("DEBUG: MyApp.onLocationEvent()");
     var oTimeNow = Time.now();
     var iEpoch = oTimeNow.value();
 
     // Save location
     if(_oInfo has :position) {
-      $.GSK_oPositionLocation = _oInfo.position;
+      $.oMyPositionLocation = _oInfo.position;
     }
 
     // Save altitude
     if(_oInfo has :altitude) {
-      $.GSK_oPositionAltitude = _oInfo.altitude;
+      $.oMyPositionAltitude = _oInfo.altitude;
     }
 
     // Process position data
-    $.GSK_oProcessing.processPositionInfo(_oInfo, iEpoch);
-    if($.GSK_oActivity != null) {
-      $.GSK_oActivity.processPositionInfo(_oInfo, iEpoch, oTimeNow);
+    $.oMyProcessing.processPositionInfo(_oInfo, iEpoch);
+    if($.oMyActivity != null) {
+      $.oMyActivity.processPositionInfo(_oInfo, iEpoch, oTimeNow);
     }
 
     // Automatic Activity recording
-    if($.GSK_oSettings.bGeneralAutoActivity and $.GSK_oProcessing.fGroundSpeed != null) {
-      if($.GSK_oActivity == null) {
-        if($.GSK_oProcessing.fGroundSpeed > 10.0f) {  // 10 m/s = 36km/h
-          $.GSK_oActivity = new GSK_Activity();
-          $.GSK_oActivity.start();
+    if($.oMySettings.bGeneralAutoActivity and $.oMyProcessing.fGroundSpeed != null) {
+      if($.oMyActivity == null) {
+        if($.oMyProcessing.fGroundSpeed > 10.0f) {  // 10 m/s = 36km/h
+          $.oMyActivity = new MyActivity();
+          $.oMyActivity.start();
         }
       }
       else {
-        if($.GSK_oProcessing.fGroundSpeed < 5.0f) {  // 5 m/s = 18km/h
-          $.GSK_oActivity.pause();
+        if($.oMyProcessing.fGroundSpeed < 5.0f) {  // 5 m/s = 18km/h
+          $.oMyActivity.pause();
         }
-        else if(!$.GSK_oActivity.isRecording() and $.GSK_oProcessing.fGroundSpeed > 10.0f) {  // 10 m/s = 36km/h
-          $.GSK_oActivity.addLap();
-          $.GSK_oActivity.resume();
+        else if(!$.oMyActivity.isRecording() and $.oMyProcessing.fGroundSpeed > 10.0f) {  // 10 m/s = 36km/h
+          $.oMyActivity.addLap();
+          $.oMyActivity.resume();
         }
       }
     }
@@ -311,23 +311,23 @@ class GSK_App extends App.AppBase {
     self.updateUi(iEpoch);
 
     // Save FIT fields
-    if($.GSK_oActivity != null) {
-      if($.GSK_oSettings.iVariometerMode == 1) {
-        $.GSK_oActivity.setVerticalSpeed($.GSK_oProcessing.fVariometer);
+    if($.oMyActivity != null) {
+      if($.oMySettings.iVariometerMode == 1) {
+        $.oMyActivity.setVerticalSpeed($.oMyProcessing.fVariometer);
       }
-      $.GSK_oActivity.setRateOfTurn($.GSK_oProcessing.fRateOfTurn);
+      $.oMyActivity.setRateOfTurn($.oMyProcessing.fRateOfTurn);
     }
   }
 
   function onUpdateTimer_init() {
-    //Sys.println("DEBUG: GSK_App.onUpdateTimer_init()");
+    //Sys.println("DEBUG: MyApp.onUpdateTimer_init()");
     self.onUpdateTimer();
     self.oUpdateTimer = new Timer.Timer();
     self.oUpdateTimer.start(method(:onUpdateTimer), 5000, true);
   }
 
   function onUpdateTimer() {
-    //Sys.println("DEBUG: GSK_App.onUpdateTimer()");
+    //Sys.println("DEBUG: MyApp.onUpdateTimer()");
     var iEpoch = Time.now().value();
     if(iEpoch-self.iUpdateLastEpoch > 1) {
       self.updateUi(iEpoch);
@@ -335,28 +335,28 @@ class GSK_App extends App.AppBase {
   }
 
   function onTonesTimer() {
-    //Sys.println("DEBUG: GSK_App.onTonesTimer()");
+    //Sys.println("DEBUG: MyApp.onTonesTimer()");
     self.playTones();
     self.iTonesTick++;
   }
 
   function updateUi(_iEpoch) {
-    //Sys.println("DEBUG: GSK_App.updateUi()");
+    //Sys.println("DEBUG: MyApp.updateUi()");
 
     // Check sensor data age
-    if($.GSK_oProcessing.iSensorEpoch != null and _iEpoch-$.GSK_oProcessing.iSensorEpoch > 10) {
-      $.GSK_oProcessing.resetSensorData();
-      $.GSK_oAltimeter.reset();
+    if($.oMyProcessing.iSensorEpoch != null and _iEpoch-$.oMyProcessing.iSensorEpoch > 10) {
+      $.oMyProcessing.resetSensorData();
+      $.oMyAltimeter.reset();
     }
 
     // Check position data age
-    if($.GSK_oProcessing.iPositionEpoch != null and _iEpoch-$.GSK_oProcessing.iPositionEpoch > 10) {
-      $.GSK_oProcessing.resetPositionData();
+    if($.oMyProcessing.iPositionEpoch != null and _iEpoch-$.oMyProcessing.iPositionEpoch > 10) {
+      $.oMyProcessing.resetPositionData();
     }
 
     // Update UI
-    if($.GSK_oCurrentView != null) {
-      $.GSK_oCurrentView.updateUi();
+    if($.oMyView != null) {
+      $.oMyView.updateUi();
       self.iUpdateLastEpoch = _iEpoch;
     }
   }
@@ -373,10 +373,10 @@ class GSK_App extends App.AppBase {
     // Enable tones
     self.iTones = 0;
     if(Attn has :playTone) {
-      if(_iTones & self.TONES_SAFETY and $.GSK_oSettings.bSoundsSafetyTones) {
+      if(_iTones & self.TONES_SAFETY and $.oMySettings.bSoundsSafetyTones) {
         self.iTones |= self.TONES_SAFETY;
       }
-      if(_iTones & self.TONES_VARIOMETER and $.GSK_oSettings.bSoundsVariometerTones) {
+      if(_iTones & self.TONES_VARIOMETER and $.oMySettings.bSoundsVariometerTones) {
         self.iTones |= self.TONES_VARIOMETER;
       }
     }
@@ -392,27 +392,27 @@ class GSK_App extends App.AppBase {
   }
 
   function playTones() {
-    //Sys.println(Lang.format("DEBUG: GSK_App.playTones() @ $1$", [self.iTonesTick]));
+    //Sys.println(Lang.format("DEBUG: MyApp.playTones() @ $1$", [self.iTonesTick]));
 
     // Check mute distance
-    if($.GSK_oSettings.fSoundsMuteDistance > 0.0f
-       and $.GSK_oProcessing.fDistanceToDestination != null
-       and $.GSK_oProcessing.fDistanceToDestination <= $.GSK_oSettings.fSoundsMuteDistance) {
-      //Sys.println(Lang.format("DEBUG: playTone: mute! @ $1$ ($2$ <= $3$)", [self.iTonesTick, $.GSK_oProcessing.fDistanceToDestination, $.GSK_oSettings.fSoundsMuteDistance]));
+    if($.oMySettings.fSoundsMuteDistance > 0.0f
+       and $.oMyProcessing.fDistanceToDestination != null
+       and $.oMyProcessing.fDistanceToDestination <= $.oMySettings.fSoundsMuteDistance) {
+      //Sys.println(Lang.format("DEBUG: playTone: mute! @ $1$ ($2$ <= $3$)", [self.iTonesTick, $.oMyProcessing.fDistanceToDestination, $.oMySettings.fSoundsMuteDistance]));
       return;
     }
 
     // Alert tones (priority over variometer)
     if(self.iTones & self.TONES_SAFETY) {
-      if($.GSK_oProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {  // position accuracy is good enough
-        if($.GSK_oProcessing.bDecision and !$.GSK_oProcessing.bGrace) {
-          if($.GSK_oProcessing.bAltitudeCritical and self.iTonesTick-self.iTonesLastTick >= (self.iTones & self.TONES_VARIOMETER ? 10 : 1)) {
+      if($.oMyProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {  // position accuracy is good enough
+        if($.oMyProcessing.bDecision and !$.oMyProcessing.bGrace) {
+          if($.oMyProcessing.bAltitudeCritical and self.iTonesTick-self.iTonesLastTick >= (self.iTones & self.TONES_VARIOMETER ? 10 : 1)) {
             //Sys.println(Lang.format("DEBUG: playTone = altitude critical @ $1$", [self.iTonesTick]));
             Attn.playTone(Attn.TONE_LOUD_BEEP);
             self.iTonesLastTick = self.iTonesTick;
             return;
           }
-          else if($.GSK_oProcessing.bAltitudeWarning and self.iTonesTick-self.iTonesLastTick >= (self.iTones & self.TONES_VARIOMETER ? 30 : 3)) {
+          else if($.oMyProcessing.bAltitudeWarning and self.iTonesTick-self.iTonesLastTick >= (self.iTones & self.TONES_VARIOMETER ? 30 : 3)) {
             //Sys.println(Lang.format("DEBUG: playTone: altitude warning @ $1$", [self.iTonesTick]));
             Attn.playTone(Attn.TONE_LOUD_BEEP);
             self.iTonesLastTick = self.iTonesTick;
@@ -433,9 +433,9 @@ class GSK_App extends App.AppBase {
     //       depending on the ratio between the ascent speed and the variometer range.
     if(self.iTones & self.TONES_VARIOMETER)
     {
-      var fValue = $.GSK_oSettings.iGeneralDisplayFilter >= 1 ? $.GSK_oProcessing.fVariometer_filtered : $.GSK_oProcessing.fVariometer;
+      var fValue = $.oMySettings.iGeneralDisplayFilter >= 1 ? $.oMyProcessing.fVariometer_filtered : $.oMyProcessing.fVariometer;
       if(fValue != null and fValue > 0.05f) {
-        if(self.iTonesTick-self.iTonesLastTick >= 20.0f-18.0f*fValue/$.GSK_oSettings.fVariometerRange) {
+        if(self.iTonesTick-self.iTonesLastTick >= 20.0f-18.0f*fValue/$.oMySettings.fVariometerRange) {
           //Sys.println(Lang.format("DEBUG: playTone: variometer @ $1$", [self.iTonesTick]));
           Attn.playTone(Attn.TONE_KEY);
           self.iTonesLastTick = self.iTonesTick;
@@ -446,7 +446,7 @@ class GSK_App extends App.AppBase {
   }
 
   function importStorageData(_sFile) {
-    //Sys.println(Lang.format("DEBUG: GSK_App.importStorageData($1$)", [_sFile]));
+    //Sys.println(Lang.format("DEBUG: MyApp.importStorageData($1$)", [_sFile]));
 
     Comm.makeWebRequest(Lang.format("$1$/$2$.json", [App.Properties.getValue("userStorageRepositoryURL"), _sFile]),
                         null,
@@ -455,7 +455,7 @@ class GSK_App extends App.AppBase {
   }
 
   function onStorageDataReceive(_iResponseCode, _dictData) {
-    //Sys.println(Lang.format("DEBUG: GSK_App.onStorageDataReceive($1$, ...)", [_iResponseCode]));
+    //Sys.println(Lang.format("DEBUG: MyApp.onStorageDataReceive($1$, ...)", [_iResponseCode]));
 
     // Check response code
     if(_iResponseCode != 200) {
@@ -470,7 +470,7 @@ class GSK_App extends App.AppBase {
     // .. .destinations
     if(_dictData.hasKey("destinations")) {
       var dictDestinations = _dictData.get("destinations");
-      for(var n=0; n<$.GSK_STORAGE_SLOTS; n++) {
+      for(var n=0; n<$.MY_STORAGE_SLOTS; n++) {
         var s = n.format("%02d");
         if(dictDestinations.hasKey(s)) {
           var dictDestination = dictDestinations.get(s);
@@ -492,12 +492,12 @@ class GSK_App extends App.AppBase {
   }
 
   function clearStorageData() {
-    //Sys.println("DEBUG: GSK_App.clearStorageData()");
+    //Sys.println("DEBUG: MyApp.clearStorageData()");
 
     // Delete all storage data
 
     // .. .destinations
-    for(var n=0; n<$.GSK_STORAGE_SLOTS; n++) {
+    for(var n=0; n<$.MY_STORAGE_SLOTS; n++) {
       var s = n.format("%02d");
       App.Storage.deleteValue(Lang.format("storDest$1$", [s]));
     }

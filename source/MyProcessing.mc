@@ -26,7 +26,7 @@ using Toybox.Time;
 // CLASS
 //
 
-class GSK_Processing {
+class MyProcessing {
 
   //
   // CONSTANTS
@@ -136,7 +136,7 @@ class GSK_Processing {
   }
 
   function resetSensorData() {
-    //Sys.println("DEBUG: GSK_Processing.resetSensorData()");
+    //Sys.println("DEBUG: MyProcessing.resetSensorData()");
 
     // Reset
     // ... we must calculate our own vertical speed
@@ -150,17 +150,17 @@ class GSK_Processing {
     self.fAltitude = null;
     self.fAltitude_filtered = null;
     // ... altimeter calculated values
-    if($.GSK_oSettings.iVariometerMode == 0) {
+    if($.oMySettings.iVariometerMode == 0) {
       self.fVariometer = null;
       self.fVariometer_filtered = null;
-      $.GSK_oFilter.resetFilter(GSK_Filter.VARIOMETER);
+      $.oMyFilter.resetFilter(MyFilter.VARIOMETER);
     }
     // ... filters
-    $.GSK_oFilter.resetFilter(GSK_Filter.ACCELERATION);
+    $.oMyFilter.resetFilter(MyFilter.ACCELERATION);
   }
 
   function resetPositionData() {
-    //Sys.println("DEBUG: GSK_Processing.resetPositionData()");
+    //Sys.println("DEBUG: MyProcessing.resetPositionData()");
 
     // Reset
     // ... we must calculate our own potential energy "vertical speed"
@@ -181,10 +181,10 @@ class GSK_Processing {
     self.fHeading = null;
     self.fHeading_filtered = null;
     // ... position calculated values
-    if($.GSK_oSettings.iVariometerMode == 1) {
+    if($.oMySettings.iVariometerMode == 1) {
       self.fVariometer = null;
       self.fVariometer_filtered = null;
-      $.GSK_oFilter.resetFilter(GSK_Filter.VARIOMETER);
+      $.oMyFilter.resetFilter(MyFilter.VARIOMETER);
     }
     self.fEnergyTotal = null;
     self.fEnergyCinetic = null;
@@ -207,15 +207,15 @@ class GSK_Processing {
     self.bAltitudeCritical = false;
     self.bAltitudeWarning = false;
     // ... filters
-    $.GSK_oFilter.resetFilter(GSK_Filter.GROUNDSPEED);
-    $.GSK_oFilter.resetFilter(GSK_Filter.HEADING_X);
-    $.GSK_oFilter.resetFilter(GSK_Filter.HEADING_Y);
-    $.GSK_oFilter.resetFilter(GSK_Filter.RATEOFTURN);
+    $.oMyFilter.resetFilter(MyFilter.GROUNDSPEED);
+    $.oMyFilter.resetFilter(MyFilter.HEADING_X);
+    $.oMyFilter.resetFilter(MyFilter.HEADING_Y);
+    $.oMyFilter.resetFilter(MyFilter.RATEOFTURN);
   }
 
   function importSettings() {
     // Energy compensation
-    self.fEnergyCineticLossFactor = 1.0f - $.GSK_oSettings.fVariometerEnergyEfficiency;
+    self.fEnergyCineticLossFactor = 1.0f - $.oMySettings.fVariometerEnergyEfficiency;
   }
 
   function setDestination(_sName, _oLocation, _fElevation) {
@@ -225,14 +225,14 @@ class GSK_Processing {
   }
 
   function processSensorInfo(_oInfo, _iEpoch) {
-    //Sys.println("DEBUG: GSK_Processing.processSensorInfo()");
+    //Sys.println("DEBUG: MyProcessing.processSensorInfo()");
 
     // Process sensor data
 
     // ... acceleration
     if(_oInfo has :accel and _oInfo.accel != null) {
       self.fAcceleration = Math.sqrt(_oInfo.accel[0]*_oInfo.accel[0]+_oInfo.accel[1]*_oInfo.accel[1]+_oInfo.accel[2]*_oInfo.accel[2])/1000.0f;
-      self.fAcceleration_filtered = $.GSK_oFilter.filterValue(GSK_Filter.ACCELERATION, self.fAcceleration);
+      self.fAcceleration_filtered = $.oMyFilter.filterValue(MyFilter.ACCELERATION, self.fAcceleration);
       //Sys.println(Lang.format("DEBUG: (Sensor.Info) acceleration = $1$ ~ $2$", [self.fAcceleration, self.fAcceleration_filtered]));
     }
     //else {
@@ -240,19 +240,19 @@ class GSK_Processing {
     //}
 
     // ... altitude
-    if($.GSK_oAltimeter.fAltitudeActual != null) {  // ... the closest to the device's raw barometric sensor value
-      self.fAltitude = $.GSK_oAltimeter.fAltitudeActual;
-      self.fAltitude_filtered = $.GSK_oAltimeter.fAltitudeActual_filtered;
+    if($.oMyAltimeter.fAltitudeActual != null) {  // ... the closest to the device's raw barometric sensor value
+      self.fAltitude = $.oMyAltimeter.fAltitudeActual;
+      self.fAltitude_filtered = $.oMyAltimeter.fAltitudeActual_filtered;
     }
     //else {
     //  Sys.println("WARNING: Internal altimeter has no altitude available");
     //}
 
     // ... variometer
-    if($.GSK_oSettings.iVariometerMode == 0 and self.fAltitude != null) {  // ... altimetric variometer
+    if($.oMySettings.iVariometerMode == 0 and self.fAltitude != null) {  // ... altimetric variometer
       if(self.iPreviousAltitudeEpoch != null and self.iSensorEpoch-self.iPreviousAltitudeEpoch != 0) {
         self.fVariometer = (self.fAltitude-self.fPreviousAltitude) / (self.iSensorEpoch-self.iPreviousAltitudeEpoch);
-        self.fVariometer_filtered = $.GSK_oFilter.filterValue(GSK_Filter.VARIOMETER, self.fVariometer);
+        self.fVariometer_filtered = $.oMyFilter.filterValue(MyFilter.VARIOMETER, self.fVariometer);
         //Sys.println(Lang.format("DEBUG: (Calculated) altimetric variometer = $1$ ~ $2$", [self.fVariometer, self.fVariometer_filtered]));
       }
       self.iPreviousAltitudeEpoch = self.iSensorEpoch;
@@ -265,7 +265,7 @@ class GSK_Processing {
   }
 
   function processPositionInfo(_oInfo, _iEpoch) {
-    //Sys.println("DEBUG: GSK_Processing.processPositionInfo()");
+    //Sys.println("DEBUG: MyProcessing.processPositionInfo()");
 
     // Process position data
     var fValue;
@@ -335,7 +335,7 @@ class GSK_Processing {
     // ... ground speed
     if(_oInfo has :speed and _oInfo.speed != null) {
       self.fGroundSpeed = _oInfo.speed;
-      self.fGroundSpeed_filtered = $.GSK_oFilter.filterValue(GSK_Filter.GROUNDSPEED, self.fGroundSpeed);
+      self.fGroundSpeed_filtered = $.oMyFilter.filterValue(MyFilter.GROUNDSPEED, self.fGroundSpeed);
       //Sys.println(Lang.format("DEBUG: (Position.Info) ground speed = $1$ ~ $2$", [self.fGroundSpeed, self.fGroundSpeed_filtered]));
     }
     //else {
@@ -346,13 +346,13 @@ class GSK_Processing {
     }
 
     // ... variometer
-    if($.GSK_oSettings.iVariometerMode == 1 and self.fAltitude != null and self.fGroundSpeed != null) {  // ... energetic variometer
+    if($.oMySettings.iVariometerMode == 1 and self.fAltitude != null and self.fGroundSpeed != null) {  // ... energetic variometer
       self.fEnergyCinetic = 0.5f*self.fGroundSpeed*self.fGroundSpeed;
       self.fEnergyTotal = self.fEnergyCinetic + 9.80665f*self.fAltitude;
       //Sys.println(Lang.format("DEBUG: (Calculated) total energy = $1$", [self.fEnergyTotal]));
       if(self.iPreviousEnergyGpoch != null and self.iPositionGpoch-self.iPreviousEnergyGpoch != 0) {
         self.fVariometer = (self.fEnergyTotal-self.fPreviousEnergyTotal-self.fEnergyCineticLossFactor*(self.fEnergyCinetic-self.fPreviousEnergyCinetic)) / (self.iPositionGpoch-self.iPreviousEnergyGpoch) * 0.1019716213f;  // ... 1.0f / 9.80665f = 1.019716213f
-        self.fVariometer_filtered = $.GSK_oFilter.filterValue(GSK_Filter.VARIOMETER, self.fVariometer);
+        self.fVariometer_filtered = $.oMyFilter.filterValue(MyFilter.VARIOMETER, self.fVariometer);
         //Sys.println(Lang.format("DEBUG: (Calculated) energetic variometer = $1$ ~ $2$", [self.fVariometer, self.fVariometer_filtered]));
       }
       self.iPreviousEnergyGpoch = self.iPositionGpoch;
@@ -372,8 +372,8 @@ class GSK_Processing {
         fValue += 6.28318530718f;
       }
       self.fHeading = fValue;
-      fValue = $.GSK_oFilter.filterValue(GSK_Filter.HEADING_X, Math.cos(self.fHeading));
-      fValue = Math.atan2($.GSK_oFilter.filterValue(GSK_Filter.HEADING_Y, Math.sin(self.fHeading)), fValue);
+      fValue = $.oMyFilter.filterValue(MyFilter.HEADING_X, Math.cos(self.fHeading));
+      fValue = Math.atan2($.oMyFilter.filterValue(MyFilter.HEADING_Y, Math.sin(self.fHeading)), fValue);
       if(fValue == NaN) {
         fValue = null;  // WARNING! The one case where the filtered value may be null while the instantaneous value is not!
       }
@@ -399,7 +399,7 @@ class GSK_Processing {
           fValue -= 6.28318530718f;
         }
         self.fRateOfTurn = fValue;
-        self.fRateOfTurn_filtered = $.GSK_oFilter.filterValue(GSK_Filter.RATEOFTURN, self.fRateOfTurn);
+        self.fRateOfTurn_filtered = $.oMyFilter.filterValue(MyFilter.RATEOFTURN, self.fRateOfTurn);
         //Sys.println(Lang.format("DEBUG: (Calculated) rate of turn = $1$ ~ $2$", [self.fRateOfTurn, self.fRateOfTurn_filtered]));
       }
       self.iPreviousHeadingGpoch = self.iPositionGpoch;
@@ -445,7 +445,7 @@ class GSK_Processing {
   }
 
   function processSafety() {
-    //Sys.println("DEBUG: GSK_Processing.processSafety()");
+    //Sys.println("DEBUG: MyProcessing.processSafety()");
     self.bSafetyStateful = false;
     if(!self.bPositionStateful or self.fDestinationElevation == null or self.fDistanceToDestination == null) {
       //Sys.println("ERROR: Incomplete data; cannot proceed");
@@ -464,16 +464,16 @@ class GSK_Processing {
     if(self.fSpeedToDestination == null) {
       //Sys.println("WARNING: No speed/bearing data");
       self.bAscent = false;
-      self.fFinesse = $.GSK_oSettings.iSafetyFinesse.toFloat();
+      self.fFinesse = $.oMySettings.iSafetyFinesse.toFloat();
       self.bDecision = false;
       self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / self.fFinesse;
       self.fHeightAtDestination = self.fAltitudeAtDestination - self.fDestinationElevation;
       self.bAltitudeCritical = false;
       self.bAltitudeWarning = false;
-      if(self.fHeightAtDestination <= $.GSK_oSettings.fSafetyHeightCritical) {
+      if(self.fHeightAtDestination <= $.oMySettings.fSafetyHeightCritical) {
         self.bAltitudeCritical = true;
       }
-      else if(self.fHeightAtDestination <= $.GSK_oSettings.fSafetyHeightWarning) {
+      else if(self.fHeightAtDestination <= $.oMySettings.fSafetyHeightWarning) {
         self.bAltitudeWarning = true;
       }
       self.bSafetyStateful = true;
@@ -485,9 +485,9 @@ class GSK_Processing {
 
     // Grace period
     if(self.iGraceEpoch == null) {
-      if($.GSK_oSettings.iSafetyGraceDuration > 0) {
+      if($.oMySettings.iSafetyGraceDuration > 0) {
         //Sys.println("DEBUG: Grace period automatically enabled");
-        self.iGraceEpoch = Time.now().value() + $.GSK_oSettings.iSafetyGraceDuration;
+        self.iGraceEpoch = Time.now().value() + $.oMySettings.iSafetyGraceDuration;
         self.bGrace = true;
       }
       else {
@@ -514,7 +514,7 @@ class GSK_Processing {
     // ... finesse
     if(self.bAscent) {
       // ALGO: Let's use the user-specified reference finesse to estimate where we'd stand if we were to descend and head straight back home
-      self.fFinesse = $.GSK_oSettings.iSafetyFinesse.toFloat();
+      self.fFinesse = $.oMySettings.iSafetyFinesse.toFloat();
     }
     else {
       // ALGO: The "descending (really!)" test above guarantees a negative, non-zero variometer
@@ -529,7 +529,7 @@ class GSK_Processing {
     //       meaningful alerts.
     if(self.fFinesse > 0.0f) {
       // ALGO: We always use the *worst* between the *actual* and the user-specified *reference* finesse
-      var fFinesse_safety = (self.fFinesse < $.GSK_oSettings.iSafetyFinesse) ? self.fFinesse : $.GSK_oSettings.iSafetyFinesse;
+      var fFinesse_safety = (self.fFinesse < $.oMySettings.iSafetyFinesse) ? self.fFinesse : $.oMySettings.iSafetyFinesse;
       // ALGO: Let's start by estimating our altitude at destination assuming we're *heading straight to it*, i.e. speed-to(wards)-destination
       //       is equal to ground speed.
       //       This is the worst-case scenario as far as finesse is concerned BUT the best-case scenario as far as our heading
@@ -539,7 +539,7 @@ class GSK_Processing {
       // ALGO: Then, if the corresponding height at destination is below our decision height, let's re-calculate our altitude at
       //       destination by using our *actual* speed-to(wards)-destination (which accounts for our *heading vs bearing to destination*)
       //       UNLESS we are within the grace period.
-      self.bDecision = (self.fHeightAtDestination <= $.GSK_oSettings.fSafetyHeightDecision);
+      self.bDecision = (self.fHeightAtDestination <= $.oMySettings.fSafetyHeightDecision);
       if(self.bDecision and !self.bGrace) {
         if(self.fSpeedToDestination > 0.0f) {
           self.fAltitudeAtDestination = self.fAltitude - self.fDistanceToDestination / fFinesse_safety * self.fGroundSpeed_filtered / self.fSpeedToDestination;
@@ -568,10 +568,10 @@ class GSK_Processing {
     // ... status
     self.bAltitudeCritical = false;
     self.bAltitudeWarning = false;
-    if(self.fHeightAtDestination <= $.GSK_oSettings.fSafetyHeightCritical) {
+    if(self.fHeightAtDestination <= $.oMySettings.fSafetyHeightCritical) {
       self.bAltitudeCritical = true;
     }
-    else if(self.fHeightAtDestination <= $.GSK_oSettings.fSafetyHeightWarning) {
+    else if(self.fHeightAtDestination <= $.oMySettings.fSafetyHeightWarning) {
       self.bAltitudeWarning = true;
     }
 

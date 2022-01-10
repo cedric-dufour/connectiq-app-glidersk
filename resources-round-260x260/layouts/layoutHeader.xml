@@ -1,7 +1,7 @@
 <!-- -*- mode:xml; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab: -->
 <layouts>
   <layout id="layoutHeader">
-    <drawable class="GSK_DrawableHeader" />
+    <drawable class="MyDrawableHeader" />
     <drawable id="drawContentBorders" />
     <!-- Header -->
     <label id="valueBatteryLevel" x="92" y="11" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" font="@Fonts.fontStatus" />

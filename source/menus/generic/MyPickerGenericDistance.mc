@@ -19,24 +19,26 @@
 using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
-class GSK_PickerGenericLatitude extends PickerGenericLatitude {
+class MyPickerGenericDistance extends PickerGenericDistance {
 
   //
-  // FUNCTIONS: PickerGenericLatitude (override/implement)
+  // FUNCTIONS: PickerGenericDistance (override/implement)
   //
 
   function initialize(_context, _item) {
-    if(_context == :contextDestination) {
-      if(_item == :itemPosition) {
-        var d = App.Storage.getValue("storDestInUse");
-        PickerGenericLatitude.initialize(Ui.loadResource(Rez.Strings.titleDestinationLatitude), d != null ? d["latitude"] : 0.0f);
+    if(_context == :contextSettings) {
+      if(_item == :itemSoundsMuteDistance) {
+        PickerGenericDistance.initialize(Ui.loadResource(Rez.Strings.titleSoundsMuteDistance),
+                                         App.Properties.getValue("userSoundsMuteDistance"),
+                                         $.oMySettings.iUnitDistance,
+                                         false);
       }
     }
   }
 
 }
 
-class GSK_PickerGenericLatitudeDelegate extends Ui.PickerDelegate {
+class MyPickerGenericDistanceDelegate extends Ui.PickerDelegate {
 
   //
   // VARIABLES
@@ -57,16 +59,11 @@ class GSK_PickerGenericLatitudeDelegate extends Ui.PickerDelegate {
   }
 
   function onAccept(_amValues) {
-    var fValue = PickerGenericLatitude.getValue(_amValues);
-    if(self.context == :contextDestination) {
-      var d = App.Storage.getValue("storDestInUse");
-      if(d == null) {
-        d = { "name" => "----", "latitude" => 0.0f, "longitude" => 0.0f, "elevation" => 0.0f };
+    var fValue = PickerGenericDistance.getValue(_amValues, $.oMySettings.iUnitDistance);
+    if(self.context == :contextSettings) {
+      if(self.item == :itemSoundsMuteDistance) {
+        App.Properties.setValue("userSoundsMuteDistance", fValue);
       }
-      if(self.item == :itemPosition) {
-        d["latitude"] = fValue;
-      }
-      App.Storage.setValue("storDestInUse", d);
     }
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }

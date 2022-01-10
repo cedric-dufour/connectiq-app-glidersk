@@ -19,26 +19,25 @@
 using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
-class GSK_PickerGenericPressure extends PickerGenericPressure {
+class MyPickerGenericLongitude extends PickerGenericLongitude {
 
   //
-  // FUNCTIONS: PickerGenericPressure (override/implement)
+  // FUNCTIONS: PickerGenericLongitude (override/implement)
   //
 
   function initialize(_context, _item) {
-    if(_context == :contextSettings) {
-      if(_item == :itemAltimeterCalibration) {
-        PickerGenericPressure.initialize(Ui.loadResource(Rez.Strings.titleAltimeterCalibrationQNH), $.GSK_oAltimeter.fQNH, $.GSK_oSettings.iUnitPressure, false);
-      }
-      else if(_item == :itemAltimeterCorrection) {
-        PickerGenericPressure.initialize(Ui.loadResource(Rez.Strings.titleAltimeterCorrectionAbsolute), App.Properties.getValue("userAltimeterCorrectionAbsolute"), $.GSK_oSettings.iUnitPressure, true);
+    if(_context == :contextDestination) {
+      if(_item == :itemPosition) {
+        var d = App.Storage.getValue("storDestInUse");
+        PickerGenericLongitude.initialize(Ui.loadResource(Rez.Strings.titleDestinationLongitude),
+                                          d != null ? d["longitude"] : 0.0f);
       }
     }
   }
 
 }
 
-class GSK_PickerGenericPressureDelegate extends Ui.PickerDelegate {
+class MyPickerGenericLongitudeDelegate extends Ui.PickerDelegate {
 
   //
   // VARIABLES
@@ -59,15 +58,16 @@ class GSK_PickerGenericPressureDelegate extends Ui.PickerDelegate {
   }
 
   function onAccept(_amValues) {
-    var fValue = PickerGenericPressure.getValue(_amValues, $.GSK_oSettings.iUnitPressure);
-    if(self.context == :contextSettings) {
-      if(self.item == :itemAltimeterCalibration) {
-        $.GSK_oAltimeter.setQNH(fValue);
-        App.Properties.setValue("userAltimeterCalibrationQNH", $.GSK_oAltimeter.fQNH);
+    var fValue = PickerGenericLongitude.getValue(_amValues);
+    if(self.context == :contextDestination) {
+      var d = App.Storage.getValue("storDestInUse");
+      if(d == null) {
+        d = {"name" => "----", "latitude" => 0.0f, "longitude" => 0.0f, "elevation" => 0.0f};
       }
-      else if(self.item == :itemAltimeterCorrection) {
-        App.Properties.setValue("userAltimeterCorrectionAbsolute", fValue);
+      if(self.item == :itemPosition) {
+        d["longitude"] = fValue;
       }
+      App.Storage.setValue("storDestInUse", d);
     }
     Ui.popView(Ui.SLIDE_IMMEDIATE);
   }

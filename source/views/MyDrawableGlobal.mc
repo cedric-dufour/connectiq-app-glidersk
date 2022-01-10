@@ -19,7 +19,7 @@
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
-class GSK_DrawableGlobal extends Ui.Drawable {
+class MyDrawableGlobal extends Ui.Drawable {
 
   //
   // VARIABLES
@@ -43,7 +43,7 @@ class GSK_DrawableGlobal extends Ui.Drawable {
   //
 
   function initialize() {
-    Drawable.initialize({ :identifier => "GSK_DrawableGlobal" });
+    Drawable.initialize({ :identifier => "MyDrawableGlobal" });
 
     // Resources
     self.oRezFieldsBackground = new Rez.Drawables.drawFieldsBackground();

@@ -19,7 +19,7 @@
 using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
-class GSK_PickerGenericOnOff extends PickerGenericOnOff {
+class MyPickerGenericOnOff extends PickerGenericOnOff {
 
   //
   // FUNCTIONS: PickerGenericOnOff (override/implement)
@@ -28,23 +28,27 @@ class GSK_PickerGenericOnOff extends PickerGenericOnOff {
   function initialize(_context, _item) {
     if(_context == :contextSettings) {
       if(_item == :itemSoundsVariometerTones) {
-        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleSoundsVariometerTones), App.Properties.getValue("userSoundsVariometerTones"));
+        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleSoundsVariometerTones),
+                                      App.Properties.getValue("userSoundsVariometerTones"));
       }
       else if(_item == :itemSoundsSafetyTones) {
-        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleSoundsSafetyTones), App.Properties.getValue("userSoundsSafetyTones"));
+        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleSoundsSafetyTones),
+                                      App.Properties.getValue("userSoundsSafetyTones"));
       }
       else if(_item == :itemGeneralAutoActivity) {
-        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleGeneralAutoActivity), App.Properties.getValue("userGeneralAutoActivity"));
+        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleGeneralAutoActivity),
+                                      App.Properties.getValue("userGeneralAutoActivity"));
       }
       else if(_item == :itemGeneralLapKey) {
-        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleGeneralLapKey), App.Properties.getValue("userGeneralLapKey"));
+        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleGeneralLapKey),
+                                      App.Properties.getValue("userGeneralLapKey"));
       }
     }
   }
 
 }
 
-class GSK_PickerGenericOnOffDelegate extends Ui.PickerDelegate {
+class MyPickerGenericOnOffDelegate extends Ui.PickerDelegate {
 
   //
   // VARIABLES
