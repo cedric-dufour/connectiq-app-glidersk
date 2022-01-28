@@ -51,11 +51,14 @@ class MySettings {
   public var bSoundsVariometerTones as Boolean = true;
   public var bSoundsSafetyTones as Boolean = true;
   public var fSoundsMuteDistance as Float = 2000.0f;
+  // ... activity
+  public var bActivityAuto as Boolean = false;
+  public var fActivityAutoSpeedStart as Float = 9.0f;
+  public var fActivityAutoSpeedStop as Float = 3.0f;
   // ... general
   public var iGeneralTimeConstant as Number = 5;
   public var iGeneralDisplayFilter as Number = 1;
   public var iGeneralBackgroundColor as Number = Gfx.COLOR_WHITE;
-  public var bGeneralAutoActivity as Boolean = false;
   public var bGeneralLapKey as Boolean = true;
   // ... units
   public var iUnitDistance as Number = -1;
@@ -115,11 +118,14 @@ class MySettings {
     self.setSoundsVariometerTones(self.loadSoundsVariometerTones());
     self.setSoundsSafetyTones(self.loadSoundsSafetyTones());
     self.setSoundsMuteDistance(self.loadSoundsMuteDistance());
+    // ... activity
+    self.setActivityAuto(self.loadActivityAuto());
+    self.setActivityAutoSpeedStart(self.loadActivityAutoSpeedStart());
+    self.setActivityAutoSpeedStop(self.loadActivityAutoSpeedStop());
     // ... general
     self.setGeneralTimeConstant(self.loadGeneralTimeConstant());
     self.setGeneralDisplayFilter(self.loadGeneralDisplayFilter());
     self.setGeneralBackgroundColor(self.loadGeneralBackgroundColor());
-    self.setGeneralAutoActivity(self.loadGeneralAutoActivity());
     self.setGeneralLapKey(self.loadGeneralLapKey());
     // ... units
     self.setUnitDistance(self.loadUnitDistance());
@@ -442,6 +448,51 @@ class MySettings {
     self.fSoundsMuteDistance = _fValue;
   }
 
+  function loadActivityAuto() as Boolean {
+    var bValue = App.Properties.getValue("userActivityAuto") as Boolean?;
+    return bValue != null ? bValue : false;
+  }
+  function saveActivityAuto(_bValue as Boolean) as Void {
+    App.Properties.setValue("userActivityAuto", _bValue as App.PropertyValueType);
+  }
+  function setActivityAuto(_bValue as Boolean) as Void {
+    self.bActivityAuto = _bValue;
+  }
+
+  function loadActivityAutoSpeedStart() as Float {  // [m/s]
+    var fValue = App.Properties.getValue("userActivityAutoSpeedStart") as Float?;
+    return fValue != null ? fValue : 9.0f;
+  }
+  function saveActivityAutoSpeedStart(_fValue as Float) as Void {  // [m/s]
+    App.Properties.setValue("userActivityAutoSpeedStart", _fValue as App.PropertyValueType);
+  }
+  function setActivityAutoSpeedStart(_fValue as Float) as Void {  // [m/s]
+    if(_fValue > 99.9f) {
+      _fValue = 99.9f;
+    }
+    else if(_fValue < 0.0f) {
+      _fValue = 0.0f;
+    }
+    self.fActivityAutoSpeedStart = _fValue;
+  }
+
+  function loadActivityAutoSpeedStop() as Float {  // [m/s]
+    var fValue = App.Properties.getValue("userActivityAutoSpeedStop") as Float?;
+    return fValue != null ? fValue : 3.0f;
+  }
+  function saveActivityAutoSpeedStop(_fValue as Float) as Void {  // [m/s]
+    App.Properties.setValue("userActivityAutoSpeedStop", _fValue as App.PropertyValueType);
+  }
+  function setActivityAutoSpeedStop(_fValue as Float) as Void {  // [m/s]
+    if(_fValue > 99.9f) {
+      _fValue = 99.9f;
+    }
+    else if(_fValue < 0.0f) {
+      _fValue = 0.0f;
+    }
+    self.fActivityAutoSpeedStop = _fValue;
+  }
+
   function loadGeneralTimeConstant() as Number {  // [s]
     var iValue = App.Properties.getValue("userGeneralTimeConstant") as Number?;
     return iValue != null ? iValue : 5;
@@ -482,17 +533,6 @@ class MySettings {
   }
   function setGeneralBackgroundColor(_iValue as Number) as Void {
     self.iGeneralBackgroundColor = _iValue;
-  }
-
-  function loadGeneralAutoActivity() as Boolean {
-    var bValue = App.Properties.getValue("userGeneralAutoActivity") as Boolean?;
-    return bValue != null ? bValue : false;
-  }
-  function saveGeneralAutoActivity(_bValue as Boolean) as Void {
-    App.Properties.setValue("userGeneralAutoActivity", _bValue as App.PropertyValueType);
-  }
-  function setGeneralAutoActivity(_bValue as Boolean) as Void {
-    self.bGeneralAutoActivity = _bValue;
   }
 
   function loadGeneralLapKey() as Boolean {

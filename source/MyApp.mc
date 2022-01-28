@@ -279,18 +279,22 @@ class MyApp extends App.AppBase {
     }
 
     // Automatic Activity recording
-    if($.oMySettings.bGeneralAutoActivity and LangUtils.notNaN($.oMyProcessing.fGroundSpeed)) {
+    if($.oMySettings.bActivityAuto and LangUtils.notNaN($.oMyProcessing.fGroundSpeed)) {
       if($.oMyActivity == null) {
-        if($.oMyProcessing.fGroundSpeed > 10.0f) {  // 10 m/s = 36km/h
+        if($.oMySettings.fActivityAutoSpeedStart > 0.0f
+           and $.oMyProcessing.fGroundSpeed > $.oMySettings.fActivityAutoSpeedStart) {
           $.oMyActivity = new MyActivity();
           ($.oMyActivity as MyActivity).start();
         }
       }
       else {
-        if($.oMyProcessing.fGroundSpeed < 5.0f) {  // 5 m/s = 18km/h
+        if($.oMySettings.fActivityAutoSpeedStop > 0.0f
+           and $.oMyProcessing.fGroundSpeed < $.oMySettings.fActivityAutoSpeedStop) {
           ($.oMyActivity as MyActivity).pause();
         }
-        else if(!($.oMyActivity as MyActivity).isRecording() and $.oMyProcessing.fGroundSpeed > 10.0f) {  // 10 m/s = 36km/h
+        else if(!($.oMyActivity as MyActivity).isRecording()
+                and $.oMySettings.fActivityAutoSpeedStart > 0.0f
+                and $.oMyProcessing.fGroundSpeed > $.oMySettings.fActivityAutoSpeedStart) {
           ($.oMyActivity as MyActivity).addLap();
           ($.oMyActivity as MyActivity).resume();
         }

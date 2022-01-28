@@ -29,6 +29,7 @@ class MyPickerGenericSettings extends Ui.Picker {
 
   function initialize(_context as Symbol, _item as Symbol) {
     if(_context == :contextVariometer) {
+
       if(_item == :itemRange) {
         var iVariometerRange = $.oMySettings.loadVariometerRange();
         $.oMySettings.load();  // ... reload potentially modified settings
@@ -90,8 +91,10 @@ class MyPickerGenericSettings extends Ui.Picker {
             :pattern => [oFactory],
             :defaults => [oFactory.indexOf(iVariometerPlotRange)]});
       }
+
     }
     else if(_context == :contextSafety) {
+
       if(_item == :itemFinesse) {
         var iSafetyFinesse = $.oMySettings.loadSafetyFinesse();
         var oFactory = new PickerFactoryNumber(1, 99, null);
@@ -141,8 +144,10 @@ class MyPickerGenericSettings extends Ui.Picker {
             :pattern => [oFactory],
             :defaults => [iIndex]});
       }
+
     }
     else if(_context == :contextGeneral) {
+
       if(_item == :itemTimeConstant) {
         var iGeneralTimeConstant = $.oMySettings.loadGeneralTimeConstant();
         var oFactory = new PickerFactoryDictionary([0, 1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 45, 60],
@@ -195,8 +200,10 @@ class MyPickerGenericSettings extends Ui.Picker {
             :pattern => [oFactory],
             :defaults => [oFactory.indexOfKey(iColor)]});
       }
+
     }
     else if(_context == :contextUnit) {
+
       if(_item == :itemDistance) {
         var iUnitDistance = $.oMySettings.loadUnitDistance();
         var oFactory = new PickerFactoryDictionary([-1, 0, 1 ,2],
@@ -273,6 +280,7 @@ class MyPickerGenericSettings extends Ui.Picker {
             :pattern => [oFactory],
             :defaults => [oFactory.indexOfKey(bUnitTimeUTC)]});
       }
+
     }
   }
 
@@ -300,6 +308,7 @@ class MyPickerGenericSettingsDelegate extends Ui.PickerDelegate {
 
   function onAccept(_amValues) {
     if(self.context == :contextVariometer) {
+
       if(self.item == :itemRange) {
         $.oMySettings.saveVariometerRange(_amValues[0] as Number);
       }
@@ -312,8 +321,10 @@ class MyPickerGenericSettingsDelegate extends Ui.PickerDelegate {
       else if(self.item == :itemPlotRange) {
         $.oMySettings.saveVariometerPlotRange(_amValues[0] as Number);
       }
+
     }
     else if(self.context == :contextSafety) {
+
       if(self.item == :itemFinesse) {
         $.oMySettings.saveSafetyFinesse(_amValues[0] as Number);
       }
@@ -327,19 +338,23 @@ class MyPickerGenericSettingsDelegate extends Ui.PickerDelegate {
         $.oMyProcessing.bGrace = false;
         $.oMyProcessing.iGraceEpoch = -1;
       }
+
     }
     else if(self.context == :contextGeneral) {
+
       if(self.item == :itemTimeConstant) {
         $.oMySettings.saveGeneralTimeConstant(_amValues[0] as Number);
       }
       else if(self.item == :itemDisplayFilter) {
         $.oMySettings.saveGeneralDisplayFilter(_amValues[0] as Number);
       }
-      if(self.item == :itemBackgroundColor) {
+      else if(self.item == :itemBackgroundColor) {
         $.oMySettings.saveGeneralBackgroundColor(_amValues[0] as Number);
       }
+
     }
     else if(self.context == :contextUnit) {
+
       if(self.item == :itemDistance) {
         $.oMySettings.saveUnitDistance(_amValues[0] as Number);
       }
@@ -356,6 +371,7 @@ class MyPickerGenericSettingsDelegate extends Ui.PickerDelegate {
         $.oMySettings.saveUnitTimeUTC(_amValues[0] as Boolean);
       }
       $.oMySettings.load();  // ... use proper units in settings
+
     }
     Ui.popView(Ui.SLIDE_IMMEDIATE);
     return true;

@@ -41,13 +41,17 @@
   <string id="titleSoundsVariometerTones">Variometer Tones</string>
   <string id="titleSoundsSafetyTones">Safety Tones</string>
   <string id="titleSoundsMuteDistance">Mute Distance</string>
+  <!-- Menu (settings:activity) -->
+  <string id="titleSettingsActivity">Activity</string>
+  <string id="titleActivityAuto">Auto</string>
+  <string id="titleActivityAutoSpeedStart">Start Speed</string>
+  <string id="titleActivityAutoSpeedStop">Stop Speed</string>
   <!-- Menu (settings:general) -->
   <string id="titleSettingsGeneral">General</string>
   <string id="titleGeneralTimeConstant">Time Constant</string>
   <string id="titleGeneralDisplayFilter">Display Filter</string>
   <string id="valueGeneralDisplayFilterTimeDerived">δt</string>
   <string id="titleGeneralBackgroundColor">Background Color</string>
-  <string id="titleGeneralAutoActivity">Auto Activity</string>
   <string id="titleGeneralLapKey">Lap Key</string>
   <!-- Menu (settings:units) -->
   <string id="titleSettingsUnits">Units</string>

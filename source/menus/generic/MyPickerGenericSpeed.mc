@@ -20,36 +20,32 @@ import Toybox.Lang;
 using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
-class MyPickerGenericOnOff extends PickerGenericOnOff {
+class MyPickerGenericSpeed extends PickerGenericSpeed {
 
   //
-  // FUNCTIONS: PickerGenericOnOff (override/implement)
+  // FUNCTIONS: PickerGenericSpeed (override/implement)
   //
 
   function initialize(_context as Symbol, _item as Symbol) {
     if(_context == :contextSettings) {
-      if(_item == :itemSoundsVariometerTones) {
-        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleSoundsVariometerTones) as String,
-                                      $.oMySettings.loadSoundsVariometerTones());
+      if(_item == :itemActivityAutoSpeedStart) {
+        PickerGenericSpeed.initialize(Ui.loadResource(Rez.Strings.titleActivityAutoSpeedStart) as String,
+                                         $.oMySettings.loadActivityAutoSpeedStart(),
+                                         $.oMySettings.iUnitDistance,
+                                         false);
       }
-      else if(_item == :itemSoundsSafetyTones) {
-        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleSoundsSafetyTones) as String,
-                                      $.oMySettings.loadSoundsSafetyTones());
-      }
-      else if(_item == :itemActivityAuto) {
-        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleActivityAuto) as String,
-                                      $.oMySettings.loadActivityAuto());
-      }
-      else if(_item == :itemGeneralLapKey) {
-        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleGeneralLapKey) as String,
-                                      $.oMySettings.loadGeneralLapKey());
+      else if(_item == :itemActivityAutoSpeedStop) {
+        PickerGenericSpeed.initialize(Ui.loadResource(Rez.Strings.titleActivityAutoSpeedStop) as String,
+                                         $.oMySettings.loadActivityAutoSpeedStop(),
+                                         $.oMySettings.iUnitDistance,
+                                         false);
       }
     }
   }
 
 }
 
-class MyPickerGenericOnOffDelegate extends Ui.PickerDelegate {
+class MyPickerGenericSpeedDelegate extends Ui.PickerDelegate {
 
   //
   // VARIABLES
@@ -70,19 +66,13 @@ class MyPickerGenericOnOffDelegate extends Ui.PickerDelegate {
   }
 
   function onAccept(_amValues) {
-    var bValue = PickerGenericOnOff.getValue(_amValues);
+    var fValue = PickerGenericSpeed.getValue(_amValues, $.oMySettings.iUnitDistance);
     if(self.context == :contextSettings) {
-      if(self.item == :itemSoundsVariometerTones) {
-        $.oMySettings.saveSoundsVariometerTones(bValue);
+      if(self.item == :itemActivityAutoSpeedStart) {
+        $.oMySettings.saveActivityAutoSpeedStart(fValue);
       }
-      else if(self.item == :itemSoundsSafetyTones) {
-        $.oMySettings.saveSoundsSafetyTones(bValue);
-      }
-      else if(self.item == :itemActivityAuto) {
-        $.oMySettings.saveActivityAuto(bValue);
-      }
-      else if(self.item == :itemGeneralLapKey) {
-        $.oMySettings.saveGeneralLapKey(bValue);
+      else if(self.item == :itemActivityAutoSpeedStop) {
+        $.oMySettings.saveActivityAutoSpeedStop(fValue);
       }
     }
     Ui.popView(Ui.SLIDE_IMMEDIATE);

@@ -34,6 +34,7 @@ class MyMenuGeneric extends Ui.Menu {
       Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsVariometer) as String, :menuSettingsVariometer);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsSafety) as String, :menuSettingsSafety);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsSounds) as String, :menuSettingsSounds);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsActivity) as String, :menuSettingsActivity);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsGeneral) as String, :menuSettingsGeneral);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsUnits) as String, :menuSettingsUnits);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleStorage) as String, :menuStorage);
@@ -84,12 +85,18 @@ class MyMenuGeneric extends Ui.Menu {
       Menu.addItem(Ui.loadResource(Rez.Strings.titleSoundsMuteDistance) as String, :menuSoundsMuteDistance);
     }
 
+    else if(_menu == :menuSettingsActivity) {
+      Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsActivity) as String);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityAuto) as String, :menuActivityAuto);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityAutoSpeedStart) as String, :menuActivityAutoSpeedStart);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityAutoSpeedStop) as String, :menuActivityAutoSpeedStop);
+    }
+
     else if(_menu == :menuSettingsGeneral) {
       Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsGeneral) as String);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralTimeConstant) as String, :menuGeneralTimeConstant);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralDisplayFilter) as String, :menuGeneralDisplayFilter);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralBackgroundColor) as String, :menuGeneralBackgroundColor);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralAutoActivity) as String, :menuGeneralAutoActivity);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralLapKey) as String, :menuGeneralLapKey);
     }
 
@@ -195,6 +202,11 @@ class MyMenuGenericDelegate extends Ui.MenuInputDelegate {
       else if(_item == :menuSettingsSounds) {
         Ui.pushView(new MyMenuGeneric(:menuSettingsSounds),
                     new MyMenuGenericDelegate(:menuSettingsSounds),
+                    Ui.SLIDE_IMMEDIATE);
+      }
+      else if(_item == :menuSettingsActivity) {
+        Ui.pushView(new MyMenuGeneric(:menuSettingsActivity),
+                    new MyMenuGenericDelegate(:menuSettingsActivity),
                     Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuSettingsGeneral) {
@@ -335,6 +347,24 @@ class MyMenuGenericDelegate extends Ui.MenuInputDelegate {
       }
     }
 
+    else if(self.menu == :menuSettingsActivity) {
+      if(_item == :menuActivityAuto) {
+        Ui.pushView(new MyPickerGenericOnOff(:contextSettings, :itemActivityAuto),
+                    new MyPickerGenericOnOffDelegate(:contextSettings, :itemActivityAuto),
+                    Ui.SLIDE_IMMEDIATE);
+      }
+      else if(_item == :menuActivityAutoSpeedStart) {
+        Ui.pushView(new MyPickerGenericSpeed(:contextSettings, :itemActivityAutoSpeedStart),
+                    new MyPickerGenericSpeedDelegate(:contextSettings, :itemActivityAutoSpeedStart),
+                    Ui.SLIDE_IMMEDIATE);
+      }
+      else if(_item == :menuActivityAutoSpeedStop) {
+        Ui.pushView(new MyPickerGenericSpeed(:contextSettings, :itemActivityAutoSpeedStop),
+                    new MyPickerGenericSpeedDelegate(:contextSettings, :itemActivityAutoSpeedStop),
+                    Ui.SLIDE_IMMEDIATE);
+      }
+    }
+
     else if(self.menu == :menuSettingsGeneral) {
       if(_item == :menuGeneralTimeConstant) {
         Ui.pushView(new MyPickerGenericSettings(:contextGeneral, :itemTimeConstant),
@@ -349,11 +379,6 @@ class MyMenuGenericDelegate extends Ui.MenuInputDelegate {
       else if(_item == :menuGeneralBackgroundColor) {
         Ui.pushView(new MyPickerGenericSettings(:contextGeneral, :itemBackgroundColor),
                     new MyPickerGenericSettingsDelegate(:contextGeneral, :itemBackgroundColor),
-                    Ui.SLIDE_IMMEDIATE);
-      }
-      else if(_item == :menuGeneralAutoActivity) {
-        Ui.pushView(new MyPickerGenericOnOff(:contextSettings, :itemGeneralAutoActivity),
-                    new MyPickerGenericOnOffDelegate(:contextSettings, :itemGeneralAutoActivity),
                     Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuGeneralLapKey) {

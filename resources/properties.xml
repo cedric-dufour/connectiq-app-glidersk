@@ -23,11 +23,14 @@
   <property id="userSoundsVariometerTones" type="boolean">true</property>
   <property id="userSoundsSafetyTones" type="boolean">true</property>
   <property id="userSoundsMuteDistance" type="float">2000.0</property>
+  <!-- ... activity -->
+  <property id="userActivityAuto" type="boolean">false</property>
+  <property id="userActivityAutoSpeedStart" type="float">9.0</property>
+  <property id="userActivityAutoSpeedStop" type="float">3.0</property>
   <!-- ... general -->
   <property id="userGeneralTimeConstant" type="number">5</property>
   <property id="userGeneralDisplayFilter" type="number">1</property>
   <property id="userGeneralBackgroundColor" type="number">0</property>
-  <property id="userGeneralAutoActivity" type="boolean">false</property>
   <property id="userGeneralLapKey" type="boolean">true</property>
   <!-- ... units -->
   <property id="userUnitDistance" type="number">-1</property>

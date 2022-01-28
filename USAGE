@@ -321,6 +321,17 @@ The application allows you to specify the following settings:
     the distance (from destination) under which to mute all sounds
     (and let you concentrate on your take-off or landing)
 
+* Activity
+  - Auto
+    whether to automatically start/pause/resume the activity recording
+    throughout the flight (takeoffs/landings)
+  - Start Speed
+    speed above which the activity automatically starts/resumes
+    (must be greater than the Stop Speed; ignored if set to zero)
+  - Stop Speed
+    speed below which the activity automatically stops (pauses)
+    (must be smaller than the Start Speed; ignored if set to zero)
+
 * General
   - Time Constant:
     time constant/window (in seconds) used for averaging (SMA) sensor values
@@ -328,9 +339,6 @@ The application allows you to specify the following settings:
     whether to display instantaneous or filtered data (see Data Filtering below)
   - Background Color:
     the background color (black or white)
-  - Auto Activity:
-    whether to automatically start/pause/resume the activity recording
-    throughout the flight (takeoffs/landings)
   - Lap Key:
     whether the BACK key adds a new lap to a recording activity
 
