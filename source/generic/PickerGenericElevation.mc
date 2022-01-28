@@ -16,8 +16,8 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Graphics as Gfx;
-using Toybox.Lang;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
@@ -27,74 +27,75 @@ class PickerGenericElevation extends Ui.Picker {
   // FUNCTIONS: Ui.Picker (override/implement)
   //
 
-  function initialize(_sTitle, _fValue, _iUnit, _bAllowNegative) {
+  function initialize(_sTitle as String, _fValue as Float?, _iUnit as Number?, _bAllowNegative as Boolean) {
     // Input validation
     // ... unit
-    if(_iUnit == null or _iUnit < 0 or _iUnit > 1) {
+    var iUnit = _iUnit != null ? _iUnit : -1;
+    if(iUnit < 0) {
       var oDeviceSettings = Sys.getDeviceSettings();
       if(oDeviceSettings has :elevationUnits and oDeviceSettings.elevationUnits != null) {
-        _iUnit = oDeviceSettings.elevationUnits;
+        iUnit = oDeviceSettings.elevationUnits;
       }
       else {
-        _iUnit = Sys.UNIT_METRIC;
+        iUnit = Sys.UNIT_METRIC;
       }
     }
     // ... value
-    if(_fValue == null) {
-      _fValue = 0.0f;
-    }
+    var fValue = (_fValue != null and LangUtils.notNaN(_fValue)) ? _fValue : 0.0f;
 
-    // Use user-specified elevation unit (NB: SI units are always used internally)
-    // PRECISION: 1.0
-    var sUnit;
-    var iMaxSignificant;
-    if(_iUnit == Sys.UNIT_STATUTE) {
+    // Use user-specified elevation unit (NB: metric units are always used internally)
+    // PRECISION: 1
+    var sUnit = "m";
+    var iMaxSignificant = 9;
+    if(iUnit == Sys.UNIT_STATUTE) {
       sUnit = "ft";
       iMaxSignificant = 31;
-      _fValue /= 0.3048f;  // m -> ft
-      if(_fValue > 31999.0f) {
-        _fValue = 31999.0f;
+      fValue /= 0.3048f;  // m -> ft
+      if(fValue > 31999.0f) {
+        fValue = 31999.0f;
       }
-      else if(_fValue < -31999.0f) {
-        _fValue = -31999.0f;
+      else if(fValue < -31999.0f) {
+        fValue = -31999.0f;
       }
     }
     else {
-      sUnit = "m";
-      iMaxSignificant = 9;
-      if(_fValue > 9999.0f) {
-        _fValue = 9999.0f;
+      if(fValue > 9999.0f) {
+        fValue = 9999.0f;
       }
-      else if(_fValue < -9999.0f) {
-        _fValue = -9999.0f;
+      else if(fValue < -9999.0f) {
+        fValue = -9999.0f;
       }
     }
-    if(!_bAllowNegative and _fValue < 0.0f) {
-      _fValue = 0.0f;
+    if(!_bAllowNegative and fValue < 0.0f) {
+      fValue = 0.0f;
     }
 
     // Split components
-    var amValues = new [5];
-    amValues[0] = _fValue < 0.0f ? 0 : 1;
-    _fValue = _fValue.abs() + 0.05f;
-    amValues[4] = _fValue.toNumber() % 10;
-    _fValue = _fValue / 10.0f;
-    amValues[3] = _fValue.toNumber() % 10;
-    _fValue = _fValue / 10.0f;
-    amValues[2] = _fValue.toNumber() % 10;
-    _fValue = _fValue / 10.0f;
-    amValues[1] = _fValue.toNumber();
+    var aiValues = new Array<Number>[5];
+    aiValues[0] = fValue < 0.0f ? 0 : 1;
+    fValue = fValue.abs() + 0.05f;
+    aiValues[4] = fValue.toNumber() % 10;
+    fValue = fValue / 10.0f;
+    aiValues[3] = fValue.toNumber() % 10;
+    fValue = fValue / 10.0f;
+    aiValues[2] = fValue.toNumber() % 10;
+    fValue = fValue / 10.0f;
+    aiValues[1] = fValue.toNumber();
 
     // Initialize picker
     Picker.initialize({
-      :title => new Ui.Text({ :text => Lang.format("$1$ [$2$]", [_sTitle, sUnit]), :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
-      :pattern => [ _bAllowNegative ? new PickerFactoryDictionary([-1, 1], ["-", "+"], null) : new Ui.Text({}),
-                    new PickerFactoryNumber(0, iMaxSignificant, { :langFormat => "$1$ '" }),
-                    new PickerFactoryNumber(0, 9, null),
-                    new PickerFactoryNumber(0, 9, null),
-                    new PickerFactoryNumber(0, 9, null) ],
-      :defaults => amValues
-    });
+        :title => new Ui.Text({
+            :text => format("$1$ [$2$]", [_sTitle, sUnit]),
+            :font => Gfx.FONT_TINY,
+            :locX=>Ui.LAYOUT_HALIGN_CENTER,
+            :locY=>Ui.LAYOUT_VALIGN_BOTTOM,
+            :color => Gfx.COLOR_BLUE}),
+        :pattern => [_bAllowNegative ? new PickerFactoryDictionary([-1, 1], ["-", "+"], null) : new Ui.Text({}),
+                     new PickerFactoryNumber(0, iMaxSignificant, {:langFormat => "$1$ '"}),
+                     new PickerFactoryNumber(0, 9, null),
+                     new PickerFactoryNumber(0, 9, null),
+                     new PickerFactoryNumber(0, 9, null)],
+        :defaults => aiValues});
   }
 
 
@@ -102,16 +103,17 @@ class PickerGenericElevation extends Ui.Picker {
   // FUNCTIONS: self
   //
 
-  function getValue(_amValues, _iUnit) {
+  function getValue(_amValues as Array, _iUnit as Number?) as Float {
     // Input validation
     // ... unit
-    if(_iUnit == null or _iUnit < 0 or _iUnit > 1) {
+    var iUnit = _iUnit != null ? _iUnit : -1;
+    if(iUnit < 0) {
       var oDeviceSettings = Sys.getDeviceSettings();
       if(oDeviceSettings has :elevationUnits and oDeviceSettings.elevationUnits != null) {
-        _iUnit = oDeviceSettings.elevationUnits;
+        iUnit = oDeviceSettings.elevationUnits;
       }
       else {
-        _iUnit = Sys.UNIT_METRIC;
+        iUnit = Sys.UNIT_METRIC;
       }
     }
 
@@ -121,8 +123,8 @@ class PickerGenericElevation extends Ui.Picker {
       fValue *= _amValues[0];
     }
 
-    // Use user-specified elevation unit (NB: SI units are always used internally)
-    if(_iUnit == Sys.UNIT_STATUTE) {
+    // Use user-specified elevation unit (NB: metric units are always used internally)
+    if(iUnit == Sys.UNIT_STATUTE) {
       fValue *= 0.3048f;  // ft -> m
     }
 

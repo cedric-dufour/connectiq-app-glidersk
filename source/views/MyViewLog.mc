@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.Time;
@@ -28,7 +29,7 @@ using Toybox.WatchUi as Ui;
 //
 
 // Current view/log index
-var iMyViewLogIndex = null;
+var iMyViewLogIndex as Number = -1;
 
 
 //
@@ -43,21 +44,21 @@ class MyViewLog extends MyViewGlobal {
 
   // Resources (cache)
   // ... fields (units)
-  private var oRezUnitLeft;
-  private var oRezUnitRight;
-  private var oRezUnitBottomRight;
+  private var oRezUnitLeft as Ui.Text?;
+  private var oRezUnitRight as Ui.Text?;
+  private var oRezUnitBottomRight as Ui.Text?;
   // ... strings
-  private var sTitle;
-  private var sUnitElevation_fmt;
+  private var sTitle as String = "Log";
+  private var sUnitElevation_fmt as String = "[m]";
 
   // Internals
   // ... fields
-  private var bTitleShow;
-  private var iFieldIndex;
-  private var iFieldEpoch;
+  private var bTitleShow as Boolean = true;
+  private var iFieldIndex as Number = 0;
+  private var iFieldEpoch as Number = -1;
   // ... log
-  private var iLogIndex = null;
-  private var dictLog;
+  private var iLogIndex as Number = -1;
+  private var dictLog as Dictionary?;
 
 
   //
@@ -72,12 +73,10 @@ class MyViewLog extends MyViewGlobal {
 
     // Internals
     // ... fields
-    self.bTitleShow = true;
-    self.iFieldIndex = 0;
     self.iFieldEpoch = Time.now().value();
   }
 
-  function onUpdate(_oDC) {
+  function onUpdate(_oDC as Gfx.Dc) as Void {
     //Sys.println("DEBUG: MyViewLog.onUpdate()");
 
     // Load log
@@ -86,57 +85,54 @@ class MyViewLog extends MyViewGlobal {
     }
 
     // Done
-    return MyViewGlobal.onUpdate(_oDC);
+    MyViewGlobal.onUpdate(_oDC);
   }
 
-  function prepare() {
+  function prepare() as Void {
     //Sys.println("DEBUG: MyViewLog.prepare()");
     MyViewGlobal.prepare();
 
     // Load resources
     // ... fields (units)
-    self.oRezUnitLeft = View.findDrawableById("unitLeft");
-    self.oRezUnitRight = View.findDrawableById("unitRight");
-    self.oRezUnitBottomRight = View.findDrawableById("unitBottomRight");
+    self.oRezUnitLeft = View.findDrawableById("unitLeft") as Ui.Text;
+    self.oRezUnitRight = View.findDrawableById("unitRight") as Ui.Text;
+    self.oRezUnitBottomRight = View.findDrawableById("unitBottomRight") as Ui.Text;
     // ... strings
-    self.sTitle = Ui.loadResource(Rez.Strings.titleViewLog);
-    self.sUnitElevation_fmt = Lang.format("[$1$]", [$.oMySettings.sUnitElevation]);
+    self.sTitle = Ui.loadResource(Rez.Strings.titleViewLog) as String;
+    self.sUnitElevation_fmt = format("[$1$]", [$.oMySettings.sUnitElevation]);
 
     // Set labels, units and colors
     // ... start time
-    View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelStart));
-    View.findDrawableById("unitTopLeft").setText($.MY_NOVALUE_BLANK);
-    self.oRezValueTopLeft.setColor(self.iColorText);
+    (View.findDrawableById("labelTopLeft") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelStart) as String);
+    (View.findDrawableById("unitTopLeft") as Ui.Text).setText($.MY_NOVALUE_BLANK);
+    (self.oRezValueTopLeft as Ui.Text).setColor(self.iColorText);
     // ... stop time
-    View.findDrawableById("labelTopRight").setText(Ui.loadResource(Rez.Strings.labelStop));
-    View.findDrawableById("unitTopRight").setText($.MY_NOVALUE_BLANK);
-    self.oRezValueTopRight.setColor(self.iColorText);
+    (View.findDrawableById("labelTopRight") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelStop) as String);
+    (View.findDrawableById("unitTopRight") as Ui.Text).setText($.MY_NOVALUE_BLANK);
+    (self.oRezValueTopRight as Ui.Text).setColor(self.iColorText);
     // ... minimum altitude / time (dynamic label)
-    View.findDrawableById("labelLeft").setText(Ui.loadResource(Rez.Strings.labelAltitudeMin));
-    self.oRezValueLeft.setColor(self.iColorText);
+    (View.findDrawableById("labelLeft") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelAltitudeMin) as String);
+    (self.oRezValueLeft as Ui.Text).setColor(self.iColorText);
     // ... distance
-    View.findDrawableById("labelCenter").setText(Ui.loadResource(Rez.Strings.labelDistance));
-    self.oRezValueCenter.setColor(self.iColorText);
+    (View.findDrawableById("labelCenter") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelDistance) as String);
+    (self.oRezValueCenter as Ui.Text).setColor(self.iColorText);
     // ... maximum altitude / time (dynamic label)
-    View.findDrawableById("labelRight").setText(Ui.loadResource(Rez.Strings.labelAltitudeMax));
-    self.oRezValueRight.setColor(self.iColorText);
+    (View.findDrawableById("labelRight") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelAltitudeMax) as String);
+    (self.oRezValueRight as Ui.Text).setColor(self.iColorText);
     // ... elapsed time
-    View.findDrawableById("labelBottomLeft").setText(Ui.loadResource(Rez.Strings.labelElapsed));
-    View.findDrawableById("unitBottomLeft").setText($.MY_NOVALUE_BLANK);
-    self.oRezValueBottomLeft.setColor(self.iColorText);
+    (View.findDrawableById("labelBottomLeft") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelElapsed) as String);
+    (View.findDrawableById("unitBottomLeft") as Ui.Text).setText($.MY_NOVALUE_BLANK);
+    (self.oRezValueBottomLeft as Ui.Text).setColor(self.iColorText);
     // ... ascent / elapsed (dynamic label)
-    View.findDrawableById("labelBottomRight").setText(Ui.loadResource(Rez.Strings.labelAscent));
-    self.oRezValueBottomRight.setColor(self.iColorText);
+    (View.findDrawableById("labelBottomRight") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelAscent) as String);
+    (self.oRezValueBottomRight as Ui.Text).setColor(self.iColorText);
     // ... title
     self.bTitleShow = true;
-    self.oRezValueFooter.setColor(Gfx.COLOR_DK_GRAY);
-    self.oRezValueFooter.setText(Ui.loadResource(Rez.Strings.titleViewLog));
-
-    // Done
-    return true;
+    (self.oRezValueFooter as Ui.Text).setColor(Gfx.COLOR_DK_GRAY);
+    (self.oRezValueFooter as Ui.Text).setText(Ui.loadResource(Rez.Strings.titleViewLog) as String);
   }
 
-  function updateLayout() {
+  function updateLayout(_b as Boolean) as Void {
     //Sys.println("DEBUG: MyViewLog.updateLayout()");
     MyViewGlobal.updateLayout(false);
 
@@ -150,58 +146,58 @@ class MyViewLog extends MyViewGlobal {
 
     // No log ?
     if(self.dictLog == null) {
-      self.oRezValueTopLeft.setText($.MY_NOVALUE_LEN3);
-      self.oRezValueTopRight.setText($.MY_NOVALUE_LEN3);
-      self.oRezValueLeft.setText($.MY_NOVALUE_LEN3);
-      self.oRezValueCenter.setText($.MY_NOVALUE_LEN2);
-      self.oRezValueRight.setText($.MY_NOVALUE_LEN3);
-      self.oRezValueBottomLeft.setText($.MY_NOVALUE_LEN3);
-      self.oRezValueBottomRight.setText($.MY_NOVALUE_LEN3);
-      self.oRezValueFooter.setColor(Gfx.COLOR_DK_GRAY);
-      self.oRezValueFooter.setText(self.sTitle);
+      (self.oRezValueTopLeft as Ui.Text).setText($.MY_NOVALUE_LEN3);
+      (self.oRezValueTopRight as Ui.Text).setText($.MY_NOVALUE_LEN3);
+      (self.oRezValueLeft as Ui.Text).setText($.MY_NOVALUE_LEN3);
+      (self.oRezValueCenter as Ui.Text).setText($.MY_NOVALUE_LEN2);
+      (self.oRezValueRight as Ui.Text).setText($.MY_NOVALUE_LEN3);
+      (self.oRezValueBottomLeft as Ui.Text).setText($.MY_NOVALUE_LEN3);
+      (self.oRezValueBottomRight as Ui.Text).setText($.MY_NOVALUE_LEN3);
+      (self.oRezValueFooter as Ui.Text).setColor(Gfx.COLOR_DK_GRAY);
+      (self.oRezValueFooter as Ui.Text).setText(self.sTitle);
       return;
     }
 
     // Set values
     // ... time: start
-    self.oRezValueTopLeft.setText(self.dictLog["timeStart"]);
+    (self.oRezValueTopLeft as Ui.Text).setText((self.dictLog as Dictionary)["timeStart"] as String);
     // ... time: stop
-    self.oRezValueTopRight.setText(self.dictLog["timeStop"]);
+    (self.oRezValueTopRight as Ui.Text).setText((self.dictLog as Dictionary)["timeStop"] as String);
     // ... altitude: mininum
     if(self.iFieldIndex == 0) {  // ... altitude
-      self.oRezUnitLeft.setText(self.sUnitElevation_fmt);
-      self.oRezValueLeft.setText(self.dictLog["altitudeMin"]);
+      (self.oRezUnitLeft as Ui.Text).setText(self.sUnitElevation_fmt);
+      (self.oRezValueLeft as Ui.Text).setText((self.dictLog as Dictionary)["altitudeMin"] as String);
     }
     else {  // ... time
-      self.oRezUnitLeft.setText($.MY_NOVALUE_BLANK);
-      self.oRezValueLeft.setText(self.dictLog["timeAltitudeMin"]);
+      (self.oRezUnitLeft as Ui.Text).setText($.MY_NOVALUE_BLANK);
+      (self.oRezValueLeft as Ui.Text).setText((self.dictLog as Dictionary)["timeAltitudeMin"] as String);
     }
     // ... distance
-    self.oRezValueCenter.setText(self.dictLog["distance"]);
+    (self.oRezValueCenter as Ui.Text).setText((self.dictLog as Dictionary)["distance"] as String);
     // ... altitude: maxinum
     if(self.iFieldIndex == 0) {  // ... altitude
-      self.oRezUnitRight.setText(self.sUnitElevation_fmt);
-      self.oRezValueRight.setText(self.dictLog["altitudeMax"]);
+      (self.oRezUnitRight as Ui.Text).setText(self.sUnitElevation_fmt);
+      (self.oRezValueRight as Ui.Text).setText((self.dictLog as Dictionary)["altitudeMax"] as String);
     }
     else {  // ... time
-      self.oRezUnitRight.setText($.MY_NOVALUE_BLANK);
-      self.oRezValueRight.setText(self.dictLog["timeAltitudeMax"]);
+      (self.oRezUnitRight as Ui.Text).setText($.MY_NOVALUE_BLANK);
+      (self.oRezValueRight as Ui.Text).setText((self.dictLog as Dictionary)["timeAltitudeMax"] as String);
     }
     // ... elapsed
-    self.oRezValueBottomLeft.setText(self.dictLog["elapsed"]);
+    (self.oRezValueBottomLeft as Ui.Text).setText((self.dictLog as Dictionary)["elapsed"] as String);
     // ... ascent
     if(self.iFieldIndex == 0) {  // ... altitude
-      self.oRezUnitBottomRight.setText(self.sUnitElevation_fmt);
-      self.oRezValueBottomRight.setText(self.dictLog["ascent"]);
+      (self.oRezUnitBottomRight as Ui.Text).setText(self.sUnitElevation_fmt);
+      (self.oRezValueBottomRight as Ui.Text).setText((self.dictLog as Dictionary)["ascent"] as String);
     }
     else {  // ... elapsed
-      self.oRezUnitBottomRight.setText($.MY_NOVALUE_BLANK);
-      self.oRezValueBottomRight.setText(self.dictLog["elapsedAscent"]);
+      (self.oRezUnitBottomRight as Ui.Text).setText($.MY_NOVALUE_BLANK);
+      (self.oRezValueBottomRight as Ui.Text).setText((self.dictLog as Dictionary)["elapsedAscent"] as String);
     }
     // ... footer
     if(!self.bTitleShow) {
-      self.oRezValueFooter.setColor(self.iColorText);
-      self.oRezValueFooter.setText(self.dictLog["date"]);
+      (self.oRezValueFooter as Ui.Text).setColor(self.iColorText);
+      (self.oRezValueFooter as Ui.Text).setText((self.dictLog as Dictionary)["date"] as String);
     }
   }
 
@@ -210,12 +206,12 @@ class MyViewLog extends MyViewGlobal {
   // FUNCTIONS: self
   //
 
-  function loadLog() {
+  function loadLog() as Void {
     //Sys.println("DEBUG: MyViewLog.loadLog()");
 
     // Check index
-    if($.iMyViewLogIndex == null) {
-      self.iLogIndex = null;
+    if($.iMyViewLogIndex < 0) {
+      self.iLogIndex = -1;
       self.dictLog = null;
       return;
     }
@@ -223,7 +219,7 @@ class MyViewLog extends MyViewGlobal {
     // Load log entry
     self.iLogIndex = $.iMyViewLogIndex;
     var s = self.iLogIndex.format("%02d");
-    var d = App.Storage.getValue(Lang.format("storLog$1$", [s]));
+    var d = App.Storage.getValue(format("storLog$1$", [s])) as Dictionary?;
     if(d == null) {
       self.dictLog = null;
       return;
@@ -235,17 +231,17 @@ class MyViewLog extends MyViewGlobal {
     var fValue;
     // ... time: start (and date)
     if(d.get("timeStart") != null) {
-      oTimeStart = new Time.Moment(d["timeStart"]);
+      oTimeStart = new Time.Moment(d["timeStart"] as Number);
       var oTimeInfo = $.oMySettings.bUnitTimeUTC ? Gregorian.utcInfo(oTimeStart, Time.FORMAT_MEDIUM) : Gregorian.info(oTimeStart, Time.FORMAT_MEDIUM);
-      d["timeStart"] = Lang.format("$1$:$2$", [oTimeInfo.hour.format("%02d"), oTimeInfo.min.format("%02d")]);
-      d["date"] = Lang.format("$1$ $2$", [oTimeInfo.month, oTimeInfo.day.format("%01d")]);
+      d["timeStart"] = format("$1$:$2$", [oTimeInfo.hour.format("%02d"), oTimeInfo.min.format("%02d")]);
+      d["date"] = format("$1$ $2$", [oTimeInfo.month, oTimeInfo.day.format("%01d")]);
     } else {
       d["timeStart"] = $.MY_NOVALUE_LEN3;
       d["date"] = $.MY_NOVALUE_LEN4;
     }
     // ... time: stop
     if(d.get("timeStop") != null) {
-      oTimeStop = new Time.Moment(d["timeStop"]);
+      oTimeStop = new Time.Moment(d["timeStop"] as Number);
       d["timeStop"] = LangUtils.formatTime(oTimeStop, $.oMySettings.bUnitTimeUTC, false);
     } else {
       d["timeStop"] = $.MY_NOVALUE_LEN3;
@@ -259,44 +255,44 @@ class MyViewLog extends MyViewGlobal {
     }
     // ... distance
     if(d.get("distance") != null) {
-      fValue = d["distance"] * $.oMySettings.fUnitDistanceCoefficient;
+      fValue = (d["distance"] as Float) * $.oMySettings.fUnitDistanceCoefficient;
       d["distance"] = fValue.format("%.0f");
     } else {
       d["distance"] = $.MY_NOVALUE_LEN2;
     }
     // ... ascent (and elasped)
     if(d.get("ascent") != null) {
-      fValue = d["ascent"] * $.oMySettings.fUnitElevationCoefficient;
-      d["ascent"] = d["ascent"].format("%.0f");
+      fValue = (d["ascent"] as Float) * $.oMySettings.fUnitElevationCoefficient;
+      d["ascent"] = fValue.format("%.0f");
     } else {
       d["ascent"] = $.MY_NOVALUE_LEN3;
     }
     if(d.get("elapsedAscent") != null) {
-      d["elapsedAscent"] = LangUtils.formatElapsed(d["elapsedAscent"], false);
+      d["elapsedAscent"] = LangUtils.formatElapsed(d["elapsedAscent"] as Number, false);
     } else {
       d["elapsedAscent"] = $.MY_NOVALUE_LEN3;
     }
     // ... altitude: minimum (and time)
     if(d.get("altitudeMin") != null) {
-      fValue = d["altitudeMin"] * $.oMySettings.fUnitElevationCoefficient;
+      fValue = (d["altitudeMin"] as Float) * $.oMySettings.fUnitElevationCoefficient;
       d["altitudeMin"] = fValue.format("%.0f");
     } else {
       d["altitudeMin"] = $.MY_NOVALUE_LEN3;
     }
     if(d.get("timeAltitudeMin") != null) {
-      d["timeAltitudeMin"] = LangUtils.formatTime(new Time.Moment(d["timeAltitudeMin"]), $.oMySettings.bUnitTimeUTC, false);
+      d["timeAltitudeMin"] = LangUtils.formatTime(new Time.Moment(d["timeAltitudeMin"] as Number), $.oMySettings.bUnitTimeUTC, false);
     } else {
       d["timeAltitudeMin"] = $.MY_NOVALUE_LEN3;
     }
     // ... altitude: maximum (and time)
     if(d.get("altitudeMax") != null) {
-      fValue = d["altitudeMax"] * $.oMySettings.fUnitElevationCoefficient;
+      fValue = (d["altitudeMax"] as Float) * $.oMySettings.fUnitElevationCoefficient;
       d["altitudeMax"] = fValue.format("%.0f");
     } else {
       d["altitudeMax"] = $.MY_NOVALUE_LEN3;
     }
     if(d.get("timeAltitudeMax") != null) {
-      d["timeAltitudeMax"] = LangUtils.formatTime(new Time.Moment(d["timeAltitudeMax"]), $.oMySettings.bUnitTimeUTC, false);
+      d["timeAltitudeMax"] = LangUtils.formatTime(new Time.Moment(d["timeAltitudeMax"] as Number), $.oMySettings.bUnitTimeUTC, false);
     } else {
       d["timeAltitudeMax"] = $.MY_NOVALUE_LEN3;
     }
@@ -315,7 +311,7 @@ class MyViewLogDelegate extends MyViewGlobalDelegate {
 
   function onSelect() {
     //Sys.println("DEBUG: MyViewLogDelegate.onSelect()");
-    if($.iMyViewLogIndex == null) {
+    if($.iMyViewLogIndex < 0) {
       $.iMyViewLogIndex = $.iMyLogIndex;
     }
     else {
@@ -327,7 +323,7 @@ class MyViewLogDelegate extends MyViewGlobalDelegate {
 
   function onBack() {
     //Sys.println("DEBUG: MyViewLogDelegate.onBack()");
-    if($.iMyViewLogIndex == null) {
+    if($.iMyViewLogIndex < 0) {
       $.iMyViewLogIndex = $.iMyLogIndex;
     }
     else {

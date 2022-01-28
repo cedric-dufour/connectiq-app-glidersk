@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.Position as Pos;
@@ -24,9 +25,9 @@ using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
 // Display mode (intent)
-var iMyViewVarioplotPanZoom = 0;
-var iMyViewVarioplotOffsetX = 0;
-var iMyViewVarioplotOffsetY = 0;
+var iMyViewVarioplotPanZoom as Number = 0;
+var iMyViewVarioplotOffsetX as Number = 0;
+var iMyViewVarioplotOffsetY as Number = 0;
 
 class MyViewVarioplot extends MyViewHeader {
 
@@ -35,28 +36,27 @@ class MyViewVarioplot extends MyViewHeader {
   //
 
   // Display mode (internal)
-  private var bShow;
-  private var iPanZoom;
+  private var iPanZoom as Number = 0;
 
   // Resources
   // ... buttons
-  private var oRezButtonKeyUp;
-  private var oRezButtonKeyDown;
+  private var oRezButtonKeyUp as Ui.Drawable?;
+  private var oRezButtonKeyDown as Ui.Drawable?;
   // ... fonts
-  private var oRezFontPlot;
+  private var oRezFontPlot as Ui.FontResource?;
 
   // Layout-specific
-  private var iLayoutCenter;
-  private var iLayoutClipY;
-  private var iLayoutClipW;
-  private var iLayoutClipH;
-  private var iLayoutValueXleft;
-  private var iLayoutValueXright;
-  private var iLayoutValueYtop;
-  private var iLayoutValueYbottom;
+  private var iLayoutCenter as Number = 120;
+  private var iLayoutClipY as Number = 31;
+  private var iLayoutClipW as Number = 240;
+  private var iLayoutClipH as Number = 178;
+  private var iLayoutValueXleft as Number = 40;
+  private var iLayoutValueXright as Number = 200;
+  private var iLayoutValueYtop as Number = 30;
+  private var iLayoutValueYbottom as Number = 193;
 
   // Color scale
-  private var aiScale;
+  private var aiScale as Array<Number> = [-3000, -2000, -1000, -50, 50, 1000, 2000, 3000] as Array<Number>;
 
 
   //
@@ -64,7 +64,7 @@ class MyViewVarioplot extends MyViewHeader {
   //
 
   (:layout_240x240)
-  function initLayout() {
+  function initLayout() as Void {
     self.iLayoutCenter = 120;
     self.iLayoutClipY = 31;
     self.iLayoutClipW = 240;
@@ -76,7 +76,7 @@ class MyViewVarioplot extends MyViewHeader {
   }
 
   (:layout_260x260)
-  function initLayout() {
+  function initLayout() as Void {
     self.iLayoutCenter = 130;
     self.iLayoutClipY = 34;
     self.iLayoutClipW = 260;
@@ -88,7 +88,7 @@ class MyViewVarioplot extends MyViewHeader {
   }
 
   (:layout_280x280)
-  function initLayout() {
+  function initLayout() as Void {
     self.iLayoutCenter = 140;
     self.iLayoutClipY = 36;
     self.iLayoutClipW = 280;
@@ -109,20 +109,6 @@ class MyViewVarioplot extends MyViewHeader {
 
     // Layout-specific initialization
     self.initLayout();
-
-    // Display mode
-    // ... internal
-    self.iPanZoom = 0;
-  }
-
-  function onLayout(_oDC) {
-    //Sys.println("DEBUG: MyViewVarioplot.onLayout()");
-    if(!MyViewHeader.onLayout(_oDC)) {
-      return false;
-    }
-
-    // Done
-    return true;
   }
 
   function prepare() {
@@ -131,27 +117,27 @@ class MyViewVarioplot extends MyViewHeader {
 
     // Load resources
     // ... fonts
-    self.oRezFontPlot = Ui.loadResource(Rez.Fonts.fontPlot);
+    self.oRezFontPlot = Ui.loadResource(Rez.Fonts.fontPlot) as Ui.FontResource;
 
     // Color scale
     switch($.oMySettings.iVariometerRange) {
     default:
     case 0:
-      self.aiScale = [-3000, -2000, -1000, -50, 50, 1000, 2000, 3000];
+      self.aiScale = [-3000, -2000, -1000, -50, 50, 1000, 2000, 3000] as Array<Number>;
       break;
     case 1:
-      self.aiScale = [-6000, -4000, -2000, -100, 100, 2000, 4000, 6000];
+      self.aiScale = [-6000, -4000, -2000, -100, 100, 2000, 4000, 6000] as Array<Number>;
       break;
     case 2:
-      self.aiScale = [-9000, -6000, -3000, -150, 150, 3000, 6000, 9000];
+      self.aiScale = [-9000, -6000, -3000, -150, 150, 3000, 6000, 9000] as Array<Number>;
       break;
     }
 
     // Unmute tones
-    App.getApp().unmuteTones(MyApp.TONES_SAFETY | MyApp.TONES_VARIOMETER);
+    (App.getApp() as MyApp).unmuteTones(MyApp.TONES_SAFETY | MyApp.TONES_VARIOMETER);
   }
 
-  function onUpdate(_oDC) {
+  function onUpdate(_oDC as Gfx.Dc) as Void {
     //Sys.println("DEBUG: MyViewVarioplot.onUpdate()");
 
     // Update layout
@@ -178,19 +164,16 @@ class MyViewVarioplot extends MyViewHeader {
         }
         self.iPanZoom = $.iMyViewVarioplotPanZoom;
       }
-      self.oRezButtonKeyUp.draw(_oDC);
-      self.oRezButtonKeyDown.draw(_oDC);
+      (self.oRezButtonKeyUp as Ui.Drawable).draw(_oDC);
+      (self.oRezButtonKeyDown as Ui.Drawable).draw(_oDC);
     }
     else {
       self.oRezButtonKeyUp = null;
       self.oRezButtonKeyDown = null;
     }
-
-    // Done
-    return true;
   }
 
-  function drawPlot(_oDC) {
+  function drawPlot(_oDC as Gfx.Dc) as Void {
     //Sys.println("DEBUG: MyViewVarioplot.drawPlot()");
     var iNowEpoch = Time.now().value();
 
@@ -206,7 +189,7 @@ class MyViewVarioplot extends MyViewHeader {
     // ... end (center) location
     var iEndIndex = iPlotIndex;
     var iEndEpoch = $.oMyProcessing.aiPlotEpoch[iEndIndex];
-    if(iEndEpoch == null or iNowEpoch-iEndEpoch > iVariometerPlotRange) {
+    if(iEndEpoch < 0 or iNowEpoch-iEndEpoch > iVariometerPlotRange) {
       // No data or data too old
       return;
     }
@@ -229,7 +212,7 @@ class MyViewVarioplot extends MyViewHeader {
     var bDraw = false;
     for(var i=iVariometerPlotRange; i>0; i--) {
       var iCurrentEpoch = $.oMyProcessing.aiPlotEpoch[iCurrentIndex];
-      if(iCurrentEpoch != null and iCurrentEpoch >= iStartEpoch) {
+      if(iCurrentEpoch >= 0 and iCurrentEpoch >= iStartEpoch) {
         if(iCurrentEpoch-iLastEpoch <= iMaxDeltaEpoch) {
           var iCurrentX = self.iLayoutCenter+$.iMyViewVarioplotOffsetX+(($.oMyProcessing.aiPlotLongitude[iCurrentIndex]-iEndLongitude)*fZoomX).toNumber();
           var iCurrentY = self.iLayoutCenter+$.iMyViewVarioplotOffsetY-(($.oMyProcessing.aiPlotLatitude[iCurrentIndex]-iEndLatitude)*fZoomY).toNumber();
@@ -289,7 +272,7 @@ class MyViewVarioplot extends MyViewHeader {
     _oDC.clearClip();
   }
 
-  function drawValues(_oDC) {
+  function drawValues(_oDC as Gfx.Dc) as Void {
     //Sys.println("DEBUG: MyViewVarioplot.drawValues()");
 
     // Draw values
@@ -298,17 +281,17 @@ class MyViewVarioplot extends MyViewHeader {
     _oDC.setColor($.oMySettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
 
     // ... altitude
-    if($.oMyProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.oMyProcessing.fAltitude != null) {
+    if($.oMyProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and LangUtils.notNaN($.oMyProcessing.fAltitude)) {
       fValue = $.oMyProcessing.fAltitude * $.oMySettings.fUnitElevationCoefficient;
       sValue = fValue.format("%.0f");
     }
     else {
       sValue = $.MY_NOVALUE_LEN3;
     }
-    _oDC.drawText(self.iLayoutValueXleft, self.iLayoutValueYtop, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.oMySettings.sUnitElevation]), Gfx.TEXT_JUSTIFY_LEFT);
+    _oDC.drawText(self.iLayoutValueXleft, self.iLayoutValueYtop, self.oRezFontPlot as Ui.FontResource, Lang.format("$1$ $2$", [sValue, $.oMySettings.sUnitElevation]), Gfx.TEXT_JUSTIFY_LEFT);
 
     // ... variometer
-    if($.oMyProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.oMyProcessing.fVariometer != null) {
+    if($.oMyProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and LangUtils.notNaN($.oMyProcessing.fVariometer)) {
       fValue = $.oMyProcessing.fVariometer * $.oMySettings.fUnitVerticalSpeedCoefficient;
       if($.oMySettings.fUnitVerticalSpeedCoefficient < 100.0f) {
         sValue = fValue.format("%+.1f");
@@ -320,27 +303,27 @@ class MyViewVarioplot extends MyViewHeader {
     else {
       sValue = $.MY_NOVALUE_LEN3;
     }
-    _oDC.drawText(self.iLayoutValueXright, self.iLayoutValueYtop, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.oMySettings.sUnitVerticalSpeed]), Gfx.TEXT_JUSTIFY_RIGHT);
+    _oDC.drawText(self.iLayoutValueXright, self.iLayoutValueYtop, self.oRezFontPlot as Ui.FontResource, Lang.format("$1$ $2$", [sValue, $.oMySettings.sUnitVerticalSpeed]), Gfx.TEXT_JUSTIFY_RIGHT);
 
     // ... ground speed
-    if($.oMyProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and $.oMyProcessing.fGroundSpeed != null) {
+    if($.oMyProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and LangUtils.notNaN($.oMyProcessing.fGroundSpeed)) {
       fValue = $.oMyProcessing.fGroundSpeed * $.oMySettings.fUnitHorizontalSpeedCoefficient;
       sValue = fValue.format("%.0f");
     }
     else {
       sValue = $.MY_NOVALUE_LEN3;
     }
-    _oDC.drawText(self.iLayoutValueXleft, self.iLayoutValueYbottom, self.oRezFontPlot, Lang.format("$1$ $2$", [sValue, $.oMySettings.sUnitHorizontalSpeed]), Gfx.TEXT_JUSTIFY_LEFT);
+    _oDC.drawText(self.iLayoutValueXleft, self.iLayoutValueYbottom, self.oRezFontPlot as Ui.FontResource, Lang.format("$1$ $2$", [sValue, $.oMySettings.sUnitHorizontalSpeed]), Gfx.TEXT_JUSTIFY_LEFT);
 
     // ... finesse
-    if($.oMyProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and !$.oMyProcessing.bAscent and $.oMyProcessing.fFinesse != null) {
+    if($.oMyProcessing.iAccuracy > Pos.QUALITY_NOT_AVAILABLE and !$.oMyProcessing.bAscent and LangUtils.notNaN($.oMyProcessing.fFinesse)) {
       fValue = $.oMyProcessing.fFinesse;
       sValue = fValue.format("%.0f");
     }
     else {
       sValue = $.MY_NOVALUE_LEN2;
     }
-    _oDC.drawText(self.iLayoutValueXright, self.iLayoutValueYbottom, self.oRezFontPlot, sValue, Gfx.TEXT_JUSTIFY_RIGHT);
+    _oDC.drawText(self.iLayoutValueXright, self.iLayoutValueYbottom, self.oRezFontPlot as Ui.FontResource, sValue, Gfx.TEXT_JUSTIFY_RIGHT);
   }
 
   function onHide() {
@@ -352,7 +335,7 @@ class MyViewVarioplot extends MyViewHeader {
     $.iMyViewVarioplotOffsetY = 0;
 
     // Mute tones
-    App.getApp().muteTones();
+    (App.getApp() as MyApp).muteTones();
 
     // Free resources
     // ... buttons
@@ -418,7 +401,7 @@ class MyViewVarioplotDelegate extends Ui.BehaviorDelegate {
     }
     else if($.oMyActivity != null) {
       if($.oMySettings.bGeneralLapKey) {
-        $.oMyActivity.addLap();
+        ($.oMyActivity as MyActivity).addLap();
       }
       return true;
     }

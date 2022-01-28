@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.WatchUi as Ui;
 
 class MyMenuGeneric extends Ui.Menu {
@@ -24,129 +25,129 @@ class MyMenuGeneric extends Ui.Menu {
   // FUNCTIONS: Ui.Menu (override/implement)
   //
 
-  function initialize(_menu) {
+  function initialize(_menu as Symbol) {
     Menu.initialize();
 
     if(_menu == :menuSettings) {
-      Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettings));
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsAltimeter), :menuSettingsAltimeter);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsVariometer), :menuSettingsVariometer);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsSafety), :menuSettingsSafety);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsSounds), :menuSettingsSounds);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsGeneral), :menuSettingsGeneral);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsUnits), :menuSettingsUnits);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorage), :menuStorage);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleAbout), :menuAbout);
+      Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettings) as String);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsAltimeter) as String, :menuSettingsAltimeter);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsVariometer) as String, :menuSettingsVariometer);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsSafety) as String, :menuSettingsSafety);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsSounds) as String, :menuSettingsSounds);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsGeneral) as String, :menuSettingsGeneral);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsUnits) as String, :menuSettingsUnits);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorage) as String, :menuStorage);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleAbout) as String, :menuAbout);
     }
 
     else if(_menu == :menuSettingsAltimeter) {
-      Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsAltimeter));
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCalibration), :menuAltimeterCalibration);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCorrection), :menuAltimeterCorrection);
+      Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsAltimeter) as String);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCalibration) as String, :menuAltimeterCalibration);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCorrection) as String, :menuAltimeterCorrection);
     }
     else if(_menu == :menuAltimeterCalibration) {
-      Menu.setTitle(Ui.loadResource(Rez.Strings.titleAltimeterCalibration));
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCalibrationQNH), :menuAltimeterCalibrationQNH);
-      if($.oMyAltimeter.fAltitudeActual != null) {
-        Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCalibrationElevation), :menuAltimeterCalibrationElevation);
+      Menu.setTitle(Ui.loadResource(Rez.Strings.titleAltimeterCalibration) as String);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCalibrationQNH) as String, :menuAltimeterCalibrationQNH);
+      if(LangUtils.notNaN($.oMyAltimeter.fAltitudeActual)) {
+        Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCalibrationElevation) as String, :menuAltimeterCalibrationElevation);
       }
     }
     else if(_menu == :menuAltimeterCorrection) {
-      Menu.setTitle(Ui.loadResource(Rez.Strings.titleAltimeterCorrection));
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCorrectionAbsolute), :menuAltimeterCorrectionAbsolute);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCorrectionRelative), :menuAltimeterCorrectionRelative);
+      Menu.setTitle(Ui.loadResource(Rez.Strings.titleAltimeterCorrection) as String);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCorrectionAbsolute) as String, :menuAltimeterCorrectionAbsolute);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleAltimeterCorrectionRelative) as String, :menuAltimeterCorrectionRelative);
     }
 
     else if(_menu == :menuSettingsVariometer) {
-      Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsVariometer));
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleVariometerRange), :menuVariometerRange);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleVariometerMode), :menuVariometerMode);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleVariometerEnergyEfficiency), :menuVariometerEnergyEfficiency);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleVariometerPlotRange), :menuVariometerPlotRange);
+      Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsVariometer) as String);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleVariometerRange) as String, :menuVariometerRange);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleVariometerMode) as String, :menuVariometerMode);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleVariometerEnergyEfficiency) as String, :menuVariometerEnergyEfficiency);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleVariometerPlotRange) as String, :menuVariometerPlotRange);
     }
 
     else if(_menu == :menuSettingsSafety) {
-      Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsSafety));
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyFinesse), :menuSafetyFinesse);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightDecision), :menuSafetyHeightDecision);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightWarning), :menuSafetyHeightWarning);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightCritical), :menuSafetyHeightCritical);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightReference), :menuSafetyHeightReference);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeadingBug), :menuSafetyHeadingBug);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyGraceDuration), :menuSafetyGraceDuration);
+      Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsSafety) as String);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyFinesse) as String, :menuSafetyFinesse);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightDecision) as String, :menuSafetyHeightDecision);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightWarning) as String, :menuSafetyHeightWarning);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightCritical) as String, :menuSafetyHeightCritical);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeightReference) as String, :menuSafetyHeightReference);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyHeadingBug) as String, :menuSafetyHeadingBug);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSafetyGraceDuration) as String, :menuSafetyGraceDuration);
     }
 
     else if(_menu == :menuSettingsSounds) {
-      Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsSounds));
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSoundsVariometerTones), :menuSoundsVariometerTones);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSoundsSafetyTones), :menuSoundsSafetyTones);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSoundsMuteDistance), :menuSoundsMuteDistance);
+      Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsSounds) as String);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSoundsVariometerTones) as String, :menuSoundsVariometerTones);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSoundsSafetyTones) as String, :menuSoundsSafetyTones);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSoundsMuteDistance) as String, :menuSoundsMuteDistance);
     }
 
     else if(_menu == :menuSettingsGeneral) {
-      Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsGeneral));
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralTimeConstant), :menuGeneralTimeConstant);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralDisplayFilter), :menuGeneralDisplayFilter);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralBackgroundColor), :menuGeneralBackgroundColor);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralAutoActivity), :menuGeneralAutoActivity);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralLapKey), :menuGeneralLapKey);
+      Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsGeneral) as String);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralTimeConstant) as String, :menuGeneralTimeConstant);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralDisplayFilter) as String, :menuGeneralDisplayFilter);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralBackgroundColor) as String, :menuGeneralBackgroundColor);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralAutoActivity) as String, :menuGeneralAutoActivity);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleGeneralLapKey) as String, :menuGeneralLapKey);
     }
 
     else if(_menu == :menuSettingsUnits) {
-      Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsUnits));
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleUnitDistance), :menuUnitDistance);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleUnitElevation), :menuUnitElevation);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleUnitPressure), :menuUnitPressure);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleUnitRateOfTurn), :menuUnitRateOfTurn);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleUnitTimeUTC), :menuUnitTimeUTC);
+      Menu.setTitle(Ui.loadResource(Rez.Strings.titleSettingsUnits) as String);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleUnitDistance) as String, :menuUnitDistance);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleUnitElevation) as String, :menuUnitElevation);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleUnitPressure) as String, :menuUnitPressure);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleUnitRateOfTurn) as String, :menuUnitRateOfTurn);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleUnitTimeUTC) as String, :menuUnitTimeUTC);
     }
 
     else if(_menu == :menuStorage) {
-      Menu.setTitle(Ui.loadResource(Rez.Strings.titleStorage));
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageImportData), :menuStorageImportData);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageClear), :menuStorageClear);
+      Menu.setTitle(Ui.loadResource(Rez.Strings.titleStorage) as String);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageImportData) as String, :menuStorageImportData);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageClear) as String, :menuStorageClear);
     }
 
     else if(_menu == :menuDestination) {
-      Menu.setTitle(Ui.loadResource(Rez.Strings.titleDestination));
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageLoad), :menuDestinationLoad);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageEdit), :menuDestinationEdit);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageSave), :menuDestinationSave);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageDelete), :menuDestinationDelete);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsSafety), :menuSettingsSafety);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettings), :menuSettings);
+      Menu.setTitle(Ui.loadResource(Rez.Strings.titleDestination) as String);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageLoad) as String, :menuDestinationLoad);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageEdit) as String, :menuDestinationEdit);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageSave) as String, :menuDestinationSave);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageDelete) as String, :menuDestinationDelete);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettingsSafety) as String, :menuSettingsSafety);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleSettings) as String, :menuSettings);
     }
     else if(_menu == :menuDestinationEdit) {
-      Menu.setTitle(Ui.loadResource(Rez.Strings.titleStorageEdit));
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationName), :menuDestinationName);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationLatitude), :menuDestinationLatitude);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationLongitude), :menuDestinationLongitude);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationElevation), :menuDestinationElevation);
-      if($.oMyPositionLocation != null and $.oMyPositionAltitude != null) {
-        Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationFromCurrent), :menuDestinationFromCurrent);
+      Menu.setTitle(Ui.loadResource(Rez.Strings.titleStorageEdit) as String);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationName) as String, :menuDestinationName);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationLatitude) as String, :menuDestinationLatitude);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationLongitude) as String, :menuDestinationLongitude);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationElevation) as String, :menuDestinationElevation);
+      if($.oMyPositionLocation != null and LangUtils.notNaN($.fMyPositionAltitude)) {
+        Menu.addItem(Ui.loadResource(Rez.Strings.titleDestinationFromCurrent) as String, :menuDestinationFromCurrent);
       }
     }
 
     else if(_menu == :menuAbout) {
-      Menu.setTitle(Ui.loadResource(Rez.Strings.titleAbout));
-      Menu.addItem(Lang.format("$1$: $2$", [Ui.loadResource(Rez.Strings.titleVersion), Ui.loadResource(Rez.Strings.AppVersion)]), :aboutVersion);
-      Menu.addItem(Lang.format("$1$: GPL 3.0", [Ui.loadResource(Rez.Strings.titleLicense)]), :aboutLicense);
-      Menu.addItem(Lang.format("$1$: Cédric Dufour", [Ui.loadResource(Rez.Strings.titleAuthor)]), :aboutAuthor);
+      Menu.setTitle(Ui.loadResource(Rez.Strings.titleAbout) as String);
+      Menu.addItem(format("$1$: $2$", [Ui.loadResource(Rez.Strings.titleVersion), Ui.loadResource(Rez.Strings.AppVersion)]), :aboutVersion);
+      Menu.addItem(format("$1$: GPL 3.0", [Ui.loadResource(Rez.Strings.titleLicense)]), :aboutLicense);
+      Menu.addItem(format("$1$: Cédric Dufour", [Ui.loadResource(Rez.Strings.titleAuthor)]), :aboutAuthor);
     }
 
     else if(_menu == :menuActivity) {
-      Menu.setTitle(Ui.loadResource(Rez.Strings.titleActivity));
+      Menu.setTitle(Ui.loadResource(Rez.Strings.titleActivity) as String);
       if($.oMyActivity != null) {
-        if($.oMyActivity.isRecording()) {
-          Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityPause), :menuActivityPause);
+        if(($.oMyActivity as MyActivity).isRecording()) {
+          Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityPause) as String, :menuActivityPause);
         }
         else {
-          Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityResume), :menuActivityResume);
+          Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityResume) as String, :menuActivityResume);
         }
-        Menu.addItem(Ui.loadResource(Rez.Strings.titleActivitySave), :menuActivitySave);
-        Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityDiscard), :menuActivityDiscard);
+        Menu.addItem(Ui.loadResource(Rez.Strings.titleActivitySave) as String, :menuActivitySave);
+        Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityDiscard) as String, :menuActivityDiscard);
         if(!$.oMySettings.bGeneralLapKey) {
-          Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityLap), :menuActivityLap);
+          Menu.addItem(Ui.loadResource(Rez.Strings.titleActivityLap) as String, :menuActivityLap);
         }
       }
     }
@@ -161,19 +162,19 @@ class MyMenuGenericDelegate extends Ui.MenuInputDelegate {
   // VARIABLES
   //
 
-  private var menu;
+  private var menu as Symbol = :menuNone;
 
 
   //
   // FUNCTIONS: Ui.MenuInputDelegate (override/implement)
   //
 
-  function initialize(_menu) {
+  function initialize(_menu as Symbol) {
     MenuInputDelegate.initialize();
     self.menu = _menu;
   }
 
-  function onMenuItem(_item) {
+  function onMenuItem(_item as Symbol) {
 
     if(self.menu == :menuSettings) {
       if(_item == :menuSettingsAltimeter) {
@@ -470,12 +471,12 @@ class MyMenuGenericDelegate extends Ui.MenuInputDelegate {
     else if(self.menu == :menuActivity) {
       if(_item == :menuActivityResume) {
         if($.oMyActivity != null) {
-          $.oMyActivity.resume();
+          ($.oMyActivity as MyActivity).resume();
         }
       }
       else if(_item == :menuActivityPause) {
         if($.oMyActivity != null) {
-          $.oMyActivity.pause();
+          ($.oMyActivity as MyActivity).pause();
         }
       }
       else if(_item == :menuActivitySave) {

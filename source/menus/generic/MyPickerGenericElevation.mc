@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
@@ -25,44 +26,44 @@ class MyPickerGenericElevation extends PickerGenericElevation {
   // FUNCTIONS: PickerGenericElevation (override/implement)
   //
 
-  function initialize(_context, _item) {
+  function initialize(_context as Symbol, _item as Symbol) {
     if(_context == :contextSettings) {
       if(_item == :itemAltimeterCalibration) {
-        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleAltimeterCalibrationElevation),
+        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleAltimeterCalibrationElevation) as String,
                                           $.oMyAltimeter.fAltitudeActual,
                                           $.oMySettings.iUnitElevation,
                                           false);
       }
       else if(_item == :itemSafetyHeightDecision) {
-        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightDecision),
-                                          App.Properties.getValue("userSafetyHeightDecision"),
+        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightDecision) as String,
+                                          $.oMySettings.loadSafetyHeightDecision(),
                                           $.oMySettings.iUnitElevation,
                                           false);
       }
       else if(_item == :itemSafetyHeightWarning) {
-        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightWarning),
-                                          App.Properties.getValue("userSafetyHeightWarning"),
+        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightWarning) as String,
+                                          $.oMySettings.loadSafetyHeightWarning(),
                                           $.oMySettings.iUnitElevation,
                                           false);
       }
       else if(_item == :itemSafetyHeightCritical) {
-        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightCritical),
-                                          App.Properties.getValue("userSafetyHeightCritical"),
+        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightCritical) as String,
+                                          $.oMySettings.loadSafetyHeightCritical(),
                                           $.oMySettings.iUnitElevation,
                                           false);
       }
       else if(_item == :itemSafetyHeightReference) {
-        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightReference),
-                                          App.Properties.getValue("userSafetyHeightReference"),
+        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleSafetyHeightReference) as String,
+                                          $.oMySettings.loadSafetyHeightReference(),
                                           $.oMySettings.iUnitElevation,
                                           false);
       }
     }
     else if(_context == :contextDestination) {
       if(_item == :itemPosition) {
-        var d = App.Storage.getValue("storDestInUse");
-        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleDestinationElevation),
-                                          d != null ? d["elevation"] : 0.0f,
+        var d = App.Storage.getValue("storDestInUse") as Dictionary?;
+        PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleDestinationElevation) as String,
+                                          d != null ? d["elevation"] as Float : 0.0f,
                                           $.oMySettings.iUnitElevation,
                                           false);
       }
@@ -77,15 +78,15 @@ class MyPickerGenericElevationDelegate extends Ui.PickerDelegate {
   // VARIABLES
   //
 
-  private var context;
-  private var item;
+  private var context as Symbol = :contextNone;
+  private var item as Symbol = :itemNone;
 
 
   //
   // FUNCTIONS: Ui.PickerDelegate (override/implement)
   //
 
-  function initialize(_context, _item) {
+  function initialize(_context as Symbol, _item as Symbol) {
     PickerDelegate.initialize();
     self.context = _context;
     self.item = _item;
@@ -96,37 +97,39 @@ class MyPickerGenericElevationDelegate extends Ui.PickerDelegate {
     if(self.context == :contextSettings) {
       if(self.item == :itemAltimeterCalibration) {
         $.oMyAltimeter.setAltitudeActual(fValue);
-        App.Properties.setValue("userAltimeterCalibrationQNH", $.oMyAltimeter.fQNH);
+        $.oMySettings.saveAltimeterCalibrationQNH($.oMyAltimeter.fQNH);
       }
       else if(self.item == :itemSafetyHeightDecision) {
-        App.Properties.setValue("userSafetyHeightDecision", fValue);
+        $.oMySettings.saveSafetyHeightDecision(fValue);
       }
       else if(self.item == :itemSafetyHeightWarning) {
-        App.Properties.setValue("userSafetyHeightWarning", fValue);
+        $.oMySettings.saveSafetyHeightWarning(fValue);
       }
       else if(self.item == :itemSafetyHeightCritical) {
-        App.Properties.setValue("userSafetyHeightCritical", fValue);
+        $.oMySettings.saveSafetyHeightCritical(fValue);
       }
       else if(self.item == :itemSafetyHeightReference) {
-        App.Properties.setValue("userSafetyHeightReference", fValue);
+        $.oMySettings.saveSafetyHeightReference(fValue);
       }
     }
     else if(self.context == :contextDestination) {
-      var d = App.Storage.getValue("storDestInUse");
+      var d = App.Storage.getValue("storDestInUse") as Dictionary?;
       if(d == null) {
         d = {"name" => "----", "latitude" => 0.0f, "longitude" => 0.0f, "elevation" => 0.0f};
       }
       if(self.item == :itemPosition) {
         d["elevation"] = fValue;
       }
-      App.Storage.setValue("storDestInUse", d);
+      App.Storage.setValue("storDestInUse", d as App.PropertyValueType);
     }
     Ui.popView(Ui.SLIDE_IMMEDIATE);
+    return true;
   }
 
   function onCancel() {
     // Exit
     Ui.popView(Ui.SLIDE_IMMEDIATE);
+    return true;
   }
 
 }

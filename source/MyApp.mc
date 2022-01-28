@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Activity;
 using Toybox.Application as App;
 using Toybox.Attention as Attn;
@@ -32,30 +33,30 @@ using Toybox.WatchUi as Ui;
 //
 
 // Application settings
-var oMySettings = null;
+var oMySettings as MySettings = new MySettings() ;
 
 // (Last) position location/altitude
-var oMyPositionLocation = null;
-var oMyPositionAltitude = null;
+var oMyPositionLocation as Pos.Location?;
+var fMyPositionAltitude as Float = NaN;
 
 // Sensors filter
-var oMyFilter = null;
+var oMyFilter as MyFilter = new MyFilter();
 
 // Internal altimeter
-var oMyAltimeter = null;
+var oMyAltimeter as MyAltimeter = new MyAltimeter();
 
 // Processing logic
-var oMyProcessing = null;
-var oMyTimeStart = null;
+var oMyProcessing as MyProcessing = new MyProcessing();
+var oMyTimeStart as Time.Moment = Time.now();
 
 // Log
-var iMyLogIndex = null;
+var iMyLogIndex as Number = -1;
 
 // Activity session (recording)
-var oMyActivity = null;
+var oMyActivity as MyActivity?;
 
 // Current view
-var oMyView = null;
+var oMyView as MyView?;
 
 
 //
@@ -100,15 +101,15 @@ class MyApp extends App.AppBase {
 
   // Timers
   // ... UI update
-  private var oUpdateTimer;
-  private var iUpdateLastEpoch;
+  private var oUpdateTimer as Timer.Timer?;
+  private var iUpdateLastEpoch as Number = 0;
   // ... tones
-  private var oTonesTimer;
-  private var iTonesTick;
-  private var iTonesLastTick;
+  private var oTonesTimer as Timer.Timer?;
+  private var iTonesTick as Number = 1000;
+  private var iTonesLastTick as Number = 0;
 
   // Tones
-  private var iTones;
+  private var iTones as Number = 0;
 
 
   //
@@ -118,40 +119,22 @@ class MyApp extends App.AppBase {
   function initialize() {
     AppBase.initialize();
 
-    // Application settings
-    $.oMySettings = new MySettings();
-
-    // Sensors filter
-    $.oMyFilter = new MyFilter();
-
-    // Internal altimeter
-    $.oMyAltimeter = new MyAltimeter();
-
-    // Processing logic
-    $.oMyProcessing = new MyProcessing();
-
     // Log
     var iLogEpoch = 0;
     for(var n=0; n<$.MY_STORAGE_SLOTS; n++) {
       var s = n.format("%02d");
-      var dictLog = App.Storage.getValue(Lang.format("storLog$1$", [s]));
-      if(dictLog == null) {
-        break;
-      }
-      var i = dictLog.get("timeStart");
-      if(i != null and i > iLogEpoch) {
-        $.iMyLogIndex = n;
-        iLogEpoch = i;
+      var dictLog = App.Storage.getValue(format("storLog$1$", [s])) as Dictionary?;
+      if(dictLog != null) {
+        var i = dictLog.get("timeStart") as Number?;
+        if(i != null and (i as Number) > iLogEpoch) {
+          $.iMyLogIndex = n;
+          iLogEpoch = i;
+        }
       }
     }
 
     // Timers
     $.oMyTimeStart = Time.now();
-    // ... UI update
-    self.oUpdateTimer = null;
-    self.iUpdateLastEpoch = 0;
-    // ... tones
-    self.oTonesTimer = null;
   }
 
   function onStart(state) {
@@ -161,7 +144,7 @@ class MyApp extends App.AppBase {
     self.loadSettings();
 
     // Enable sensor events
-    Sensor.setEnabledSensors([]);  // ... we need just the acceleration
+    Sensor.setEnabledSensors([] as Array<Sensor.SensorType>);  // ... we need just the acceleration
     Sensor.enableSensorEvents(method(:onSensorEvent));
 
     // Enable position events
@@ -172,10 +155,10 @@ class MyApp extends App.AppBase {
     self.oUpdateTimer = new Timer.Timer();
     var iUpdateTimerDelay = (60-Sys.getClockTime().sec)%5;
     if(iUpdateTimerDelay > 0) {
-      self.oUpdateTimer.start(method(:onUpdateTimer_init), 1000*iUpdateTimerDelay, false);
+      (self.oUpdateTimer as Timer.Timer).start(method(:onUpdateTimer_init), 1000*iUpdateTimerDelay, false);
     }
     else {
-      self.oUpdateTimer.start(method(:onUpdateTimer), 5000, true);
+      (self.oUpdateTimer as Timer.Timer).start(method(:onUpdateTimer), 5000, true);
     }
   }
 
@@ -185,17 +168,17 @@ class MyApp extends App.AppBase {
     // Stop timers
     // ... UI update
     if(self.oUpdateTimer != null) {
-      self.oUpdateTimer.stop();
+      (self.oUpdateTimer as Timer.Timer).stop();
       self.oUpdateTimer = null;
     }
     // ... tones
     if(self.oTonesTimer != null) {
-      self.oTonesTimer.stop();
+      (self.oTonesTimer as Timer.Timer).stop();
       self.oTonesTimer = null;
     }
 
     // Disable position events
-    Pos.enableLocationEvents(Pos.LOCATION_DISABLE, null);
+    Pos.enableLocationEvents(Pos.LOCATION_DISABLE, method(:onLocationEvent));
 
     // Disable sensor events
     Sensor.enableSensorEvents(null);
@@ -204,7 +187,7 @@ class MyApp extends App.AppBase {
   function getInitialView() {
     //Sys.println("DEBUG: MyApp.getInitialView()");
 
-    return [new MyViewGeneral(), new MyViewGeneralDelegate()];
+    return [new MyViewGeneral(), new MyViewGeneralDelegate()] as Array<Ui.Views or Ui.InputDelegates>;
   }
 
   function onSettingsChanged() {
@@ -218,7 +201,7 @@ class MyApp extends App.AppBase {
   // FUNCTIONS: self
   //
 
-  function loadSettings() {
+  function loadSettings() as Void {
     //Sys.println("DEBUG: MyApp.loadSettings()");
 
     // Load settings
@@ -230,28 +213,35 @@ class MyApp extends App.AppBase {
     $.oMyProcessing.importSettings();
 
     // ... safety destination
-    var dictDestination = App.Storage.getValue("storDestInUse");
+    var dictDestination = App.Storage.getValue("storDestInUse") as Dictionary?;
     if(dictDestination == null) {
       // Hey! Gsk was born at LSGB ;-)
-      dictDestination = { "name" => "LSGB", "latitude" => 46.2583333333f, "longitude" => 6.98638888889f, "elevation" => 400.0f };
+      dictDestination = {"name" => "LSGB", "latitude" => 46.2583333333f, "longitude" => 6.98638888889f, "elevation" => 400.0f};
       // Yet, for debugging in the simulator (which is fond of Kansas City), KOJC or KIXD make more sense
-      //dictDestination = { "name" => "KOJC", "latitude" => 38.8476019f, "longitude" => -94.7375858f, "elevation" => 334.1f };
-      //dictDestination = { "name" => "KIXD", "latitude" => 38.8309167f, "longitude" => -94.8903056f, "elevation" => 331.4f };
-      App.Storage.setValue("storDestInUse", dictDestination);
+      //dictDestination = {"name" => "KOJC", "latitude" => 38.8476019f, "longitude" => -94.7375858f, "elevation" => 334.1f};
+      //dictDestination = {"name" => "KIXD", "latitude" => 38.8309167f, "longitude" => -94.8903056f, "elevation" => 331.4f};
+      App.Storage.setValue("storDestInUse", dictDestination as App.PropertyValueType);
     }
-    $.oMyProcessing.setDestination(dictDestination["name"], new Pos.Location({ :latitude => dictDestination["latitude"], :longitude => dictDestination["longitude"], :format => :degrees}), dictDestination["elevation"]);
+    $.oMyProcessing.setDestination(dictDestination["name"] as String,
+                                   new Pos.Location({
+                                       :latitude => dictDestination["latitude"] as Float,
+                                       :longitude => dictDestination["longitude"] as Float,
+                                       :format => :degrees}),
+                                   dictDestination["elevation"] as Float);
 
     // ... tones
     self.muteTones();
   }
 
-  function onSensorEvent(_oInfo) {
+  function onSensorEvent(_oInfo as Sensor.Info) as Void {
     //Sys.println("DEBUG: MyApp.onSensorEvent());
 
     // Process altimeter data
     var oActivityInfo = Activity.getActivityInfo();  // ... we need *raw ambient* pressure
-    if(oActivityInfo has :rawAmbientPressure and oActivityInfo.rawAmbientPressure != null) {
-      $.oMyAltimeter.setQFE(oActivityInfo.rawAmbientPressure);
+    if(oActivityInfo != null) {
+      if(oActivityInfo has :rawAmbientPressure and oActivityInfo.rawAmbientPressure != null) {
+        $.oMyAltimeter.setQFE(oActivityInfo.rawAmbientPressure as Float);
+      }
     }
 
     // Process sensor data
@@ -259,15 +249,15 @@ class MyApp extends App.AppBase {
 
     // Save FIT fields
     if($.oMyActivity != null) {
-      $.oMyActivity.setBarometricAltitude($.oMyProcessing.fAltitude);
+      ($.oMyActivity as MyActivity).setBarometricAltitude($.oMyProcessing.fAltitude);
       if($.oMySettings.iVariometerMode == 0) {
-        $.oMyActivity.setVerticalSpeed($.oMyProcessing.fVariometer);
+        ($.oMyActivity as MyActivity).setVerticalSpeed($.oMyProcessing.fVariometer);
       }
-      $.oMyActivity.setAcceleration($.oMyProcessing.fAcceleration);
+      ($.oMyActivity as MyActivity).setAcceleration($.oMyProcessing.fAcceleration);
     }
   }
 
-  function onLocationEvent(_oInfo) {
+  function onLocationEvent(_oInfo as Pos.Info) as Void {
     //Sys.println("DEBUG: MyApp.onLocationEvent()");
     var oTimeNow = Time.now();
     var iEpoch = oTimeNow.value();
@@ -278,31 +268,31 @@ class MyApp extends App.AppBase {
     }
 
     // Save altitude
-    if(_oInfo has :altitude) {
-      $.oMyPositionAltitude = _oInfo.altitude;
+    if(_oInfo has :altitude and _oInfo.altitude != null) {
+      $.fMyPositionAltitude = _oInfo.altitude as Float;
     }
 
     // Process position data
     $.oMyProcessing.processPositionInfo(_oInfo, iEpoch);
     if($.oMyActivity != null) {
-      $.oMyActivity.processPositionInfo(_oInfo, iEpoch, oTimeNow);
+      ($.oMyActivity as MyActivity).processPositionInfo(_oInfo, iEpoch, oTimeNow);
     }
 
     // Automatic Activity recording
-    if($.oMySettings.bGeneralAutoActivity and $.oMyProcessing.fGroundSpeed != null) {
+    if($.oMySettings.bGeneralAutoActivity and LangUtils.notNaN($.oMyProcessing.fGroundSpeed)) {
       if($.oMyActivity == null) {
         if($.oMyProcessing.fGroundSpeed > 10.0f) {  // 10 m/s = 36km/h
           $.oMyActivity = new MyActivity();
-          $.oMyActivity.start();
+          ($.oMyActivity as MyActivity).start();
         }
       }
       else {
         if($.oMyProcessing.fGroundSpeed < 5.0f) {  // 5 m/s = 18km/h
-          $.oMyActivity.pause();
+          ($.oMyActivity as MyActivity).pause();
         }
-        else if(!$.oMyActivity.isRecording() and $.oMyProcessing.fGroundSpeed > 10.0f) {  // 10 m/s = 36km/h
-          $.oMyActivity.addLap();
-          $.oMyActivity.resume();
+        else if(!($.oMyActivity as MyActivity).isRecording() and $.oMyProcessing.fGroundSpeed > 10.0f) {  // 10 m/s = 36km/h
+          ($.oMyActivity as MyActivity).addLap();
+          ($.oMyActivity as MyActivity).resume();
         }
       }
     }
@@ -313,20 +303,20 @@ class MyApp extends App.AppBase {
     // Save FIT fields
     if($.oMyActivity != null) {
       if($.oMySettings.iVariometerMode == 1) {
-        $.oMyActivity.setVerticalSpeed($.oMyProcessing.fVariometer);
+        ($.oMyActivity as MyActivity).setVerticalSpeed($.oMyProcessing.fVariometer);
       }
-      $.oMyActivity.setRateOfTurn($.oMyProcessing.fRateOfTurn);
+      ($.oMyActivity as MyActivity).setRateOfTurn($.oMyProcessing.fRateOfTurn);
     }
   }
 
-  function onUpdateTimer_init() {
+  function onUpdateTimer_init() as Void {
     //Sys.println("DEBUG: MyApp.onUpdateTimer_init()");
     self.onUpdateTimer();
     self.oUpdateTimer = new Timer.Timer();
-    self.oUpdateTimer.start(method(:onUpdateTimer), 5000, true);
+    (self.oUpdateTimer as Timer.Timer).start(method(:onUpdateTimer), 5000, true);
   }
 
-  function onUpdateTimer() {
+  function onUpdateTimer() as Void {
     //Sys.println("DEBUG: MyApp.onUpdateTimer()");
     var iEpoch = Time.now().value();
     if(iEpoch-self.iUpdateLastEpoch > 1) {
@@ -334,49 +324,49 @@ class MyApp extends App.AppBase {
     }
   }
 
-  function onTonesTimer() {
+  function onTonesTimer() as Void {
     //Sys.println("DEBUG: MyApp.onTonesTimer()");
     self.playTones();
     self.iTonesTick++;
   }
 
-  function updateUi(_iEpoch) {
+  function updateUi(_iEpoch as Number) as Void {
     //Sys.println("DEBUG: MyApp.updateUi()");
 
     // Check sensor data age
-    if($.oMyProcessing.iSensorEpoch != null and _iEpoch-$.oMyProcessing.iSensorEpoch > 10) {
+    if($.oMyProcessing.iSensorEpoch >= 0 and _iEpoch-$.oMyProcessing.iSensorEpoch > 10) {
       $.oMyProcessing.resetSensorData();
       $.oMyAltimeter.reset();
     }
 
     // Check position data age
-    if($.oMyProcessing.iPositionEpoch != null and _iEpoch-$.oMyProcessing.iPositionEpoch > 10) {
+    if($.oMyProcessing.iPositionEpoch >= 0 and _iEpoch-$.oMyProcessing.iPositionEpoch > 10) {
       $.oMyProcessing.resetPositionData();
     }
 
     // Update UI
     if($.oMyView != null) {
-      $.oMyView.updateUi();
+      ($.oMyView as MyView).updateUi();
       self.iUpdateLastEpoch = _iEpoch;
     }
   }
 
-  function muteTones() {
+  function muteTones() as Void {
     // Stop tones timers
     if(self.oTonesTimer != null) {
-      self.oTonesTimer.stop();
+      (self.oTonesTimer as Timer.Timer).stop();
       self.oTonesTimer = null;
     }
   }
 
-  function unmuteTones(_iTones) {
+  function unmuteTones(_iTones as Number) as Void {
     // Enable tones
     self.iTones = 0;
-    if(Attn has :playTone) {
-      if(_iTones & self.TONES_SAFETY and $.oMySettings.bSoundsSafetyTones) {
+    if(Toybox.Attention has :playTone) {
+      if(_iTones & self.TONES_SAFETY != 0 and $.oMySettings.bSoundsSafetyTones) {
         self.iTones |= self.TONES_SAFETY;
       }
-      if(_iTones & self.TONES_VARIOMETER and $.oMySettings.bSoundsVariometerTones) {
+      if(_iTones & self.TONES_VARIOMETER != 0 and $.oMySettings.bSoundsVariometerTones) {
         self.iTones |= self.TONES_VARIOMETER;
       }
     }
@@ -391,14 +381,14 @@ class MyApp extends App.AppBase {
     }
   }
 
-  function playTones() {
-    //Sys.println(Lang.format("DEBUG: MyApp.playTones() @ $1$", [self.iTonesTick]));
+  function playTones() as Void {
+    //Sys.println(format("DEBUG: MyApp.playTones() @ $1$", [self.iTonesTick]));
 
     // Check mute distance
     if($.oMySettings.fSoundsMuteDistance > 0.0f
-       and $.oMyProcessing.fDistanceToDestination != null
+       and LangUtils.notNaN($.oMyProcessing.fDistanceToDestination)
        and $.oMyProcessing.fDistanceToDestination <= $.oMySettings.fSoundsMuteDistance) {
-      //Sys.println(Lang.format("DEBUG: playTone: mute! @ $1$ ($2$ <= $3$)", [self.iTonesTick, $.oMyProcessing.fDistanceToDestination, $.oMySettings.fSoundsMuteDistance]));
+      //Sys.println(format("DEBUG: playTone: mute! @ $1$ ($2$ <= $3$)", [self.iTonesTick, $.oMyProcessing.fDistanceToDestination, $.oMySettings.fSoundsMuteDistance]));
       return;
     }
 
@@ -407,13 +397,13 @@ class MyApp extends App.AppBase {
       if($.oMyProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {  // position accuracy is good enough
         if($.oMyProcessing.bDecision and !$.oMyProcessing.bGrace) {
           if($.oMyProcessing.bAltitudeCritical and self.iTonesTick-self.iTonesLastTick >= (self.iTones & self.TONES_VARIOMETER ? 10 : 1)) {
-            //Sys.println(Lang.format("DEBUG: playTone = altitude critical @ $1$", [self.iTonesTick]));
+            //Sys.println(format("DEBUG: playTone = altitude critical @ $1$", [self.iTonesTick]));
             Attn.playTone(Attn.TONE_LOUD_BEEP);
             self.iTonesLastTick = self.iTonesTick;
             return;
           }
           else if($.oMyProcessing.bAltitudeWarning and self.iTonesTick-self.iTonesLastTick >= (self.iTones & self.TONES_VARIOMETER ? 30 : 3)) {
-            //Sys.println(Lang.format("DEBUG: playTone: altitude warning @ $1$", [self.iTonesTick]));
+            //Sys.println(format("DEBUG: playTone: altitude warning @ $1$", [self.iTonesTick]));
             Attn.playTone(Attn.TONE_LOUD_BEEP);
             self.iTonesLastTick = self.iTonesTick;
             return;
@@ -421,7 +411,7 @@ class MyApp extends App.AppBase {
         }
       }
       else if(self.iTonesTick-self.iTonesLastTick >= (self.iTones & self.TONES_VARIOMETER ? 20 : 2)) {
-        //Sys.println(Lang.format("DEBUG: playTone: position accuracy @ $1$", [self.iTonesTick]));
+        //Sys.println(format("DEBUG: playTone: position accuracy @ $1$", [self.iTonesTick]));
         Attn.playTone(Attn.TONE_ALARM);
         self.iTonesLastTick = self.iTonesTick;
           return;
@@ -434,9 +424,9 @@ class MyApp extends App.AppBase {
     if(self.iTones & self.TONES_VARIOMETER)
     {
       var fValue = $.oMySettings.iGeneralDisplayFilter >= 1 ? $.oMyProcessing.fVariometer_filtered : $.oMyProcessing.fVariometer;
-      if(fValue != null and fValue > 0.05f) {
+      if(fValue > 0.05f) {
         if(self.iTonesTick-self.iTonesLastTick >= 20.0f-18.0f*fValue/$.oMySettings.fVariometerRange) {
-          //Sys.println(Lang.format("DEBUG: playTone: variometer @ $1$", [self.iTonesTick]));
+          //Sys.println(format("DEBUG: playTone: variometer @ $1$", [self.iTonesTick]));
           Attn.playTone(Attn.TONE_KEY);
           self.iTonesLastTick = self.iTonesTick;
           return;
@@ -445,21 +435,21 @@ class MyApp extends App.AppBase {
     }
   }
 
-  function importStorageData(_sFile) {
-    //Sys.println(Lang.format("DEBUG: MyApp.importStorageData($1$)", [_sFile]));
+  function importStorageData(_sFile as String) as Void {
+    //Sys.println(format("DEBUG: MyApp.importStorageData($1$)", [_sFile]));
 
-    Comm.makeWebRequest(Lang.format("$1$/$2$.json", [App.Properties.getValue("userStorageRepositoryURL"), _sFile]),
+    Comm.makeWebRequest(format("$1$/$2$.json", [App.Properties.getValue("userStorageRepositoryURL"), _sFile]),
                         null,
-                        { :method => Comm.HTTP_REQUEST_METHOD_GET, :responseType => Comm.HTTP_RESPONSE_CONTENT_TYPE_JSON },
+                        {:method => Comm.HTTP_REQUEST_METHOD_GET, :responseType => Comm.HTTP_RESPONSE_CONTENT_TYPE_JSON},
                         method(:onStorageDataReceive));
   }
 
-  function onStorageDataReceive(_iResponseCode, _dictData) {
-    //Sys.println(Lang.format("DEBUG: MyApp.onStorageDataReceive($1$, ...)", [_iResponseCode]));
+  function onStorageDataReceive(_iResponseCode as Number, _dictData as Dictionary?) as Void {
+    //Sys.println(format("DEBUG: MyApp.onStorageDataReceive($1$, ...)", [_iResponseCode]));
 
     // Check response code
-    if(_iResponseCode != 200) {
-      if(Attn has :playTone) {
+    if(_iResponseCode != 200 or _dictData == null) {
+      if(Toybox.Attention has :playTone) {
         Attn.playTone(Attn.TONE_FAILURE);
       }
       return;
@@ -467,31 +457,35 @@ class MyApp extends App.AppBase {
 
     // Validate (!) and store data
 
-    // .. .destinations
-    if(_dictData.hasKey("destinations")) {
-      var dictDestinations = _dictData.get("destinations");
+    // ... destinations
+    var dictDestinations = _dictData.get("destinations") as Dictionary?;
+    if(dictDestinations != null and dictDestinations instanceof Dictionary) {
       for(var n=0; n<$.MY_STORAGE_SLOTS; n++) {
         var s = n.format("%02d");
-        if(dictDestinations.hasKey(s)) {
-          var dictDestination = dictDestinations.get(s);
-          if(dictDestination.size() == 4 and
-             dictDestination.hasKey("name") and
-             dictDestination.hasKey("latitude") and
-             dictDestination.hasKey("longitude") and
-             dictDestination.hasKey("elevation")) {
-            App.Storage.setValue(Lang.format("storDest$1$", [s]), LangUtils.copy(dictDestination));
+        var dictDestination = dictDestinations.get(s) as Dictionary?;
+        if(dictDestination != null and dictDestination instanceof Dictionary) {
+          if(dictDestination.hasKey("latitude") and (dictDestination["latitude"] instanceof Float or dictDestination["latitude"] instanceof Double) and
+             dictDestination.hasKey("longitude") and (dictDestination["longitude"] instanceof Float or dictDestination["longitude"] instanceof Double) and
+             dictDestination.hasKey("elevation") and (dictDestination["elevation"] instanceof Float or dictDestination["elevation"] instanceof Double)) {
+            var dictStore = {  // store only valid keys
+              "name" => dictDestination["name"],
+              "latitude" => (dictDestination["latitude"] as Decimal).toFloat(),
+              "longitude" => (dictDestination["longitude"] as Decimal).toFloat(),
+              "elevation" => (dictDestination["elevation"] as Decimal).toFloat(),
+            };
+            App.Storage.setValue(format("storDest$1$", [s]), dictStore as App.PropertyValueType);
           }
         }
       }
     }
 
     // Done
-    if(Attn has :playTone) {
+    if(Toybox.Attention has :playTone) {
       Attn.playTone(Attn.TONE_SUCCESS);
     }
   }
 
-  function clearStorageData() {
+  function clearStorageData() as Void {
     //Sys.println("DEBUG: MyApp.clearStorageData()");
 
     // Delete all storage data
@@ -499,7 +493,7 @@ class MyApp extends App.AppBase {
     // .. .destinations
     for(var n=0; n<$.MY_STORAGE_SLOTS; n++) {
       var s = n.format("%02d");
-      App.Storage.deleteValue(Lang.format("storDest$1$", [s]));
+      App.Storage.deleteValue(format("storDest$1$", [s]));
     }
   }
 

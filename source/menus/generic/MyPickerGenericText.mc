@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
@@ -25,11 +26,11 @@ class MyPickerGenericText extends Ui.TextPicker {
   // FUNCTIONS: Ui.TextPicker (override/implement)
   //
 
-  function initialize(_context, _item) {
+  function initialize(_context as Symbol, _item as Symbol) {
     if(_context == :contextDestination) {
-      var d = App.Storage.getValue("storDestInUse");
+      var d = App.Storage.getValue("storDestInUse") as Dictionary?;
       if(_item == :itemName) {
-        TextPicker.initialize(d != null ? d["name"] : "");
+        TextPicker.initialize(d != null ? d["name"] as String : "");
       }
     }
     else if(_context == :contextStorage) {
@@ -47,15 +48,15 @@ class MyPickerGenericTextDelegate extends Ui.TextPickerDelegate {
   // VARIABLES
   //
 
-  private var context;
-  private var item;
+  private var context as Symbol = :contextNone;
+  private var item as Symbol = :itemNone;
 
 
   //
   // FUNCTIONS: Ui.TextPickerDelegate (override/implement)
   //
 
-  function initialize(_context, _item) {
+  function initialize(_context as Symbol, _item as Symbol) {
     TextPickerDelegate.initialize();
     self.context = _context;
     self.item = _item;
@@ -63,20 +64,21 @@ class MyPickerGenericTextDelegate extends Ui.TextPickerDelegate {
 
   function onTextEntered(_sText, _bChanged) {
     if(self.context == :contextDestination) {
-      var d = App.Storage.getValue("storDestInUse");
+      var d = App.Storage.getValue("storDestInUse") as Dictionary?;
       if(d == null) {
         d = {"name" => "----", "latitude" => 0.0f, "longitude" => 0.0f, "elevation" => 0.0f};
       }
       if(self.item == :itemName) {
         d["name"] = _sText;
       }
-      App.Storage.setValue("storDestInUse", d);
+      App.Storage.setValue("storDestInUse", d as App.PropertyValueType);
     }
     else if(self.context == :contextStorage) {
       if(self.item == :itemImportData) {
-        App.getApp().importStorageData(_sText);
+        (App.getApp() as MyApp).importStorageData(_sText);
       }
     }
+    return true;
   }
 
 }

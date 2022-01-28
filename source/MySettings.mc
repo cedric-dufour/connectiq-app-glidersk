@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
@@ -29,156 +30,172 @@ class MySettings {
 
   // Settings
   // ... altimeter
-  public var fAltimeterCalibrationQNH;
-  public var fAltimeterCorrectionAbsolute;
-  public var fAltimeterCorrectionRelative;
+  public var fAltimeterCalibrationQNH as Float = 101325.0f;
+  public var fAltimeterCorrectionAbsolute as Float = 0.0f;
+  public var fAltimeterCorrectionRelative as Float = 1.0f;
   // ... variometer
-  public var iVariometerRange;
-  public var iVariometerMode;
-  public var iVariometerEnergyEfficiency;
-  public var iVariometerPlotRange;
-  public var iVariometerPlotZoom;
+  public var iVariometerRange as Number = 0;
+  public var iVariometerMode as Number = 0;
+  public var iVariometerEnergyEfficiency as Number = 75;
+  public var iVariometerPlotRange as Number = 1;
+  public var iVariometerPlotZoom as Number = 6;
   // ... safety
-  public var iSafetyFinesse;
-  public var fSafetyHeightDecision;
-  public var fSafetyHeightWarning;
-  public var fSafetyHeightCritical;
-  public var fSafetyHeightReference;
-  public var iSafetyHeadingBug;
-  public var iSafetyGraceDuration;
+  public var iSafetyFinesse as Number = 20;
+  public var fSafetyHeightDecision as Float = 500.0f;
+  public var fSafetyHeightWarning as Float = 400.0f;
+  public var fSafetyHeightCritical as Float = 300.0f;
+  public var fSafetyHeightReference as Float = 300.0f;
+  public var iSafetyHeadingBug as Number = 2;
+  public var iSafetyGraceDuration as Number = 0;
   // ... sounds
-  public var bSoundsVariometerTones;
-  public var bSoundsSafetyTones;
-  public var fSoundsMuteDistance;
+  public var bSoundsVariometerTones as Boolean = true;
+  public var bSoundsSafetyTones as Boolean = true;
+  public var fSoundsMuteDistance as Float = 2000.0f;
   // ... general
-  public var iGeneralTimeConstant;
-  public var iGeneralDisplayFilter;
-  public var iGeneralBackgroundColor;
-  public var bGeneralAutoActivity;
-  public var bGeneralLapKey;
+  public var iGeneralTimeConstant as Number = 5;
+  public var iGeneralDisplayFilter as Number = 1;
+  public var iGeneralBackgroundColor as Number = Gfx.COLOR_WHITE;
+  public var bGeneralAutoActivity as Boolean = false;
+  public var bGeneralLapKey as Boolean = true;
   // ... units
-  public var iUnitDistance;
-  public var iUnitElevation;
-  public var iUnitPressure;
-  public var iUnitRateOfTurn;
-  public var bUnitTimeUTC;
+  public var iUnitDistance as Number = -1;
+  public var iUnitElevation as Number = -1;
+  public var iUnitPressure as Number = -1;
+  public var iUnitRateOfTurn as Number = 0;
+  public var bUnitTimeUTC as Boolean = false;
 
   // Units
   // ... symbols
-  public var sUnitDistance;
-  public var sUnitHorizontalSpeed;
-  public var sUnitElevation;
-  public var sUnitVerticalSpeed;
-  public var sUnitPressure;
-  public var sUnitRateOfTurn;
-  public var sUnitTime;
+  public var sUnitDistance as String = "km";
+  public var sUnitHorizontalSpeed as String = "km/h";
+  public var sUnitElevation as String = "m";
+  public var sUnitVerticalSpeed as String = "m/s";
+  public var sUnitPressure as String = "mb";
+  public var sUnitRateOfTurn as String = "°/s";
+  public var sUnitTime as String = "LT";
   // ... conversion coefficients
-  public var fUnitDistanceCoefficient;
-  public var fUnitHorizontalSpeedCoefficient;
-  public var fUnitElevationCoefficient;
-  public var fUnitVerticalSpeedCoefficient;
-  public var fUnitPressureCoefficient;
-  public var fUnitRateOfTurnCoefficient;
+  public var fUnitDistanceCoefficient as Float = 0.001f;
+  public var fUnitHorizontalSpeedCoefficient as Float = 3.6f;
+  public var fUnitElevationCoefficient as Float = 1.0f;
+  public var fUnitVerticalSpeedCoefficient as Float = 1.0f;
+  public var fUnitPressureCoefficient as Float = 0.01f;
+  public var fUnitRateOfTurnCoefficient as Float = 57.2957795131f;
 
   // Other
-  public var fVariometerRange;
-  public var fVariometerEnergyEfficiency;
-  public var fVariometerPlotZoom;
+  public var fVariometerRange as Float = 3.0f;
+  public var fVariometerEnergyEfficiency as Float = 0.75f;
+  public var fVariometerPlotZoom as Float = 0.0030866666667f;
 
 
   //
   // FUNCTIONS: self
   //
 
-  function load() {
+  function load() as Void {
     // Settings
     // ... altimeter
-    self.setAltimeterCalibrationQNH(App.Properties.getValue("userAltimeterCalibrationQNH"));
-    self.setAltimeterCorrectionAbsolute(App.Properties.getValue("userAltimeterCorrectionAbsolute"));
-    self.setAltimeterCorrectionRelative(App.Properties.getValue("userAltimeterCorrectionRelative"));
+    self.setAltimeterCalibrationQNH(self.loadAltimeterCalibrationQNH());
+    self.setAltimeterCorrectionAbsolute(self.loadAltimeterCorrectionAbsolute());
+    self.setAltimeterCorrectionRelative(self.loadAltimeterCorrectionRelative());
     // ... variometer
-    self.setVariometerRange(App.Properties.getValue("userVariometerRange"));
-    self.setVariometerMode(App.Properties.getValue("userVariometerMode"));
-    self.setVariometerEnergyEfficiency(App.Properties.getValue("userVariometerEnergyEfficiency"));
-    self.setVariometerPlotRange(App.Properties.getValue("userVariometerPlotRange"));
-    self.setVariometerPlotZoom(App.Properties.getValue("userVariometerPlotZoom"));
+    self.setVariometerRange(self.loadVariometerRange());
+    self.setVariometerMode(self.loadVariometerMode());
+    self.setVariometerEnergyEfficiency(self.loadVariometerEnergyEfficiency());
+    self.setVariometerPlotRange(self.loadVariometerPlotRange());
+    self.setVariometerPlotZoom(self.loadVariometerPlotZoom());
     // ... safety
-    self.setSafetyFinesse(App.Properties.getValue("userSafetyFinesse"));
-    self.setSafetyHeightDecision(App.Properties.getValue("userSafetyHeightDecision"));
-    self.setSafetyHeightWarning(App.Properties.getValue("userSafetyHeightWarning"));
-    self.setSafetyHeightCritical(App.Properties.getValue("userSafetyHeightCritical"));
-    self.setSafetyHeightReference(App.Properties.getValue("userSafetyHeightReference"));
-    self.setSafetyHeadingBug(App.Properties.getValue("userSafetyHeadingBug"));
-    self.setSafetyGraceDuration(App.Properties.getValue("userSafetyGraceDuration"));
+    self.setSafetyFinesse(self.loadSafetyFinesse());
+    self.setSafetyHeightDecision(self.loadSafetyHeightDecision());
+    self.setSafetyHeightWarning(self.loadSafetyHeightWarning());
+    self.setSafetyHeightCritical(self.loadSafetyHeightCritical());
+    self.setSafetyHeightReference(self.loadSafetyHeightReference());
+    self.setSafetyHeadingBug(self.loadSafetyHeadingBug());
+    self.setSafetyGraceDuration(self.loadSafetyGraceDuration());
     // ... sounds
-    self.setSoundsVariometerTones(App.Properties.getValue("userSoundsVariometerTones"));
-    self.setSoundsSafetyTones(App.Properties.getValue("userSoundsSafetyTones"));
-    self.setSoundsMuteDistance(App.Properties.getValue("userSoundsMuteDistance"));
+    self.setSoundsVariometerTones(self.loadSoundsVariometerTones());
+    self.setSoundsSafetyTones(self.loadSoundsSafetyTones());
+    self.setSoundsMuteDistance(self.loadSoundsMuteDistance());
     // ... general
-    self.setGeneralTimeConstant(App.Properties.getValue("userGeneralTimeConstant"));
-    self.setGeneralDisplayFilter(App.Properties.getValue("userGeneralDisplayFilter"));
-    self.setGeneralBackgroundColor(App.Properties.getValue("userGeneralBackgroundColor"));
-    self.setGeneralAutoActivity(App.Properties.getValue("userGeneralAutoActivity"));
-    self.setGeneralLapKey(App.Properties.getValue("userGeneralLapKey"));
+    self.setGeneralTimeConstant(self.loadGeneralTimeConstant());
+    self.setGeneralDisplayFilter(self.loadGeneralDisplayFilter());
+    self.setGeneralBackgroundColor(self.loadGeneralBackgroundColor());
+    self.setGeneralAutoActivity(self.loadGeneralAutoActivity());
+    self.setGeneralLapKey(self.loadGeneralLapKey());
     // ... units
-    self.setUnitDistance(App.Properties.getValue("userUnitDistance"));
-    self.setUnitElevation(App.Properties.getValue("userUnitElevation"));
-    self.setUnitPressure(App.Properties.getValue("userUnitPressure"));
-    self.setUnitRateOfTurn(App.Properties.getValue("userUnitRateOfTurn"));
-    self.setUnitTimeUTC(App.Properties.getValue("userUnitTimeUTC"));
+    self.setUnitDistance(self.loadUnitDistance());
+    self.setUnitElevation(self.loadUnitElevation());
+    self.setUnitPressure(self.loadUnitPressure());
+    self.setUnitRateOfTurn(self.loadUnitRateOfTurn());
+    self.setUnitTimeUTC(self.loadUnitTimeUTC());
   }
 
-  function setAltimeterCalibrationQNH(_fAltimeterCalibrationQNH) {  // [Pa]
+  function loadAltimeterCalibrationQNH() as Float {  // [Pa]
+    var fValue = App.Properties.getValue("userAltimeterCalibrationQNH") as Float?;
+    return fValue != null ? fValue : 101325.0f;
+  }
+  function saveAltimeterCalibrationQNH(_fValue as Float) as Void {  // [Pa]
+    App.Properties.setValue("userAltimeterCalibrationQNH", _fValue as App.PropertyValueType);
+  }
+  function setAltimeterCalibrationQNH(_fValue as Float) as Void {  // [Pa]
     // REF: https://en.wikipedia.org/wiki/Atmospheric_pressure#Records
-    if(_fAltimeterCalibrationQNH == null) {
-      _fAltimeterCalibrationQNH = 101325.0f;
+    if(_fValue > 110000.0f) {
+      _fValue = 110000.0f;
     }
-    else if(_fAltimeterCalibrationQNH > 110000.0f) {
-      _fAltimeterCalibrationQNH = 110000.0f;
+    else if(_fValue < 85000.0f) {
+      _fValue = 85000.0f;
     }
-    else if(_fAltimeterCalibrationQNH < 85000.0f) {
-      _fAltimeterCalibrationQNH = 85000.0f;
-    }
-    self.fAltimeterCalibrationQNH = _fAltimeterCalibrationQNH;
+    self.fAltimeterCalibrationQNH = _fValue;
   }
 
-  function setAltimeterCorrectionAbsolute(_fAltimeterCorrectionAbsolute) {  // [Pa]
-    if(_fAltimeterCorrectionAbsolute == null) {
-      _fAltimeterCorrectionAbsolute = 0.0f;
+  function loadAltimeterCorrectionAbsolute() as Float {  // [Pa]
+    var fValue = App.Properties.getValue("userAltimeterCorrectionAbsolute") as Float?;
+    return fValue != null ? fValue : 0.0f;
+  }
+  function saveAltimeterCorrectionAbsolute(_fValue as Float) as Void {  // [Pa]
+    App.Properties.setValue("userAltimeterCorrectionAbsolute", _fValue as App.PropertyValueType);
+  }
+  function setAltimeterCorrectionAbsolute(_fValue as Float) as Void {  // [Pa]
+    if(_fValue > 9999.0f) {
+      _fValue = 9999.0f;
     }
-    else if(_fAltimeterCorrectionAbsolute > 9999.0f) {
-      _fAltimeterCorrectionAbsolute = 9999.0f;
+    else if(_fValue < -9999.0f) {
+      _fValue = -9999.0f;
     }
-    else if(_fAltimeterCorrectionAbsolute < -9999.0f) {
-      _fAltimeterCorrectionAbsolute = -9999.0f;
-    }
-    self.fAltimeterCorrectionAbsolute = _fAltimeterCorrectionAbsolute;
+    self.fAltimeterCorrectionAbsolute = _fValue;
   }
 
-  function setAltimeterCorrectionRelative(_fAltimeterCorrectionRelative) {
-    if(_fAltimeterCorrectionRelative == null) {
-      _fAltimeterCorrectionRelative = 1.0f;
+  function loadAltimeterCorrectionRelative() as Float {
+    var fValue = App.Properties.getValue("userAltimeterCorrectionRelative") as Float?;
+    return fValue != null ? fValue : 1.0f;
+  }
+  function saveAltimeterCorrectionRelative(_fValue as Float) as Void {
+    App.Properties.setValue("userAltimeterCorrectionRelative", _fValue as App.PropertyValueType);
+  }
+  function setAltimeterCorrectionRelative(_fValue as Float) as Void {
+    if(_fValue > 1.9999f) {
+      _fValue = 1.9999f;
     }
-    else if(_fAltimeterCorrectionRelative > 1.9999f) {
-      _fAltimeterCorrectionRelative = 1.9999f;
+    else if(_fValue < 0.0001f) {
+      _fValue = 0.0001f;
     }
-    else if(_fAltimeterCorrectionRelative < 0.0001f) {
-      _fAltimeterCorrectionRelative = 0.0001f;
-    }
-    self.fAltimeterCorrectionRelative = _fAltimeterCorrectionRelative;
+    self.fAltimeterCorrectionRelative = _fValue;
   }
 
-  function setVariometerRange(_iVariometerRange) {
-    if(_iVariometerRange == null) {
-      _iVariometerRange = 0;
+  function loadVariometerRange() as Number {
+    var iValue = App.Properties.getValue("userVariometerRange") as Number?;
+    return iValue != null ? iValue : 0;
+  }
+  function saveVariometerRange(_iValue as Number) as Void {
+    App.Properties.setValue("userVariometerRange", _iValue as App.PropertyValueType);
+  }
+  function setVariometerRange(_iValue as Number) as Void {
+    if(_iValue > 2) {
+      _iValue = 2;
     }
-    else if(_iVariometerRange > 2) {
-      _iVariometerRange = 2;
+    else if(_iValue < 0) {
+      _iValue = 0;
     }
-    else if(_iVariometerRange < 0) {
-      _iVariometerRange = 0;
-    }
-    self.iVariometerRange = _iVariometerRange;
+    self.iVariometerRange = _iValue;
     switch(self.iVariometerRange) {
     case 0: self.fVariometerRange = 3.0f; break;
     case 1: self.fVariometerRange = 6.0f; break;
@@ -186,57 +203,73 @@ class MySettings {
     }
   }
 
-  function setVariometerMode(_iVariometerMode) {
-    if(_iVariometerMode == null) {
-      _iVariometerMode = 0;
+  function loadVariometerMode() as Number {
+    var iValue = App.Properties.getValue("userVariometerMode") as Number?;
+    return iValue != null ? iValue : 0;
+  }
+  function saveVariometerMode(_iValue as Number) as Void {
+    App.Properties.setValue("userVariometerMode", _iValue as App.PropertyValueType);
+  }
+  function setVariometerMode(_iValue as Number) as Void {
+    if(_iValue > 1) {
+      _iValue = 1;
     }
-    else if(_iVariometerMode > 1) {
-      _iVariometerMode = 1;
+    else if(_iValue < 0) {
+      _iValue = 0;
     }
-    else if(_iVariometerMode < 0) {
-      _iVariometerMode = 0;
-    }
-    self.iVariometerMode = _iVariometerMode;
+    self.iVariometerMode = _iValue;
   }
 
-  function setVariometerEnergyEfficiency(_iVariometerEnergyEfficiency) {  // [%]
-    if(_iVariometerEnergyEfficiency == null) {
-      _iVariometerEnergyEfficiency = 75;
+  function loadVariometerEnergyEfficiency() as Number {  // [%]
+    var iValue = App.Properties.getValue("userVariometerEnergyEfficiency") as Number?;
+    return iValue != null ? iValue : 75;
+  }
+  function saveVariometerEnergyEfficiency(_iValue as Number) as Void {  // [%]
+    App.Properties.setValue("userVariometerEnergyEfficiency", _iValue as App.PropertyValueType);
+  }
+  function setVariometerEnergyEfficiency(_iValue as Number) as Void {  // [%]
+    if(_iValue > 100) {
+      _iValue = 100;
     }
-    else if(_iVariometerEnergyEfficiency > 100) {
-      _iVariometerEnergyEfficiency = 100;
+    else if(_iValue < 0) {
+      _iValue = 0;
     }
-    else if(_iVariometerEnergyEfficiency < 0) {
-      _iVariometerEnergyEfficiency = 0;
-    }
-    self.iVariometerEnergyEfficiency = _iVariometerEnergyEfficiency;
+    self.iVariometerEnergyEfficiency = _iValue;
     self.fVariometerEnergyEfficiency = self.iVariometerEnergyEfficiency / 100.0f;
   }
 
-  function setVariometerPlotRange(_iVariometerPlotRange) {
-    if(_iVariometerPlotRange == null) {
-      _iVariometerPlotRange = 1;
+  function loadVariometerPlotRange() as Number {
+    var iValue = App.Properties.getValue("userVariometerPlotRange") as Number?;
+    return iValue != null ? iValue : 1;
+  }
+  function saveVariometerPlotRange(_iValue as Number) as Void {
+    App.Properties.setValue("userVariometerPlotRange", _iValue as App.PropertyValueType);
+  }
+  function setVariometerPlotRange(_iValue as Number) as Void {
+    if(_iValue > 5) {
+      _iValue = 5;
     }
-    else if(_iVariometerPlotRange > 5) {
-      _iVariometerPlotRange = 5;
+    else if(_iValue < 1) {
+      _iValue = 1;
     }
-    else if(_iVariometerPlotRange < 1) {
-      _iVariometerPlotRange = 1;
-    }
-    self.iVariometerPlotRange = _iVariometerPlotRange;
+    self.iVariometerPlotRange = _iValue;
   }
 
-  function setVariometerPlotZoom(_iVariometerPlotZoom) {
-    if(_iVariometerPlotZoom == null) {
-      _iVariometerPlotZoom = 6;
+  function loadVariometerPlotZoom() as Number {
+    var iValue = App.Properties.getValue("userVariometerPlotZoom") as Number?;
+    return iValue != null ? iValue : 6;
+  }
+  function saveVariometerPlotZoom(_iValue as Number) as Void {
+    App.Properties.setValue("userVariometerPlotZoom", _iValue as App.PropertyValueType);
+  }
+  function setVariometerPlotZoom(_iValue as Number) as Void {
+    if(_iValue > 9) {
+      _iValue = 9;
     }
-    else if(_iVariometerPlotZoom > 9) {
-      _iVariometerPlotZoom = 9;
+    else if(_iValue < 0) {
+      _iValue = 0;
     }
-    else if(_iVariometerPlotZoom < 0) {
-      _iVariometerPlotZoom = 0;
-    }
-    self.iVariometerPlotZoom = _iVariometerPlotZoom;
+    self.iVariometerPlotZoom = _iValue;
     switch(self.iVariometerPlotZoom) {
     case 0: self.fVariometerPlotZoom = 0.0000308666667f; break;  // 1000m/px
     case 1: self.fVariometerPlotZoom = 0.0000617333333f; break;  // 500m/px
@@ -251,180 +284,250 @@ class MySettings {
     }
   }
 
-  function setSafetyFinesse(_iSafetyFinesse) {
-    if(_iSafetyFinesse == null) {
-      _iSafetyFinesse = 20;
+  function loadSafetyFinesse() as Number {
+    var iValue = App.Properties.getValue("userSafetyFinesse") as Number?;
+    return iValue != null ? iValue : 20;
+  }
+  function saveSafetyFinesse(_iValue as Number) as Void {
+    App.Properties.setValue("userSafetyFinesse", _iValue as App.PropertyValueType);
+  }
+  function setSafetyFinesse(_iValue as Number) as Void {
+    if(_iValue > 99) {
+      _iValue = 99;
     }
-    else if(_iSafetyFinesse > 99) {
-      _iSafetyFinesse = 99;
+    else if(_iValue < 1) {
+      _iValue = 1;
     }
-    else if(_iSafetyFinesse < 1) {
-      _iSafetyFinesse = 1;
-    }
-    self.iSafetyFinesse = _iSafetyFinesse;
+    self.iSafetyFinesse = _iValue;
   }
 
-  function setSafetyHeightDecision(_fSafetyHeightDecision) {  // [m]
-    if(_fSafetyHeightDecision == null) {
-      _fSafetyHeightDecision = 500.0f;
+  function loadSafetyHeightDecision() as Float {  // [m]
+    var fValue = App.Properties.getValue("userSafetyHeightDecision") as Float?;
+    return fValue != null ? fValue : 500.0f;
+  }
+  function saveSafetyHeightDecision(_fValue as Float) as Void {  // [m]
+    App.Properties.setValue("userSafetyHeightDecision", _fValue as App.PropertyValueType);
+  }
+  function setSafetyHeightDecision(_fValue as Float) as Void {  // [m]
+    if(_fValue > 9999.0f) {
+      _fValue = 9999.0f;
     }
-    else if(_fSafetyHeightDecision > 9999.0f) {
-      _fSafetyHeightDecision = 9999.0f;
+    else if(_fValue < 0.0f) {
+      _fValue = 0.0f;
     }
-    else if(_fSafetyHeightDecision < 0.0f) {
-      _fSafetyHeightDecision = 0.0f;
-    }
-    self.fSafetyHeightDecision = _fSafetyHeightDecision;
+    self.fSafetyHeightDecision = _fValue;
   }
 
-  function setSafetyHeightWarning(_fSafetyHeightWarning) {  // [m]
-    if(_fSafetyHeightWarning == null) {
-      _fSafetyHeightWarning = 400.0f;
+  function loadSafetyHeightWarning() as Float {  // [m]
+    var fValue = App.Properties.getValue("userSafetyHeightWarning") as Float?;
+    return fValue != null ? fValue : 400.0f;
+  }
+  function saveSafetyHeightWarning(_fValue as Float) as Void {  // [m]
+    App.Properties.setValue("userSafetyHeightWarning", _fValue as App.PropertyValueType);
+  }
+  function setSafetyHeightWarning(_fValue as Float) as Void {  // [m]
+    if(_fValue > 9999.0f) {
+      _fValue = 9999.0f;
     }
-    else if(_fSafetyHeightWarning > 9999.0f) {
-      _fSafetyHeightWarning = 9999.0f;
+    else if(_fValue < 0.0f) {
+      _fValue = 0.0f;
     }
-    else if(_fSafetyHeightWarning < 0.0f) {
-      _fSafetyHeightWarning = 0.0f;
-    }
-    self.fSafetyHeightWarning = _fSafetyHeightWarning;
+    self.fSafetyHeightWarning = _fValue;
   }
 
-  function setSafetyHeightCritical(_fSafetyHeightCritical) {  // [m]
-    if(_fSafetyHeightCritical == null) {
-      _fSafetyHeightCritical = 300.0f;
+  function loadSafetyHeightCritical() as Float {  // [m]
+    var fValue = App.Properties.getValue("userSafetyHeightCritical") as Float?;
+    return fValue != null ? fValue : 300.0f;
+  }
+  function saveSafetyHeightCritical(_fValue as Float) as Void {  // [m]
+    App.Properties.setValue("userSafetyHeightCritical", _fValue as App.PropertyValueType);
+  }
+  function setSafetyHeightCritical(_fValue as Float) as Void {  // [m]
+    if(_fValue > 9999.0f) {
+      _fValue = 9999.0f;
     }
-    else if(_fSafetyHeightCritical > 9999.0f) {
-      _fSafetyHeightCritical = 9999.0f;
+    else if(_fValue < 0.0f) {
+      _fValue = 0.0f;
     }
-    else if(_fSafetyHeightCritical < 0.0f) {
-      _fSafetyHeightCritical = 0.0f;
-    }
-    self.fSafetyHeightCritical = _fSafetyHeightCritical;
+    self.fSafetyHeightCritical = _fValue;
   }
 
-  function setSafetyHeightReference(_fSafetyHeightReference) {  // [m]
-    if(_fSafetyHeightReference == null) {
-      _fSafetyHeightReference = 300.0f;
+  function loadSafetyHeightReference() as Float {  // [m]
+    var fValue = App.Properties.getValue("userSafetyHeightReference") as Float?;
+    return fValue != null ? fValue : 300.0f;
+  }
+  function saveSafetyHeightReference(_fValue as Float) as Void {  // [m]
+    App.Properties.setValue("userSafetyHeightReference", _fValue as App.PropertyValueType);
+  }
+  function setSafetyHeightReference(_fValue as Float) as Void {  // [m]
+    if(_fValue > 9999.0f) {
+      _fValue = 9999.0f;
     }
-    else if(_fSafetyHeightReference > 9999.0f) {
-      _fSafetyHeightReference = 9999.0f;
+    else if(_fValue < 0.0f) {
+      _fValue = 0.0f;
     }
-    else if(_fSafetyHeightReference < 0.0f) {
-      _fSafetyHeightReference = 0.0f;
-    }
-    self.fSafetyHeightReference = _fSafetyHeightReference;
+    self.fSafetyHeightReference = _fValue;
   }
 
-  function setSafetyHeadingBug(_iSafetyHeadingBug) {
-    if(_iSafetyHeadingBug == null) {
-      _iSafetyHeadingBug = 2;
+  function loadSafetyHeadingBug() as Number {
+    var iValue = App.Properties.getValue("userSafetyHeadingBug") as Number?;
+    return iValue != null ? iValue : 2;
+  }
+  function saveSafetyHeadingBug(_iValue as Number) as Void {
+    App.Properties.setValue("userSafetyHeadingBug", _iValue as App.PropertyValueType);
+  }
+  function setSafetyHeadingBug(_iValue as Number) as Void {
+    if(_iValue > 2) {
+      _iValue = 2;
     }
-    else if(_iSafetyHeadingBug > 2) {
-      _iSafetyHeadingBug = 2;
+    else if(_iValue < 0) {
+      _iValue = 0;
     }
-    else if(_iSafetyHeadingBug < 0) {
-      _iSafetyHeadingBug = 0;
-    }
-    self.iSafetyHeadingBug = _iSafetyHeadingBug;
+    self.iSafetyHeadingBug = _iValue;
   }
 
-  function setSafetyGraceDuration(_iSafetyGraceDuration) {  // [s]
-    if(_iSafetyGraceDuration == null) {
-      _iSafetyGraceDuration = 0;
+  function loadSafetyGraceDuration() as Number {  // [s]
+    var iValue = App.Properties.getValue("userSafetyGraceDuration") as Number?;
+    return iValue != null ? iValue : 0;
+  }
+  function saveSafetyGraceDuration(_iValue as Number) as Void {  // [s]
+    App.Properties.setValue("userSafetyGraceDuration", _iValue as App.PropertyValueType);
+  }
+  function setSafetyGraceDuration(_iValue as Number) as Void {  // [s]
+    if(_iValue > 3600) {
+      _iValue = 3600;
     }
-    else if(_iSafetyGraceDuration > 3600) {
-      _iSafetyGraceDuration = 3600;
+    else if(_iValue < 0) {
+      _iValue = 0;
     }
-    else if(_iSafetyGraceDuration < 0) {
-      _iSafetyGraceDuration = 0;
-    }
-    self.iSafetyGraceDuration = _iSafetyGraceDuration;
+    self.iSafetyGraceDuration = _iValue;
   }
 
-  function setSoundsVariometerTones(_bSoundsVariometerTones) {
-    if(_bSoundsVariometerTones == null) {
-      _bSoundsVariometerTones = true;
-    }
-    self.bSoundsVariometerTones = _bSoundsVariometerTones;
+  function loadSoundsVariometerTones() as Boolean {
+    var bValue = App.Properties.getValue("userSoundsVariometerTones") as Boolean?;
+    return bValue != null ? bValue : true;
+  }
+  function saveSoundsVariometerTones(_bValue as Boolean) as Void {
+    App.Properties.setValue("userSoundsVariometerTones", _bValue as App.PropertyValueType);
+  }
+  function setSoundsVariometerTones(_bValue as Boolean) as Void {
+    self.bSoundsVariometerTones = _bValue;
   }
 
-  function setSoundsSafetyTones(_bSoundsSafetyTones) {
-    if(_bSoundsSafetyTones == null) {
-      _bSoundsSafetyTones = true;
-    }
-    self.bSoundsSafetyTones = _bSoundsSafetyTones;
+  function loadSoundsSafetyTones() as Boolean {
+    var bValue = App.Properties.getValue("userSoundsSafetyTones") as Boolean?;
+    return bValue != null ? bValue : true;
+  }
+  function saveSoundsSafetyTones(_bValue as Boolean) as Void {
+    App.Properties.setValue("userSoundsSafetyTones", _bValue as App.PropertyValueType);
+  }
+  function setSoundsSafetyTones(_bValue as Boolean) as Void {
+    self.bSoundsSafetyTones = _bValue;
   }
 
-  function setSoundsMuteDistance(_fSoundsMuteDistance) {  // [m]
-    if(_fSoundsMuteDistance == null) {
-      _fSoundsMuteDistance = 2000.0f;
+  function loadSoundsMuteDistance() as Float {  // [m]
+    var fValue = App.Properties.getValue("userSoundsMuteDistance") as Float?;
+    return fValue != null ? fValue : 2000.0f;
+  }
+  function saveSoundsMuteDistance(_fValue as Float) as Void {  // [m]
+    App.Properties.setValue("userSoundsMuteDistance", _fValue as App.PropertyValueType);
+  }
+  function setSoundsMuteDistance(_fValue as Float) as Void {  // [m]
+    if(_fValue > 9999.0f) {
+      _fValue = 9999.0f;
     }
-    else if(_fSoundsMuteDistance > 9999.0f) {
-      _fSoundsMuteDistance = 9999.0f;
+    else if(_fValue < 0.0f) {
+      _fValue = 0.0f;
     }
-    else if(_fSoundsMuteDistance < 0.0f) {
-      _fSoundsMuteDistance = 0.0f;
-    }
-    self.fSoundsMuteDistance = _fSoundsMuteDistance;
+    self.fSoundsMuteDistance = _fValue;
   }
 
-  function setGeneralTimeConstant(_iGeneralTimeConstant) {  // [s]
-    if(_iGeneralTimeConstant == null) {
-      _iGeneralTimeConstant = 5;
+  function loadGeneralTimeConstant() as Number {  // [s]
+    var iValue = App.Properties.getValue("userGeneralTimeConstant") as Number?;
+    return iValue != null ? iValue : 5;
+  }
+  function saveGeneralTimeConstant(_iValue as Number) as Void {  // [s]
+    App.Properties.setValue("userGeneralTimeConstant", _iValue as App.PropertyValueType);
+  }
+  function setGeneralTimeConstant(_iValue as Number) as Void {  // [s]
+    if(_iValue > 60) {
+      _iValue = 60;
     }
-    else if(_iGeneralTimeConstant > 60) {
-      _iGeneralTimeConstant = 60;
+    else if(_iValue < 0) {
+      _iValue = 0;
     }
-    else if(_iGeneralTimeConstant < 0) {
-      _iGeneralTimeConstant = 0;
-    }
-    self.iGeneralTimeConstant = _iGeneralTimeConstant;
+    self.iGeneralTimeConstant = _iValue;
   }
 
-  function setGeneralDisplayFilter(_iGeneralDisplayFilter) {
-    if(_iGeneralDisplayFilter == null or _iGeneralDisplayFilter < 0 or _iGeneralDisplayFilter > 2) {
-      _iGeneralDisplayFilter = 1;
+  function loadGeneralDisplayFilter() as Number {
+    var iValue = App.Properties.getValue("userGeneralDisplayFilter") as Number?;
+    return iValue != null ? iValue : 1;
+  }
+  function saveGeneralDisplayFilter(_iValue as Number) as Void {
+    App.Properties.setValue("userGeneralDisplayFilter", _iValue as App.PropertyValueType);
+  }
+  function setGeneralDisplayFilter(_iValue as Number) as Void {
+    if(_iValue < 0 or _iValue > 2) {
+      _iValue = 1;
     }
-    self.iGeneralDisplayFilter = _iGeneralDisplayFilter;
+    self.iGeneralDisplayFilter = _iValue;
   }
 
-  function setGeneralBackgroundColor(_iGeneralBackgroundColor) {
-    if(_iGeneralBackgroundColor == null) {
-      _iGeneralBackgroundColor = Gfx.COLOR_WHITE;
-    }
-    self.iGeneralBackgroundColor = _iGeneralBackgroundColor;
+  function loadGeneralBackgroundColor() as Number {
+    var iValue = App.Properties.getValue("userGeneralBackgroundColor") as Number?;
+    return iValue != null ? iValue : Gfx.COLOR_WHITE;
+  }
+  function saveGeneralBackgroundColor(_iValue as Number) as Void {
+    App.Properties.setValue("userGeneralBackgroundColor", _iValue as App.PropertyValueType);
+  }
+  function setGeneralBackgroundColor(_iValue as Number) as Void {
+    self.iGeneralBackgroundColor = _iValue;
   }
 
-  function setGeneralAutoActivity(_bGeneralAutoActivity) {
-    if(_bGeneralAutoActivity == null) {
-      _bGeneralAutoActivity = false;
-    }
-    self.bGeneralAutoActivity = _bGeneralAutoActivity;
+  function loadGeneralAutoActivity() as Boolean {
+    var bValue = App.Properties.getValue("userGeneralAutoActivity") as Boolean?;
+    return bValue != null ? bValue : false;
+  }
+  function saveGeneralAutoActivity(_bValue as Boolean) as Void {
+    App.Properties.setValue("userGeneralAutoActivity", _bValue as App.PropertyValueType);
+  }
+  function setGeneralAutoActivity(_bValue as Boolean) as Void {
+    self.bGeneralAutoActivity = _bValue;
   }
 
-  function setGeneralLapKey(_bGeneralLapKey) {
-    if(_bGeneralLapKey == null) {
-      _bGeneralLapKey = true;
-    }
-    self.bGeneralLapKey = _bGeneralLapKey;
+  function loadGeneralLapKey() as Boolean {
+    var bValue = App.Properties.getValue("userGeneralLapKey") as Boolean?;
+    return bValue != null ? bValue : true;
+  }
+  function saveGeneralLapKey(_bValue as Boolean) as Void {
+    App.Properties.setValue("userGeneralLapKey", _bValue as App.PropertyValueType);
+  }
+  function setGeneralLapKey(_bValue as Boolean) as Void {
+    self.bGeneralLapKey = _bValue;
   }
 
-  function setUnitDistance(_iUnitDistance) {
-    if(_iUnitDistance == null or _iUnitDistance < 0 or _iUnitDistance > 2) {
-      _iUnitDistance = -1;
+  function loadUnitDistance() as Number {
+    var iValue = App.Properties.getValue("userUnitDistance") as Number?;
+    return iValue != null ? iValue : -1;
+  }
+  function saveUnitDistance(_iValue as Number) as Void {
+    App.Properties.setValue("userUnitDistance", _iValue as App.PropertyValueType);
+  }
+  function setUnitDistance(_iValue as Number) as Void {
+    if(_iValue < 0 or _iValue > 2) {
+      _iValue = -1;
     }
-    self.iUnitDistance = _iUnitDistance;
+    self.iUnitDistance = _iValue;
     if(self.iUnitDistance < 0) {  // ... auto
       var oDeviceSettings = Sys.getDeviceSettings();
       if(oDeviceSettings has :distanceUnits and oDeviceSettings.distanceUnits != null) {
-        _iUnitDistance = oDeviceSettings.distanceUnits;
+        _iValue = oDeviceSettings.distanceUnits;
       }
       else {
-        _iUnitDistance = Sys.UNIT_METRIC;
+        _iValue = Sys.UNIT_METRIC;
       }
     }
-    if(_iUnitDistance == 2) {  // ... nautical
+    if(_iValue == 2) {  // ... nautical
       // ... [nm]
       self.sUnitDistance = "nm";
       self.fUnitDistanceCoefficient = 0.000539956803456f;  // ... m -> nm
@@ -432,7 +535,7 @@ class MySettings {
       self.sUnitHorizontalSpeed = "kt";
       self.fUnitHorizontalSpeedCoefficient = 1.94384449244f;  // ... m/s -> kt
     }
-    else if(_iUnitDistance == Sys.UNIT_STATUTE) {  // ... statute
+    else if(_iValue == Sys.UNIT_STATUTE) {  // ... statute
       // ... [sm]
       self.sUnitDistance = "sm";
       self.fUnitDistanceCoefficient = 0.000621371192237f;  // ... m -> sm
@@ -450,21 +553,28 @@ class MySettings {
     }
   }
 
-  function setUnitElevation(_iUnitElevation) {
-    if(_iUnitElevation == null or _iUnitElevation < 0 or _iUnitElevation > 1) {
-      _iUnitElevation = -1;
+  function loadUnitElevation() as Number {
+    var iValue = App.Properties.getValue("userUnitElevation") as Number?;
+    return iValue != null ? iValue : -1;
+  }
+  function saveUnitElevation(_iValue as Number) as Void {
+    App.Properties.setValue("userUnitElevation", _iValue as App.PropertyValueType);
+  }
+  function setUnitElevation(_iValue as Number) as Void {
+    if(_iValue < 0 or _iValue > 1) {
+      _iValue = -1;
     }
-    self.iUnitElevation = _iUnitElevation;
+    self.iUnitElevation = _iValue;
     if(self.iUnitElevation < 0) {  // ... auto
       var oDeviceSettings = Sys.getDeviceSettings();
       if(oDeviceSettings has :elevationUnits and oDeviceSettings.elevationUnits != null) {
-        _iUnitElevation = oDeviceSettings.elevationUnits;
+        _iValue = oDeviceSettings.elevationUnits;
       }
       else {
-        _iUnitElevation = Sys.UNIT_METRIC;
+        _iValue = Sys.UNIT_METRIC;
       }
     }
-    if(_iUnitElevation == Sys.UNIT_STATUTE) {  // ... statute
+    if(_iValue == Sys.UNIT_STATUTE) {  // ... statute
       // ... [ft]
       self.sUnitElevation = "ft";
       self.fUnitElevationCoefficient = 3.280839895f;  // ... m -> ft
@@ -482,22 +592,29 @@ class MySettings {
     }
   }
 
-  function setUnitPressure(_iUnitPressure) {
-    if(_iUnitPressure == null or _iUnitPressure < 0 or _iUnitPressure > 1) {
-      _iUnitPressure = -1;
+  function loadUnitPressure() as Number {
+    var iValue = App.Properties.getValue("userUnitPressure") as Number?;
+    return iValue != null ? iValue : -1;
+  }
+  function saveUnitPressure(_iValue as Number) as Void {
+    App.Properties.setValue("userUnitPressure", _iValue as App.PropertyValueType);
+  }
+  function setUnitPressure(_iValue as Number) as Void {
+    if(_iValue < 0 or _iValue > 1) {
+      _iValue = -1;
     }
-    self.iUnitPressure = _iUnitPressure;
+    self.iUnitPressure = _iValue;
     if(self.iUnitPressure < 0) {  // ... auto
       // NOTE: assume weight units are a good indicator of preferred pressure units
       var oDeviceSettings = Sys.getDeviceSettings();
       if(oDeviceSettings has :weightUnits and oDeviceSettings.weightUnits != null) {
-        _iUnitPressure = oDeviceSettings.weightUnits;
+        _iValue = oDeviceSettings.weightUnits;
       }
       else {
-        _iUnitPressure = Sys.UNIT_METRIC;
+        _iValue = Sys.UNIT_METRIC;
       }
     }
-    if(_iUnitPressure == Sys.UNIT_STATUTE) {  // ... statute
+    if(_iValue == Sys.UNIT_STATUTE) {  // ... statute
       // ... [inHg]
       self.sUnitPressure = "inHg";
       self.fUnitPressureCoefficient = 0.0002953f;  // ... Pa -> inHg
@@ -509,12 +626,19 @@ class MySettings {
     }
   }
 
-  function setUnitRateOfTurn(_iUnitRateOfTurn) {
-    if(_iUnitRateOfTurn == null or _iUnitRateOfTurn < 0 or _iUnitRateOfTurn > 1) {
-      _iUnitRateOfTurn = 0;
+  function loadUnitRateOfTurn() as Number {
+    var iValue = App.Properties.getValue("userUnitRateOfTurn") as Number?;
+    return iValue != null ? iValue : 0;
+  }
+  function saveUnitRateOfTurn(_iValue as Number) as Void {
+    App.Properties.setValue("userUnitRateOfTurn", _iValue as App.PropertyValueType);
+  }
+  function setUnitRateOfTurn(_iValue as Number) as Void {
+    if(_iValue < 0 or _iValue > 1) {
+      _iValue = 0;
     }
-    self.iUnitRateOfTurn = _iUnitRateOfTurn;
-    if(_iUnitRateOfTurn == 1) {  // ... revolution-per-minute
+    self.iUnitRateOfTurn = _iValue;
+    if(_iValue == 1) {  // ... revolution-per-minute
       // ... [rpm]
       self.sUnitRateOfTurn = "rpm";
       self.fUnitRateOfTurnCoefficient = 9.54929658551f;  // ... rad/s -> rpm
@@ -526,16 +650,19 @@ class MySettings {
     }
   }
 
-  function setUnitTimeUTC(_bUnitTimeUTC) {
-    if(_bUnitTimeUTC == null) {
-      _bUnitTimeUTC = false;
-    }
-    if(_bUnitTimeUTC) {
-      self.bUnitTimeUTC = true;
+  function loadUnitTimeUTC() as Boolean {
+    var bValue = App.Properties.getValue("userUnitTimeUTC") as Boolean?;
+    return bValue != null ? bValue : false;
+  }
+  function saveUnitTimeUTC(_bValue as Boolean) as Void {
+    App.Properties.setValue("userUnitTimeUTC", _bValue as App.PropertyValueType);
+  }
+  function setUnitTimeUTC(_bValue as Boolean) as Void {
+    self.bUnitTimeUTC = _bValue;
+    if(_bValue) {
       self.sUnitTime = "Z";
     }
     else {
-      self.bUnitTimeUTC = false;
       self.sUnitTime = "LT";
     }
   }

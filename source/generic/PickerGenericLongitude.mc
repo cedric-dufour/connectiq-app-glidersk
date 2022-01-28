@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
@@ -26,15 +27,19 @@ class PickerGenericLongitude extends Ui.Picker {
   // FUNCTIONS: Ui.Picker (override/implement)
   //
 
-  function initialize(_sTitle, _fValue) {
+  function initialize(_sTitle as String, _dValue as Decimal?) {
+    // Input validation
+    // ... value
+    var dValue = (_dValue != null and LangUtils.notNaN(_dValue)) ? _dValue : 0.0d;
+
     // Split components
-    var iValue_qua = _fValue < 0.0f ? -1 : 1;
-    _fValue = _fValue.abs();
-    var iValue_deg = _fValue.toNumber();
-    _fValue = (_fValue - iValue_deg) * 60.0f;
-    var iValue_min = _fValue.toNumber();
-    _fValue = (_fValue - iValue_min) * 60.0f + 0.5f;
-    var iValue_sec = _fValue.toNumber();
+    var iValue_qua = dValue < 0.0d ? -1 : 1;
+    dValue = dValue.abs();
+    var iValue_deg = dValue.toNumber();
+    dValue = (dValue - iValue_deg) * 60.0d;
+    var iValue_min = dValue.toNumber();
+    dValue = (dValue - iValue_min) * 60.0d + 0.5d;
+    var iValue_sec = dValue.toNumber();
     if(iValue_sec >= 60) {
       iValue_sec = 59;
     }
@@ -42,13 +47,17 @@ class PickerGenericLongitude extends Ui.Picker {
     // Initialize picker
     var oFactory_qua = new PickerFactoryDictionary([1, -1], ["E", "W"], null);
     Picker.initialize({
-      :title => new Ui.Text({ :text => _sTitle, :font => Gfx.FONT_TINY, :locX=>Ui.LAYOUT_HALIGN_CENTER, :locY=>Ui.LAYOUT_VALIGN_BOTTOM, :color => Gfx.COLOR_BLUE }),
-      :pattern => [ oFactory_qua,
-                    new PickerFactoryNumber(0, 179, { :langFormat => "$1$°" }),
-                    new PickerFactoryNumber(0, 59, { :langFormat => "$1$'", :format => "%02d" }),
-                    new PickerFactoryNumber(0, 59, { :langFormat => "$1$\"", :format => "%02d" }) ],
-      :defaults => [ oFactory_qua.indexOfKey(iValue_qua), iValue_deg, iValue_min, iValue_sec ]
-    });
+        :title => new Ui.Text({
+            :text => _sTitle,
+            :font => Gfx.FONT_TINY,
+            :locX=>Ui.LAYOUT_HALIGN_CENTER,
+            :locY=>Ui.LAYOUT_VALIGN_BOTTOM,
+            :color => Gfx.COLOR_BLUE}),
+        :pattern => [oFactory_qua,
+                     new PickerFactoryNumber(0, 179, {:langFormat => "$1$°"}),
+                     new PickerFactoryNumber(0, 59, {:langFormat => "$1$'", :format => "%02d"}),
+                     new PickerFactoryNumber(0, 59, {:langFormat => "$1$\"", :format => "%02d"})],
+        :defaults => [oFactory_qua.indexOfKey(iValue_qua), iValue_deg, iValue_min, iValue_sec]});
   }
 
 
@@ -56,11 +65,11 @@ class PickerGenericLongitude extends Ui.Picker {
   // FUNCTIONS: self
   //
 
-  function getValue(_amValues) {
+  function getValue(_amValues as Array) as Double {
     // Assemble components
-    var fValue = _amValues[0] * (_amValues[1] + _amValues[2]/60.0f + _amValues[3]/3600.0f);
+    var dValue = _amValues[0] * (_amValues[1] + _amValues[2]/60.0d + _amValues[3]/3600.0d);
 
     // Return value
-    return fValue;
+    return dValue;
   }
 }

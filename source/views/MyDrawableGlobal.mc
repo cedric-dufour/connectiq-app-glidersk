@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 
@@ -26,16 +27,16 @@ class MyDrawableGlobal extends Ui.Drawable {
   //
 
   // Resources
-  private var oRezFieldsBackground;
-  private var oRezAlertLeft;
-  private var oRezAlertCenter;
-  private var oRezAlertRight;
+  private var oRezFieldsBackground as Ui.Drawable;
+  private var oRezAlertLeft as Ui.Drawable;
+  private var oRezAlertCenter as Ui.Drawable;
+  private var oRezAlertRight as Ui.Drawable;
 
   // Colors
-  private var iColorFieldsBackground;
-  private var iColorAlertLeft;
-  private var iColorAlertCenter;
-  private var iColorAlertRight;
+  private var iColorFieldsBackground as Number = Gfx.COLOR_TRANSPARENT;
+  private var iColorAlertLeft as Number = Gfx.COLOR_TRANSPARENT;
+  private var iColorAlertCenter as Number = Gfx.COLOR_TRANSPARENT;
+  private var iColorAlertRight as Number = Gfx.COLOR_TRANSPARENT;
 
 
   //
@@ -46,16 +47,10 @@ class MyDrawableGlobal extends Ui.Drawable {
     Drawable.initialize({ :identifier => "MyDrawableGlobal" });
 
     // Resources
-    self.oRezFieldsBackground = new Rez.Drawables.drawFieldsBackground();
-    self.oRezAlertLeft = new Rez.Drawables.drawGlobalAlertLeft();
-    self.oRezAlertCenter = new Rez.Drawables.drawGlobalAlertCenter();
-    self.oRezAlertRight = new Rez.Drawables.drawGlobalAlertRight();
-
-    // Colors
-    self.iColorFieldsBackground = Gfx.COLOR_TRANSPARENT;
-    self.iColorAlertLeft = Gfx.COLOR_TRANSPARENT;
-    self.iColorAlertCenter = Gfx.COLOR_TRANSPARENT;
-    self.iColorAlertRight = Gfx.COLOR_TRANSPARENT;
+    oRezFieldsBackground = new Rez.Drawables.drawFieldsBackground();
+    oRezAlertLeft = new Rez.Drawables.drawGlobalAlertLeft();
+    oRezAlertCenter = new Rez.Drawables.drawGlobalAlertCenter();
+    oRezAlertRight = new Rez.Drawables.drawGlobalAlertRight();
   }
 
   function draw(_oDC) {
@@ -86,19 +81,19 @@ class MyDrawableGlobal extends Ui.Drawable {
   // FUNCTIONS: self
   //
 
-  function setColorFieldsBackground(_iColor) {
+  function setColorFieldsBackground(_iColor as Number) as Void {
     self.iColorFieldsBackground = _iColor;
   }
 
-  function setColorAlertLeft(_iColor) {
+  function setColorAlertLeft(_iColor as Number) as Void {
     self.iColorAlertLeft = _iColor;
   }
 
-  function setColorAlertCenter(_iColor) {
+  function setColorAlertCenter(_iColor as Number) as Void {
     self.iColorAlertCenter = _iColor;
   }
 
-  function setColorAlertRight(_iColor) {
+  function setColorAlertRight(_iColor as Number) as Void {
     self.iColorAlertRight = _iColor;
   }
 

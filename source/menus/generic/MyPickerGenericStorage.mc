@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.Position as Pos;
@@ -27,54 +28,53 @@ class MyPickerGenericStorage extends Ui.Picker {
   // FUNCTIONS: Ui.Picker (override/implement)
   //
 
-  function initialize(_storage, _action) {
+  function initialize(_storage as Symbol, _action as Symbol) {
     // Retrieve object from storage <-> Picker
     var oPickerDictionary = null;
-    var aiStorageKeys = new [$.MY_STORAGE_SLOTS];
-    var asStorageValues = new [$.MY_STORAGE_SLOTS];
+    var aiStorageKeys = new Array<Number>[$.MY_STORAGE_SLOTS];
+    var asStorageValues = new Array<String>[$.MY_STORAGE_SLOTS];
     var iStorageUsed = 0;
     // ... storage specifics
     var sStorageName = null;
-    var sObjectName = null;
+    var sObjectName = "name";
     if(_storage == :storageDestination) {
       sStorageName = "Dest";
-      sObjectName = "name";
     }
     // ... action specifics
     var sStorageAction = null;
     if(_action == :actionSave) {
-      sStorageAction = Ui.loadResource(Rez.Strings.titleStorageSave);
+      sStorageAction = Ui.loadResource(Rez.Strings.titleStorageSave) as String;
       // ... populate all slots
       for(var n=0; n<$.MY_STORAGE_SLOTS; n++) {
         var s = n.format("%02d");
-        var d = App.Storage.getValue(Lang.format("stor$1$$2$", [sStorageName, s]));
+        var d = App.Storage.getValue(format("stor$1$$2$", [sStorageName, s])) as Dictionary?;
         aiStorageKeys[n] = n;
         if(d != null) {
-          asStorageValues[n] = Lang.format("[$1$]\n$2$", [s, d.get(sObjectName)]);
+          asStorageValues[n] = format("[$1$]\n$2$", [s, d.get(sObjectName)]);
         }
         else {
-          asStorageValues[n] = Lang.format("[$1$]\n---", [s]);
+          asStorageValues[n] = format("[$1$]\n---", [s]);
         }
         iStorageUsed++;
       }
       oPickerDictionary = new PickerFactoryDictionary(aiStorageKeys, asStorageValues, {:font => Gfx.FONT_TINY});
     }
     else if(_action == :actionLoad or _action == :actionDelete) {
-      sStorageAction = _action == :actionLoad ? Ui.loadResource(Rez.Strings.titleStorageLoad) : Ui.loadResource(Rez.Strings.titleStorageDelete);
+      sStorageAction = _action == :actionLoad ? Ui.loadResource(Rez.Strings.titleStorageLoad) as String : Ui.loadResource(Rez.Strings.titleStorageDelete) as String;
       // ... pick existing objects/slots
-      var afStorageDistances = new [$.MY_STORAGE_SLOTS];
+      var afStorageDistances = new Array<Float>[$.MY_STORAGE_SLOTS];
       for(var n=0; n<$.MY_STORAGE_SLOTS; n++) {
         var s = n.format("%02d");
-        var d = App.Storage.getValue(Lang.format("stor$1$$2$", [sStorageName, s]));
+        var d = App.Storage.getValue(format("stor$1$$2$", [sStorageName, s])) as Dictionary?;
         if(d != null) {
           aiStorageKeys[iStorageUsed] = n;
           if(_action == :actionLoad and $.oMyPositionLocation != null) {
-            var oStorageLocation = new Pos.Location({:latitude => d["latitude"], :longitude => d["longitude"], :format => :degrees});
-            afStorageDistances[iStorageUsed] = LangUtils.distanceEstimate($.oMyPositionLocation.toRadians(), oStorageLocation.toRadians());
-            asStorageValues[iStorageUsed] = Lang.format("$1$$2$\n$3$", [(afStorageDistances[iStorageUsed]*$.oMySettings.fUnitDistanceCoefficient).format("%.0f"), $.oMySettings.sUnitDistance, d.get(sObjectName)]);
+            var oStorageLocation = new Pos.Location({:latitude => d["latitude"] as Float, :longitude => d["longitude"] as Float, :format => :degrees});
+            afStorageDistances[iStorageUsed] = LangUtils.distanceEstimate(($.oMyPositionLocation as Pos.Location).toRadians(), oStorageLocation.toRadians());
+            asStorageValues[iStorageUsed] = format("$1$$2$\n$3$", [(afStorageDistances[iStorageUsed]*$.oMySettings.fUnitDistanceCoefficient).format("%.0f"), $.oMySettings.sUnitDistance, d.get(sObjectName)]);
           }
           else {
-            asStorageValues[iStorageUsed] = Lang.format("[$1$]\n$2$", [s, d.get(sObjectName)]);
+            asStorageValues[iStorageUsed] = format("[$1$]\n$2$", [s, d.get(sObjectName)]);
             afStorageDistances[iStorageUsed] = 0.0f;
           }
           iStorageUsed++;
@@ -107,7 +107,7 @@ class MyPickerGenericStorage extends Ui.Picker {
     if(oPickerDictionary != null) {
       Picker.initialize({
           :title => new Ui.Text({
-              :text => sStorageAction,
+              :text => sStorageAction as String,
               :font => Gfx.FONT_TINY,
               :locX=>Ui.LAYOUT_HALIGN_CENTER,
               :locY=>Ui.LAYOUT_VALIGN_BOTTOM,
@@ -124,15 +124,15 @@ class MyPickerGenericStorageDelegate extends Ui.PickerDelegate {
   // VARIABLES
   //
 
-  private var storage;
-  private var action;
+  private var storage as Symbol = :storageNone;
+  private var action as Symbol = :actionNone;
 
 
   //
   // FUNCTIONS: Ui.PickerDelegate (override/implement)
   //
 
-  function initialize(_storage, _action) {
+  function initialize(_storage as Symbol, _action as Symbol) {
     PickerDelegate.initialize();
     self.storage = _storage;
     self.action = _action;
@@ -141,7 +141,7 @@ class MyPickerGenericStorageDelegate extends Ui.PickerDelegate {
   function onAccept(_amValues) {
     // Save/load/delete object to/from storage
     if(_amValues[0] != null) {
-      var s = _amValues[0].format("%02d");
+      var s = (_amValues[0] as Number).format("%02d");
       // ... storage specifics
       var sStorageName = null;
       if(self.storage == :storageDestination) {
@@ -149,28 +149,32 @@ class MyPickerGenericStorageDelegate extends Ui.PickerDelegate {
       }
       if(sStorageName != null) {
         if(self.action == :actionSave) {
-          var d = App.Storage.getValue(Lang.format("stor$1$InUse", [sStorageName]));
+          var d = App.Storage.getValue(format("stor$1$InUse", [sStorageName])) as Dictionary?;
           if(d != null) {
-            App.Storage.setValue(Lang.format("stor$1$$2$", [sStorageName, s]), LangUtils.copy(d));  // WARNING: We MUST store a new (different) dictionary instance (deep copy)!
+            App.Storage.setValue(format("stor$1$$2$", [sStorageName, s]), LangUtils.copy(d) as App.PropertyValueType);  // WARNING: We MUST store a new (different) dictionary instance (deep copy)!
           }
         }
         else if(self.action == :actionLoad) {
-          var d = App.Storage.getValue(Lang.format("stor$1$$2$", [sStorageName, s]));
-          App.Storage.setValue(Lang.format("stor$1$InUse", [sStorageName]), LangUtils.copy(d));  // WARNING: We MUST store a new (different) dictionary instance (deep copy)!
+          var d = App.Storage.getValue(format("stor$1$$2$", [sStorageName, s])) as Dictionary?;
+          if(d != null) {
+            App.Storage.setValue(format("stor$1$InUse", [sStorageName]), LangUtils.copy(d) as App.PropertyValueType);  // WARNING: We MUST store a new (different) dictionary instance (deep copy)!
+          }
         }
         else if(self.action == :actionDelete) {
-          App.Storage.deleteValue(Lang.format("stor$1$$2$", [sStorageName, s]));
+          App.Storage.deleteValue(format("stor$1$$2$", [sStorageName, s]));
         }
       }
     }
 
     // Exit
     Ui.popView(Ui.SLIDE_IMMEDIATE);
+    return true;
   }
 
   function onCancel() {
     // Exit
     Ui.popView(Ui.SLIDE_IMMEDIATE);
+    return true;
   }
 
 }

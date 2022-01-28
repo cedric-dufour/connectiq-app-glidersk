@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
@@ -25,17 +26,17 @@ class MyPickerGenericPressure extends PickerGenericPressure {
   // FUNCTIONS: PickerGenericPressure (override/implement)
   //
 
-  function initialize(_context, _item) {
+  function initialize(_context as Symbol, _item as Symbol) {
     if(_context == :contextSettings) {
       if(_item == :itemAltimeterCalibration) {
-        PickerGenericPressure.initialize(Ui.loadResource(Rez.Strings.titleAltimeterCalibrationQNH),
+        PickerGenericPressure.initialize(Ui.loadResource(Rez.Strings.titleAltimeterCalibrationQNH) as String,
                                          $.oMyAltimeter.fQNH,
                                          $.oMySettings.iUnitPressure,
                                          false);
       }
       else if(_item == :itemAltimeterCorrection) {
-        PickerGenericPressure.initialize(Ui.loadResource(Rez.Strings.titleAltimeterCorrectionAbsolute),
-                                         App.Properties.getValue("userAltimeterCorrectionAbsolute"),
+        PickerGenericPressure.initialize(Ui.loadResource(Rez.Strings.titleAltimeterCorrectionAbsolute) as String,
+                                         $.oMySettings.loadAltimeterCorrectionAbsolute(),
                                          $.oMySettings.iUnitPressure,
                                          true);
       }
@@ -50,15 +51,15 @@ class MyPickerGenericPressureDelegate extends Ui.PickerDelegate {
   // VARIABLES
   //
 
-  private var context;
-  private var item;
+  private var context as Symbol = :contextNone;
+  private var item as Symbol = :itemNone;
 
 
   //
   // FUNCTIONS: Ui.PickerDelegate (override/implement)
   //
 
-  function initialize(_context, _item) {
+  function initialize(_context as Symbol, _item as Symbol) {
     PickerDelegate.initialize();
     self.context = _context;
     self.item = _item;
@@ -69,18 +70,20 @@ class MyPickerGenericPressureDelegate extends Ui.PickerDelegate {
     if(self.context == :contextSettings) {
       if(self.item == :itemAltimeterCalibration) {
         $.oMyAltimeter.setQNH(fValue);
-        App.Properties.setValue("userAltimeterCalibrationQNH", $.oMyAltimeter.fQNH);
+        $.oMySettings.saveAltimeterCalibrationQNH($.oMyAltimeter.fQNH);
       }
       else if(self.item == :itemAltimeterCorrection) {
-        App.Properties.setValue("userAltimeterCorrectionAbsolute", fValue);
+        $.oMySettings.saveAltimeterCorrectionAbsolute(fValue);
       }
     }
     Ui.popView(Ui.SLIDE_IMMEDIATE);
+    return true;
   }
 
   function onCancel() {
     // Exit
     Ui.popView(Ui.SLIDE_IMMEDIATE);
+    return true;
   }
 
 }

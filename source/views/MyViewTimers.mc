@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.Position as Pos;
@@ -31,17 +32,17 @@ class MyViewTimers extends MyViewGlobal {
 
   // Resources (cache)
   // ... fields (units)
-  private var oRezUnitRight;
-  private var oRezUnitBottomRight;
+  private var oRezUnitRight as Ui.Text?;
+  private var oRezUnitBottomRight as Ui.Text?;
   // ... strings
-  private var sUnitElapsed;
-  private var sUnitDistance_fmt;
-  private var sUnitAscent_fmt;
+  private var sUnitElapsed as String = "elapsed";
+  private var sUnitDistance_fmt as String = "distance [km]";
+  private var sUnitAscent_fmt as String = "ascent [m]";
 
   // Internals
   // ... fields
-  private var iFieldIndex;
-  private var iFieldEpoch;
+  private var iFieldIndex as Number = 0;
+  private var iFieldEpoch as Number = -1;
 
 
   //
@@ -53,7 +54,6 @@ class MyViewTimers extends MyViewGlobal {
 
     // Internals
     // ... fields
-    self.iFieldIndex = 0;
     self.iFieldEpoch = Time.now().value();
   }
 
@@ -63,37 +63,37 @@ class MyViewTimers extends MyViewGlobal {
 
     // Load resources
     // ... fields (units)
-    self.oRezUnitRight = View.findDrawableById("unitRight");
-    self.oRezUnitBottomRight = View.findDrawableById("unitBottomRight");
+    self.oRezUnitRight = View.findDrawableById("unitRight") as Ui.Text;
+    self.oRezUnitBottomRight = View.findDrawableById("unitBottomRight") as Ui.Text;
     // ... strings
-    self.sUnitElapsed = Ui.loadResource(Rez.Strings.labelElapsed).toLower();
-    self.sUnitDistance_fmt = Lang.format("$1$ [$2$]", [Ui.loadResource(Rez.Strings.labelDistance).toLower(), $.oMySettings.sUnitDistance]);
-    self.sUnitAscent_fmt = Lang.format("$1$ [$2$]", [Ui.loadResource(Rez.Strings.labelAscent).toLower(), $.oMySettings.sUnitElevation]);
+    self.sUnitElapsed = (Ui.loadResource(Rez.Strings.labelElapsed) as String).toLower();
+    self.sUnitDistance_fmt = Lang.format("$1$ [$2$]", [(Ui.loadResource(Rez.Strings.labelDistance) as String).toLower(), $.oMySettings.sUnitDistance]);
+    self.sUnitAscent_fmt = Lang.format("$1$ [$2$]", [(Ui.loadResource(Rez.Strings.labelAscent) as String).toLower(), $.oMySettings.sUnitElevation]);
 
     // Set colors (value-independent), labels and units
     // ... activity: start
-    View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelActivity));
-    View.findDrawableById("unitTopLeft").setText(Ui.loadResource(Rez.Strings.labelStart).toLower());
+    (View.findDrawableById("labelTopLeft") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelActivity) as String);
+    (View.findDrawableById("unitTopLeft") as Ui.Text).setText((Ui.loadResource(Rez.Strings.labelStart) as String).toLower());
     // ... activity: elapsed
-    View.findDrawableById("unitTopRight").setText(self.sUnitElapsed);
+    (View.findDrawableById("unitTopRight") as Ui.Text).setText(self.sUnitElapsed);
     // ... lap: start
-    View.findDrawableById("labelLeft").setText(Ui.loadResource(Rez.Strings.labelLap));
-    View.findDrawableById("unitLeft").setText(Ui.loadResource(Rez.Strings.labelStart).toLower());
+    (View.findDrawableById("labelLeft") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelLap) as String);
+    (View.findDrawableById("unitLeft") as Ui.Text).setText((Ui.loadResource(Rez.Strings.labelStart) as String).toLower());
     // ... lap: count
-    View.findDrawableById("labelCenter").setText(Ui.loadResource(Rez.Strings.labelCount).toLower());
+    (View.findDrawableById("labelCenter") as Ui.Text).setText((Ui.loadResource(Rez.Strings.labelCount) as String).toLower());
     // ... lap: elapsed/distance/ascent (dynamic)
-    self.oRezUnitRight.setText(self.sUnitElapsed);
+    (self.oRezUnitRight as Ui.Text).setText(self.sUnitElapsed);
     // ... recording: start
-    View.findDrawableById("labelBottomLeft").setText(Ui.loadResource(Rez.Strings.labelRecording));
-    View.findDrawableById("unitBottomLeft").setText(Ui.loadResource(Rez.Strings.labelStart).toLower());
+    (View.findDrawableById("labelBottomLeft") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelRecording) as String);
+    (View.findDrawableById("unitBottomLeft") as Ui.Text).setText((Ui.loadResource(Rez.Strings.labelStart) as String).toLower());
     // ... recording: elapsed/distance/ascent (dynamic)
-    self.oRezUnitBottomRight.setText(self.sUnitElapsed);
+    (self.oRezUnitBottomRight as Ui.Text).setText(self.sUnitElapsed);
 
     // Unmute tones
-    App.getApp().unmuteTones(MyApp.TONES_SAFETY);
+    (App.getApp() as MyApp).unmuteTones(MyApp.TONES_SAFETY);
   }
 
-  function updateLayout() {
+  function updateLayout(_b) {
     //Sys.println("DEBUG: MyViewGlobal.updateLayout()");
     MyViewGlobal.updateLayout(true);
 
@@ -106,11 +106,11 @@ class MyViewTimers extends MyViewGlobal {
 
     // Colors
     if($.oMyProcessing.iAccuracy == Pos.QUALITY_NOT_AVAILABLE or $.oMyProcessing.iAccuracy == Pos.QUALITY_LAST_KNOWN) {
-      self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_DK_RED);
+      (self.oRezDrawableGlobal as MyDrawableGlobal).setColorFieldsBackground(Gfx.COLOR_DK_RED);
       self.iColorText = Gfx.COLOR_LT_GRAY;
     }
     else {
-      self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_TRANSPARENT);
+      (self.oRezDrawableGlobal as MyDrawableGlobal).setColorFieldsBackground(Gfx.COLOR_TRANSPARENT);
     }
 
     // Set values
@@ -120,112 +120,112 @@ class MyViewTimers extends MyViewGlobal {
     var sValue;
 
     // ... activity: start
-    self.oRezValueTopLeft.setColor(self.iColorText);
+    (self.oRezValueTopLeft as Ui.Text).setColor(self.iColorText);
     if($.oMyTimeStart != null) {
       sValue = LangUtils.formatTime($.oMyTimeStart, $.oMySettings.bUnitTimeUTC, false);
     }
     else {
       sValue = $.MY_NOVALUE_LEN3;
     }
-    self.oRezValueTopLeft.setText(sValue);
+    (self.oRezValueTopLeft as Ui.Text).setText(sValue);
 
     // ... activity: elapsed
-    self.oRezValueTopRight.setColor(self.iColorText);
+    (self.oRezValueTopRight as Ui.Text).setColor(self.iColorText);
     if($.oMyTimeStart != null) {
       sValue = LangUtils.formatElapsedTime($.oMyTimeStart, oTimeNow, false);
     }
     else {
       sValue = $.MY_NOVALUE_LEN3;
     }
-    self.oRezValueTopRight.setText(sValue);
+    (self.oRezValueTopRight as Ui.Text).setText(sValue);
 
     // ... lap: start
-    self.oRezValueLeft.setColor(bRecording ? self.iColorText : Gfx.COLOR_LT_GRAY);
+    (self.oRezValueLeft as Ui.Text).setColor(bRecording ? self.iColorText : Gfx.COLOR_LT_GRAY);
     if($.oMyActivity != null) {
-      sValue = LangUtils.formatTime($.oMyActivity.oTimeLap, $.oMySettings.bUnitTimeUTC, false);
+      sValue = LangUtils.formatTime(($.oMyActivity as MyActivity).oTimeLap, $.oMySettings.bUnitTimeUTC, false);
     }
     else {
       sValue = $.MY_NOVALUE_LEN3;
     }
-    self.oRezValueLeft.setText(sValue);
+    (self.oRezValueLeft as Ui.Text).setText(sValue);
 
     // ... lap: count
-    self.oRezValueCenter.setColor(bRecording ? self.iColorText : Gfx.COLOR_LT_GRAY);
-    if($.oMyActivity != null and $.oMyActivity.iCountLaps) {
-      sValue = $.oMyActivity.iCountLaps.format("%d");
+    (self.oRezValueCenter as Ui.Text).setColor(bRecording ? self.iColorText : Gfx.COLOR_LT_GRAY);
+    if($.oMyActivity != null and ($.oMyActivity as MyActivity).iCountLaps > 0) {
+      sValue = ($.oMyActivity as MyActivity).iCountLaps.format("%d");
     }
     else {
       sValue = $.MY_NOVALUE_LEN2;
     }
-    self.oRezValueCenter.setText(sValue);
+    (self.oRezValueCenter as Ui.Text).setText(sValue);
 
     // ... lap: elapsed
-    self.oRezValueRight.setColor(bRecording ? self.iColorText : Gfx.COLOR_LT_GRAY);
+    (self.oRezValueRight as Ui.Text).setColor(bRecording ? self.iColorText : Gfx.COLOR_LT_GRAY);
     if($.oMyActivity != null) {
       if(self.iFieldIndex == 0) {  // ... elapsed
-        self.oRezUnitRight.setText(self.sUnitElapsed);
+        (self.oRezUnitRight as Ui.Text).setText(self.sUnitElapsed);
         if(bRecording) {
-          sValue = LangUtils.formatElapsedTime($.oMyActivity.oTimeLap, oTimeNow, false);
+          sValue = LangUtils.formatElapsedTime(($.oMyActivity as MyActivity).oTimeLap, oTimeNow, false);
         }
         else {
-          sValue = LangUtils.formatElapsedTime($.oMyActivity.oTimeLap, $.oMyActivity.oTimeStop, false);
+          sValue = LangUtils.formatElapsedTime(($.oMyActivity as MyActivity).oTimeLap, ($.oMyActivity as MyActivity).oTimeStop, false);
         }
       }
       else if(self.iFieldIndex == 1) {  // ... distance
-        self.oRezUnitRight.setText(self.sUnitDistance_fmt);
-        fValue = $.oMyActivity.fDistance * $.oMySettings.fUnitDistanceCoefficient;
+        (self.oRezUnitRight as Ui.Text).setText(self.sUnitDistance_fmt);
+        fValue = ($.oMyActivity as MyActivity).fDistance * $.oMySettings.fUnitDistanceCoefficient;
         sValue = fValue.format("%.0f");
       }
       else {  // ... ascent
-        self.oRezUnitRight.setText(self.sUnitAscent_fmt);
-        fValue = $.oMyActivity.fAscent * $.oMySettings.fUnitElevationCoefficient;
+        (self.oRezUnitRight as Ui.Text).setText(self.sUnitAscent_fmt);
+        fValue = ($.oMyActivity as MyActivity).fAscent * $.oMySettings.fUnitElevationCoefficient;
         sValue = fValue.format("%.0f");
       }
     }
     else {
-      self.oRezUnitBottomRight.setText(self.sUnitElapsed);
+      (self.oRezUnitBottomRight as Ui.Text).setText(self.sUnitElapsed);
       sValue = $.MY_NOVALUE_LEN3;
     }
-    self.oRezValueRight.setText(sValue);
+    (self.oRezValueRight as Ui.Text).setText(sValue);
 
     // ... recording: start
-    self.oRezValueBottomLeft.setColor(bRecording ? self.iColorText : Gfx.COLOR_LT_GRAY);
+    (self.oRezValueBottomLeft as Ui.Text).setColor(bRecording ? self.iColorText : Gfx.COLOR_LT_GRAY);
     if($.oMyActivity != null) {
-      sValue = LangUtils.formatTime($.oMyActivity.oTimeStart, $.oMySettings.bUnitTimeUTC, false);
+      sValue = LangUtils.formatTime(($.oMyActivity as MyActivity).oTimeStart, $.oMySettings.bUnitTimeUTC, false);
     }
     else {
       sValue = $.MY_NOVALUE_LEN3;
     }
-    self.oRezValueBottomLeft.setText(sValue);
+    (self.oRezValueBottomLeft as Ui.Text).setText(sValue);
 
     // ... recording: elapsed
-    self.oRezValueBottomRight.setColor(bRecording ? self.iColorText : Gfx.COLOR_LT_GRAY);
+    (self.oRezValueBottomRight as Ui.Text).setColor(bRecording ? self.iColorText : Gfx.COLOR_LT_GRAY);
     if($.oMyActivity != null) {
       if(self.iFieldIndex == 0) {  // ... elapsed
-        self.oRezUnitBottomRight.setText(self.sUnitElapsed);
+        (self.oRezUnitBottomRight as Ui.Text).setText(self.sUnitElapsed);
         if(bRecording) {
-          sValue = LangUtils.formatElapsedTime($.oMyActivity.oTimeStart, oTimeNow, false);
+          sValue = LangUtils.formatElapsedTime(($.oMyActivity as MyActivity).oTimeStart, oTimeNow, false);
         }
         else {
-          sValue = LangUtils.formatElapsedTime($.oMyActivity.oTimeStart, $.oMyActivity.oTimeStop, false);
+          sValue = LangUtils.formatElapsedTime(($.oMyActivity as MyActivity).oTimeStart, ($.oMyActivity as MyActivity).oTimeStop, false);
         }
       }
       else if(self.iFieldIndex == 1) {  // ... distance
-        self.oRezUnitBottomRight.setText(self.sUnitDistance_fmt);
-        fValue = $.oMyActivity.fGlobalDistance * $.oMySettings.fUnitDistanceCoefficient;
+        (self.oRezUnitBottomRight as Ui.Text).setText(self.sUnitDistance_fmt);
+        fValue = ($.oMyActivity as MyActivity).fGlobalDistance * $.oMySettings.fUnitDistanceCoefficient;
         sValue = fValue.format("%.0f");
       }
       else {  // ... ascent
-        self.oRezUnitBottomRight.setText(self.sUnitAscent_fmt);
-        fValue = $.oMyActivity.fGlobalAscent * $.oMySettings.fUnitElevationCoefficient;
+        (self.oRezUnitBottomRight as Ui.Text).setText(self.sUnitAscent_fmt);
+        fValue = ($.oMyActivity as MyActivity).fGlobalAscent * $.oMySettings.fUnitElevationCoefficient;
         sValue = fValue.format("%.0f");
       }
     }
     else {
-      self.oRezUnitBottomRight.setText(self.sUnitElapsed);
+      (self.oRezUnitBottomRight as Ui.Text).setText(self.sUnitElapsed);
       sValue = $.MY_NOVALUE_LEN3;
     }
-    self.oRezValueBottomRight.setText(sValue);
+    (self.oRezValueBottomRight as Ui.Text).setText(sValue);
   }
 
   function onHide() {
@@ -233,7 +233,7 @@ class MyViewTimers extends MyViewGlobal {
     MyViewGlobal.onHide();
 
     // Mute tones
-    App.getApp().muteTones();
+    (App.getApp() as MyApp).muteTones();
   }
 
 }

@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
@@ -25,11 +26,11 @@ class MyPickerGenericDistance extends PickerGenericDistance {
   // FUNCTIONS: PickerGenericDistance (override/implement)
   //
 
-  function initialize(_context, _item) {
+  function initialize(_context as Symbol, _item as Symbol) {
     if(_context == :contextSettings) {
       if(_item == :itemSoundsMuteDistance) {
-        PickerGenericDistance.initialize(Ui.loadResource(Rez.Strings.titleSoundsMuteDistance),
-                                         App.Properties.getValue("userSoundsMuteDistance"),
+        PickerGenericDistance.initialize(Ui.loadResource(Rez.Strings.titleSoundsMuteDistance) as String,
+                                         $.oMySettings.loadSoundsMuteDistance(),
                                          $.oMySettings.iUnitDistance,
                                          false);
       }
@@ -44,15 +45,15 @@ class MyPickerGenericDistanceDelegate extends Ui.PickerDelegate {
   // VARIABLES
   //
 
-  private var context;
-  private var item;
+  private var context as Symbol = :contextNone;
+  private var item as Symbol = :itemNone;
 
 
   //
   // FUNCTIONS: Ui.PickerDelegate (override/implement)
   //
 
-  function initialize(_context, _item) {
+  function initialize(_context as Symbol, _item as Symbol) {
     PickerDelegate.initialize();
     self.context = _context;
     self.item = _item;
@@ -62,15 +63,17 @@ class MyPickerGenericDistanceDelegate extends Ui.PickerDelegate {
     var fValue = PickerGenericDistance.getValue(_amValues, $.oMySettings.iUnitDistance);
     if(self.context == :contextSettings) {
       if(self.item == :itemSoundsMuteDistance) {
-        App.Properties.setValue("userSoundsMuteDistance", fValue);
+        $.oMySettings.saveSoundsMuteDistance(fValue);
       }
     }
     Ui.popView(Ui.SLIDE_IMMEDIATE);
+    return true;
   }
 
   function onCancel() {
     // Exit
     Ui.popView(Ui.SLIDE_IMMEDIATE);
+    return true;
   }
 
 }

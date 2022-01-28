@@ -16,7 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
-using Toybox.Lang;
+import Toybox.Lang;
 using Toybox.Math;
 using Toybox.System as Sys;
 
@@ -51,64 +51,59 @@ class MyAltimeter {
   //
 
   // Pressure
-  public var fQNH;  // [Pa]
-  public var fQFE_raw;  // [Pa]
-  public var fQFE;  // [Pa]
+  public var fQNH as Float = 101325.0f;  // [Pa]
+  public var fQFE_raw as Float = NaN;  // [Pa]
+  public var fQFE as Float = NaN;  // [Pa]
 
   // Altitude
-  public var fAltitudeISA;  // [m]
-  public var fAltitudeActual;  // [m]
-  public var fAltitudeActual_filtered;  // [m]
+  public var fAltitudeISA as Float = NaN;  // [m]
+  public var fAltitudeActual as Float = NaN;  // [m]
+  public var fAltitudeActual_filtered as Float = NaN;  // [m]
 
 
   //
   // FUNCTIONS: self
   //
 
-  function initialize() {
-    self.fQNH = self.ISA_PRESSURE_MSL;
-    self.reset();
-  }
-
-  function reset() {
+  function reset() as Void {
     // Pressure
-    self.fQFE_raw = null;
-    self.fQFE = null;
+    self.fQFE_raw = NaN;
+    self.fQFE = NaN;
 
     // Altitude
-    self.fAltitudeISA = null;
-    self.fAltitudeActual = null;
-    self.fAltitudeActual_filtered = null;
+    self.fAltitudeISA = NaN;
+    self.fAltitudeActual = NaN;
+    self.fAltitudeActual_filtered = NaN;
 
     // Filter
     $.oMyFilter.resetFilter(MyFilter.ALTIMETER);
   }
 
-  function importSettings() {
+  function importSettings() as Void {
     // QNH
     self.fQNH = $.oMySettings.fAltimeterCalibrationQNH;
   }
 
-  function setQFE(_fQFE) {  // [Pa]
+  function setQFE(_fQFE as Float) as Void {  // [Pa]
     // Raw sensor value
     self.fQFE_raw = _fQFE;
-    //Sys.println(Lang.format("DEBUG: QFE (raw) = $1$", [self.fQFE_raw]));
+    //Sys.println(format("DEBUG: QFE (raw) = $1$", [self.fQFE_raw]));
 
     // Calibrated value
     self.fQFE = self.fQFE_raw * $.oMySettings.fAltimeterCorrectionRelative + $.oMySettings.fAltimeterCorrectionAbsolute;
-    //Sys.println(Lang.format("DEBUG: QFE (calibrated) = $1$", [self.fQFE]));
+    //Sys.println(format("DEBUG: QFE (calibrated) = $1$", [self.fQFE]));
 
     // Derive altitudes (ICAO formula)
     // ... ISA (QNH=QNE)
-    self.fAltitudeISA = self.ICAO_ALTITUDE_K1 + self.ICAO_ALTITUDE_K2 * Math.pow(self.fQFE/100.0f, self.ICAO_ALTITUDE_EXP);
-    //Sys.println(Lang.format("DEBUG: Altitude (ISA) = $1$", [self.fAltitudeISA]));
+    self.fAltitudeISA = self.ICAO_ALTITUDE_K1 + self.ICAO_ALTITUDE_K2 * Math.pow(self.fQFE/100.0f, self.ICAO_ALTITUDE_EXP).toFloat();
+    //Sys.println(format("DEBUG: Altitude (ISA) = $1$", [self.fAltitudeISA]));
     // ... actual
-    self.fAltitudeActual = self.fAltitudeISA - (Math.pow(self.fQNH/self.ISA_PRESSURE_MSL, self.ICAO_ALTITUDE_EXP) - 1.0f)*self.ISA_TEMPERATURE_MSL/self.ISA_TEMPERATURE_LRATE;
+    self.fAltitudeActual = self.fAltitudeISA - (Math.pow(self.fQNH/self.ISA_PRESSURE_MSL, self.ICAO_ALTITUDE_EXP).toFloat() - 1.0f)*self.ISA_TEMPERATURE_MSL/self.ISA_TEMPERATURE_LRATE;
     self.fAltitudeActual_filtered = $.oMyFilter.filterValue(MyFilter.ALTIMETER, self.fAltitudeActual);
-    //Sys.println(Lang.format("DEBUG: Altitude (actual) = $1$ ~ $2$", [self.fAltitudeActual, self.fAltitudeActual_filtered]));
+    //Sys.println(format("DEBUG: Altitude (actual) = $1$ ~ $2$", [self.fAltitudeActual, self.fAltitudeActual_filtered]));
   }
 
-  function setQNH(_fQNH) {  // [Pa]
+  function setQNH(_fQNH as Float) as Void {  // [Pa]
     // QNH
     if(_fQNH == self.fQNH) {
       return;
@@ -117,29 +112,25 @@ class MyAltimeter {
     $.oMyFilter.resetFilter(MyFilter.ALTIMETER);
 
     // ISA altitude (<-> QFE) available ?
-    if(self.fAltitudeISA == null) {
-      return;
+    if(LangUtils.notNaN(self.fAltitudeISA)) {
+      // Derive altitude (ICAO formula)
+      // ... actual
+      self.fAltitudeActual = self.fAltitudeISA - (Math.pow(self.fQNH/self.ISA_PRESSURE_MSL, self.ICAO_ALTITUDE_EXP).toFloat() - 1.0f)*self.ISA_TEMPERATURE_MSL/self.ISA_TEMPERATURE_LRATE;
+      self.fAltitudeActual_filtered = $.oMyFilter.filterValue(MyFilter.ALTIMETER, self.fAltitudeActual);
+      //Sys.println(format("DEBUG: Altitude (actual) = $1$ ~ $2$", [self.fAltitudeActual, self.fAltitudeActual_filtered]));
     }
-
-    // Derive altitude (ICAO formula)
-    // ... actual
-    self.fAltitudeActual = self.fAltitudeISA - (Math.pow(self.fQNH/self.ISA_PRESSURE_MSL, self.ICAO_ALTITUDE_EXP) - 1.0f)*self.ISA_TEMPERATURE_MSL/self.ISA_TEMPERATURE_LRATE;
-    self.fAltitudeActual_filtered = $.oMyFilter.filterValue(MyFilter.ALTIMETER, self.fAltitudeActual);
-    //Sys.println(Lang.format("DEBUG: Altitude (actual) = $1$ ~ $2$", [self.fAltitudeActual, self.fAltitudeActual_filtered]));
   }
 
-  function setAltitudeActual(_fAltitudeActual) {  // [m]
+  function setAltitudeActual(_fAltitudeActual as Float) as Void {  // [m]
     // ISA altitude (<-> QFE) available ?
-    if(self.fAltitudeISA == null) {
-      return;
+    if(LangUtils.notNaN(self.fAltitudeISA)) {
+      // Derive QNH (ICAO formula)
+      var fQNH_new = self.ISA_PRESSURE_MSL * Math.pow(1.0f + self.ISA_TEMPERATURE_LRATE*(self.fAltitudeISA-_fAltitudeActual)/self.ISA_TEMPERATURE_MSL, self.ICAO_PRESSURE_EXP).toFloat();
+      //Sys.println(format("DEBUG: QNH = $1$", [fQNH_new]));
+
+      // Save QNH
+      self.setQNH(fQNH_new);
     }
-
-    // Derive QNH (ICAO formula)
-    var fQNH_new = self.ISA_PRESSURE_MSL * Math.pow(1.0f + self.ISA_TEMPERATURE_LRATE*(self.fAltitudeISA-_fAltitudeActual)/self.ISA_TEMPERATURE_MSL, self.ICAO_PRESSURE_EXP);
-    //Sys.println(Lang.format("DEBUG: QNH = $1$", [fQNH_new]));
-
-    // Save QNH
-    self.setQNH(fQNH_new);
   }
 
 }

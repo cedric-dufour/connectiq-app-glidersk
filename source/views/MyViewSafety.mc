@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.Position as Pos;
@@ -23,10 +24,10 @@ using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
 // Display mode (intent)
-var bMyViewSafetyShowSettings = false;
-var bMyViewSafetySelectFields = false;
-var iMyViewSafetyFieldTopLeft = 0;
-var iMyViewSafetyFieldBottomRight = 0;
+var bMyViewSafetyShowSettings as Boolean = false;
+var bMyViewSafetySelectFields as Boolean = false;
+var iMyViewSafetyFieldTopLeft as Number = 0;
+var iMyViewSafetyFieldBottomRight as Number = 0;
 
 class MyViewSafety extends MyViewGlobal {
 
@@ -35,32 +36,32 @@ class MyViewSafety extends MyViewGlobal {
   //
 
   // Display mode (internal)
-  private var bShowSettings;
-  private var bSelectFields;
-  private var iFieldTopLeft;
-  private var iFieldBottomRight;
-  private var bProcessingDecision;
+  private var bShowSettings as Boolean = false;
+  private var bSelectFields as Boolean = false;
+  private var iFieldTopLeft as Number = 0;
+  private var iFieldBottomRight as Number = 0;
+  private var bProcessingDecision as Boolean = false;
 
   // Resources
   // ... fields (labels)
-  private var oRezLabelLeft;
-  private var oRezLabelCenter;
-  private var oRezLabelRight;
+  private var oRezLabelLeft as Ui.Text?;
+  private var oRezLabelCenter as Ui.Text?;
+  private var oRezLabelRight as Ui.Text?;
   // ... fields (units)
-  private var oRezUnitLeft;
-  private var oRezUnitRight;
+  private var oRezUnitLeft as Ui.Text?;
+  private var oRezUnitRight as Ui.Text?;
   // ... buttons
-  private var oRezButtonKeyUp;
-  private var oRezButtonKeyDown;
+  private var oRezButtonKeyUp as Ui.Drawable?;
+  private var oRezButtonKeyDown as Ui.Drawable?;
   // ... strings
-  private var sTitle;
-  private var sValueHeightInvalid;
+  private var sTitle as String = "Safety";
+  private var sValueHeightInvalid as String = "XXX";
 
   // Layout-specific
-  private var fLayoutCenter;
-  private var fLayoutBugR1;
-  private var fLayoutBugR2;
-  private var fLayoutBugR3;
+  private var fLayoutCenter as Float = 120.0f;
+  private var fLayoutBugR1 as Float = 119.0f;
+  private var fLayoutBugR2 as Float = 100.0f;
+  private var fLayoutBugR3 as Float = 103.0f;
 
 
   //
@@ -68,7 +69,7 @@ class MyViewSafety extends MyViewGlobal {
   //
 
   (:layout_240x240)
-  function initLayout() {
+  function initLayout() as Void {
     self.fLayoutCenter = 120.0f;
     self.fLayoutBugR1 = 119.0f;
     self.fLayoutBugR2 = 100.0f;
@@ -76,7 +77,7 @@ class MyViewSafety extends MyViewGlobal {
   }
 
   (:layout_260x260)
-  function initLayout() {
+  function initLayout() as Void {
     self.fLayoutCenter = 130.0f;
     self.fLayoutBugR1 = 129.0f;
     self.fLayoutBugR2 = 108.0f;
@@ -84,7 +85,7 @@ class MyViewSafety extends MyViewGlobal {
   }
 
   (:layout_280x280)
-  function initLayout() {
+  function initLayout() as Void {
     self.fLayoutCenter = 140.0f;
     self.fLayoutBugR1 = 139.0f;
     self.fLayoutBugR2 = 117.0f;
@@ -101,32 +102,19 @@ class MyViewSafety extends MyViewGlobal {
 
     // Layout-specific initialization
     self.initLayout();
-
-    // Display mode
-    // ... internal
-    self.bShowSettings = false;
-    self.bSelectFields = false;
-    self.iFieldTopLeft = 0;
-    self.iFieldBottomRight = 0;
-    self.bProcessingDecision = false;
   }
 
-  function onLayout(_oDC) {
-    if(!MyViewGlobal.onLayout(_oDC)) {
-      return false;
-    }
+  function onLayout(_oDC as Gfx.Dc) as Void {
+    MyViewGlobal.onLayout(_oDC);
 
     // Load resources
     // ... fields (labels)
-    self.oRezLabelLeft = View.findDrawableById("labelLeft");
-    self.oRezLabelCenter = View.findDrawableById("labelCenter");
-    self.oRezLabelRight = View.findDrawableById("labelRight");
+    self.oRezLabelLeft = View.findDrawableById("labelLeft") as Ui.Text;
+    self.oRezLabelCenter = View.findDrawableById("labelCenter") as Ui.Text;
+    self.oRezLabelRight = View.findDrawableById("labelRight") as Ui.Text;
     // ... fields (units)
-    self.oRezUnitLeft = View.findDrawableById("unitLeft");
-    self.oRezUnitRight = View.findDrawableById("unitRight");
-
-    // Done
-    return true;
+    self.oRezUnitLeft = View.findDrawableById("unitLeft") as Ui.Text;
+    self.oRezUnitRight = View.findDrawableById("unitRight") as Ui.Text;
   }
 
   function prepare() {
@@ -135,17 +123,17 @@ class MyViewSafety extends MyViewGlobal {
 
     // Load resources
     // ... strings
-    self.sTitle = Ui.loadResource(Rez.Strings.titleViewSafety);
-    self.sValueHeightInvalid = Ui.loadResource(Rez.Strings.valueHeightInvalid);
+    self.sTitle = Ui.loadResource(Rez.Strings.titleViewSafety) as String;
+    self.sValueHeightInvalid = Ui.loadResource(Rez.Strings.valueHeightInvalid) as String;
 
     // Unmute tones
-    App.getApp().unmuteTones(MyApp.TONES_SAFETY);
+    (App.getApp() as MyApp).unmuteTones(MyApp.TONES_SAFETY);
 
     // Internal state
     self.bShowSettings = !$.bMyViewSafetyShowSettings;  // ... force adaptLayout()
   }
 
-  function onUpdate(_oDC) {
+  function onUpdate(_oDC as Gfx.Dc) as Void {
     //Sys.println("DEBUG: MyViewSafety.onUpdate()");
 
     // Update layout
@@ -155,7 +143,7 @@ class MyViewSafety extends MyViewGlobal {
     else {
       self.updateLayoutSettings();
     }
-    View.onUpdate(_oDC);
+    MyViewGlobal.onUpdate(_oDC);
 
     // Draw buttons
     if($.bMyViewSafetySelectFields) {
@@ -163,8 +151,8 @@ class MyViewSafety extends MyViewGlobal {
         self.oRezButtonKeyUp = new Rez.Drawables.drawButtonTopLeft();
         self.oRezButtonKeyDown = new Rez.Drawables.drawButtonBottomRight();
       }
-      self.oRezButtonKeyUp.draw(_oDC);
-      self.oRezButtonKeyDown.draw(_oDC);
+      (self.oRezButtonKeyUp as Ui.Drawable).draw(_oDC);
+      (self.oRezButtonKeyDown as Ui.Drawable).draw(_oDC);
     }
     else {
       self.oRezButtonKeyUp = null;
@@ -175,59 +163,56 @@ class MyViewSafety extends MyViewGlobal {
     if(!$.bMyViewSafetySelectFields and !$.bMyViewSafetyShowSettings
        and ($.oMySettings.iSafetyHeadingBug == 2 or ($.oMySettings.iSafetyHeadingBug == 1 and $.oMyProcessing.bDecision))
        and $.oMyProcessing.iAccuracy >= Pos.QUALITY_LAST_KNOWN
-       and $.oMyProcessing.fBearingToDestination != null
-       and $.oMyProcessing.fHeading != null) {
+       and LangUtils.notNaN($.oMyProcessing.fBearingToDestination)
+       and LangUtils.notNaN($.oMyProcessing.fHeading)) {
       self.drawHeadingBug(_oDC);
     }
-
-    // Done
-    return true;
   }
 
-  function adaptLayoutSafety() {
+  function adaptLayoutSafety() as Void {
     //Sys.println("DEBUG: MyViewSafety.adaptLayoutSafety()");
 
     // Set colors (value-independent), labels and units
     // ... destination (name) / elevation at destination / bearing to destination
     if((!$.bMyViewSafetySelectFields and !$.bMyViewSafetyShowSettings and $.oMyProcessing.bDecision)
        or $.iMyViewSafetyFieldTopLeft == 2) {  // ... bearing to destination
-      View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelBearingToDestination));
-      View.findDrawableById("unitTopLeft").setText("[°]");
+      (View.findDrawableById("labelTopLeft") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelBearingToDestination) as String);
+      (View.findDrawableById("unitTopLeft") as Ui.Text).setText("[°]");
     }
     else if($.iMyViewSafetyFieldTopLeft == 1) {  // ... elevation at destination
-      View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelElevationAtDestination));
-      View.findDrawableById("unitTopLeft").setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
+      (View.findDrawableById("labelTopLeft") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelElevationAtDestination) as String);
+      (View.findDrawableById("unitTopLeft") as Ui.Text).setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
     }
     else {  // ... destination (name)
-      View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelDestination));
-      View.findDrawableById("unitTopLeft").setText(MY_NOVALUE_BLANK);
+      (View.findDrawableById("labelTopLeft") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelDestination) as String);
+      (View.findDrawableById("unitTopLeft") as Ui.Text).setText(MY_NOVALUE_BLANK);
     }
     // ... distance to destination
-    View.findDrawableById("labelTopRight").setText(Ui.loadResource(Rez.Strings.labelDistanceToDestination));
-    View.findDrawableById("unitTopRight").setText(Lang.format("[$1$]", [$.oMySettings.sUnitDistance]));
+    (View.findDrawableById("labelTopRight") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelDistanceToDestination) as String);
+    (View.findDrawableById("unitTopRight") as Ui.Text).setText(Lang.format("[$1$]", [$.oMySettings.sUnitDistance]));
     // ... altitude
-    self.oRezLabelLeft.setText(Ui.loadResource(Rez.Strings.labelAltitude));
-    self.oRezUnitLeft.setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
+    (self.oRezLabelLeft as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelAltitude) as String);
+    (self.oRezUnitLeft as Ui.Text).setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
     // ... finesse
-    self.oRezLabelCenter.setText(Ui.loadResource(Rez.Strings.labelFinesse));
+    (self.oRezLabelCenter as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelFinesse) as String);
     // ... height at destination
-    self.oRezLabelRight.setText(Ui.loadResource(Rez.Strings.labelHeightAtDestination));
-    self.oRezUnitRight.setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
+    (self.oRezLabelRight as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelHeightAtDestination) as String);
+    (self.oRezUnitRight as Ui.Text).setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
     // ... vertical speed
-    View.findDrawableById("labelBottomLeft").setText(Ui.loadResource(Rez.Strings.labelVerticalSpeed));
-    View.findDrawableById("unitBottomLeft").setText(Lang.format("[$1$]", [$.oMySettings.sUnitVerticalSpeed]));
+    (View.findDrawableById("labelBottomLeft") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelVerticalSpeed) as String);
+    (View.findDrawableById("unitBottomLeft") as Ui.Text).setText(Lang.format("[$1$]", [$.oMySettings.sUnitVerticalSpeed]));
     // ... ground speed / speed-to(wards)-destination
     if((!$.bMyViewSafetySelectFields and !$.bMyViewSafetyShowSettings and $.oMyProcessing.bDecision)
        or $.iMyViewSafetyFieldBottomRight == 1) {  // ... speed-to(wards)-destination
-      View.findDrawableById("labelBottomRight").setText(Ui.loadResource(Rez.Strings.labelSpeedToDestination));
+      (View.findDrawableById("labelBottomRight") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelSpeedToDestination) as String);
     }
     else {  // ... ground speed
-      View.findDrawableById("labelBottomRight").setText(Ui.loadResource(Rez.Strings.labelGroundSpeed));
+      (View.findDrawableById("labelBottomRight") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelGroundSpeed) as String);
     }
-    View.findDrawableById("unitBottomRight").setText(Lang.format("[$1$]", [$.oMySettings.sUnitHorizontalSpeed]));
+    (View.findDrawableById("unitBottomRight") as Ui.Text).setText(Lang.format("[$1$]", [$.oMySettings.sUnitHorizontalSpeed]));
   }
 
-  function updateLayoutSafety() {
+  function updateLayoutSafety() as Void {
     //Sys.println("DEBUG: MyViewSafety.updateLayoutSafety()");
     MyViewGlobal.updateLayout(true);
 
@@ -248,37 +233,37 @@ class MyViewSafety extends MyViewGlobal {
 
     // Colors
     if($.oMyProcessing.iAccuracy == Pos.QUALITY_NOT_AVAILABLE) {
-      self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_DK_RED);
-      self.oRezValueTopLeft.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueTopLeft.setText($.MY_NOVALUE_LEN3);
-      self.oRezValueTopRight.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueTopRight.setText($.MY_NOVALUE_LEN3);
-      self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_DK_GRAY);
-      self.oRezLabelLeft.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezUnitLeft.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueLeft.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueLeft.setText($.MY_NOVALUE_LEN3);
-      self.oRezDrawableGlobal.setColorAlertCenter(Gfx.COLOR_DK_GRAY);
-      self.oRezLabelCenter.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueCenter.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueCenter.setText($.MY_NOVALUE_LEN2);
-      self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_DK_GRAY);
-      self.oRezLabelRight.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezUnitRight.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueRight.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueRight.setText($.MY_NOVALUE_LEN3);
-      self.oRezValueBottomLeft.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueBottomLeft.setText($.MY_NOVALUE_LEN3);
-      self.oRezValueBottomRight.setColor(Gfx.COLOR_LT_GRAY);
-      self.oRezValueBottomRight.setText($.MY_NOVALUE_LEN3);
+      (self.oRezDrawableGlobal as MyDrawableGlobal).setColorFieldsBackground(Gfx.COLOR_DK_RED);
+      (self.oRezValueTopLeft as Ui.Text).setColor(Gfx.COLOR_LT_GRAY);
+      (self.oRezValueTopLeft as Ui.Text).setText($.MY_NOVALUE_LEN3);
+      (self.oRezValueTopRight as Ui.Text).setColor(Gfx.COLOR_LT_GRAY);
+      (self.oRezValueTopRight as Ui.Text).setText($.MY_NOVALUE_LEN3);
+      (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertLeft(Gfx.COLOR_DK_GRAY);
+      (self.oRezLabelLeft as Ui.Text).setColor(Gfx.COLOR_LT_GRAY);
+      (self.oRezUnitLeft as Ui.Text).setColor(Gfx.COLOR_LT_GRAY);
+      (self.oRezValueLeft as Ui.Text).setColor(Gfx.COLOR_LT_GRAY);
+      (self.oRezValueLeft as Ui.Text).setText($.MY_NOVALUE_LEN3);
+      (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertCenter(Gfx.COLOR_DK_GRAY);
+      (self.oRezLabelCenter as Ui.Text).setColor(Gfx.COLOR_LT_GRAY);
+      (self.oRezValueCenter as Ui.Text).setColor(Gfx.COLOR_LT_GRAY);
+      (self.oRezValueCenter as Ui.Text).setText($.MY_NOVALUE_LEN2);
+      (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertRight(Gfx.COLOR_DK_GRAY);
+      (self.oRezLabelRight as Ui.Text).setColor(Gfx.COLOR_LT_GRAY);
+      (self.oRezUnitRight as Ui.Text).setColor(Gfx.COLOR_LT_GRAY);
+      (self.oRezValueRight as Ui.Text).setColor(Gfx.COLOR_LT_GRAY);
+      (self.oRezValueRight as Ui.Text).setText($.MY_NOVALUE_LEN3);
+      (self.oRezValueBottomLeft as Ui.Text).setColor(Gfx.COLOR_LT_GRAY);
+      (self.oRezValueBottomLeft as Ui.Text).setText($.MY_NOVALUE_LEN3);
+      (self.oRezValueBottomRight as Ui.Text).setColor(Gfx.COLOR_LT_GRAY);
+      (self.oRezValueBottomRight as Ui.Text).setText($.MY_NOVALUE_LEN3);
       return;
     }
     else if($.oMyProcessing.iAccuracy == Pos.QUALITY_LAST_KNOWN) {
-      self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_DK_RED);
+      (self.oRezDrawableGlobal as MyDrawableGlobal).setColorFieldsBackground(Gfx.COLOR_DK_RED);
       self.iColorText = Gfx.COLOR_LT_GRAY;
     }
     else {
-      self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_TRANSPARENT);
+      (self.oRezDrawableGlobal as MyDrawableGlobal).setColorFieldsBackground(Gfx.COLOR_TRANSPARENT);
     }
 
     // Set values (and dependent colors)
@@ -286,13 +271,13 @@ class MyViewSafety extends MyViewGlobal {
     var sValue;
 
     // ... destination (name) / elevation at destination / bearing to destination
-    self.oRezValueTopLeft.setColor(Gfx.COLOR_BLUE);
+    (self.oRezValueTopLeft as Ui.Text).setColor(Gfx.COLOR_BLUE);
     if((!$.bMyViewSafetySelectFields and !$.bMyViewSafetyShowSettings and $.oMyProcessing.bDecision)
        or $.iMyViewSafetyFieldTopLeft == 2) {  // ... bearing to destination
       if($.oMyProcessing.bDecision and $.oMyProcessing.bGrace) {
-        self.oRezValueTopLeft.setColor(Gfx.COLOR_PURPLE);
+        (self.oRezValueTopLeft as Ui.Text).setColor(Gfx.COLOR_PURPLE);
       }
-      if($.oMyProcessing.fBearingToDestination != null) {
+      if(LangUtils.notNaN($.oMyProcessing.fBearingToDestination)) {
         //fValue = (($.oMyProcessing.fBearingToDestination * 180.0f/Math.PI).toNumber()) % 360;
         fValue = (($.oMyProcessing.fBearingToDestination * 57.2957795131f).toNumber()) % 360;
         sValue = fValue.format("%d");
@@ -302,7 +287,7 @@ class MyViewSafety extends MyViewGlobal {
       }
     }
     else if($.iMyViewSafetyFieldTopLeft == 1) {  // ... elevation at destination
-      if($.oMyProcessing.fDestinationElevation != null) {
+      if(LangUtils.notNaN($.oMyProcessing.fDestinationElevation)) {
         fValue = $.oMyProcessing.fDestinationElevation * $.oMySettings.fUnitElevationCoefficient;
         sValue = fValue.format("%.0f");
       }
@@ -311,90 +296,90 @@ class MyViewSafety extends MyViewGlobal {
       }
     }
     else {  // ... destination (name)
-      if($.oMyProcessing.sDestinationName != null) {
+      if($.oMyProcessing.sDestinationName.length() > 0) {
         sValue = $.oMyProcessing.sDestinationName;
       }
       else {
         sValue = $.MY_NOVALUE_LEN3;
       }
     }
-    self.oRezValueTopLeft.setText(sValue);
+    (self.oRezValueTopLeft as Ui.Text).setText(sValue);
 
     // ... distance to destination
-    self.oRezValueTopRight.setColor(Gfx.COLOR_BLUE);
-    if($.oMyProcessing.fDistanceToDestination != null) {
+    (self.oRezValueTopRight as Ui.Text).setColor(Gfx.COLOR_BLUE);
+    if(LangUtils.notNaN($.oMyProcessing.fDistanceToDestination)) {
       fValue = $.oMyProcessing.fDistanceToDestination * $.oMySettings.fUnitDistanceCoefficient;
       sValue = fValue.format("%.1f");
     }
     else {
       sValue = $.MY_NOVALUE_LEN3;
     }
-    self.oRezValueTopRight.setText(sValue);
+    (self.oRezValueTopRight as Ui.Text).setText(sValue);
 
     // ... altitude
-    self.oRezLabelLeft.setColor(self.iColorText);
-    self.oRezUnitLeft.setColor(self.iColorText);
-    self.oRezValueLeft.setColor(self.iColorText);
-    if($.oMyProcessing.fAltitude != null) {
+    (self.oRezLabelLeft as Ui.Text).setColor(self.iColorText);
+    (self.oRezUnitLeft as Ui.Text).setColor(self.iColorText);
+    (self.oRezValueLeft as Ui.Text).setColor(self.iColorText);
+    if(LangUtils.notNaN($.oMyProcessing.fAltitude)) {
       if(!$.oMyProcessing.bSafetyStateful) {
-        self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_DK_GRAY);
+        (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertLeft(Gfx.COLOR_DK_GRAY);
       }
       else if($.oMyProcessing.bAltitudeCritical) {
-        self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_RED);
+        (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertLeft(Gfx.COLOR_RED);
       }
       else if($.oMyProcessing.bAltitudeWarning) {
-        self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_ORANGE);
+        (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertLeft(Gfx.COLOR_ORANGE);
       }
       else {
-        self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_DK_GREEN);
+        (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertLeft(Gfx.COLOR_DK_GREEN);
       }
       fValue = $.oMyProcessing.fAltitude * $.oMySettings.fUnitElevationCoefficient;
       sValue = fValue.format("%.0f");
     }
     else {
-      self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_DK_GRAY);
+      (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertLeft(Gfx.COLOR_DK_GRAY);
       sValue = $.MY_NOVALUE_LEN3;
     }
-    self.oRezValueLeft.setText(sValue);
+    (self.oRezValueLeft as Ui.Text).setText(sValue);
 
     // ... finesse
-    self.oRezLabelCenter.setColor(self.iColorText);
-    self.oRezValueCenter.setColor(self.iColorText);
-    if($.oMyProcessing.fFinesse != null) {
+    (self.oRezLabelCenter as Ui.Text).setColor(self.iColorText);
+    (self.oRezValueCenter as Ui.Text).setColor(self.iColorText);
+    if(LangUtils.notNaN($.oMyProcessing.fFinesse)) {
       if($.oMyProcessing.bAscent) {
-        self.oRezDrawableGlobal.setColorAlertCenter(Gfx.COLOR_DK_GREEN);
+        (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertCenter(Gfx.COLOR_DK_GREEN);
         if($.oMyProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
-          self.oRezValueCenter.setColor(Gfx.COLOR_DK_GRAY);
+          (self.oRezValueCenter as Ui.Text).setColor(Gfx.COLOR_DK_GRAY);
         }
       }
       else if($.oMyProcessing.fFinesse <= $.oMySettings.iSafetyFinesse) {
-        self.oRezDrawableGlobal.setColorAlertCenter(Gfx.COLOR_RED);
+        (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertCenter(Gfx.COLOR_RED);
       }
       else {
-        self.oRezDrawableGlobal.setColorAlertCenter(Gfx.COLOR_ORANGE);
+        (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertCenter(Gfx.COLOR_ORANGE);
       }
       fValue = $.oMyProcessing.fFinesse;
       sValue = fValue.format("%.0f");
     }
     else {
-      self.oRezDrawableGlobal.setColorAlertCenter(Gfx.COLOR_DK_GRAY);
+      (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertCenter(Gfx.COLOR_DK_GRAY);
       sValue = $.MY_NOVALUE_LEN2;
     }
-    self.oRezValueCenter.setText(sValue);
+    (self.oRezValueCenter as Ui.Text).setText(sValue);
 
     // ... height at destination
-    self.oRezLabelRight.setColor(self.iColorText);
-    self.oRezUnitRight.setColor(self.iColorText);
-    self.oRezValueRight.setColor(self.iColorText);
-    if($.oMyProcessing.fHeightAtDestination != null) {
+    (self.oRezLabelRight as Ui.Text).setColor(self.iColorText);
+    (self.oRezUnitRight as Ui.Text).setColor(self.iColorText);
+    (self.oRezValueRight as Ui.Text).setColor(self.iColorText);
+    if(LangUtils.notNaN($.oMyProcessing.fHeightAtDestination)) {
       if($.oMyProcessing.bAltitudeCritical) {
-        self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_RED);
+        (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertRight(Gfx.COLOR_RED);
       }
       else if($.oMyProcessing.bAltitudeWarning) {
-        self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_ORANGE);
+        (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertRight(Gfx.COLOR_ORANGE);
       }
       else {
-        self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_DK_GREEN);
+        (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertRight(Gfx.COLOR_DK_GREEN);
       }
       if($.oMyProcessing.fHeightAtDestination <= -10000.0f) {
         sValue = self.sValueHeightInvalid;
@@ -405,23 +390,23 @@ class MyViewSafety extends MyViewGlobal {
       }
     }
     else {
-      self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_DK_GRAY);
+      (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertRight(Gfx.COLOR_DK_GRAY);
       sValue = $.MY_NOVALUE_LEN3;
     }
-    self.oRezValueRight.setText(sValue);
+    (self.oRezValueRight as Ui.Text).setText(sValue);
 
     // ... variometer
-    self.oRezValueBottomLeft.setColor(self.iColorText);
-    if($.oMyProcessing.fVariometer_filtered != null) {
+    (self.oRezValueBottomLeft as Ui.Text).setColor(self.iColorText);
+    if(LangUtils.notNaN($.oMyProcessing.fVariometer_filtered)) {
       fValue = $.oMyProcessing.fVariometer_filtered * $.oMySettings.fUnitVerticalSpeedCoefficient;
       if($.oMySettings.fUnitVerticalSpeedCoefficient < 100.0f) {
         sValue = fValue.format("%+.1f");
         if($.oMyProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
           if(fValue >= 0.05f) {
-            self.oRezValueBottomLeft.setColor(Gfx.COLOR_DK_GREEN);
+            (self.oRezValueBottomLeft as Ui.Text).setColor(Gfx.COLOR_DK_GREEN);
           }
           else if(fValue <= -0.05f) {
-            self.oRezValueBottomLeft.setColor(Gfx.COLOR_RED);
+            (self.oRezValueBottomLeft as Ui.Text).setColor(Gfx.COLOR_RED);
           }
         }
       }
@@ -429,10 +414,10 @@ class MyViewSafety extends MyViewGlobal {
         sValue = fValue.format("%+.0f");
         if($.oMyProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
           if(fValue >= 0.5f) {
-            self.oRezValueBottomLeft.setColor(Gfx.COLOR_DK_GREEN);
+            (self.oRezValueBottomLeft as Ui.Text).setColor(Gfx.COLOR_DK_GREEN);
           }
           else if(fValue <= -0.5f) {
-            self.oRezValueBottomLeft.setColor(Gfx.COLOR_RED);
+            (self.oRezValueBottomLeft as Ui.Text).setColor(Gfx.COLOR_RED);
           }
         }
       }
@@ -440,21 +425,21 @@ class MyViewSafety extends MyViewGlobal {
     else {
       sValue = $.MY_NOVALUE_LEN3;
     }
-    self.oRezValueBottomLeft.setText(sValue);
+    (self.oRezValueBottomLeft as Ui.Text).setText(sValue);
 
     // ... ground speed / speed-to(wards)-destination
-    self.oRezValueBottomRight.setColor(self.iColorText);
+    (self.oRezValueBottomRight as Ui.Text).setColor(self.iColorText);
     if((!$.bMyViewSafetySelectFields and !$.bMyViewSafetyShowSettings and $.oMyProcessing.bDecision)
        or $.iMyViewSafetyFieldBottomRight == 1) {  // ... speed-to(wards)-destination
-      if($.oMyProcessing.fSpeedToDestination != null) {
+      if(LangUtils.notNaN($.oMyProcessing.fSpeedToDestination)) {
         fValue = $.oMyProcessing.fSpeedToDestination * $.oMySettings.fUnitHorizontalSpeedCoefficient;
         sValue = fValue.format("%+.0f");
         if($.oMyProcessing.iAccuracy > Pos.QUALITY_LAST_KNOWN) {
           if(fValue >= 0.5f) {
-            self.oRezValueBottomRight.setColor(Gfx.COLOR_DK_GREEN);
+            (self.oRezValueBottomRight as Ui.Text).setColor(Gfx.COLOR_DK_GREEN);
           }
           else if(fValue <= -0.5f) {
-            self.oRezValueBottomRight.setColor(Gfx.COLOR_RED);
+            (self.oRezValueBottomRight as Ui.Text).setColor(Gfx.COLOR_RED);
           }
         }
       }
@@ -463,7 +448,7 @@ class MyViewSafety extends MyViewGlobal {
       }
     }
     else {  // ... ground speed
-      if($.oMyProcessing.fGroundSpeed_filtered != null) {
+      if(LangUtils.notNaN($.oMyProcessing.fGroundSpeed_filtered)) {
         fValue = $.oMyProcessing.fGroundSpeed_filtered * $.oMySettings.fUnitHorizontalSpeedCoefficient;
         sValue = fValue.format("%.0f");
       }
@@ -471,18 +456,18 @@ class MyViewSafety extends MyViewGlobal {
         sValue = $.MY_NOVALUE_LEN3;
       }
     }
-    self.oRezValueBottomRight.setText(sValue);
+    (self.oRezValueBottomRight as Ui.Text).setText(sValue);
   }
 
-  function drawHeadingBug(_oDC) {
+  function drawHeadingBug(_oDC as Gfx.Dc) as Void {
     // Heading
     var fBearingRelative = $.oMyProcessing.fBearingToDestination - $.oMyProcessing.fHeading;
     // ... bug
     var iColor = ($.oMyProcessing.bDecision and $.oMyProcessing.bGrace) ? Gfx.COLOR_PURPLE : Gfx.COLOR_BLUE;
     var aPoints =
-      [[self.fLayoutCenter+self.fLayoutBugR1*Math.sin(fBearingRelative), self.fLayoutCenter-self.fLayoutBugR1*Math.cos(fBearingRelative)],
-       [self.fLayoutCenter+self.fLayoutBugR2*Math.sin(fBearingRelative-0.125f), self.fLayoutCenter-self.fLayoutBugR2*Math.cos(fBearingRelative-0.125f)],
-       [self.fLayoutCenter+self.fLayoutBugR2*Math.sin(fBearingRelative+0.125f), self.fLayoutCenter-self.fLayoutBugR2*Math.cos(fBearingRelative+0.125f)]];
+      [[self.fLayoutCenter+self.fLayoutBugR1*Math.sin(fBearingRelative).toFloat(), self.fLayoutCenter-self.fLayoutBugR1*Math.cos(fBearingRelative).toFloat()] as AFloats,
+       [self.fLayoutCenter+self.fLayoutBugR2*Math.sin(fBearingRelative-0.125f).toFloat(), self.fLayoutCenter-self.fLayoutBugR2*Math.cos(fBearingRelative-0.125f).toFloat()] as AFloats,
+       [self.fLayoutCenter+self.fLayoutBugR2*Math.sin(fBearingRelative+0.125f).toFloat(), self.fLayoutCenter-self.fLayoutBugR2*Math.cos(fBearingRelative+0.125f).toFloat()] as AFloats] as Array<AFloats>;
     _oDC.setColor(iColor, iColor);
     _oDC.fillPolygon(aPoints);
     // ... status
@@ -493,59 +478,59 @@ class MyViewSafety extends MyViewGlobal {
       iColor = $.oMySettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
     }
     aPoints =
-      [[self.fLayoutCenter+self.fLayoutBugR1*Math.sin(fBearingRelative), self.fLayoutCenter-self.fLayoutBugR1*Math.cos(fBearingRelative)],
-       [self.fLayoutCenter+self.fLayoutBugR3*Math.sin(fBearingRelative-0.035f), self.fLayoutCenter-self.fLayoutBugR3*Math.cos(fBearingRelative-0.035f)],
-       [self.fLayoutCenter+self.fLayoutBugR3*Math.sin(fBearingRelative+0.035f), self.fLayoutCenter-self.fLayoutBugR3*Math.cos(fBearingRelative+0.035f)]];
+      [[self.fLayoutCenter+self.fLayoutBugR1*Math.sin(fBearingRelative).toFloat(), self.fLayoutCenter-self.fLayoutBugR1*Math.cos(fBearingRelative).toFloat()] as AFloats,
+       [self.fLayoutCenter+self.fLayoutBugR3*Math.sin(fBearingRelative-0.035f).toFloat(), self.fLayoutCenter-self.fLayoutBugR3*Math.cos(fBearingRelative-0.035f).toFloat()] as AFloats,
+       [self.fLayoutCenter+self.fLayoutBugR3*Math.sin(fBearingRelative+0.035f).toFloat(), self.fLayoutCenter-self.fLayoutBugR3*Math.cos(fBearingRelative+0.035f).toFloat()] as AFloats] as Array<AFloats>;
     _oDC.setColor(iColor, iColor);
     _oDC.fillPolygon(aPoints);
   }
 
-  function adaptLayoutSettings() {
+  function adaptLayoutSettings() as Void {
     //Sys.println("DEBUG: MyViewSafety.adaptLayoutSettings()");
 
     // Set colors (value-independent), labels and units
     // ... fields background
-    self.oRezDrawableGlobal.setColorFieldsBackground(Gfx.COLOR_TRANSPARENT);
+    (self.oRezDrawableGlobal as MyDrawableGlobal).setColorFieldsBackground(Gfx.COLOR_TRANSPARENT);
     // ... destination (name)
-    self.oRezValueTopLeft.setColor(Gfx.COLOR_BLUE);
-    View.findDrawableById("labelTopLeft").setText(Ui.loadResource(Rez.Strings.labelDestination));
-    View.findDrawableById("unitTopLeft").setText(MY_NOVALUE_BLANK);
+    (self.oRezValueTopLeft as Ui.Text).setColor(Gfx.COLOR_BLUE);
+    (View.findDrawableById("labelTopLeft") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelDestination) as String);
+    (View.findDrawableById("unitTopLeft") as Ui.Text).setText(MY_NOVALUE_BLANK);
     // ... elevation at destination
-    self.oRezValueTopRight.setColor(Gfx.COLOR_BLUE);
-    View.findDrawableById("labelTopRight").setText(Ui.loadResource(Rez.Strings.labelElevationAtDestination));
-    View.findDrawableById("unitTopRight").setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
+    (self.oRezValueTopRight as Ui.Text).setColor(Gfx.COLOR_BLUE);
+    (View.findDrawableById("labelTopRight") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelElevationAtDestination) as String);
+    (View.findDrawableById("unitTopRight") as Ui.Text).setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
     // ... warning height
-    self.oRezDrawableGlobal.setColorAlertLeft(Gfx.COLOR_ORANGE);
-    self.oRezLabelLeft.setColor(self.iColorText);
-    self.oRezLabelLeft.setText(Ui.loadResource(Rez.Strings.labelHeightWarning));
-    self.oRezUnitLeft.setColor(self.iColorText);
-    self.oRezUnitLeft.setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
-    self.oRezValueLeft.setColor(self.iColorText);
+    (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertLeft(Gfx.COLOR_ORANGE);
+    (self.oRezLabelLeft as Ui.Text).setColor(self.iColorText);
+    (self.oRezLabelLeft as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelHeightWarning) as String);
+    (self.oRezUnitLeft as Ui.Text).setColor(self.iColorText);
+    (self.oRezUnitLeft as Ui.Text).setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
+    (self.oRezValueLeft as Ui.Text).setColor(self.iColorText);
     // ... reference finesse
-    self.oRezDrawableGlobal.setColorAlertCenter(Gfx.COLOR_DK_GREEN);
-    self.oRezLabelCenter.setColor(self.iColorText);
-    self.oRezLabelCenter.setText(Ui.loadResource(Rez.Strings.labelFinesse));
-    self.oRezValueCenter.setColor(self.iColorText);
+    (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertCenter(Gfx.COLOR_DK_GREEN);
+    (self.oRezLabelCenter as Ui.Text).setColor(self.iColorText);
+    (self.oRezLabelCenter as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelFinesse) as String);
+    (self.oRezValueCenter as Ui.Text).setColor(self.iColorText);
     // ... critical height
-    self.oRezDrawableGlobal.setColorAlertRight(Gfx.COLOR_RED);
-    self.oRezLabelRight.setColor(self.iColorText);
-    self.oRezLabelRight.setText(Ui.loadResource(Rez.Strings.labelHeightCritical));
-    self.oRezUnitRight.setColor(self.iColorText);
-    self.oRezUnitRight.setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
-    self.oRezValueRight.setColor(self.iColorText);
+    (self.oRezDrawableGlobal as MyDrawableGlobal).setColorAlertRight(Gfx.COLOR_RED);
+    (self.oRezLabelRight as Ui.Text).setColor(self.iColorText);
+    (self.oRezLabelRight as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelHeightCritical) as String);
+    (self.oRezUnitRight as Ui.Text).setColor(self.iColorText);
+    (self.oRezUnitRight as Ui.Text).setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
+    (self.oRezValueRight as Ui.Text).setColor(self.iColorText);
     // ... decision height
-    self.oRezValueBottomLeft.setColor(self.iColorText);
-    View.findDrawableById("labelBottomLeft").setText(Ui.loadResource(Rez.Strings.labelHeightDecision));
-    View.findDrawableById("unitBottomLeft").setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
+    (self.oRezValueBottomLeft as Ui.Text).setColor(self.iColorText);
+    (View.findDrawableById("labelBottomLeft") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelHeightDecision) as String);
+    (View.findDrawableById("unitBottomLeft") as Ui.Text).setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
     // ... reference height
-    self.oRezValueBottomRight.setColor(self.iColorText);
-    View.findDrawableById("labelBottomRight").setText(Ui.loadResource(Rez.Strings.labelHeightReference));
-    View.findDrawableById("unitBottomRight").setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
+    (self.oRezValueBottomRight as Ui.Text).setColor(self.iColorText);
+    (View.findDrawableById("labelBottomRight") as Ui.Text).setText(Ui.loadResource(Rez.Strings.labelHeightReference) as String);
+    (View.findDrawableById("unitBottomRight") as Ui.Text).setText(Lang.format("[$1$]", [$.oMySettings.sUnitElevation]));
     // ... application name
-    self.oRezValueFooter.setColor(Gfx.COLOR_DK_GRAY);
+    (self.oRezValueFooter as Ui.Text).setColor(Gfx.COLOR_DK_GRAY);
   }
 
-  function updateLayoutSettings() {
+  function updateLayoutSettings() as Void {
     //Sys.println("DEBUG: MyViewSafety.updateLayoutSettings()");
     MyViewSafety.updateLayout(false);
 
@@ -558,39 +543,39 @@ class MyViewSafety extends MyViewGlobal {
     // Set the values
     var fValue;
     // ... destination (name)
-    if($.oMyProcessing.sDestinationName != null) {
-      self.oRezValueTopLeft.setText($.oMyProcessing.sDestinationName);
+    if($.oMyProcessing.sDestinationName.length() > 0) {
+      (self.oRezValueTopLeft as Ui.Text).setText($.oMyProcessing.sDestinationName);
     }
     else {
-      self.oRezValueTopLeft.setText($.MY_NOVALUE_LEN4);
+      (self.oRezValueTopLeft as Ui.Text).setText($.MY_NOVALUE_LEN4);
     }
     // ... elevation at destination
-    if($.oMyProcessing.fDestinationElevation != null) {
+    if(LangUtils.notNaN($.oMyProcessing.fDestinationElevation)) {
       fValue = $.oMyProcessing.fDestinationElevation * $.oMySettings.fUnitElevationCoefficient;
-      self.oRezValueTopRight.setText(fValue.format("%.0f"));
+      (self.oRezValueTopRight as Ui.Text).setText(fValue.format("%.0f"));
     }
     else {
-      self.oRezValueTopRight.setText($.MY_NOVALUE_LEN3);
+      (self.oRezValueTopRight as Ui.Text).setText($.MY_NOVALUE_LEN3);
     }
     // ... warning height
     fValue = $.oMySettings.fSafetyHeightWarning * $.oMySettings.fUnitElevationCoefficient;
-    self.oRezValueLeft.setText(fValue.format("%.0f"));
+    (self.oRezValueLeft as Ui.Text).setText(fValue.format("%.0f"));
     // ... reference finesse
-    oRezValueCenter.setText($.oMySettings.iSafetyFinesse.format("%d"));
+    (oRezValueCenter as Ui.Text).setText($.oMySettings.iSafetyFinesse.format("%d"));
     // ... critical height
     fValue = $.oMySettings.fSafetyHeightCritical * $.oMySettings.fUnitElevationCoefficient;
-    self.oRezValueRight.setText(fValue.format("%.0f"));
+    (self.oRezValueRight as Ui.Text).setText(fValue.format("%.0f"));
     // ... decision height
     fValue = $.oMySettings.fSafetyHeightDecision * $.oMySettings.fUnitElevationCoefficient;
-    self.oRezValueBottomLeft.setText(fValue.format("%.0f"));
+    (self.oRezValueBottomLeft as Ui.Text).setText(fValue.format("%.0f"));
     // ... reference height
     fValue = $.oMySettings.fSafetyHeightReference * $.oMySettings.fUnitElevationCoefficient;
-    self.oRezValueBottomRight.setText(fValue.format("%.0f"));
+    (self.oRezValueBottomRight as Ui.Text).setText(fValue.format("%.0f"));
     // ... application name
-    self.oRezValueFooter.setText(self.sTitle);
+    (self.oRezValueFooter as Ui.Text).setText(self.sTitle);
   }
 
-  function onHide() {
+  function onHide() as Void {
     //Sys.println("DEBUG: MyViewSafety.onHide()");
     MyViewGlobal.onHide();
 
@@ -599,7 +584,7 @@ class MyViewSafety extends MyViewGlobal {
     $.bMyViewSafetySelectFields = false;
 
     // Mute tones
-    App.getApp().muteTones();
+    (App.getApp() as MyApp).muteTones();
 
     // Free resources
     // ... buttons
@@ -668,7 +653,7 @@ class MyViewSafetyDelegate extends Ui.BehaviorDelegate {
     }
     else if($.oMyActivity != null) {
       if($.oMySettings.bGeneralLapKey) {
-        $.oMyActivity.addLap();
+        ($.oMyActivity as MyActivity).addLap();
       }
       return true;
     }

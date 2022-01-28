@@ -16,7 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
-using Toybox.Lang;
+import Toybox.Lang;
 using Toybox.Math;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
@@ -27,30 +27,38 @@ module LangUtils {
   // FUNCTIONS: data primitives
   //
 
+  // NaN
+  function isNaN(_nValue as Numeric?) as Boolean {
+    return _nValue == null or _nValue != _nValue;
+  }
+  function notNaN(_nValue as Numeric?) as Boolean {
+    return _nValue != null and _nValue == _nValue;
+  }
+
   // Deep-copy the given object
-  function copy(_oObject) {
+  function copy(_oObject as Object) as Object {
     var oCopy = null;
     if(_oObject instanceof Lang.Array) {
       var iSize = _oObject.size();
-      oCopy = new [iSize];
+      oCopy = new Array<Object>[iSize];
       for(var i=0; i<iSize; i++) {
-        oCopy[i] = LangUtils.copy(_oObject[i]);
+        oCopy[i] = LangUtils.copy(_oObject[i] as Object);
       }
     }
     else if(_oObject instanceof Lang.Dictionary) {
       var amKeys = _oObject.keys();
       var iSize = amKeys.size();
-      oCopy = {};
+      oCopy = {} as Dictionary<Object, Object>;
       for(var i=0; i<iSize; i++) {
         var mKey = amKeys[i];
-        oCopy.put(mKey, LangUtils.copy(_oObject.get(mKey)));
+        oCopy.put(mKey, LangUtils.copy(_oObject.get(mKey) as Object));
       }
     }
     else if(_oObject instanceof Lang.Exception) {
-      throw new Lang.UnexpectedTypeException();
+      throw new Lang.UnexpectedTypeException("Exception may not be deep-copied", null, null);
     }
     else if(_oObject instanceof Lang.Method) {
-      throw new Lang.UnexpectedTypeException();
+      throw new Lang.UnexpectedTypeException("Method may not be deep-copied", null, null);
     }
     else {
       oCopy = _oObject;
@@ -60,9 +68,9 @@ module LangUtils {
 
   // Sort the given array (in-place) and return its re-ordered indices (array)
   // NOTE: we use Jon Bentley's optimized insertion sort algorithm; https://en.wikipedia.org/wiki/Insertion_sort
-  function sort(_amValues) {
+  function sort(_amValues as Array) as Array<Number> {
     var iSize = _amValues.size();
-    var aiIndices = new [iSize];
+    var aiIndices = new Array<Number>[iSize];
     for(var n=0; n<iSize; n++) { aiIndices[n] = n; }
 
     // Sort
@@ -92,7 +100,7 @@ module LangUtils {
 
   // Compute the distance (in meters) between two geographical coordinates, using the rhumb-line formula (constant bearing)
   // INPUT: Position.Location.toRadians() array
-  function distance(_adLoc1, _adLoc2) {
+  function distance(_adLoc1 as Array<Decimal>, _adLoc2 as Array<Decimal>) as Float {
     // Formula shamelessly copied from http://www.movable-type.co.uk/scripts/latlong.html
     // NOTE: We MUST use double precision math throughout the calculation to avoid rounding errors
     //       Also, let's avoid (expensive) operations like division or exponentiation as much as possible
@@ -118,7 +126,7 @@ module LangUtils {
 
   // Compute the bearing (in radians) between two geographical coordinates, using the rhumb-line formula (constant bearing)
   // INPUT: Position.Location.toRadians() array
-  function bearing(_adLoc1, _adLoc2) {
+  function bearing(_adLoc1 as Array<Decimal>, _adLoc2 as Array<Decimal>) as Float {
     // Formula shamelessly copied from http://www.movable-type.co.uk/scripts/latlong.html
     // NOTE: We MUST use double precision math throughout the calculation to avoid rounding errors
     //       Also, let's avoid (expensive) operations like division or exponentiation as much as possible
@@ -138,7 +146,7 @@ module LangUtils {
 
   // Estimate the distance (in meters) between two geographical coordinates, using the equirectangular rhumb-line estimation
   // INPUT: Position.Location.toRadians() array
-  function distanceEstimate(_adLoc1, _adLoc2) {
+  function distanceEstimate(_adLoc1 as Array<Decimal>, _adLoc2 as Array<Decimal>) as Float {
     // Formula shamelessly copied from http://www.movable-type.co.uk/scripts/latlong.html
     var x = (_adLoc2[1] - _adLoc1[1]) * Math.cos((_adLoc2[0] + _adLoc1[0]) / 2.0d);
     var y = (_adLoc2[0] - _adLoc1[0]);
@@ -152,7 +160,7 @@ module LangUtils {
   // FUNCTIONS: time formatting
   //
 
-  function formatTime(_oTime, _bUTC, _bSecond) {
+  function formatTime(_oTime as Time.Moment?, _bUTC as Boolean, _bSecond as Boolean) as String {
     if(_oTime != null) {
       var oTimeInfo = _bUTC ? Gregorian.utcInfo(_oTime, Time.FORMAT_SHORT) : Gregorian.info(_oTime, Time.FORMAT_SHORT);
       if(_bSecond) {
@@ -167,7 +175,7 @@ module LangUtils {
     }
   }
 
-  function formatElapsedTime(_oTimeFrom, _oTimeTo, _bSecond) {
+  function formatElapsedTime(_oTimeFrom as Time.Moment?, _oTimeTo as Time.Moment?, _bSecond as Boolean) as String {
     if(_oTimeFrom != null and _oTimeTo != null) {
       if(_bSecond) {
         var oTimeInfo = Gregorian.utcInfo(new Time.Moment(_oTimeTo.subtract(_oTimeFrom).value()), Time.FORMAT_SHORT);
@@ -185,7 +193,7 @@ module LangUtils {
     }
   }
 
-  function formatElapsed(_iElapsed, _bSecond) {
+  function formatElapsed(_iElapsed as Number?, _bSecond as Boolean) as String {
     if(_iElapsed != null) {
       var oTimeInfo = Gregorian.utcInfo(new Time.Moment(_iElapsed), Time.FORMAT_SHORT);
       if(_bSecond) {

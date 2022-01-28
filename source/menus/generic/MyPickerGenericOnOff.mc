@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Application as App;
 using Toybox.WatchUi as Ui;
 
@@ -25,23 +26,23 @@ class MyPickerGenericOnOff extends PickerGenericOnOff {
   // FUNCTIONS: PickerGenericOnOff (override/implement)
   //
 
-  function initialize(_context, _item) {
+  function initialize(_context as Symbol, _item as Symbol) {
     if(_context == :contextSettings) {
       if(_item == :itemSoundsVariometerTones) {
-        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleSoundsVariometerTones),
-                                      App.Properties.getValue("userSoundsVariometerTones"));
+        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleSoundsVariometerTones) as String,
+                                      $.oMySettings.loadSoundsVariometerTones());
       }
       else if(_item == :itemSoundsSafetyTones) {
-        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleSoundsSafetyTones),
-                                      App.Properties.getValue("userSoundsSafetyTones"));
+        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleSoundsSafetyTones) as String,
+                                      $.oMySettings.loadSoundsSafetyTones());
       }
       else if(_item == :itemGeneralAutoActivity) {
-        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleGeneralAutoActivity),
-                                      App.Properties.getValue("userGeneralAutoActivity"));
+        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleGeneralAutoActivity) as String,
+                                      $.oMySettings.loadGeneralAutoActivity());
       }
       else if(_item == :itemGeneralLapKey) {
-        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleGeneralLapKey),
-                                      App.Properties.getValue("userGeneralLapKey"));
+        PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleGeneralLapKey) as String,
+                                      $.oMySettings.loadGeneralLapKey());
       }
     }
   }
@@ -54,15 +55,15 @@ class MyPickerGenericOnOffDelegate extends Ui.PickerDelegate {
   // VARIABLES
   //
 
-  private var context;
-  private var item;
+  private var context as Symbol = :contextNone;
+  private var item as Symbol = :itemNone;
 
 
   //
   // FUNCTIONS: Ui.PickerDelegate (override/implement)
   //
 
-  function initialize(_context, _item) {
+  function initialize(_context as Symbol, _item as Symbol) {
     PickerDelegate.initialize();
     self.context = _context;
     self.item = _item;
@@ -72,24 +73,26 @@ class MyPickerGenericOnOffDelegate extends Ui.PickerDelegate {
     var bValue = PickerGenericOnOff.getValue(_amValues);
     if(self.context == :contextSettings) {
       if(self.item == :itemSoundsVariometerTones) {
-        App.Properties.setValue("userSoundsVariometerTones", bValue);
+        $.oMySettings.saveSoundsVariometerTones(bValue);
       }
       else if(self.item == :itemSoundsSafetyTones) {
-        App.Properties.setValue("userSoundsSafetyTones", bValue);
+        $.oMySettings.saveSoundsSafetyTones(bValue);
       }
       else if(self.item == :itemGeneralAutoActivity) {
-        App.Properties.setValue("userGeneralAutoActivity", bValue);
+        $.oMySettings.saveGeneralAutoActivity(bValue);
       }
       else if(self.item == :itemGeneralLapKey) {
-        App.Properties.setValue("userGeneralLapKey", bValue);
+        $.oMySettings.saveGeneralLapKey(bValue);
       }
     }
     Ui.popView(Ui.SLIDE_IMMEDIATE);
+    return true;
   }
 
   function onCancel() {
     // Exit
     Ui.popView(Ui.SLIDE_IMMEDIATE);
+    return true;
   }
 
 }

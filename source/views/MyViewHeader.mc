@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.Time;
@@ -23,31 +24,23 @@ using Toybox.Time.Gregorian;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
-class MyViewHeader extends Ui.View {
+class MyViewHeader extends MyView {
 
   //
   // VARIABLES
   //
 
   // Display mode (internal)
-  protected var bHeaderOnly;
-  private var bShow;
+  protected var bHeaderOnly as Boolean = true;
 
   // Resources
   // ... drawable
-  private var oRezDrawableHeader;
+  private var oRezDrawableHeader as MyDrawableHeader?;
   // ... header
-  private var oRezValueBatteryLevel;
-  private var oRezValueActivityStatus;
+  private var oRezValueBatteryLevel as Ui.Text?;
+  private var oRezValueActivityStatus as Ui.Text?;
   // ... footer
-  protected var oRezValueFooter;
-  // ... strings
-  private var sValueActivityStandby;
-  private var sValueActivityRecording;
-  private var sValueActivityPaused;
-
-  // Internals
-  protected var iColorText;
+  protected var oRezValueFooter as Ui.Text?;
 
 
   //
@@ -55,12 +48,7 @@ class MyViewHeader extends Ui.View {
   //
 
   function initialize() {
-    View.initialize();
-
-    // Display mode
-    // ... internal
-    self.bHeaderOnly = true;
-    self.bShow = false;
+    MyView.initialize();
   }
 
   function onLayout(_oDC) {
@@ -68,114 +56,66 @@ class MyViewHeader extends Ui.View {
 
     // Load resources
     // ... drawable
-    self.oRezDrawableHeader = View.findDrawableById("MyDrawableHeader");
+    self.oRezDrawableHeader = View.findDrawableById("MyDrawableHeader") as MyDrawableHeader;
     // ... header
-    self.oRezValueBatteryLevel = View.findDrawableById("valueBatteryLevel");
-    self.oRezValueActivityStatus = View.findDrawableById("valueActivityStatus");
+    self.oRezValueBatteryLevel = View.findDrawableById("valueBatteryLevel") as Ui.Text;
+    self.oRezValueActivityStatus = View.findDrawableById("valueActivityStatus") as Ui.Text;
     // ... footer
-    self.oRezValueFooter = View.findDrawableById("valueFooter");
-
-    // Done
-    return true;
-  }
-
-  function onShow() {
-    //Sys.println("DEBUG: MyViewHeader.onShow()");
-
-    // Prepare view
-    self.prepare();
-
-    // Done
-    self.bShow = true;
-    $.oMyView = self;
-    return true;
+    self.oRezValueFooter = View.findDrawableById("valueFooter") as Ui.Text;
   }
 
   function onUpdate(_oDC) {
-    //Sys.println("DEBUG: MyViewHeader.onUpdate()");
+    //Sys.println("DEBUG: MyView.onUpdate()");
 
     // Update layout
-    self.updateLayout();
-    View.onUpdate(_oDC);
-
-    // Done
-    return true;
-  }
-
-  function onHide() {
-    //Sys.println("DEBUG: MyViewHeader.onHide()");
-    $.oMyView = null;
-    self.bShow = false;
+    self.updateLayout(true);
+    MyView.onUpdate(_oDC);
   }
 
 
   //
-  // FUNCTIONS: self
+  // FUNCTIONS: MyView (override/implement)
   //
-
-  function prepare() {
-    //Sys.println("DEBUG: MyViewHeader.prepare()");
-
-    // Load resources
-    // ... strings
-    self.sValueActivityStandby = Ui.loadResource(Rez.Strings.valueActivityStandby);
-    self.sValueActivityRecording = Ui.loadResource(Rez.Strings.valueActivityRecording);
-    self.sValueActivityPaused = Ui.loadResource(Rez.Strings.valueActivityPaused);
-
-    // (Re)load settings
-    App.getApp().loadSettings();
-    // ... colors
-    self.iColorText = $.oMySettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
-  }
-
-  function updateUi() {
-    //Sys.println("DEBUG: MyViewHeader.updateUi()");
-
-    // Request UI update
-    if(self.bShow) {
-      Ui.requestUpdate();
-    }
-  }
 
   function updateLayout(_bUpdateTime) {
     //Sys.println("DEBUG: MyViewHeader.updateLayout()");
+    MyView.updateLayout(_bUpdateTime);
 
     // Set colors
-    self.iColorText = $.oMySettings.iGeneralBackgroundColor ? Gfx.COLOR_BLACK : Gfx.COLOR_WHITE;
     // ... background
-    self.oRezDrawableHeader.setColorBackground($.oMySettings.iGeneralBackgroundColor);
+    (self.oRezDrawableHeader as MyDrawableHeader).setColorBackground($.oMySettings.iGeneralBackgroundColor);
 
     // Set header/footer values
     var sValue;
 
     // ... position accuracy
-    self.oRezDrawableHeader.setPositionAccuracy($.oMyProcessing.iAccuracy);
+    (self.oRezDrawableHeader as MyDrawableHeader).setPositionAccuracy($.oMyProcessing.iAccuracy);
 
     // ... battery level
-    self.oRezValueBatteryLevel.setColor(self.iColorText);
-    self.oRezValueBatteryLevel.setText(Lang.format("$1$%", [Sys.getSystemStats().battery.format("%.0f")]));
+    (self.oRezValueBatteryLevel as Ui.Text).setColor(self.iColorText);
+    (self.oRezValueBatteryLevel as Ui.Text).setText(format("$1$%", [Sys.getSystemStats().battery.format("%.0f")]));
 
     // ... activity status
     if($.oMyActivity == null) {  // ... stand-by
-      self.oRezValueActivityStatus.setColor(Gfx.COLOR_LT_GRAY);
+      (self.oRezValueActivityStatus as Ui.Text).setColor(Gfx.COLOR_LT_GRAY);
       sValue = self.sValueActivityStandby;
     }
-    else if($.oMyActivity.isRecording()) {  // ... recording
-      self.oRezValueActivityStatus.setColor(Gfx.COLOR_RED);
+    else if(($.oMyActivity as MyActivity).isRecording()) {  // ... recording
+      (self.oRezValueActivityStatus as Ui.Text).setColor(Gfx.COLOR_RED);
       sValue = self.sValueActivityRecording;
     }
     else {  // ... paused
-      self.oRezValueActivityStatus.setColor(Gfx.COLOR_YELLOW);
+      (self.oRezValueActivityStatus as Ui.Text).setColor(Gfx.COLOR_YELLOW);
       sValue = self.sValueActivityPaused;
     }
-    self.oRezValueActivityStatus.setText(sValue);
+    (self.oRezValueActivityStatus as Ui.Text).setText(sValue);
 
     // ... time
     if(_bUpdateTime) {
       var oTimeNow = Time.now();
       var oTimeInfo = $.oMySettings.bUnitTimeUTC ? Gregorian.utcInfo(oTimeNow, Time.FORMAT_SHORT) : Gregorian.info(oTimeNow, Time.FORMAT_SHORT);
-      self.oRezValueFooter.setColor(self.iColorText);
-      self.oRezValueFooter.setText(Lang.format("$1$$2$$3$ $4$", [oTimeInfo.hour.format("%02d"), oTimeNow.value() % 2 ? "." : ":", oTimeInfo.min.format("%02d"), $.oMySettings.sUnitTime]));
+      (self.oRezValueFooter as Ui.Text).setColor(self.iColorText);
+      (self.oRezValueFooter as Ui.Text).setText(format("$1$$2$$3$ $4$", [oTimeInfo.hour.format("%02d"), oTimeNow.value() % 2 ? "." : ":", oTimeInfo.min.format("%02d"), $.oMySettings.sUnitTime]));
     }
   }
 

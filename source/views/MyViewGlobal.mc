@@ -16,6 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
 
@@ -27,15 +28,15 @@ class MyViewGlobal extends MyViewHeader {
 
   // Resources
   // ... drawable
-  protected var oRezDrawableGlobal;
+  protected var oRezDrawableGlobal as MyDrawableGlobal?;
   // ... fields
-  protected var oRezValueTopLeft;
-  protected var oRezValueTopRight;
-  protected var oRezValueLeft;
-  protected var oRezValueCenter;
-  protected var oRezValueRight;
-  protected var oRezValueBottomLeft;
-  protected var oRezValueBottomRight;
+  protected var oRezValueTopLeft as Ui.Text?;
+  protected var oRezValueTopRight as Ui.Text?;
+  protected var oRezValueLeft as Ui.Text?;
+  protected var oRezValueCenter as Ui.Text?;
+  protected var oRezValueRight as Ui.Text?;
+  protected var oRezValueBottomLeft as Ui.Text?;
+  protected var oRezValueBottomRight as Ui.Text?;
 
 
   //
@@ -51,24 +52,19 @@ class MyViewGlobal extends MyViewHeader {
   }
 
   function onLayout(_oDC) {
-    if(!MyViewHeader.onLayout(_oDC)) {
-      return false;
-    }
+    MyViewHeader.onLayout(_oDC);
 
     // Load resources
     // ... drawable
-    self.oRezDrawableGlobal = View.findDrawableById("MyDrawableGlobal");
+    self.oRezDrawableGlobal = View.findDrawableById("MyDrawableGlobal") as MyDrawableGlobal;
     // ... fields
-    self.oRezValueTopLeft = View.findDrawableById("valueTopLeft");
-    self.oRezValueTopRight = View.findDrawableById("valueTopRight");
-    self.oRezValueLeft = View.findDrawableById("valueLeft");
-    self.oRezValueCenter = View.findDrawableById("valueCenter");
-    self.oRezValueRight = View.findDrawableById("valueRight");
-    self.oRezValueBottomLeft = View.findDrawableById("valueBottomLeft");
-    self.oRezValueBottomRight = View.findDrawableById("valueBottomRight");
-
-    // Done
-    return true;
+    self.oRezValueTopLeft = View.findDrawableById("valueTopLeft") as Ui.Text;
+    self.oRezValueTopRight = View.findDrawableById("valueTopRight") as Ui.Text;
+    self.oRezValueLeft = View.findDrawableById("valueLeft") as Ui.Text;
+    self.oRezValueCenter = View.findDrawableById("valueCenter") as Ui.Text;
+    self.oRezValueRight = View.findDrawableById("valueRight") as Ui.Text;
+    self.oRezValueBottomLeft = View.findDrawableById("valueBottomLeft") as Ui.Text;
+    self.oRezValueBottomRight = View.findDrawableById("valueBottomRight") as Ui.Text;
   }
 
 }
@@ -106,7 +102,7 @@ class MyViewGlobalDelegate extends Ui.BehaviorDelegate {
     //Sys.println("DEBUG: MyViewHeaderDelegate.onBack()");
     if($.oMyActivity != null) {
       if($.oMySettings.bGeneralLapKey) {
-        $.oMyActivity.addLap();
+        ($.oMyActivity as MyActivity).addLap();
       }
       return true;
     }

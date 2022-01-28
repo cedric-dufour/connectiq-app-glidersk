@@ -36,5 +36,5 @@
   <property id="userUnitRateOfTurn" type="number">0</property>
   <property id="userUnitTimeUTC" type="boolean">false</property>
   <!-- ... storage -->
-  <property id="userStorageRepositoryURL" type="string">https://github.com/cedric-dufour/connectiq-app-glidersk/raw/master/data</property>
+  <property id="userStorageRepositoryURL" type="string">https://cdn.jsdelivr.net/gh/cedric-dufour/connectiq-app-glidersk@master/data</property>
 </properties>

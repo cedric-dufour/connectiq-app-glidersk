@@ -16,8 +16,8 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
+import Toybox.Lang;
 using Toybox.Graphics as Gfx;
-using Toybox.Lang;
 using Toybox.WatchUi as Ui;
 
 class PickerFactoryNumber extends Ui.PickerFactory {
@@ -26,34 +26,29 @@ class PickerFactoryNumber extends Ui.PickerFactory {
   // VARIABLES
   //
 
-  private var iNumberMinimum;
-  private var iNumberMaximum;
-  private var sFormat;
-  private var sLangFormat;
-  private var amSettingsKeys;
-  private var amSettingsValues;
+  private var iNumberMinimum as Number = 0;
+  private var iNumberMaximum as Number = 0;
+  private var sFormat as String = "%d";
+  private var sLangFormat as String = "$1$";
+  private var amSettingsKeys as Array = [];
+  private var amSettingsValues as Array = [];
 
   //
   // FUNCTIONS: Ui.PickerFactory (override/implement)
   //
 
-  function initialize(_iNumberMinimum, _iNumberMaximum, _dictSettings) {
+  function initialize(_iNumberMinimum as Number, _iNumberMaximum as Number,
+                      _dictSettings as {:format as String, :langFormat as String}?) {
     PickerFactory.initialize();
     self.iNumberMinimum = _iNumberMinimum;
     self.iNumberMaximum = _iNumberMaximum;
     if(_dictSettings != null) {
-      self.sFormat = _dictSettings.get(:format);
-      self.sLangFormat = _dictSettings.get(:langFormat);
-      if(self.sFormat == null) {
-        self.sFormat = "%d";
-      }
-      else {
+      if(_dictSettings.hasKey(:format)) {
+        self.sFormat = _dictSettings.get(:format) as String;
         _dictSettings.remove(:format);
       }
-      if(self.sLangFormat == null) {
-        self.sLangFormat = "$1$";
-      }
-      else {
+      if(_dictSettings.hasKey(:langFormat)) {
+        self.sLangFormat = _dictSettings.get(:langFormat) as String;
         _dictSettings.remove(:langFormat);
       }
       self.amSettingsKeys = _dictSettings.keys();
@@ -62,22 +57,20 @@ class PickerFactoryNumber extends Ui.PickerFactory {
     else {
       self.sFormat = "%d";
       self.sLangFormat = "$1$";
-      self.amSettingsKeys = null;
-      self.amSettingsValues = null;
+      self.amSettingsKeys = [];
+      self.amSettingsValues = [];
     }
   }
 
   function getDrawable(_iItem, _bSelected) {
     var dictSettings = {
-      :text => Lang.format(self.sLangFormat, [self.getValue(_iItem).format(self.sFormat)]),
+      :text => format(self.sLangFormat, [(self.getValue(_iItem) as Number).format(self.sFormat)]),
       :locX => Ui.LAYOUT_HALIGN_CENTER,
       :locY => Ui.LAYOUT_VALIGN_CENTER,
       :color => _bSelected ? Gfx.COLOR_WHITE : Gfx.COLOR_DK_GRAY
     };
-    if(self.amSettingsKeys != null) {
-      for(var i=0; i<self.amSettingsKeys.size(); i++) {
-        dictSettings[self.amSettingsKeys[i]] = self.amSettingsValues[i];
-      }
+    for(var i=0; i<self.amSettingsKeys.size(); i++) {
+      dictSettings[self.amSettingsKeys[i]] = self.amSettingsValues[i];
     }
     return new Ui.Text(dictSettings);
   }
@@ -95,7 +88,7 @@ class PickerFactoryNumber extends Ui.PickerFactory {
   // FUNCTIONS: self
   //
 
-  function indexOf(_iNumber) {
+  function indexOf(_iNumber as Number) as Number {
     return _iNumber-self.iNumberMinimum;
   }
 

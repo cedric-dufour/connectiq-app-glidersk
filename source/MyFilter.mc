@@ -16,7 +16,7 @@
 // SPDX-License-Identifier: GPL-3.0
 // License-Filename: LICENSE/GPL-3.0.txt
 
-using Toybox.Lang;
+import Toybox.Lang;
 using Toybox.Math;
 using Toybox.System as Sys;
 
@@ -55,7 +55,7 @@ class MyFilter {
   //
 
   // Filters
-  private var aoFilters;
+  private var aaFilters as Array<Array>;
 
 
   //
@@ -64,7 +64,7 @@ class MyFilter {
 
   function initialize() {
     // Initialze the filters container array
-    self.aoFilters = new [self.FILTERS];
+    aaFilters = new Array<Array>[self.FILTERS];
 
     // Loop through each filter
     for(var F=0; F<self.FILTERS; F++) {
@@ -74,22 +74,22 @@ class MyFilter {
       // [2] current value index (starting form 0)
       // [3] sum of all values
       // [4+] values history
-      self.aoFilters[F] = new [self.MAX_SIZE+4];
-      self.aoFilters[F][0] = Math.rand() % self.REFRESH_COUNTER;  // let's no refresh all filters at the same time
-      self.aoFilters[F][1] = 1;
+      self.aaFilters[F] = new Array[self.MAX_SIZE+4];
+      self.aaFilters[F][0] = Math.rand() % self.REFRESH_COUNTER;  // let's no refresh all filters at the same time
+      self.aaFilters[F][1] = 1;
       self.resetFilter(F);
     }
   }
 
-  function importSettings() {
+  function importSettings() as Void {
     // Retrieve the new filter length (user-defined time constant + 1)
     var iFilterLength_new = $.oMySettings.iGeneralTimeConstant+1;
 
     // Loop through each filter
     for(var F=0; F<self.FILTERS; F++) {
-      if(self.aoFilters[F][1] != iFilterLength_new) {
+      if(self.aaFilters[F][1] != iFilterLength_new) {
         // Store the filter length
-        self.aoFilters[F][1] = iFilterLength_new;
+        self.aaFilters[F][1] = iFilterLength_new;
 
         // Reset the filter (values)
         self.resetFilter(F);
@@ -97,68 +97,68 @@ class MyFilter {
     }
   }
 
-  function resetFilter(_F) {
-    //Sys.println(Lang.format("DEBUG: MyFilter.resetFilter($1$)", [_F]));
+  function resetFilter(_F as Number) as Void {
+    //Sys.println(format("DEBUG: MyFilter.resetFilter($1$)", [_F]));
 
     // Reset the current value index
-    self.aoFilters[_F][2] = 0;
+    self.aaFilters[_F][2] = 0;
 
     // Reset the sum of all values
-    self.aoFilters[_F][3] = 0;
+    self.aaFilters[_F][3] = 0;
 
     // Reset the values history
-    for(var i=0; i<self.aoFilters[_F][1]; i++) {
-      self.aoFilters[_F][4+i] = null;
+    for(var i=0; i<self.aaFilters[_F][1]; i++) {
+      self.aaFilters[_F][4+i] = null;
     }
   }
 
-  function filterValue(_F, _mValue) {
-    //Sys.println(Lang.format("DEBUG: MyFilter.filterValue($1$, $2$)", [_F, _mValue]));
+  function filterValue(_F as Number, _fValue as Float) as Float {
+    //Sys.println(format("DEBUG: MyFilter.filterValue($1$, $2$)", [_F, _fValue]));
 
     // Check the refresh counter
-    if(self.aoFilters[_F][0] == 0) {
+    if(self.aaFilters[_F][0] == 0) {
       // Re-compute the sum of all values, which may diverge over time (given numeric imprecisions)
-      //Sys.println(Lang.format("DEBUG: (Filter[$1$]) Refreshing", [_F]));
-      self.aoFilters[_F][3] = 0;
-      for(var i=0; i<self.aoFilters[_F][1]; i++) {
-        if(self.aoFilters[_F][4+i] == null) {
+      //Sys.println(format("DEBUG: (Filter[$1$]) Refreshing", [_F]));
+      self.aaFilters[_F][3] = 0.0f;
+      for(var i=0; i<self.aaFilters[_F][1]; i++) {
+        if(self.aaFilters[_F][4+i] == null) {
           break;
         }
-        self.aoFilters[_F][3] += self.aoFilters[_F][4+i];
+        self.aaFilters[_F][3] += self.aaFilters[_F][4+i];
       }
 
       // Reset the refresh counter
-      self.aoFilters[_F][0] = self.REFRESH_COUNTER;
+      self.aaFilters[_F][0] = self.REFRESH_COUNTER;
     }
     else {
       // Decrease the refresh counter
-      self.aoFilters[_F][0] -= 1;
+      self.aaFilters[_F][0] -= 1;
     }
 
     // Retrieve the previous "current" value and store the new one in its place
-    var mValue_previous = self.aoFilters[_F][4+self.aoFilters[_F][2]];
-    self.aoFilters[_F][4+self.aoFilters[_F][2]] = _mValue;
+    var fValue_previous = self.aaFilters[_F][4+self.aaFilters[_F][2]];
+    self.aaFilters[_F][4+self.aaFilters[_F][2]] = _fValue;
 
     // Update the sum of all values, by:
     // 1. adding the new (current) value
     // 2. substracting the previous "current" value (if available)
     // WARNING: numeric imprecisions will creep in and make the sum diverge over time!
     var iValues_quantity;
-    self.aoFilters[_F][3] += _mValue;
-    if(mValue_previous != null) {
-      self.aoFilters[_F][3] -= mValue_previous;
-      iValues_quantity = self.aoFilters[_F][1];
+    self.aaFilters[_F][3] += _fValue;
+    if(fValue_previous != null) {
+      self.aaFilters[_F][3] -= fValue_previous;
+      iValues_quantity = self.aaFilters[_F][1];
     }
     else {
-      iValues_quantity = self.aoFilters[_F][2] + 1;
+      iValues_quantity = self.aaFilters[_F][2] + 1;
     }
-    //Sys.println(Lang.format("DEBUG: (Filter[$1$]) Sum/Length = $2$/$3$", [_F, self.aoFilters[_F][3], iValues_quantity]));
+    //Sys.println(format("DEBUG: (Filter[$1$]) Sum/Length = $2$/$3$", [_F, self.aaFilters[_F][3], iValues_quantity]));
 
     // Increase the current value index
-    self.aoFilters[_F][2] = (self.aoFilters[_F][2] + 1) % self.aoFilters[_F][1];
+    self.aaFilters[_F][2] = (self.aaFilters[_F][2] + 1) % self.aaFilters[_F][1];
 
     // Return the SMA-filtered value (sum of all values divided by quantity of values)
-    return self.aoFilters[_F][3]/iValues_quantity;
+    return self.aaFilters[_F][3]/iValues_quantity;
   }
 
 }
