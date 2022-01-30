@@ -1,3 +1,8 @@
+* 1.4.20220130a
+  - CHG: One less button press when loading a Safety destination
+  - NEW: Allow to configure Activity auto-start/stop speeds
+  - Added support for Fenix 7 devices
+
 * 1.4.20200710a
   - NEW: Add Safety Grace Period (within which to stick to Estimation mode)
   - NEW: Identify Grace Period by PURPLE-colouring Bearing and Heading Bug
