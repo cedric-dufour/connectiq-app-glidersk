@@ -159,6 +159,7 @@ class MyPickerGenericStorageDelegate extends Ui.PickerDelegate {
           if(d != null) {
             App.Storage.setValue(format("stor$1$InUse", [sStorageName]), LangUtils.copy(d) as App.PropertyValueType);  // WARNING: We MUST store a new (different) dictionary instance (deep copy)!
           }
+          Ui.popView(Ui.SLIDE_IMMEDIATE);  // one less button press to go back to main view
         }
         else if(self.action == :actionDelete) {
           App.Storage.deleteValue(format("stor$1$$2$", [sStorageName, s]));
