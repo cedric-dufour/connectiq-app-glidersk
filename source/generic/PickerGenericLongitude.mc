@@ -1,7 +1,7 @@
 // -*- mode:java; tab-width:2; c-basic-offset:2; intent-tabs-mode:nil; -*- ex: set tabstop=2 expandtab:
 
 // Generic ConnectIQ Helpers/Resources (CIQ Helpers)
-// Copyright (C) 2017-2019 Cedric Dufour <http://cedric.dufour.name>
+// Copyright (C) 2017-2022 Cedric Dufour <http://cedric.dufour.name>
 //
 // Generic ConnectIQ Helpers/Resources (CIQ Helpers) is free software:
 // you can redistribute it and/or modify it under the terms of the GNU General
