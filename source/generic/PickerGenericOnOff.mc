@@ -41,8 +41,8 @@ class PickerGenericOnOff extends Ui.Picker {
         :title => new Ui.Text({
             :text => _sTitle,
             :font => Gfx.FONT_TINY,
-            :locX=>Ui.LAYOUT_HALIGN_CENTER,
-            :locY=>Ui.LAYOUT_VALIGN_BOTTOM,
+            :locX => Ui.LAYOUT_HALIGN_CENTER,
+            :locY => Ui.LAYOUT_VALIGN_BOTTOM,
             :color => Gfx.COLOR_BLUE}),
         :pattern => [oFactory],
         :defaults => [oFactory.indexOfKey(bValue)]});

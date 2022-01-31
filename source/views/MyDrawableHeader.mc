@@ -45,7 +45,7 @@ class MyDrawableHeader extends Ui.Drawable {
   //
 
   function initialize() {
-    Drawable.initialize({ :identifier => "MyDrawableHeader" });
+    Drawable.initialize({:identifier => "MyDrawableHeader"});
 
     // Resources
     oRezHeaderAccuracy1 = new Rez.Drawables.drawHeaderAccuracy1();

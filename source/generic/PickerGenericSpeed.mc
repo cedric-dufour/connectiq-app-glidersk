@@ -99,8 +99,8 @@ class PickerGenericSpeed extends Ui.Picker {
         :title => new Ui.Text({
             :text => format("$1$ [$2$]", [_sTitle, sUnit]),
             :font => Gfx.FONT_TINY,
-            :locX=>Ui.LAYOUT_HALIGN_CENTER,
-            :locY=>Ui.LAYOUT_VALIGN_BOTTOM,
+            :locX => Ui.LAYOUT_HALIGN_CENTER,
+            :locY => Ui.LAYOUT_VALIGN_BOTTOM,
             :color => Gfx.COLOR_BLUE}),
         :pattern => [_bAllowNegative ? new PickerFactoryDictionary([-1, 1], ["-", "+"], null) : new Ui.Text({}),
                      new PickerFactoryNumber(0, iMaxSignificant, null),

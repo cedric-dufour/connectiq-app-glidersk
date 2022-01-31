@@ -73,7 +73,7 @@ class MyProcessing {
   public var bPositionStateful as Boolean = false;
   public var iPositionEpoch as Number = -1;
   public var iPositionGpoch as Number = -1;
-  public var iAccuracy as Number = -1;
+  public var iAccuracy as Number = Pos.QUALITY_NOT_AVAILABLE;
   public var oLocation as Pos.Location?;
   public var fGroundSpeed as Float = NaN;
   public var fGroundSpeed_filtered as Float = NaN;

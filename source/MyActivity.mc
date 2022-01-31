@@ -133,7 +133,10 @@ class MyActivity {
 
     // Session (recording)
     // SPORT_FLYING = 20 (since API 3.0.10)
-    oSession = AR.createSession({:name=>"GliderSK", :sport=>20 as AR.Sport2, :subSport=>AR.SUB_SPORT_GENERIC});
+    oSession = AR.createSession({
+        :name => "GliderSK",
+        :sport => 20 as AR.Sport2,
+        :subSport => AR.SUB_SPORT_GENERIC});
 
     // FIT fields
 
@@ -145,29 +148,101 @@ class MyActivity {
     fUnitCoefficient_RateOfTurn = $.oMySettings.fUnitRateOfTurnCoefficient;
 
     // ... record
-    oFitField_BarometricAltitude = self.oSession.createField("BarometricAltitude", MyActivity.FITFIELD_BAROMETRICALTITUDE, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.oMySettings.sUnitElevation });
-    oFitField_VerticalSpeed = self.oSession.createField("VerticalSpeed", MyActivity.FITFIELD_VERTICALSPEED, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.oMySettings.sUnitVerticalSpeed });
-    oFitField_RateOfTurn = self.oSession.createField("RateOfTurn", MyApp.FITFIELD_RATEOFTURN, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>$.oMySettings.sUnitRateOfTurn });
-    oFitField_Acceleration = self.oSession.createField("Acceleration", MyApp.FITFIELD_ACCELERATION, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_RECORD, :units=>"g" });
+    oFitField_BarometricAltitude =
+      oSession.createField("BarometricAltitude",
+                           MyActivity.FITFIELD_BAROMETRICALTITUDE,
+                           FC.DATA_TYPE_FLOAT,
+                           {:mesgType => FC.MESG_TYPE_RECORD, :units => $.oMySettings.sUnitElevation});
+    oFitField_VerticalSpeed =
+      oSession.createField("VerticalSpeed",
+                           MyActivity.FITFIELD_VERTICALSPEED,
+                           FC.DATA_TYPE_FLOAT,
+                           {:mesgType => FC.MESG_TYPE_RECORD, :units => $.oMySettings.sUnitVerticalSpeed});
+    oFitField_RateOfTurn =
+      oSession.createField("RateOfTurn",
+                           MyApp.FITFIELD_RATEOFTURN,
+                           FC.DATA_TYPE_FLOAT,
+                           {:mesgType => FC.MESG_TYPE_RECORD, :units => $.oMySettings.sUnitRateOfTurn});
+    oFitField_Acceleration =
+      oSession.createField("Acceleration",
+                           MyApp.FITFIELD_ACCELERATION,
+                           FC.DATA_TYPE_FLOAT,
+                           {:mesgType => FC.MESG_TYPE_RECORD, :units => "g"});
 
     // ... lap
-    oFitField_Distance = self.oSession.createField("Distance", MyActivity.FITFIELD_DISTANCE, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_LAP, :units=>$.oMySettings.sUnitDistance });
-    oFitField_Ascent = self.oSession.createField("Ascent", MyActivity.FITFIELD_ASCENT, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_LAP, :units=>$.oMySettings.sUnitElevation });
-    oFitField_ElapsedAscent = self.oSession.createField("ElapsedAscent", MyActivity.FITFIELD_ELAPSEDASCENT, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_LAP, :count=>9 });
-    oFitField_AltitudeMin = self.oSession.createField("AltitudeMin", MyActivity.FITFIELD_ALTITUDEMIN, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_LAP, :units=>$.oMySettings.sUnitElevation });
-    oFitField_TimeAltitudeMin = self.oSession.createField("TimeAltitudeMin", MyActivity.FITFIELD_TIMEALTITUDEMIN, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_LAP, :count=>9, :units=>$.oMySettings.sUnitTime });
-    oFitField_AltitudeMax = self.oSession.createField("AltitudeMax", MyActivity.FITFIELD_ALTITUDEMAX, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_LAP, :units=>$.oMySettings.sUnitElevation });
-    oFitField_TimeAltitudeMax = self.oSession.createField("TimeAltitudeMax", MyActivity.FITFIELD_TIMEALTITUDEMAX, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_LAP, :count=>9, :units=>$.oMySettings.sUnitTime });
+    oFitField_Distance =
+      oSession.createField("Distance",
+                           MyActivity.FITFIELD_DISTANCE,
+                           FC.DATA_TYPE_FLOAT,
+                           {:mesgType => FC.MESG_TYPE_LAP, :units => $.oMySettings.sUnitDistance});
+    oFitField_Ascent =
+      oSession.createField("Ascent",
+                           MyActivity.FITFIELD_ASCENT,
+                           FC.DATA_TYPE_FLOAT,
+                           {:mesgType => FC.MESG_TYPE_LAP, :units => $.oMySettings.sUnitElevation});
+    oFitField_ElapsedAscent =
+      oSession.createField("ElapsedAscent",
+                           MyActivity.FITFIELD_ELAPSEDASCENT,
+                           FC.DATA_TYPE_STRING,
+                           {:mesgType => FC.MESG_TYPE_LAP, :count => 9});
+    oFitField_AltitudeMin =
+      oSession.createField("AltitudeMin",
+                           MyActivity.FITFIELD_ALTITUDEMIN,
+                           FC.DATA_TYPE_FLOAT,
+                           {:mesgType => FC.MESG_TYPE_LAP, :units => $.oMySettings.sUnitElevation});
+    oFitField_TimeAltitudeMin =
+      oSession.createField("TimeAltitudeMin",
+                           MyActivity.FITFIELD_TIMEALTITUDEMIN,
+                           FC.DATA_TYPE_STRING,
+                           {:mesgType => FC.MESG_TYPE_LAP, :count => 9, :units => $.oMySettings.sUnitTime});
+    oFitField_AltitudeMax =
+      oSession.createField("AltitudeMax",
+                           MyActivity.FITFIELD_ALTITUDEMAX,
+                           FC.DATA_TYPE_FLOAT,
+                           {:mesgType => FC.MESG_TYPE_LAP, :units => $.oMySettings.sUnitElevation});
+    oFitField_TimeAltitudeMax =
+      oSession.createField("TimeAltitudeMax",
+                           MyActivity.FITFIELD_TIMEALTITUDEMAX,
+                           FC.DATA_TYPE_STRING,
+                           {:mesgType => FC.MESG_TYPE_LAP, :count => 9, :units => $.oMySettings.sUnitTime});
     self.resetLapFields();
 
     // ... session
-    oFitField_GlobalDistance = self.oSession.createField("Distance", MyActivity.FITFIELD_GLOBALDISTANCE, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_SESSION, :units=>$.oMySettings.sUnitDistance });
-    oFitField_GlobalAscent = self.oSession.createField("Ascent", MyActivity.FITFIELD_GLOBALASCENT, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_SESSION, :units=>$.oMySettings.sUnitElevation });
-    oFitField_GlobalElapsedAscent = self.oSession.createField("ElapsedAscent", MyActivity.FITFIELD_GLOBALELAPSEDASCENT, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_SESSION, :count=>9 });
-    oFitField_GlobalAltitudeMin = self.oSession.createField("AltitudeMin", MyActivity.FITFIELD_GLOBALALTITUDEMIN, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_SESSION, :units=>$.oMySettings.sUnitElevation });
-    oFitField_GlobalTimeAltitudeMin = self.oSession.createField("TimeAltitudeMin", MyActivity.FITFIELD_GLOBALTIMEALTITUDEMIN, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_SESSION, :count=>9, :units=>$.oMySettings.sUnitTime });
-    oFitField_GlobalAltitudeMax = self.oSession.createField("AltitudeMax", MyActivity.FITFIELD_GLOBALALTITUDEMAX, FC.DATA_TYPE_FLOAT, { :mesgType=>FC.MESG_TYPE_SESSION, :units=>$.oMySettings.sUnitElevation });
-    oFitField_GlobalTimeAltitudeMax = self.oSession.createField("TimeAltitudeMax", MyActivity.FITFIELD_GLOBALTIMEALTITUDEMAX, FC.DATA_TYPE_STRING, { :mesgType=>FC.MESG_TYPE_SESSION, :count=>9, :units=>$.oMySettings.sUnitTime });
+    oFitField_GlobalDistance =
+      oSession.createField("Distance",
+                           MyActivity.FITFIELD_GLOBALDISTANCE,
+                           FC.DATA_TYPE_FLOAT,
+                           {:mesgType => FC.MESG_TYPE_SESSION, :units => $.oMySettings.sUnitDistance});
+    oFitField_GlobalAscent =
+      oSession.createField("Ascent",
+                           MyActivity.FITFIELD_GLOBALASCENT,
+                           FC.DATA_TYPE_FLOAT,
+                           {:mesgType => FC.MESG_TYPE_SESSION, :units => $.oMySettings.sUnitElevation});
+    oFitField_GlobalElapsedAscent =
+      oSession.createField("ElapsedAscent",
+                           MyActivity.FITFIELD_GLOBALELAPSEDASCENT,
+                           FC.DATA_TYPE_STRING,
+                           {:mesgType => FC.MESG_TYPE_SESSION, :count => 9});
+    oFitField_GlobalAltitudeMin =
+      oSession.createField("AltitudeMin",
+                           MyActivity.FITFIELD_GLOBALALTITUDEMIN,
+                           FC.DATA_TYPE_FLOAT,
+                           {:mesgType => FC.MESG_TYPE_SESSION, :units => $.oMySettings.sUnitElevation});
+    oFitField_GlobalTimeAltitudeMin =
+      oSession.createField("TimeAltitudeMin",
+                           MyActivity.FITFIELD_GLOBALTIMEALTITUDEMIN,
+                           FC.DATA_TYPE_STRING,
+                           {:mesgType => FC.MESG_TYPE_SESSION, :count => 9, :units => $.oMySettings.sUnitTime});
+    oFitField_GlobalAltitudeMax =
+      oSession.createField("AltitudeMax",
+                           MyActivity.FITFIELD_GLOBALALTITUDEMAX,
+                           FC.DATA_TYPE_FLOAT,
+                           {:mesgType => FC.MESG_TYPE_SESSION, :units => $.oMySettings.sUnitElevation});
+    oFitField_GlobalTimeAltitudeMax =
+      oSession.createField("TimeAltitudeMax",
+                           MyActivity.FITFIELD_GLOBALTIMEALTITUDEMAX,
+                           FC.DATA_TYPE_STRING,
+                           {:mesgType => FC.MESG_TYPE_SESSION, :count => 9, :units => $.oMySettings.sUnitTime});
 
   }
 

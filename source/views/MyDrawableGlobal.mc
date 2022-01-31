@@ -44,7 +44,7 @@ class MyDrawableGlobal extends Ui.Drawable {
   //
 
   function initialize() {
-    Drawable.initialize({ :identifier => "MyDrawableGlobal" });
+    Drawable.initialize({:identifier => "MyDrawableGlobal"});
 
     // Resources
     oRezFieldsBackground = new Rez.Drawables.drawFieldsBackground();
