@@ -112,7 +112,8 @@ class MyMenuGeneric extends Ui.Menu {
     else if(_menu == :menuStorage) {
       Menu.setTitle(Ui.loadResource(Rez.Strings.titleStorage) as String);
       Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageImportData) as String, :menuStorageImportData);
-      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageClear) as String, :menuStorageClear);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageClearDestinations) as String, :menuStorageClearDestinations);
+      Menu.addItem(Ui.loadResource(Rez.Strings.titleStorageClearLogs) as String, :menuStorageClearLogs);
     }
 
     else if(_menu == :menuDestination) {
@@ -422,9 +423,14 @@ class MyMenuGenericDelegate extends Ui.MenuInputDelegate {
                     new MyPickerGenericTextDelegate(:contextStorage, :itemImportData),
                     Ui.SLIDE_IMMEDIATE);
       }
-      else if(_item == :menuStorageClear) {
-        Ui.pushView(new MyMenuGenericConfirm(:contextStorage, :actionClear),
-                    new MyMenuGenericConfirmDelegate(:contextStorage, :actionClear, true),
+      else if(_item == :menuStorageClearDestinations) {
+        Ui.pushView(new MyMenuGenericConfirm(:contextStorage, :actionClearDestinations),
+                    new MyMenuGenericConfirmDelegate(:contextStorage, :actionClearDestinations, true),
+                    Ui.SLIDE_IMMEDIATE);
+      }
+      else if(_item == :menuStorageClearLogs) {
+        Ui.pushView(new MyMenuGenericConfirm(:contextStorage, :actionClearLogs),
+                    new MyMenuGenericConfirmDelegate(:contextStorage, :actionClearLogs, true),
                     Ui.SLIDE_IMMEDIATE);
       }
     }

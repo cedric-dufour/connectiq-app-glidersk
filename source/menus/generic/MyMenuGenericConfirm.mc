@@ -52,8 +52,11 @@ class MyMenuGenericConfirm extends Ui.Menu {
       }
     }
     else if(_context == :contextStorage) {
-      if(_action == :actionClear) {
-        Menu.addItem(format("$1$ ?", [Ui.loadResource(Rez.Strings.titleStorageClear)]), :menuNone);
+      if(_action == :actionClearDestinations) {
+        Menu.addItem(format("$1$ ?", [Ui.loadResource(Rez.Strings.titleStorageClearDestinations)]), :menuNone);
+      }
+      else if(_action == :actionClearLogs) {
+        Menu.addItem(format("$1$ ?", [Ui.loadResource(Rez.Strings.titleStorageClearLogs)]), :menuNone);
       }
     }
   }
@@ -122,8 +125,11 @@ class MyMenuGenericConfirmDelegate extends Ui.MenuInputDelegate {
       }
     }
     else if(self.context == :contextStorage) {
-      if(self.action == :actionClear) {
-        (App.getApp() as MyApp).clearStorageData();
+      if(self.action == :actionClearDestinations) {
+        (App.getApp() as MyApp).clearStorageDestinations();
+      }
+      else if(self.action == :actionClearLogs) {
+        (App.getApp() as MyApp).clearStorageLogs();
       }
     }
     if(self.popout) {

@@ -70,7 +70,8 @@
   <string id="titleStorageLoad">Load</string>
   <string id="titleStorageSave">Save</string>
   <string id="titleStorageDelete">Delete</string>
-  <string id="titleStorageClear">Clear</string>
+  <string id="titleStorageClearDestinations">Clear Dest.</string>
+  <string id="titleStorageClearLogs">Clear Logs</string>
   <!-- Menu (destination) -->
   <string id="titleDestination">Destination</string>
   <string id="titleDestinationName">Name</string>

@@ -505,16 +505,22 @@ class MyApp extends App.AppBase {
     }
   }
 
-  function clearStorageData() as Void {
-    //Sys.println("DEBUG: MyApp.clearStorageData()");
-
-    // Delete all storage data
-
-    // .. .destinations
+  function clearStorageDestinations() as Void {
+    //Sys.println("DEBUG: MyApp.clearStorageDestinations()");
     for(var n=0; n<$.MY_STORAGE_SLOTS; n++) {
       var s = n.format("%02d");
       App.Storage.deleteValue(format("storDest$1$", [s]));
     }
+  }
+
+  function clearStorageLogs() as Void {
+    //Sys.println("DEBUG: MyApp.clearStorageLogs()");
+    for(var n=0; n<$.MY_STORAGE_SLOTS; n++) {
+      var s = n.format("%02d");
+      App.Storage.deleteValue(format("storLog$1$", [s]));
+    }
+    App.Storage.deleteValue("storLogIndex");
+    $.iMyLogIndex = -1;
   }
 
 }
