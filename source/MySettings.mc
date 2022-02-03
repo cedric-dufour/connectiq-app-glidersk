@@ -474,6 +474,9 @@ class MySettings {
       _fValue = 0.0f;
     }
     self.fActivityAutoSpeedStart = _fValue;
+    if(self.fActivityAutoSpeedStop > self.fActivityAutoSpeedStart) {
+      self.fActivityAutoSpeedStop = self.fActivityAutoSpeedStart;
+    }
   }
 
   function loadActivityAutoSpeedStop() as Float {  // [m/s]
@@ -491,6 +494,9 @@ class MySettings {
       _fValue = 0.0f;
     }
     self.fActivityAutoSpeedStop = _fValue;
+    if(self.fActivityAutoSpeedStart < self.fActivityAutoSpeedStop) {
+      self.fActivityAutoSpeedStart = self.fActivityAutoSpeedStop;
+    }
   }
 
   function loadGeneralTimeConstant() as Number {  // [s]
