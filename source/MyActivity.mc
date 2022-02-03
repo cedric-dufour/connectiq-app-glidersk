@@ -460,14 +460,10 @@ class MyActivity {
         "altitudeMax" => LangUtils.notNaN(self.fGlobalAltitudeMax) ? self.fGlobalAltitudeMax : null,
         "timeAltitudeMax" => self.oGlobalTimeAltitudeMax != null ? (self.oGlobalTimeAltitudeMax as Time.Moment).value() : null,
       };
-      if($.iMyLogIndex < 0) {
-        $.iMyLogIndex = 0;
-      }
-      else {
-        $.iMyLogIndex = ($.iMyLogIndex + 1) % $.MY_STORAGE_SLOTS;
-      }
+      $.iMyLogIndex = ($.iMyLogIndex + 1) % $.MY_STORAGE_SLOTS;
       var s = $.iMyLogIndex.format("%02d");
       App.Storage.setValue(Lang.format("storLog$1$", [s]), dictLog as App.PropertyValueType);
+      App.Storage.setValue("storLogIndex", $.iMyLogIndex as App.PropertyValueType);
     }
   }
 

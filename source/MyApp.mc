@@ -120,16 +120,32 @@ class MyApp extends App.AppBase {
     AppBase.initialize();
 
     // Log
-    var iLogEpoch = 0;
-    for(var n=0; n<$.MY_STORAGE_SLOTS; n++) {
-      var s = n.format("%02d");
-      var dictLog = App.Storage.getValue(format("storLog$1$", [s])) as Dictionary?;
-      if(dictLog != null) {
-        var i = dictLog.get("timeStart") as Number?;
-        if(i != null and (i as Number) > iLogEpoch) {
-          $.iMyLogIndex = n;
-          iLogEpoch = i;
+    // ... last entry index
+    var iLogIndex = App.Storage.getValue("storLogIndex") as Number?;
+    if(iLogIndex != null) {
+      $.iMyLogIndex = iLogIndex;
+    }
+    else {
+      // MIGRATION; TODO: Remove after 2022.12.31
+      var iLogEpoch = 0;
+      for(var n=0; n<$.MY_STORAGE_SLOTS; n++) {
+        var s = n.format("%02d");
+        var dictLog = App.Storage.getValue(format("storLog$1$", [s])) as Dictionary?;
+        if(dictLog == null) {
+          break;
+        } else {
+          var i = dictLog.get("timeStart") as Number?;
+          if(i == null) {
+            break;
+          }
+          else if(i > iLogEpoch) {
+            $.iMyLogIndex = n;
+            iLogEpoch = i;
+          }
         }
+      }
+      if($.iMyLogIndex >= 0) {
+        App.Storage.setValue("storLogIndex", $.iMyLogIndex as App.PropertyValueType);
       }
     }
 
