@@ -160,6 +160,16 @@ module LangUtils {
   // FUNCTIONS: time formatting
   //
 
+  function formatDate(_oTime as Time.Moment?, _bUTC as Boolean) as String {
+    if(_oTime != null) {
+      var oTimeInfo = _bUTC ? Gregorian.utcInfo(_oTime, Time.FORMAT_MEDIUM) : Gregorian.info(_oTime, Time.FORMAT_MEDIUM);
+      return Lang.format("$1$ $2$", [oTimeInfo.month, oTimeInfo.day.format("%01d")]);
+    }
+    else {
+      return "----";
+    }
+  }
+
   function formatTime(_oTime as Time.Moment?, _bUTC as Boolean, _bSecond as Boolean) as String {
     if(_oTime != null) {
       var oTimeInfo = _bUTC ? Gregorian.utcInfo(_oTime, Time.FORMAT_SHORT) : Gregorian.info(_oTime, Time.FORMAT_SHORT);

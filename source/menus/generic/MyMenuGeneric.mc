@@ -425,12 +425,12 @@ class MyMenuGenericDelegate extends Ui.MenuInputDelegate {
       }
       else if(_item == :menuStorageClearDestinations) {
         Ui.pushView(new MyMenuGenericConfirm(:contextStorage, :actionClearDestinations),
-                    new MyMenuGenericConfirmDelegate(:contextStorage, :actionClearDestinations, true),
+                    new MyMenuGenericConfirmDelegate(:contextStorage, :actionClearDestinations, false),
                     Ui.SLIDE_IMMEDIATE);
       }
       else if(_item == :menuStorageClearLogs) {
         Ui.pushView(new MyMenuGenericConfirm(:contextStorage, :actionClearLogs),
-                    new MyMenuGenericConfirmDelegate(:contextStorage, :actionClearLogs, true),
+                    new MyMenuGenericConfirmDelegate(:contextStorage, :actionClearLogs, false),
                     Ui.SLIDE_IMMEDIATE);
       }
     }

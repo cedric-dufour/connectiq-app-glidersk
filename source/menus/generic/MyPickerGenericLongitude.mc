@@ -28,11 +28,13 @@ class MyPickerGenericLongitude extends PickerGenericLongitude {
 
   function initialize(_context as Symbol, _item as Symbol) {
     if(_context == :contextDestination) {
+
       if(_item == :itemPosition) {
         var d = App.Storage.getValue("storDestInUse") as Dictionary?;
         PickerGenericLongitude.initialize(Ui.loadResource(Rez.Strings.titleDestinationLongitude) as String,
                                           d != null ? d["longitude"] as Float : 0.0f);
       }
+
     }
   }
 
@@ -61,6 +63,7 @@ class MyPickerGenericLongitudeDelegate extends Ui.PickerDelegate {
   function onAccept(_amValues) {
     var dValue = PickerGenericLongitude.getValue(_amValues);
     if(self.context == :contextDestination) {
+
       var d = App.Storage.getValue("storDestInUse") as Dictionary?;
       if(d == null) {
         d = {"name" => "----", "latitude" => 0.0f, "longitude" => 0.0f, "elevation" => 0.0f};
@@ -69,6 +72,7 @@ class MyPickerGenericLongitudeDelegate extends Ui.PickerDelegate {
         d["longitude"] = dValue.toFloat();
       }
       App.Storage.setValue("storDestInUse", d as App.PropertyValueType);
+
     }
     Ui.popView(Ui.SLIDE_IMMEDIATE);
     return true;

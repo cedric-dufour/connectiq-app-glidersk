@@ -232,9 +232,8 @@ class MyViewLog extends MyViewGlobal {
     // ... time: start (and date)
     if(d.get("timeStart") != null) {
       oTimeStart = new Time.Moment(d["timeStart"] as Number);
-      var oTimeInfo = $.oMySettings.bUnitTimeUTC ? Gregorian.utcInfo(oTimeStart, Time.FORMAT_MEDIUM) : Gregorian.info(oTimeStart, Time.FORMAT_MEDIUM);
-      d["timeStart"] = format("$1$:$2$", [oTimeInfo.hour.format("%02d"), oTimeInfo.min.format("%02d")]);
-      d["date"] = format("$1$ $2$", [oTimeInfo.month, oTimeInfo.day.format("%01d")]);
+      d["timeStart"] = LangUtils.formatTime(oTimeStart, $.oMySettings.bUnitTimeUTC, false);
+      d["date"] = LangUtils.formatDate(oTimeStart, $.oMySettings.bUnitTimeUTC);
     } else {
       d["timeStart"] = $.MY_NOVALUE_LEN3;
       d["date"] = $.MY_NOVALUE_LEN4;

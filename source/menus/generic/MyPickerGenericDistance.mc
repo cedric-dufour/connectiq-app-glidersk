@@ -28,12 +28,14 @@ class MyPickerGenericDistance extends PickerGenericDistance {
 
   function initialize(_context as Symbol, _item as Symbol) {
     if(_context == :contextSettings) {
+
       if(_item == :itemSoundsMuteDistance) {
         PickerGenericDistance.initialize(Ui.loadResource(Rez.Strings.titleSoundsMuteDistance) as String,
                                          $.oMySettings.loadSoundsMuteDistance(),
                                          $.oMySettings.iUnitDistance,
                                          false);
       }
+
     }
   }
 
@@ -62,9 +64,11 @@ class MyPickerGenericDistanceDelegate extends Ui.PickerDelegate {
   function onAccept(_amValues) {
     var fValue = PickerGenericDistance.getValue(_amValues, $.oMySettings.iUnitDistance);
     if(self.context == :contextSettings) {
+
       if(self.item == :itemSoundsMuteDistance) {
         $.oMySettings.saveSoundsMuteDistance(fValue);
       }
+
     }
     Ui.popView(Ui.SLIDE_IMMEDIATE);
     return true;

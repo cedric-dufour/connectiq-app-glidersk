@@ -35,14 +35,15 @@ class MyPickerGenericStorage extends Ui.Picker {
     var asStorageValues = new Array<String>[$.MY_STORAGE_SLOTS];
     var iStorageUsed = 0;
     // ... storage specifics
-    var sStorageName = null;
+    var sStorageName = MY_NOVALUE_BLANK;
     var sObjectName = "name";
     if(_storage == :storageDestination) {
       sStorageName = "Dest";
     }
     // ... action specifics
-    var sStorageAction = null;
+    var sStorageAction = MY_NOVALUE_BLANK;
     if(_action == :actionSave) {
+
       sStorageAction = Ui.loadResource(Rez.Strings.titleStorageSave) as String;
       // ... populate all slots
       for(var n=0; n<$.MY_STORAGE_SLOTS; n++) {
@@ -60,7 +61,11 @@ class MyPickerGenericStorage extends Ui.Picker {
       oPickerDictionary = new PickerFactoryDictionary(aiStorageKeys, asStorageValues, {:font => Gfx.FONT_TINY});
     }
     else if(_action == :actionLoad or _action == :actionDelete) {
-      sStorageAction = _action == :actionLoad ? Ui.loadResource(Rez.Strings.titleStorageLoad) as String : Ui.loadResource(Rez.Strings.titleStorageDelete) as String;
+
+      sStorageAction =
+        _action == :actionLoad
+        ? Ui.loadResource(Rez.Strings.titleStorageLoad) as String
+        : Ui.loadResource(Rez.Strings.titleStorageDelete) as String;
       // ... pick existing objects/slots
       var afStorageDistances = new Array<Float>[$.MY_STORAGE_SLOTS];
       for(var n=0; n<$.MY_STORAGE_SLOTS; n++) {
@@ -101,13 +106,14 @@ class MyPickerGenericStorage extends Ui.Picker {
       else {
         oPickerDictionary = new PickerFactoryDictionary([null], ["-"], {:color => Gfx.COLOR_DK_GRAY});
       }
+
     }
 
     // Initialize picker
     if(oPickerDictionary != null) {
       Picker.initialize({
           :title => new Ui.Text({
-              :text => sStorageAction as String,
+              :text => sStorageAction,
               :font => Gfx.FONT_TINY,
               :locX=>Ui.LAYOUT_HALIGN_CENTER,
               :locY=>Ui.LAYOUT_VALIGN_BOTTOM,
@@ -143,26 +149,32 @@ class MyPickerGenericStorageDelegate extends Ui.PickerDelegate {
     if(_amValues[0] != null) {
       var s = (_amValues[0] as Number).format("%02d");
       // ... storage specifics
-      var sStorageName = null;
+      var sStorageName = MY_NOVALUE_BLANK;
       if(self.storage == :storageDestination) {
         sStorageName = "Dest";
       }
-      if(sStorageName != null) {
+      if(sStorageName.length() > 0) {
         if(self.action == :actionSave) {
+
           var d = App.Storage.getValue(format("stor$1$InUse", [sStorageName])) as Dictionary?;
           if(d != null) {
             App.Storage.setValue(format("stor$1$$2$", [sStorageName, s]), LangUtils.copy(d) as App.PropertyValueType);  // WARNING: We MUST store a new (different) dictionary instance (deep copy)!
           }
+
         }
         else if(self.action == :actionLoad) {
+
           var d = App.Storage.getValue(format("stor$1$$2$", [sStorageName, s])) as Dictionary?;
           if(d != null) {
             App.Storage.setValue(format("stor$1$InUse", [sStorageName]), LangUtils.copy(d) as App.PropertyValueType);  // WARNING: We MUST store a new (different) dictionary instance (deep copy)!
           }
           Ui.popView(Ui.SLIDE_IMMEDIATE);  // one less button press to go back to main view
+
         }
         else if(self.action == :actionDelete) {
+
           App.Storage.deleteValue(format("stor$1$$2$", [sStorageName, s]));
+
         }
       }
     }

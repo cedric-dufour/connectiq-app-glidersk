@@ -28,15 +28,19 @@ class MyPickerGenericText extends Ui.TextPicker {
 
   function initialize(_context as Symbol, _item as Symbol) {
     if(_context == :contextDestination) {
+
       var d = App.Storage.getValue("storDestInUse") as Dictionary?;
       if(_item == :itemName) {
         TextPicker.initialize(d != null ? d["name"] as String : "");
       }
+
     }
     else if(_context == :contextStorage) {
+
       if(_item == :itemImportData) {
         TextPicker.initialize("");
       }
+
     }
   }
 
@@ -64,6 +68,7 @@ class MyPickerGenericTextDelegate extends Ui.TextPickerDelegate {
 
   function onTextEntered(_sText, _bChanged) {
     if(self.context == :contextDestination) {
+
       var d = App.Storage.getValue("storDestInUse") as Dictionary?;
       if(d == null) {
         d = {"name" => "----", "latitude" => 0.0f, "longitude" => 0.0f, "elevation" => 0.0f};
@@ -72,11 +77,14 @@ class MyPickerGenericTextDelegate extends Ui.TextPickerDelegate {
         d["name"] = _sText;
       }
       App.Storage.setValue("storDestInUse", d as App.PropertyValueType);
+
     }
     else if(self.context == :contextStorage) {
+
       if(self.item == :itemImportData) {
         (App.getApp() as MyApp).importStorageData(_sText);
       }
+
     }
     return true;
   }

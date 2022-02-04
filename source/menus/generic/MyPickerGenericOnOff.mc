@@ -28,6 +28,7 @@ class MyPickerGenericOnOff extends PickerGenericOnOff {
 
   function initialize(_context as Symbol, _item as Symbol) {
     if(_context == :contextSettings) {
+
       if(_item == :itemSoundsVariometerTones) {
         PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleSoundsVariometerTones) as String,
                                       $.oMySettings.loadSoundsVariometerTones());
@@ -44,6 +45,7 @@ class MyPickerGenericOnOff extends PickerGenericOnOff {
         PickerGenericOnOff.initialize(Ui.loadResource(Rez.Strings.titleGeneralLapKey) as String,
                                       $.oMySettings.loadGeneralLapKey());
       }
+
     }
   }
 
@@ -72,6 +74,7 @@ class MyPickerGenericOnOffDelegate extends Ui.PickerDelegate {
   function onAccept(_amValues) {
     var bValue = PickerGenericOnOff.getValue(_amValues);
     if(self.context == :contextSettings) {
+
       if(self.item == :itemSoundsVariometerTones) {
         $.oMySettings.saveSoundsVariometerTones(bValue);
       }
@@ -84,6 +87,7 @@ class MyPickerGenericOnOffDelegate extends Ui.PickerDelegate {
       else if(self.item == :itemGeneralLapKey) {
         $.oMySettings.saveGeneralLapKey(bValue);
       }
+
     }
     Ui.popView(Ui.SLIDE_IMMEDIATE);
     return true;

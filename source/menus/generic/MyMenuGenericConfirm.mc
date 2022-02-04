@@ -71,7 +71,7 @@ class MyMenuGenericConfirmDelegate extends Ui.MenuInputDelegate {
 
   private var context as Symbol = :contextNone;
   private var action as Symbol = :actionNone;
-  private var popout as Boolean = false;
+  private var popout as Boolean = true;
 
 
   //

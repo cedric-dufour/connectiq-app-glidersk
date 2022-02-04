@@ -28,6 +28,7 @@ class MyPickerGenericElevation extends PickerGenericElevation {
 
   function initialize(_context as Symbol, _item as Symbol) {
     if(_context == :contextSettings) {
+
       if(_item == :itemAltimeterCalibration) {
         PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleAltimeterCalibrationElevation) as String,
                                           $.oMyAltimeter.fAltitudeActual,
@@ -58,8 +59,10 @@ class MyPickerGenericElevation extends PickerGenericElevation {
                                           $.oMySettings.iUnitElevation,
                                           false);
       }
+
     }
     else if(_context == :contextDestination) {
+
       if(_item == :itemPosition) {
         var d = App.Storage.getValue("storDestInUse") as Dictionary?;
         PickerGenericElevation.initialize(Ui.loadResource(Rez.Strings.titleDestinationElevation) as String,
@@ -67,6 +70,7 @@ class MyPickerGenericElevation extends PickerGenericElevation {
                                           $.oMySettings.iUnitElevation,
                                           false);
       }
+
     }
   }
 
@@ -95,6 +99,7 @@ class MyPickerGenericElevationDelegate extends Ui.PickerDelegate {
   function onAccept(_amValues) {
     var fValue = PickerGenericElevation.getValue(_amValues, $.oMySettings.iUnitElevation);
     if(self.context == :contextSettings) {
+
       if(self.item == :itemAltimeterCalibration) {
         $.oMyAltimeter.setAltitudeActual(fValue);
         $.oMySettings.saveAltimeterCalibrationQNH($.oMyAltimeter.fQNH);
@@ -111,8 +116,10 @@ class MyPickerGenericElevationDelegate extends Ui.PickerDelegate {
       else if(self.item == :itemSafetyHeightReference) {
         $.oMySettings.saveSafetyHeightReference(fValue);
       }
+
     }
     else if(self.context == :contextDestination) {
+
       var d = App.Storage.getValue("storDestInUse") as Dictionary?;
       if(d == null) {
         d = {"name" => "----", "latitude" => 0.0f, "longitude" => 0.0f, "elevation" => 0.0f};
@@ -121,6 +128,7 @@ class MyPickerGenericElevationDelegate extends Ui.PickerDelegate {
         d["elevation"] = fValue;
       }
       App.Storage.setValue("storDestInUse", d as App.PropertyValueType);
+
     }
     Ui.popView(Ui.SLIDE_IMMEDIATE);
     return true;

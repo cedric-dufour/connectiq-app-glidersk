@@ -28,6 +28,7 @@ class MyPickerGenericSpeed extends PickerGenericSpeed {
 
   function initialize(_context as Symbol, _item as Symbol) {
     if(_context == :contextSettings) {
+
       if(_item == :itemActivityAutoSpeedStart) {
         PickerGenericSpeed.initialize(Ui.loadResource(Rez.Strings.titleActivityAutoSpeedStart) as String,
                                          $.oMySettings.loadActivityAutoSpeedStart(),
@@ -40,6 +41,7 @@ class MyPickerGenericSpeed extends PickerGenericSpeed {
                                          $.oMySettings.iUnitDistance,
                                          false);
       }
+
     }
   }
 
@@ -68,12 +70,14 @@ class MyPickerGenericSpeedDelegate extends Ui.PickerDelegate {
   function onAccept(_amValues) {
     var fValue = PickerGenericSpeed.getValue(_amValues, $.oMySettings.iUnitDistance);
     if(self.context == :contextSettings) {
+
       if(self.item == :itemActivityAutoSpeedStart) {
         $.oMySettings.saveActivityAutoSpeedStart(fValue);
       }
       else if(self.item == :itemActivityAutoSpeedStop) {
         $.oMySettings.saveActivityAutoSpeedStop(fValue);
       }
+
     }
     Ui.popView(Ui.SLIDE_IMMEDIATE);
     return true;

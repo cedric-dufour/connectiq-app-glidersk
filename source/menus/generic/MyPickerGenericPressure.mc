@@ -28,6 +28,7 @@ class MyPickerGenericPressure extends PickerGenericPressure {
 
   function initialize(_context as Symbol, _item as Symbol) {
     if(_context == :contextSettings) {
+
       if(_item == :itemAltimeterCalibration) {
         PickerGenericPressure.initialize(Ui.loadResource(Rez.Strings.titleAltimeterCalibrationQNH) as String,
                                          $.oMyAltimeter.fQNH,
@@ -40,6 +41,7 @@ class MyPickerGenericPressure extends PickerGenericPressure {
                                          $.oMySettings.iUnitPressure,
                                          true);
       }
+
     }
   }
 
@@ -68,6 +70,7 @@ class MyPickerGenericPressureDelegate extends Ui.PickerDelegate {
   function onAccept(_amValues) {
     var fValue = PickerGenericPressure.getValue(_amValues, $.oMySettings.iUnitPressure);
     if(self.context == :contextSettings) {
+
       if(self.item == :itemAltimeterCalibration) {
         $.oMyAltimeter.setQNH(fValue);
         $.oMySettings.saveAltimeterCalibrationQNH($.oMyAltimeter.fQNH);
@@ -75,6 +78,7 @@ class MyPickerGenericPressureDelegate extends Ui.PickerDelegate {
       else if(self.item == :itemAltimeterCorrection) {
         $.oMySettings.saveAltimeterCorrectionAbsolute(fValue);
       }
+
     }
     Ui.popView(Ui.SLIDE_IMMEDIATE);
     return true;
