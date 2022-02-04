@@ -84,6 +84,7 @@ ${CIQ_FITFILE}:
 ciq-help:
 	@echo 'ConnectIQ targets:'
 	@echo '  ciq-help      - display this help message'
+	@echo '  ciq-devices   - list available target devices'
 	@echo 'Environment (variables):'
 	@echo '  CIQ_ROOT      = ${CIQ_ROOT}'
 	@echo '  CIQ_MONKEYC   = ${CIQ_MONKEYC}'
@@ -94,3 +95,11 @@ ciq-help:
 	@echo '  CIQ_DEVKEY    = ${CIQ_DEVKEY}'
 	@echo '  CIQ_FITFILE     = ${CIQ_FITFILE}'
 
+# Devices
+.PHONY: ciq-devices
+ciq-devices:
+	@find ${HOME}/.Garmin/ConnectIQ/Devices/ -maxdepth 2 -name compiler.json \
+	| sort \
+	| while read -r device; do \
+	  jq -r '.deviceId+" "+ .deviceFamily+" "+(.appTypes[]|select(.type=="watchApp")|.memoryLimit|tostring)+" "+(.partNumbers[]|(.connectIQVersion+" ("+.number+")"))' "$${device}" \
+	; done

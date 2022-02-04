@@ -107,4 +107,3 @@ uninstall: | ${DESTDIR}/Garmin/Apps
 .PHONY: clean
 clean:
 	rm -rf bin
-
