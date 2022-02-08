@@ -403,7 +403,7 @@ destinations memory - from the web; to do so:
    name to download from the repository, without the .json suffix; example given
    (for Switzerland airfields):
 
-     LSAS
+     lsas
 
    WARNING! Make sure your GCM phone/tablet doesn't go to sleep while performing
    this step or it won't allow GCM to relay the data to your watch.
@@ -413,7 +413,7 @@ contained in the file.
 
 The format of a JSON destination data file is straight-forward; example given:
 
-     https://cdn.jsdelivr.net/gh/cedric-dufour/connectiq-app-glidersk@master/data/LSAS.json
+     https://cdn.jsdelivr.net/gh/cedric-dufour/connectiq-app-glidersk@master/data/lsas.json
 
 Provided you have some web service where to store them, you can write your own
 data file(s). Just edit the Repository URL correspondingly (see point 2. above).
