@@ -1,3 +1,8 @@
+* 1.4.20220211a:
+  - FIX: Faster startup
+  - FIX: Ensure activity start/stop speeds are consistent
+  - NEW: Allow to clear (all) log entries
+
 * 1.4.20220130a
   - CHG: One less button press when loading a Safety destination
   - NEW: Allow to configure Activity auto-start/stop speeds
@@ -121,4 +126,3 @@
 
 * 1.0.20171019a:
   - Post Tenebras Lux
-
