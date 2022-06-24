@@ -17,6 +17,7 @@
 // License-Filename: LICENSE/GPL-3.0.txt
 
 import Toybox.Lang;
+using Toybox.Application as App;
 using Toybox.Math;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
@@ -33,6 +34,43 @@ module LangUtils {
   }
   function notNaN(_nValue as Numeric?) as Boolean {
     return _nValue != null and _nValue == _nValue;
+  }
+
+  // Casting
+  function asNumber(_oValue as Object or App.PropertyValueType, _nDefault as Number) as Number {
+    if(_oValue != null && !(_oValue instanceof Lang.Number)) {
+      try {
+        _oValue = (_oValue as String or Integer or Decimal).toNumber();
+      }
+      catch(e) {
+        _oValue = null;
+      }
+    }
+    return _oValue != null ? _oValue : _nDefault;
+  }
+
+  function asFloat(_oValue as Object or App.PropertyValueType, _fDefault as Float) as Float {
+    if(_oValue != null && !(_oValue instanceof Lang.Float)) {
+      try {
+        _oValue = (_oValue as String or Integer or Decimal).toFloat();
+      }
+      catch(e) {
+        _oValue = null;
+      }
+    }
+    return _oValue != null ? _oValue : _fDefault;
+  }
+
+  function asBoolean(_oValue as Object or App.PropertyValueType, _bDefault as Boolean) as Boolean {
+    if(_oValue != null && !(_oValue instanceof Lang.Boolean)) {
+      try {
+        _oValue = (_oValue as String or Integer or Decimal).toNumber() != 0;
+      }
+      catch(e) {
+        _oValue = null;
+      }
+    }
+    return _oValue != null ? _oValue : _bDefault;
   }
 
   // Deep-copy the given object
