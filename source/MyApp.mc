@@ -164,7 +164,19 @@ class MyApp extends App.AppBase {
     Sensor.enableSensorEvents(method(:onSensorEvent));
 
     // Enable position events
-    Pos.enableLocationEvents(Pos.LOCATION_CONTINUOUS, method(:onLocationEvent));
+    if(Toybox.Position has :POSITIONING_MODE_AVIATION) {
+      // CIQ >= 3.2.0
+      Pos.enableLocationEvents({
+          :mode => Pos.POSITIONING_MODE_AVIATION,
+          :acquisitionType => Pos.LOCATION_CONTINUOUS,
+          :constellations => [Pos.CONSTELLATION_GPS, Pos.CONSTELLATION_GALILEO] as Array<Pos.Constellation>,
+        },
+        method(:onLocationEvent)
+      );
+    }
+    else {
+      Pos.enableLocationEvents(Pos.LOCATION_CONTINUOUS, method(:onLocationEvent));
+    }
 
     // Start UI update timer (every multiple of 5 seconds, to save energy)
     // NOTE: in normal circumstances, UI update will be triggered by position events (every ~1 second)
