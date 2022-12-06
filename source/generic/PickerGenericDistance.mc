@@ -133,10 +133,14 @@ class PickerGenericDistance extends Ui.Picker {
     }
 
     // Assemble components
-    var fValue = _amValues[1]*10000.0f + _amValues[2]*1000.0f + _amValues[3]*100.0f + _amValues[4]*10.0f + _amValues[5];
-    if(_amValues[0] != null) {
-      fValue *= _amValues[0];
-    }
+    var aiValues = _amValues as Array<Number?>;
+    var fValue =
+      LangUtils.asNumber(aiValues[1], 0)*10000.0f
+      + LangUtils.asNumber(aiValues[2], 0)*1000.0f
+      + LangUtils.asNumber(aiValues[3], 0)*100.0f
+      + LangUtils.asNumber(aiValues[4], 0)*10.0f
+      + LangUtils.asNumber(aiValues[5], 0);
+    fValue *= LangUtils.asNumber(aiValues[0], 1);
 
     // Use user-specified distance unit (NB: SI units are always used internally)
     if(iUnit == 2) {

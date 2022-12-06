@@ -63,7 +63,7 @@ class PickerFactoryDictionary extends Ui.PickerFactory {
   }
 
   function getValue(_iItem) {
-    return self.amKeys[_iItem];
+    return self.amKeys[_iItem] as Object?;
   }
 
   function getSize() {

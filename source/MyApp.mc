@@ -512,11 +512,11 @@ class MyApp extends App.AppBase {
                         method(:onStorageDataReceive));
   }
 
-  function onStorageDataReceive(_iResponseCode as Number, _dictData as Dictionary?) as Void {
+  function onStorageDataReceive(_iResponseCode as Number, _dictData as Dictionary or String or Null) as Void {
     //Sys.println(format("DEBUG: MyApp.onStorageDataReceive($1$, ...)", [_iResponseCode]));
 
     // Check response code
-    if(_iResponseCode != 200 or _dictData == null) {
+    if(_iResponseCode != 200 or !(_dictData instanceof Dictionary)) {
       if(Toybox.Attention has :playTone) {
         Attn.playTone(Attn.TONE_FAILURE);
       }

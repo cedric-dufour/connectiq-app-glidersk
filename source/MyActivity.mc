@@ -378,7 +378,7 @@ class MyActivity {
     // Distance (non-thermalling)
     var adPositionRadians = (_oInfo.position as Pos.Location).toRadians();
     if(self.adPositionRadiansLast != null) {
-      var fLegLength = LangUtils.distanceEstimate(self.adPositionRadiansLast, adPositionRadians);
+      var fLegLength = LangUtils.distanceEstimate(self.adPositionRadiansLast as Array<Double>, adPositionRadians);
       if(fLegLength > 1000.0f) {  // # 1000m = 1km should be bigger than thermalling diameter
         self.adPositionRadiansLast = adPositionRadians;
         // ... lap

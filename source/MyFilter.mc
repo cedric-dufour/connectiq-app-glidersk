@@ -158,7 +158,7 @@ class MyFilter {
     self.aaFilters[_F][2] = (self.aaFilters[_F][2] + 1) % self.aaFilters[_F][1];
 
     // Return the SMA-filtered value (sum of all values divided by quantity of values)
-    return self.aaFilters[_F][3]/iValues_quantity;
+    return (self.aaFilters[_F][3] as Float)/(iValues_quantity as Number);
   }
 
 }

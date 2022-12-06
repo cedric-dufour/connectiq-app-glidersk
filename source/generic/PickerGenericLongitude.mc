@@ -67,7 +67,12 @@ class PickerGenericLongitude extends Ui.Picker {
 
   function getValue(_amValues as Array) as Double {
     // Assemble components
-    var dValue = _amValues[0] * (_amValues[1] + _amValues[2]/60.0d + _amValues[3]/3600.0d);
+    var aiValues = _amValues as Array<Number?>;
+    var dValue =
+      LangUtils.asNumber(aiValues[1], 0)
+      + LangUtils.asNumber(aiValues[2], 0)/60.0d
+      + LangUtils.asNumber(aiValues[3], 0)/3600.0d;
+    dValue *= LangUtils.asNumber(aiValues[0], 0);
 
     // Return value
     return dValue;

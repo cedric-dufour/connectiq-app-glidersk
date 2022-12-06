@@ -37,7 +37,7 @@ module LangUtils {
   }
 
   // Casting
-  function asNumber(_oValue as Object or App.PropertyValueType, _nDefault as Number) as Number {
+  function asNumber(_oValue as Object or App.PropertyValueType or Null, _nDefault as Number) as Number {
     if(_oValue != null && !(_oValue instanceof Lang.Number)) {
       try {
         _oValue = (_oValue as String or Integer or Decimal).toNumber();
@@ -46,10 +46,10 @@ module LangUtils {
         _oValue = null;
       }
     }
-    return _oValue != null ? _oValue : _nDefault;
+    return _oValue != null ? _oValue as Number : _nDefault;
   }
 
-  function asFloat(_oValue as Object or App.PropertyValueType, _fDefault as Float) as Float {
+  function asFloat(_oValue as Object or App.PropertyValueType or Null, _fDefault as Float) as Float {
     if(_oValue != null && !(_oValue instanceof Lang.Float)) {
       try {
         _oValue = (_oValue as String or Integer or Decimal).toFloat();
@@ -58,10 +58,10 @@ module LangUtils {
         _oValue = null;
       }
     }
-    return _oValue != null ? _oValue : _fDefault;
+    return _oValue != null ? _oValue as Float : _fDefault;
   }
 
-  function asBoolean(_oValue as Object or App.PropertyValueType, _bDefault as Boolean) as Boolean {
+  function asBoolean(_oValue as Object or App.PropertyValueType or Null, _bDefault as Boolean) as Boolean {
     if(_oValue != null && !(_oValue instanceof Lang.Boolean)) {
       try {
         _oValue = (_oValue as String or Integer or Decimal).toNumber() != 0;
@@ -70,7 +70,7 @@ module LangUtils {
         _oValue = null;
       }
     }
-    return _oValue != null ? _oValue : _bDefault;
+    return _oValue != null ? _oValue as Boolean : _bDefault;
   }
 
   // Deep-copy the given object
