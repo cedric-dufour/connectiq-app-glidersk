@@ -164,19 +164,7 @@ class MyApp extends App.AppBase {
     Sensor.enableSensorEvents(method(:onSensorEvent));
 
     // Enable position events
-    if(Toybox.Position has :POSITIONING_MODE_AVIATION) {
-      // CIQ >= 3.2.0
-      Pos.enableLocationEvents({
-          :mode => Pos.POSITIONING_MODE_AVIATION,
-          :acquisitionType => Pos.LOCATION_CONTINUOUS,
-          :constellations => [Pos.CONSTELLATION_GPS, Pos.CONSTELLATION_GALILEO] as Array<Pos.Constellation>,
-        },
-        method(:onLocationEvent)
-      );
-    }
-    else {
-      Pos.enableLocationEvents(Pos.LOCATION_CONTINUOUS, method(:onLocationEvent));
-    }
+    self.enableLocationEvents();
 
     // Start UI update timer (every multiple of 5 seconds, to save energy)
     // NOTE: in normal circumstances, UI update will be triggered by position events (every ~1 second)
@@ -283,6 +271,54 @@ class MyApp extends App.AppBase {
       }
       ($.oMyActivity as MyActivity).setAcceleration($.oMyProcessing.fAcceleration);
     }
+  }
+
+  function enableLocationEvents() as Void {
+    //Sys.println("DEBUG: MyApp.enableLocationEvents()");
+    // REF: https://forums.garmin.com/beta-program/fenix-7-series/public-beta-reports/i/public-beta-v10-xx/bug-apps-with-gps-crashes-at-start-10-39-epix2
+    //      (thank you Garmin for keeping our quirking skills well-honed)
+    var posOptions = {:acquisitionType => Position.LOCATION_CONTINUOUS};
+    if(Toybox.Position has :POSITIONING_MODE_AVIATION) {
+      posOptions[:mode] = Pos.POSITIONING_MODE_AVIATION;
+    }
+    // CIQ >= 3.3.6 (use :configuration)
+    if(Toybox.Position has :hasConfigurationSupport) {
+      var configurations = [
+                            Pos.CONFIGURATION_SAT_IQ,
+                            Pos.CONFIGURATION_GPS_GALILEO,
+                            Pos.CONFIGURATION_GPS,
+                            ] as Array<Pos.Configuration>;
+      for (var i = 0; i < configurations.size(); i++) {
+        var configuration = configurations[i];
+        if (Pos.hasConfigurationSupport(configuration)) {
+          posOptions[:configuration] = configuration;
+          Pos.enableLocationEvents(posOptions, method(:onLocationEvent));
+          //Sys.println(format("DEBUG: MyApp.enableLocationEvents() -> configuration=$1$", [configuration]));
+          return;
+        }
+      }
+    }
+    // CIQ >= 3.2.0 (use :constellations)
+    if(Toybox.Position has :CONSTELLATION_GPS) {
+      var constellations = [
+                            [Pos.CONSTELLATION_GPS, Pos.CONSTELLATION_GALILEO],
+                            [Pos.CONSTELLATION_GPS]
+                            ] as Array<Array<Pos.Constellation>>;
+      for (var i = 0; i < constellations.size(); i++) {
+        posOptions[:constellations] = constellations[i];
+        try {
+          Pos.enableLocationEvents(posOptions, method(:onLocationEvent));
+          //Sys.println(format("DEBUG: MyApp.enableLocationEvents() -> constellations=$1$", [constellations[i]]));
+          return;
+        } catch(e) {
+          // Lang.InvalidValueException if given constellation is not supported
+        }
+      }
+    }
+    // CIQ < 3.2.0
+    posOptions = Pos.LOCATION_CONTINUOUS;
+    Pos.enableLocationEvents(posOptions, method(:onLocationEvent));
+    //Sys.println("DEBUG: MyApp.enableLocationEvents() -> legacy");
   }
 
   function onLocationEvent(_oInfo as Pos.Info) as Void {
