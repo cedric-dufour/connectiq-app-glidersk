@@ -1,5 +1,10 @@
 GliderSK (Garmin ConnectIQ) App
 ===============================
+
+> THIS PROJECT HAS MOVED TO https://codeberg.org/cedric-dufour/connectiq-app-glidersk
+>
+> (and may vanish from GitHub with no further notice; please update your upstream URL)
+
 The Glider Swiss Knife for Garmin ConnectIQ devices
 
 
